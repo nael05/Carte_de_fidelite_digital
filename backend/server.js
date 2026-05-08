@@ -160,8 +160,8 @@ app.listen(PORT, () => {
 });
 
 if (process.env.NODE_APP_INSTANCE === '0') {
-  // Daily at 2am: expire points + send J-7 warnings (temporarily 00:00 for test)
-  cron.schedule('0 0 * * *', async () => {
+  // Daily at 2am: expire points + send J-7 warnings
+  cron.schedule('0 2 * * *', async () => {
     logger.info('[CRON] Points expiration job started');
     try {
       const [enterprises] = await pool.query(

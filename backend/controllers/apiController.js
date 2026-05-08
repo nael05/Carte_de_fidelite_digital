@@ -1047,7 +1047,7 @@ export const createClientAndInvite = async (req, res) => {
   }
   if (typeof nom !== 'string' || nom.length > 50 ||
       typeof prenom !== 'string' || prenom.length > 50 ||
-      typeof telephone !== 'string' || telephone.length > 20) {
+      typeof telephone !== 'string' || telephone.length < 10 || telephone.length > 14) {
     return res.status(400).json({ error: 'Données invalides (longueur maximale dépassée)' });
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 100) {
@@ -1085,7 +1085,7 @@ export const createClientAndInvite = async (req, res) => {
 
     const clientId = randomUUID();
     await pool.query(
-      'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin) VALUES (?, ?, ?, ?, ?, ?, 0, ?, 0)',
+      'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin) VALUES (?, ?, ?, ?, ?, ?, 0, ?, 1)',
       [clientId, entrepriseId, nom, prenom, telephone, email, type_wallet]
     );
 

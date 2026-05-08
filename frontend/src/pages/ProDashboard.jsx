@@ -1231,9 +1231,9 @@ function ProDashboard() {
         <div className="modal-backdrop" style={{ zIndex: 1100 }} onClick={() => setShowCreateClientModal(false)}>
           <div className="pro-modal" style={{ maxWidth: '480px', width: '100%', padding: '0', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
             {/* Header */}
-            <div style={{ padding: '20px 24px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ padding: '20px 24px 16px', borderBottom: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(99,102,241,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <UserPlus size={17} style={{ color: 'var(--accent)' }} />
                 </div>
                 <div>
@@ -1258,7 +1258,17 @@ function ProDashboard() {
               </div>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '6px' }}>Téléphone *</label>
-                <input className="gn-input" type="tel" required maxLength={20} value={createClientForm.telephone} onChange={e => setCreateClientForm(f => ({ ...f, telephone: e.target.value }))} placeholder="+33 6 00 00 00 00" />
+                <input
+                  className="gn-input"
+                  type="tel"
+                  required
+                  minLength={10}
+                  maxLength={14}
+                  inputMode="numeric"
+                  value={createClientForm.telephone}
+                  onChange={e => setCreateClientForm(f => ({ ...f, telephone: e.target.value }))}
+                  placeholder="01 23 45 67 89"
+                />
               </div>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '6px' }}>Email *</label>
@@ -1279,10 +1289,10 @@ function ProDashboard() {
                       style={{
                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                         padding: '10px 14px', borderRadius: '10px', cursor: 'pointer', transition: 'all 0.15s',
-                        border: `2px solid ${createClientForm.type_wallet === key ? 'var(--accent)' : 'var(--border)'}`,
-                        background: createClientForm.type_wallet === key ? 'rgba(99,102,241,0.08)' : 'var(--surface)',
+                        border: `2px solid ${createClientForm.type_wallet === key ? 'var(--accent)' : 'var(--border-light)'}`,
+                        background: createClientForm.type_wallet === key ? 'var(--accent-light)' : 'var(--bg-subtle)',
                         fontWeight: '600', fontSize: '13px',
-                        color: createClientForm.type_wallet === key ? 'var(--text-primary)' : 'var(--text-secondary)',
+                        color: createClientForm.type_wallet === key ? 'var(--accent)' : 'var(--text-secondary)',
                       }}
                     >
                       <img src={logo} alt={label} style={{ width: '18px', height: '18px', objectFit: 'contain', flexShrink: 0, filter: darkMode ? 'invert(1)' : 'none' }} />
@@ -1309,7 +1319,7 @@ function ProDashboard() {
           <div className="pro-modal" style={{ maxWidth: '520px', width: '100%', maxHeight: '80vh', display: 'flex', flexDirection: 'column', padding: '0', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
 
             {/* Header */}
-            <div style={{ padding: '20px 24px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+            <div style={{ padding: '20px 24px 16px', borderBottom: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(168,85,247,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Send size={16} style={{ color: '#a855f7' }} />
@@ -1370,8 +1380,8 @@ function ProDashboard() {
                       <label key={client.id} style={{
                         display: 'flex', alignItems: 'center', gap: '12px', padding: '11px 14px',
                         borderRadius: '10px', border: '1px solid',
-                        borderColor: resendSelected.has(client.id) ? '#a855f7' : 'var(--border)',
-                        background: resendSelected.has(client.id) ? 'rgba(168,85,247,0.06)' : 'var(--surface)',
+                        borderColor: resendSelected.has(client.id) ? '#a855f7' : 'var(--border-light)',
+                        background: resendSelected.has(client.id) ? 'rgba(168,85,247,0.06)' : 'var(--bg-surface)',
                         cursor: 'pointer', transition: 'border-color 0.15s, background 0.15s',
                       }}>
                         <input type="checkbox" checked={resendSelected.has(client.id)} onChange={() => setResendSelected(prev => {
@@ -1399,7 +1409,7 @@ function ProDashboard() {
             })()}
 
             {/* Footer */}
-            <div style={{ padding: '14px 24px', borderTop: '1px solid var(--border)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flexShrink: 0 }}>
+            <div style={{ padding: '14px 24px', borderTop: '1px solid var(--border-light)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flexShrink: 0 }}>
               <button className="delete-confirm-cancel" onClick={() => setShowResendModal(false)}>Annuler</button>
               <button
                 className="delete-confirm-ok"

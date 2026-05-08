@@ -376,6 +376,152 @@ export const getPushNotificationDetails = async (req, res) => {
   }
 };
 
+// ===== POINTS EXPIRATION =====
+
+/**
+ * Calcule via FIFO combien de points d'un client ont expiré (non encore déduits).
+ * Returns { toExpire: number, soonPoints: number } where soonPoints expire dans <= 7 jours.
+ */
+export const computeClientExpiration = async (clientId, expirationMonths) => {
+  const now = new Date();
+  const cutoff = new Date(now);
+  cutoff.setMonth(cutoff.getMonth() - expirationMonths);
+
+  const soonCutoff = new Date(now);
+  soonCutoff.setMonth(soonCutoff.getMonth() - expirationMonths);
+  soonCutoff.setDate(soonCutoff.getDate() + 7); // points gagnés avant cette date expirent dans <= 7 jours
+
+  const [txns] = await pool.query(
+    `SELECT points_change, type, created_at FROM transaction_history
+     WHERE client_id = ? ORDER BY created_at ASC`,
+    [clientId]
+  );
+
+  // Simulation FIFO
+  const batches = []; // { amount, date }
+  for (const t of txns) {
+    if (t.points_change > 0) {
+      batches.push({ amount: t.points_change, date: new Date(t.created_at) });
+    } else if (t.points_change < 0) {
+      let consume = Math.abs(t.points_change);
+      while (consume > 0 && batches.length > 0) {
+        if (batches[0].amount <= consume) {
+          consume -= batches[0].amount;
+          batches.shift();
+        } else {
+          batches[0].amount -= consume;
+          consume = 0;
+        }
+      }
+    }
+  }
+
+  let toExpire = 0;
+  let soonPoints = 0;
+  for (const b of batches) {
+    if (b.date <= cutoff) toExpire += b.amount;
+    else if (b.date <= soonCutoff) soonPoints += b.amount;
+  }
+
+  return { toExpire, soonPoints };
+};
+
+/**
+ * Expire les points d'un seul client. Retourne le nombre de points déduits.
+ */
+const expireClientPoints = async (client, expirationMonths, conn) => {
+  const db = conn || pool;
+  const { toExpire } = await computeClientExpiration(client.id, expirationMonths);
+  if (toExpire <= 0) return 0;
+
+  const newBalance = Math.max(0, (client.points || 0) - toExpire);
+  await db.query(
+    `UPDATE wallet_cards SET points_balance = ?, points_expired_up_to = CURDATE(), last_updated = NOW()
+     WHERE client_id = ?`,
+    [newBalance, client.id]
+  );
+  await db.query(
+    `UPDATE clients SET points = ? WHERE id = ?`,
+    [newBalance, client.id]
+  );
+  await db.query(
+    `INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, stamps_change, description)
+     VALUES (?, ?, ?, 'points_expired', ?, 0, ?)`,
+    [
+      randomUUID(), client.id, client.entreprise_id,
+      -toExpire,
+      `Expiration automatique — ${toExpire} point(s) arrivé(s) à échéance`
+    ]
+  );
+  logger.info(`⏰ Expiration: ${toExpire} pts déduits pour client ${client.id}`);
+  return toExpire;
+};
+
+/**
+ * Lance l'expiration pour toute une entreprise.
+ * Appelé par le cron ET immédiatement quand le pro change la config.
+ */
+export const runExpirationForEnterprise = async (entrepriseId, expirationMonths) => {
+  const [clients] = await pool.query(
+    `SELECT c.id, c.entreprise_id, c.points, wc.points_balance
+     FROM clients c
+     JOIN wallet_cards wc ON wc.client_id = c.id
+     WHERE c.entreprise_id = ? AND wc.points_balance > 0`,
+    [entrepriseId]
+  );
+
+  let totalExpired = 0;
+  for (const client of clients) {
+    totalExpired += await expireClientPoints(client, expirationMonths, null);
+  }
+  return totalExpired;
+};
+
+export const getExpirationConfig = async (req, res) => {
+  const empresaId = req.user.id;
+  try {
+    const [[row]] = await pool.query(
+      `SELECT points_expiration_months FROM loyalty_config WHERE entreprise_id = ?`,
+      [empresaId]
+    );
+    res.json({ points_expiration_months: row?.points_expiration_months ?? null });
+  } catch (err) {
+    logger.error('Get expiration config error', { error: err.message });
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+};
+
+export const updateExpirationConfig = async (req, res) => {
+  const empresaId = req.user.id;
+  const { points_expiration_months } = req.body;
+
+  // null = indéterminé, sinon entier entre 1 et 36
+  if (points_expiration_months !== null &&
+      (!Number.isInteger(points_expiration_months) ||
+       points_expiration_months < 1 || points_expiration_months > 36)) {
+    return res.status(400).json({ error: 'Valeur invalide (1–36 mois ou null)' });
+  }
+
+  try {
+    await pool.query(
+      `UPDATE loyalty_config SET points_expiration_months = ? WHERE entreprise_id = ?`,
+      [points_expiration_months, empresaId]
+    );
+
+    // Si on active ou réduit l'expiration, appliquer immédiatement
+    let expired = 0;
+    if (points_expiration_months !== null) {
+      expired = await runExpirationForEnterprise(empresaId, points_expiration_months);
+    }
+
+    logger.info(`⚙️ Expiration config mise à jour: ${points_expiration_months} mois pour ${empresaId}, ${expired} pts expirés`);
+    res.json({ success: true, points_expiration_months, pointsExpiredNow: expired });
+  } catch (err) {
+    logger.error('Update expiration config error', { error: err.message });
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+};
+
 export const getLoyaltyStats = async (req, res) => {
   const empresaId = req.user.id;
 

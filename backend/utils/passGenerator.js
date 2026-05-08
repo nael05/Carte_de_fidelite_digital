@@ -515,12 +515,29 @@ export class PassGenerator {
       }
 
 
-      if (customization?.back_fields_terms) {
-        this.safeAddField(pass.backFields, {
-          key: 'terms',
-          label: 'CONDITIONS',
-          value: customization.back_fields_terms
-        });
+      // Texte conditions + injection expiration automatique
+      {
+        const baseTerms = customization?.back_fields_terms || '';
+        const expMonths = clientData.points_expiration_months ?? null;
+        let expirationLine = '';
+
+        if (expMonths !== null) {
+          if (clientData.soonExpiringPoints > 0) {
+            expirationLine = `⚠️ Certains de vos points arrivent à expiration dans moins de 7 jours. Venez vite les utiliser !`;
+          } else {
+            expirationLine = `Vos points sont valables ${expMonths} mois à compter de leur date d'acquisition.`;
+          }
+        }
+
+        const finalTerms = [baseTerms, expirationLine].filter(Boolean).join('\n\n');
+        if (finalTerms) {
+          this.safeAddField(pass.backFields, {
+            key: 'terms',
+            label: 'CONDITIONS',
+            value: finalTerms,
+            ...(clientData.soonExpiringPoints > 0 ? { changeMessage: '⚠️ Des points expirent bientôt !' } : {})
+          });
+        }
       }
 
       if (clientData.rewardTiers && clientData.rewardTiers.length > 0) {

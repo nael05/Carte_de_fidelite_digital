@@ -65,6 +65,12 @@ function ProDashboard() {
   const [createClientForm, setCreateClientForm] = useState({ nom: '', prenom: '', telephone: '', email: '', type_wallet: 'apple' })
   const [createClientLoading, setCreateClientLoading] = useState(false)
 
+  // Expiration des points
+  const [expirationConfig, setExpirationConfig] = useState({ points_expiration_months: null })
+  const [expirationSlider, setExpirationSlider] = useState(12)
+  const [expirationIndeterminate, setExpirationIndeterminate] = useState(true)
+  const [expirationSaving, setExpirationSaving] = useState(false)
+
   // Modal: renvoyer un lien de téléchargement
   const [showResendModal, setShowResendModal] = useState(false)
   const [resendSearch, setResendSearch] = useState('')
@@ -134,6 +140,7 @@ function ProDashboard() {
       loadProInfo()
       loadClients()
       loadLoyaltyConfig()
+      loadExpirationConfig()
     }
   }, [token, navigate])
 
@@ -194,6 +201,32 @@ function ProDashboard() {
       })
     } catch (err) {
       console.error('Erreur chargement config loyauté:', err)
+    }
+  }
+
+  const loadExpirationConfig = async () => {
+    try {
+      const resp = await api.get('/pro/loyalty/expiration')
+      const months = resp.data.points_expiration_months ?? null
+      setExpirationConfig({ points_expiration_months: months })
+      setExpirationIndeterminate(months === null)
+      setExpirationSlider(months ?? 12)
+    } catch (err) {
+      console.error('Erreur chargement config expiration:', err)
+    }
+  }
+
+  const handleSaveExpiration = async () => {
+    setExpirationSaving(true)
+    try {
+      const months = expirationIndeterminate ? null : expirationSlider
+      await api.put('/pro/loyalty/expiration', { points_expiration_months: months })
+      setExpirationConfig({ points_expiration_months: months })
+      addToast(months === null ? 'Points sans expiration enregistré' : `Expiration à ${months} mois enregistrée`)
+    } catch (err) {
+      addToast(err.response?.data?.error || 'Erreur lors de la sauvegarde', 'error')
+    } finally {
+      setExpirationSaving(false)
     }
   }
 
@@ -866,6 +899,14 @@ function ProDashboard() {
                       </span>
                       <ChevronRight size={16} className="stg-hub-chevron" />
                     </button>
+                    <button className="stg-hub-item" onClick={() => setSettingsPage('expiration')}>
+                      <span className="stg-hub-icon stg-hub-icon--orange"><History size={18} /></span>
+                      <span className="stg-hub-text">
+                        <span className="stg-hub-title">Expiration des points</span>
+                        <span className="stg-hub-desc">Durée de validité des points de vos clients</span>
+                      </span>
+                      <ChevronRight size={16} className="stg-hub-chevron" />
+                    </button>
                     <button className="stg-hub-item" onClick={() => setSettingsPage('geolocalisation')}>
                       <span className="stg-hub-icon stg-hub-icon--green"><MapPin size={18} /></span>
                       <span className="stg-hub-text">
@@ -1082,6 +1123,87 @@ function ProDashboard() {
                     <button type="button" className="gn-save-btn" onClick={handleSaveProx} disabled={proxSaving}>
                       {proxSaving ? <Loader2 size={15} className="pro-spin" /> : <Save size={15} />}
                       {proxSaving ? 'Enregistrement…' : 'Enregistrer'}
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {/* ── SOUS-PAGE : Expiration des points ── */}
+              {settingsPage === 'expiration' && (
+                <>
+                  <div className="stg-subpage-head">
+                    <button className="stg-back" onClick={() => setSettingsPage(null)}>
+                      <ChevronRight size={15} className="stg-back-arrow" /> Paramètres
+                    </button>
+                    <div className="stg-subpage-title-row">
+                      <span className="stg-hub-icon stg-hub-icon--orange"><History size={18} /></span>
+                      <div>
+                        <h2>Expiration des points</h2>
+                        <p>Définissez la durée de validité des points de fidélité</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="stg-content">
+                    <div className="gn-card-header" style={{ marginBottom: 16 }}>
+                      <div className="gn-card-label"><History size={13} /> Durée de validité</div>
+                    </div>
+
+                    <label style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20, cursor: 'pointer' }}>
+                      <div
+                        onClick={() => setExpirationIndeterminate(v => !v)}
+                        style={{
+                          width: 44, height: 24, borderRadius: 12, position: 'relative', cursor: 'pointer',
+                          background: expirationIndeterminate ? 'var(--accent)' : 'var(--border-light)',
+                          transition: 'background 0.2s',
+                          flexShrink: 0
+                        }}
+                      >
+                        <div style={{
+                          position: 'absolute', top: 3, left: expirationIndeterminate ? 23 : 3,
+                          width: 18, height: 18, borderRadius: '50%', background: '#fff',
+                          transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
+                        }} />
+                      </div>
+                      <span style={{ fontSize: 14, fontWeight: 500 }}>Points sans expiration (indéterminé)</span>
+                    </label>
+
+                    {!expirationIndeterminate && (
+                      <div style={{ marginBottom: 24 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                          <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Durée de validité des points</span>
+                          <span style={{ fontSize: 20, fontWeight: 700, color: 'var(--accent)' }}>{expirationSlider} mois</span>
+                        </div>
+                        <input
+                          type="range"
+                          min={1}
+                          max={36}
+                          value={expirationSlider}
+                          onChange={e => setExpirationSlider(Number(e.target.value))}
+                          style={{ width: '100%', accentColor: 'var(--accent)', cursor: 'pointer' }}
+                        />
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--text-secondary)', marginTop: 4 }}>
+                          <span>1 mois</span>
+                          <span>18 mois</span>
+                          <span>36 mois</span>
+                        </div>
+                        <div className="gn-tip" style={{ marginTop: 16 }}>
+                          <History size={13} />
+                          <span>Les points expirés seront supprimés automatiquement chaque nuit. Les clients recevront une notification 7 jours avant l'expiration.</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {expirationIndeterminate && (
+                      <div className="gn-tip" style={{ marginBottom: 20 }}>
+                        <History size={13} />
+                        <span>Les points de vos clients n'expirent jamais.</span>
+                      </div>
+                    )}
+
+                    <button type="button" className="gn-save-btn" onClick={handleSaveExpiration} disabled={expirationSaving}>
+                      {expirationSaving ? <Loader2 size={15} className="pro-spin" /> : <Save size={15} />}
+                      {expirationSaving ? 'Enregistrement…' : 'Enregistrer'}
                     </button>
                   </div>
                 </>

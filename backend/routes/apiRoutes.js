@@ -87,6 +87,10 @@ router.get('/pro/notifications/:notificationId', verifyToken, isPro, loyaltyCont
 // ===== Loyalty Stats Routes =====
 router.get('/pro/loyalty/stats', verifyToken, isPro, loyaltyController.getLoyaltyStats);
 
+// ===== Points Expiration Routes =====
+router.get('/pro/loyalty/expiration', verifyToken, isPro, loyaltyController.getExpirationConfig);
+router.put('/pro/loyalty/expiration', verifyToken, isPro, loyaltyController.updateExpirationConfig);
+
 // ===== Card Customization Routes =====
 router.get('/pro/card-customization/:empresaId', verifyToken, isPro, apiController.getCardCustomization);
 router.put('/pro/card-customization/:empresaId', verifyToken, isPro, apiController.updateCardCustomization);

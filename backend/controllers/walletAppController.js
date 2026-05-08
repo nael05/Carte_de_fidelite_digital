@@ -376,7 +376,7 @@ export const downloadClientPass = async (req, res) => {
     const [clientRows] = await db.query(
       `SELECT c.id, c.prenom, c.nom, c.telephone, c.points, c.type_wallet,
                e.id as company_id, e.nom as company_name, e.loyalty_type,
-               lc.points_for_reward, lc.stamps_for_reward,
+               lc.points_for_reward, lc.stamps_for_reward, lc.points_expiration_months,
                cc.logo_url as apple_logo_url,
                cc.icon_url as apple_icon_url,
                cc.strip_image_url as apple_strip_image_url,
@@ -483,6 +483,16 @@ export const downloadClientPass = async (req, res) => {
       [client.company_id]
     );
 
+    // Calcul points expirant bientôt pour le texte au dos
+    let soonExpiringPoints = 0;
+    if (client.points_expiration_months) {
+      try {
+        const { computeClientExpiration } = await import('./loyaltyController.js');
+        const { soonPoints } = await computeClientExpiration(client.id, client.points_expiration_months);
+        soonExpiringPoints = soonPoints;
+      } catch (_) {}
+    }
+
     const passData = {
       clientId: client.id,
       firstName: client.prenom,
@@ -494,6 +504,8 @@ export const downloadClientPass = async (req, res) => {
       rewardTiers: tiers,
       createdAt: new Date(),
       qrCodeValue: client.id.toString(),
+      points_expiration_months: client.points_expiration_months ?? null,
+      soonExpiringPoints,
     };
 
     const customization = {

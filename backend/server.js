@@ -7,6 +7,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import cron from 'node-cron';
 import apiRoutes from './routes/apiRoutes.js';
+import { computeClientExpiration, runExpirationForEnterprise } from './controllers/loyaltyController.js';
+import walletSyncService from './utils/walletSyncService.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -158,10 +160,59 @@ app.listen(PORT, () => {
 });
 
 if (process.env.NODE_APP_INSTANCE === '0') {
+  // Daily at 2am: expire points + send J-7 warnings
+  cron.schedule('0 2 * * *', async () => {
+    logger.info('[CRON] Points expiration job started');
+    try {
+      const [enterprises] = await pool.query(
+        'SELECT id, points_expiration_months FROM loyalty_config WHERE points_expiration_months IS NOT NULL'
+      );
+      for (const { id: entrepriseId, points_expiration_months } of enterprises) {
+        try {
+          await runExpirationForEnterprise(entrepriseId, points_expiration_months);
+        } catch (err) {
+          logger.error(`[CRON] Expiration failed for enterprise ${entrepriseId}`, { error: err.message });
+        }
+      }
+
+      // J-7 warnings: find clients with soon-expiring points and force card sync
+      for (const { id: entrepriseId, points_expiration_months } of enterprises) {
+        try {
+          const [clients] = await pool.query(
+            `SELECT c.id, c.entreprise_id FROM clients c
+             JOIN wallet_cards wc ON wc.client_id = c.id AND wc.company_id = c.entreprise_id
+             WHERE c.entreprise_id = ? AND wc.points_balance > 0`,
+            [entrepriseId]
+          );
+          for (const client of clients) {
+            try {
+              const { soonPoints } = await computeClientExpiration(client.id, points_expiration_months);
+              if (soonPoints > 0) {
+                await walletSyncService.syncClientWallet(client.id, entrepriseId, 0);
+              }
+            } catch (err) {
+              logger.warn(`[CRON] J-7 sync failed for client ${client.id}`, { error: err.message });
+            }
+          }
+        } catch (err) {
+          logger.error(`[CRON] J-7 loop failed for enterprise ${entrepriseId}`, { error: err.message });
+        }
+      }
+      logger.info('[CRON] Points expiration job completed');
+    } catch (err) {
+      logger.error('[CRON] Points expiration job failed', { error: err.message });
+    }
+  });
+
+  // Daily at 3am: purge old transaction history (keep at least 37 months to cover max expiration)
   cron.schedule('0 3 * * *', async () => {
     try {
-      await pool.query('DELETE FROM transaction_history WHERE created_at < DATE_SUB(NOW(), INTERVAL 6 MONTH)');
-      logger.info('Transaction history purge completed');
+      const [rows] = await pool.query(
+        'SELECT MAX(points_expiration_months) AS maxMonths FROM loyalty_config WHERE points_expiration_months IS NOT NULL'
+      );
+      const maxMonths = Math.max(6, (rows[0]?.maxMonths ?? 6) + 1);
+      await pool.query(`DELETE FROM transaction_history WHERE created_at < DATE_SUB(NOW(), INTERVAL ${maxMonths} MONTH)`);
+      logger.info(`Transaction history purge completed (keeping ${maxMonths} months)`);
     } catch (err) {
       logger.error('Transaction history purge failed', { error: err.message });
     }

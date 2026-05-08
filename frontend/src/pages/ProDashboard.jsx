@@ -6,6 +6,8 @@ import api from '../api'
 import { useAuth } from '../context/AuthContext'
 
 import CardCustomizer from '../components/CardCustomizer'
+import appleLogo from '../assets/apple.svg'
+import googleLogo from '../assets/google.svg'
 import HistoryModal from '../components/HistoryModal'
 import { LogOut, ScanLine, Users, Link as LinkIcon, Palette, Smartphone, X, Copy, Plus, Minus, AlertCircle, Loader2, Phone, Mail, Award, Check, Settings, Save, Trash2, Sun, Moon, Gift, Lock, ChevronRight, PlusCircle, History, Globe, RotateCw, Bell, MapPin, Navigation, UserPlus, Send } from 'lucide-react'
 import './ProDashboard.css'
@@ -1227,94 +1229,72 @@ function ProDashboard() {
       {/* ===== MODAL : CRÉER UN CLIENT ===== */}
       {showCreateClientModal && (
         <div className="modal-backdrop" style={{ zIndex: 1100 }} onClick={() => setShowCreateClientModal(false)}>
-          <div className="pro-modal" style={{ maxWidth: '460px', width: '100%' }} onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <div className="pro-modal" style={{ maxWidth: '480px', width: '100%', padding: '0', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
+            {/* Header */}
+            <div style={{ padding: '20px 24px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <UserPlus size={20} style={{ color: 'var(--accent)' }} />
-                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: 'var(--text-primary)' }}>Créer un client</h3>
+                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(99,102,241,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <UserPlus size={17} style={{ color: 'var(--accent)' }} />
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', lineHeight: 1.2 }}>Créer un client</h3>
+                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.3 }}>Un email lui sera envoyé avec sa carte</p>
+                </div>
               </div>
-              <button className="delete-confirm-cancel" style={{ padding: '6px 10px' }} onClick={() => setShowCreateClientModal(false)}><X size={16} /></button>
+              <button onClick={() => setShowCreateClientModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: '4px', borderRadius: '6px', display: 'flex' }}><X size={18} /></button>
             </div>
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '18px', lineHeight: '1.5' }}>
-              Le client recevra un email avec le lien pour télécharger sa carte directement.
-            </p>
-            <form onSubmit={handleCreateClientSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+
+            {/* Body */}
+            <form onSubmit={handleCreateClientSubmit} style={{ padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div>
-                  <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Prénom *</label>
-                  <input
-                    className="gn-input"
-                    type="text"
-                    required
-                    maxLength={50}
-                    value={createClientForm.prenom}
-                    onChange={e => setCreateClientForm(f => ({ ...f, prenom: e.target.value }))}
-                    placeholder="Jean"
-                  />
+                  <label style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '6px' }}>Prénom *</label>
+                  <input className="gn-input" type="text" required maxLength={50} value={createClientForm.prenom} onChange={e => setCreateClientForm(f => ({ ...f, prenom: e.target.value }))} placeholder="Jean" />
                 </div>
                 <div>
-                  <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Nom *</label>
-                  <input
-                    className="gn-input"
-                    type="text"
-                    required
-                    maxLength={50}
-                    value={createClientForm.nom}
-                    onChange={e => setCreateClientForm(f => ({ ...f, nom: e.target.value }))}
-                    placeholder="Dupont"
-                  />
+                  <label style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '6px' }}>Nom *</label>
+                  <input className="gn-input" type="text" required maxLength={50} value={createClientForm.nom} onChange={e => setCreateClientForm(f => ({ ...f, nom: e.target.value }))} placeholder="Dupont" />
                 </div>
               </div>
               <div>
-                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Téléphone *</label>
-                <input
-                  className="gn-input"
-                  type="tel"
-                  required
-                  maxLength={20}
-                  value={createClientForm.telephone}
-                  onChange={e => setCreateClientForm(f => ({ ...f, telephone: e.target.value }))}
-                  placeholder="+33 6 00 00 00 00"
-                />
+                <label style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '6px' }}>Téléphone *</label>
+                <input className="gn-input" type="tel" required maxLength={20} value={createClientForm.telephone} onChange={e => setCreateClientForm(f => ({ ...f, telephone: e.target.value }))} placeholder="+33 6 00 00 00 00" />
               </div>
               <div>
-                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Email *</label>
-                <input
-                  className="gn-input"
-                  type="email"
-                  required
-                  maxLength={100}
-                  value={createClientForm.email}
-                  onChange={e => setCreateClientForm(f => ({ ...f, email: e.target.value }))}
-                  placeholder="jean.dupont@email.com"
-                />
+                <label style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '6px' }}>Email *</label>
+                <input className="gn-input" type="email" required maxLength={100} value={createClientForm.email} onChange={e => setCreateClientForm(f => ({ ...f, email: e.target.value }))} placeholder="jean.dupont@email.com" />
               </div>
+
               <div>
-                <label style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>Type de wallet *</label>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  {['apple', 'google'].map(w => (
+                <label style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '8px' }}>Type de wallet *</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                  {[
+                    { key: 'apple', logo: appleLogo, label: 'Apple Wallet' },
+                    { key: 'google', logo: googleLogo, label: 'Google Wallet' },
+                  ].map(({ key, logo, label }) => (
                     <button
-                      key={w}
+                      key={key}
                       type="button"
-                      onClick={() => setCreateClientForm(f => ({ ...f, type_wallet: w }))}
+                      onClick={() => setCreateClientForm(f => ({ ...f, type_wallet: key }))}
                       style={{
-                        flex: 1, padding: '8px', borderRadius: '8px', border: '2px solid',
-                        borderColor: createClientForm.type_wallet === w ? 'var(--accent)' : 'var(--border)',
-                        background: createClientForm.type_wallet === w ? 'rgba(99,102,241,0.1)' : 'transparent',
-                        color: createClientForm.type_wallet === w ? 'var(--accent)' : 'var(--text-secondary)',
-                        fontWeight: '600', fontSize: '13px', cursor: 'pointer', transition: 'all 0.15s'
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                        padding: '10px 14px', borderRadius: '10px', cursor: 'pointer', transition: 'all 0.15s',
+                        border: `2px solid ${createClientForm.type_wallet === key ? 'var(--accent)' : 'var(--border)'}`,
+                        background: createClientForm.type_wallet === key ? 'rgba(99,102,241,0.08)' : 'var(--surface)',
+                        fontWeight: '600', fontSize: '13px',
+                        color: createClientForm.type_wallet === key ? 'var(--text-primary)' : 'var(--text-secondary)',
                       }}
                     >
-                      {w === 'apple' ? '🍎 Apple Wallet' : '🟢 Google Wallet'}
+                      <img src={logo} alt={label} style={{ width: '18px', height: '18px', objectFit: 'contain', flexShrink: 0, filter: darkMode ? 'invert(1)' : 'none' }} />
+                      {label}
                     </button>
                   ))}
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: '10px', marginTop: '4px' }}>
-                <button type="button" className="delete-confirm-cancel" style={{ flex: 1 }} onClick={() => setShowCreateClientModal(false)}>
-                  Annuler
-                </button>
-                <button type="submit" className="delete-confirm-ok" style={{ flex: 1 }} disabled={createClientLoading}>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '4px' }}>
+                <button type="button" className="delete-confirm-cancel" onClick={() => setShowCreateClientModal(false)}>Annuler</button>
+                <button type="submit" className="delete-confirm-ok" disabled={createClientLoading} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
                   {createClientLoading ? <><Loader2 size={14} className="pro-spin" /> Création...</> : 'Créer et envoyer'}
                 </button>
               </div>
@@ -1326,102 +1306,89 @@ function ProDashboard() {
       {/* ===== MODAL : RENVOYER UN LIEN ===== */}
       {showResendModal && (
         <div className="modal-backdrop" style={{ zIndex: 1100 }} onClick={() => setShowResendModal(false)}>
-          <div className="pro-modal" style={{ maxWidth: '520px', width: '100%', maxHeight: '80vh', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexShrink: 0 }}>
+          <div className="pro-modal" style={{ maxWidth: '520px', width: '100%', maxHeight: '80vh', display: 'flex', flexDirection: 'column', padding: '0', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
+
+            {/* Header */}
+            <div style={{ padding: '20px 24px 16px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Send size={20} style={{ color: 'var(--accent)' }} />
-                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: 'var(--text-primary)' }}>Renvoyer un lien</h3>
+                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(168,85,247,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Send size={16} style={{ color: '#a855f7' }} />
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', lineHeight: 1.2 }}>Renvoyer un lien</h3>
+                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.3 }}>Points et tampons conservés</p>
+                </div>
               </div>
-              <button className="delete-confirm-cancel" style={{ padding: '6px 10px' }} onClick={() => setShowResendModal(false)}><X size={16} /></button>
+              <button onClick={() => setShowResendModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: '4px', borderRadius: '6px', display: 'flex' }}><X size={18} /></button>
             </div>
-            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '14px', lineHeight: '1.5', flexShrink: 0 }}>
-              Sélectionnez les clients à qui renvoyer le lien de téléchargement de leur carte (points conservés).
-            </p>
 
-            {/* Barre de recherche */}
-            <div className="pro-search-bar" style={{ marginBottom: '10px', flexShrink: 0 }}>
+            {/* Search */}
+            <div style={{ padding: '14px 24px 0', flexShrink: 0 }}>
               <div className="pro-search-wrapper">
-                <input
-                  type="text"
-                  placeholder="Rechercher un client..."
-                  value={resendSearch}
-                  onChange={e => setResendSearch(e.target.value)}
-                />
-                {resendSearch && (
-                  <button className="pro-search-clear" onClick={() => setResendSearch('')}><X size={14} /></button>
-                )}
+                <input type="text" placeholder="Rechercher un client..." value={resendSearch} onChange={e => setResendSearch(e.target.value)} />
+                {resendSearch && <button className="pro-search-clear" onClick={() => setResendSearch('')}><X size={14} /></button>}
               </div>
             </div>
 
-            {/* Sélection tout */}
             {(() => {
               const filtered = clients.filter(c => {
                 if (!c.email) return false
                 const q = resendSearch.toLowerCase()
-                return !q || `${c.prenom} ${c.nom}`.toLowerCase().includes(q) || (c.email && c.email.includes(q))
+                return !q || `${c.prenom} ${c.nom}`.toLowerCase().includes(q) || c.email.includes(q)
               })
               const allSelected = filtered.length > 0 && filtered.every(c => resendSelected.has(c.id))
               return (
                 <>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexShrink: 0 }}>
-                    <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                      <input
-                        type="checkbox"
-                        checked={allSelected}
-                        onChange={() => {
-                          if (allSelected) {
-                            setResendSelected(prev => { const s = new Set(prev); filtered.forEach(c => s.delete(c.id)); return s })
-                          } else {
-                            setResendSelected(prev => { const s = new Set(prev); filtered.forEach(c => s.add(c.id)); return s })
-                          }
-                        }}
-                      />
-                      Tout sélectionner ({filtered.length} avec email)
+                  {/* Select all bar */}
+                  <div style={{ padding: '10px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+                    <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', userSelect: 'none' }}>
+                      <input type="checkbox" checked={allSelected} onChange={() => {
+                        if (allSelected) {
+                          setResendSelected(prev => { const s = new Set(prev); filtered.forEach(c => s.delete(c.id)); return s })
+                        } else {
+                          setResendSelected(prev => { const s = new Set(prev); filtered.forEach(c => s.add(c.id)); return s })
+                        }
+                      }} />
+                      Tout sélectionner
+                      <span style={{ color: 'var(--text-tertiary)' }}>({filtered.length} avec email)</span>
                     </label>
                     {resendSelected.size > 0 && (
-                      <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--accent)' }}>{resendSelected.size} sélectionné(s)</span>
+                      <span style={{ fontSize: '12px', fontWeight: '700', color: '#a855f7', background: 'rgba(168,85,247,0.1)', padding: '2px 8px', borderRadius: '20px' }}>
+                        {resendSelected.size} sélectionné{resendSelected.size > 1 ? 's' : ''}
+                      </span>
                     )}
                   </div>
 
-                  {/* Liste clients */}
-                  <div style={{ overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', gap: '6px', minHeight: 0 }}>
+                  {/* Client list */}
+                  <div style={{ overflowY: 'auto', flex: 1, minHeight: 0, padding: '0 24px', display: 'flex', flexDirection: 'column', gap: '6px', paddingBottom: '4px' }}>
                     {filtered.length === 0 ? (
-                      <div className="pro-empty" style={{ padding: '24px 0' }}>
+                      <div className="pro-empty" style={{ padding: '32px 0' }}>
                         <Users size={32} />
                         <p>{resendSearch ? 'Aucun résultat' : 'Aucun client avec une adresse email'}</p>
                       </div>
                     ) : filtered.map(client => (
-                      <label
-                        key={client.id}
-                        style={{
-                          display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px',
-                          borderRadius: '8px', border: '1px solid',
-                          borderColor: resendSelected.has(client.id) ? 'var(--accent)' : 'var(--border)',
-                          background: resendSelected.has(client.id) ? 'rgba(99,102,241,0.06)' : 'var(--surface)',
-                          cursor: 'pointer', transition: 'all 0.15s'
-                        }}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={resendSelected.has(client.id)}
-                          onChange={() => setResendSelected(prev => {
-                            const s = new Set(prev)
-                            s.has(client.id) ? s.delete(client.id) : s.add(client.id)
-                            return s
-                          })}
-                        />
-                        <div className="pro-client-avatar" style={{ width: '32px', height: '32px', fontSize: '13px', flexShrink: 0 }}>
-                          {client.prenom?.[0] || '?'}
+                      <label key={client.id} style={{
+                        display: 'flex', alignItems: 'center', gap: '12px', padding: '11px 14px',
+                        borderRadius: '10px', border: '1px solid',
+                        borderColor: resendSelected.has(client.id) ? '#a855f7' : 'var(--border)',
+                        background: resendSelected.has(client.id) ? 'rgba(168,85,247,0.06)' : 'var(--surface)',
+                        cursor: 'pointer', transition: 'border-color 0.15s, background 0.15s',
+                      }}>
+                        <input type="checkbox" checked={resendSelected.has(client.id)} onChange={() => setResendSelected(prev => {
+                          const s = new Set(prev); s.has(client.id) ? s.delete(client.id) : s.add(client.id); return s
+                        })} style={{ accentColor: '#a855f7', width: '15px', height: '15px', flexShrink: 0 }} />
+                        <div className="pro-client-avatar" style={{ width: '34px', height: '34px', fontSize: '13px', flexShrink: 0 }}>
+                          {client.prenom?.[0]?.toUpperCase() || '?'}
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                             {client.prenom} {client.nom}
                           </div>
-                          <div style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <div style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
                             <Mail size={10} /> {client.email}
                           </div>
                         </div>
-                        <span style={{ fontSize: '12px', color: 'var(--text-secondary)', flexShrink: 0 }}>
+                        <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', flexShrink: 0, background: 'var(--bg-elevated)', padding: '2px 8px', borderRadius: '20px' }}>
                           {client.points || 0} pts
                         </span>
                       </label>
@@ -1431,19 +1398,18 @@ function ProDashboard() {
               )
             })()}
 
-            <div style={{ display: 'flex', gap: '10px', marginTop: '14px', flexShrink: 0 }}>
-              <button className="delete-confirm-cancel" style={{ flex: 1 }} onClick={() => setShowResendModal(false)}>
-                Annuler
-              </button>
+            {/* Footer */}
+            <div style={{ padding: '14px 24px', borderTop: '1px solid var(--border)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flexShrink: 0 }}>
+              <button className="delete-confirm-cancel" onClick={() => setShowResendModal(false)}>Annuler</button>
               <button
                 className="delete-confirm-ok"
-                style={{ flex: 1 }}
                 disabled={resendSelected.size === 0 || resendLoading}
                 onClick={handleResendLinks}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
               >
                 {resendLoading
                   ? <><Loader2 size={14} className="pro-spin" /> Envoi...</>
-                  : `Envoyer à ${resendSelected.size} client${resendSelected.size > 1 ? 's' : ''}`
+                  : `Envoyer à ${resendSelected.size || 0} client${resendSelected.size > 1 ? 's' : ''}`
                 }
               </button>
             </div>

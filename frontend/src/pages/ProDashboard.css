@@ -1766,7 +1766,7 @@ body {
   top: 80px; /* Under topbar */
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1000;
+  z-index: 1300;
   display: flex;
   flex-direction: column;
   gap: 10px;

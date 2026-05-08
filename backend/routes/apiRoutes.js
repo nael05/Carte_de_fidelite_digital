@@ -101,6 +101,10 @@ router.post('/pro/upload-logo', verifyToken, isPro, (req, res, next) => {
   });
 }, apiController.uploadLogo);
 
+// ===== PRO CLIENT INVITE ROUTES =====
+router.post('/pro/clients/create-invite', verifyToken, isPro, apiController.createClientAndInvite);
+router.post('/pro/clients/resend-links', verifyToken, isPro, apiController.sendClientDownloadLinks);
+
 // ===== PUSH NOTIFICATION ROUTES =====
 router.post('/pro/push/send', verifyToken, isPro, pushController.sendNotification);
 router.get('/pro/push/history', verifyToken, isPro, pushController.getHistory);

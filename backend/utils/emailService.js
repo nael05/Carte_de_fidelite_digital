@@ -1,6 +1,8 @@
 import axios from 'axios';
 import logger from './logger.js';
 
+const escHtml = (str) => String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
 class EmailService {
   constructor() {
     this.apiKey = process.env.BREVO_API_KEY;
@@ -255,6 +257,120 @@ class EmailService {
     } catch (err) {
       logger.error(`❌ Échec de l'envoi de l'email de bienvenue à ${email}:`, err.response?.data || err.message);
       throw new Error('Erreur lors de l\'envoi de l\'email de bienvenue');
+    }
+  }
+
+  async sendClientInviteEmail({ email, prenom, downloadUrl, companyName }) {
+    if (!this.apiKey) throw new Error('Service d\'email non configuré');
+    const prenomDisplay = escHtml(prenom || '');
+    const safeCompany = escHtml(companyName);
+    try {
+      await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: this.sender,
+        to: [{ email }],
+        subject: `Votre carte de fidélité ${companyName} est prête !`,
+        htmlContent: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:32px 16px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e2e4e9;">
+      <tr>
+        <td style="background:#6366F1;padding:32px 40px;text-align:center;">
+          <p style="margin:0;font-size:26px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">Fidelyz</p>
+          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.75);">Plateforme de fidélité digitale</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:36px 40px 0;">
+          <p style="margin:0 0 6px;font-size:20px;font-weight:700;color:#111827;">Bonjour ${prenomDisplay},</p>
+          <p style="margin:0;font-size:14px;color:#6b7280;line-height:1.7;">
+            <strong style="color:#111827;">${safeCompany}</strong> vous a créé une carte de fidélité digitale.<br>
+            Ajoutez-la à votre Wallet en un clic, elle se met à jour automatiquement.
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:28px 40px 36px;text-align:center;">
+          <a href="${downloadUrl}" style="display:inline-block;background:#6366F1;color:#ffffff;padding:14px 36px;text-decoration:none;border-radius:7px;font-size:15px;font-weight:600;letter-spacing:0.2px;">
+            Télécharger ma carte
+          </a>
+          <p style="margin:16px 0 0;font-size:12px;color:#9ca3af;">Fonctionne avec Apple Wallet et Google Wallet</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="background:#f9fafb;padding:16px 40px;border-top:1px solid #e2e4e9;text-align:center;">
+          <p style="margin:0;font-size:11px;color:#9ca3af;">Email envoyé automatiquement par Fidelyz — merci de ne pas répondre.</p>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`
+      }, { headers: { 'api-key': this.apiKey, 'Content-Type': 'application/json' } });
+      logger.info(`✅ Email d'invitation carte envoyé à ${email}`);
+    } catch (err) {
+      logger.error(`❌ Échec envoi email invitation carte à ${email}:`, err.response?.data || err.message);
+      throw new Error('Erreur lors de l\'envoi de l\'email d\'invitation');
+    }
+  }
+
+  async sendCardDownloadLinkEmail({ email, prenom, downloadUrl, companyName }) {
+    if (!this.apiKey) throw new Error('Service d\'email non configuré');
+    const prenomDisplay = escHtml(prenom || '');
+    const safeCompany = escHtml(companyName);
+    try {
+      await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: this.sender,
+        to: [{ email }],
+        subject: `Retrouvez votre carte ${companyName}`,
+        htmlContent: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:32px 16px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e2e4e9;">
+      <tr>
+        <td style="background:#6366F1;padding:32px 40px;text-align:center;">
+          <p style="margin:0;font-size:26px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">Fidelyz</p>
+          <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.75);">Plateforme de fidélité digitale</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:36px 40px 0;">
+          <p style="margin:0 0 6px;font-size:20px;font-weight:700;color:#111827;">Bonjour ${prenomDisplay},</p>
+          <p style="margin:0;font-size:14px;color:#6b7280;line-height:1.7;">
+            Voici votre lien pour retrouver votre carte de fidélité <strong style="color:#111827;">${safeCompany}</strong>.<br>
+            Vos points et tampons sont conservés — rien n'est perdu.
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:28px 40px 36px;text-align:center;">
+          <a href="${downloadUrl}" style="display:inline-block;background:#6366F1;color:#ffffff;padding:14px 36px;text-decoration:none;border-radius:7px;font-size:15px;font-weight:600;letter-spacing:0.2px;">
+            Récupérer ma carte
+          </a>
+          <p style="margin:16px 0 0;font-size:12px;color:#9ca3af;">Vos points sont intacts. Compatible Apple Wallet et Google Wallet.</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="background:#f9fafb;padding:16px 40px;border-top:1px solid #e2e4e9;text-align:center;">
+          <p style="margin:0;font-size:11px;color:#9ca3af;">Email envoyé automatiquement par Fidelyz — merci de ne pas répondre.</p>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`
+      }, { headers: { 'api-key': this.apiKey, 'Content-Type': 'application/json' } });
+      logger.info(`✅ Email lien de re-téléchargement envoyé à ${email}`);
+    } catch (err) {
+      logger.error(`❌ Échec envoi email lien téléchargement à ${email}:`, err.response?.data || err.message);
+      throw new Error('Erreur lors de l\'envoi de l\'email');
     }
   }
 }

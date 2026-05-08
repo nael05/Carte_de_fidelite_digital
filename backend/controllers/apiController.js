@@ -1036,6 +1036,135 @@ export const registerClientAndGeneratePass = async (req, res) => {
 };
 
 
+// ===== PRO CLIENT INVITE / RESEND LINK =====
+
+export const createClientAndInvite = async (req, res) => {
+  const entrepriseId = req.user.id; // always from JWT, never from body
+  const { nom, prenom, telephone, email, type_wallet } = req.body;
+
+  if (!nom || !prenom || !telephone || !email || !type_wallet) {
+    return res.status(400).json({ error: 'Tous les champs sont requis (nom, prénom, téléphone, email, type_wallet)' });
+  }
+  if (typeof nom !== 'string' || nom.length > 50 ||
+      typeof prenom !== 'string' || prenom.length > 50 ||
+      typeof telephone !== 'string' || telephone.length > 20) {
+    return res.status(400).json({ error: 'Données invalides (longueur maximale dépassée)' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 100) {
+    return res.status(400).json({ error: 'Adresse email invalide' });
+  }
+  if (!['apple', 'google'].includes(type_wallet)) {
+    return res.status(400).json({ error: 'Type de wallet invalide' });
+  }
+
+  try {
+    const [companyRows] = await pool.query(
+      'SELECT id, nom FROM entreprises WHERE id = ? AND statut = "actif"',
+      [entrepriseId]
+    );
+    if (companyRows.length === 0) {
+      return res.status(404).json({ error: 'Entreprise non trouvée ou inactive' });
+    }
+    const companyName = companyRows[0].nom;
+
+    const [dupPhone] = await pool.query(
+      'SELECT id FROM clients WHERE telephone = ? AND entreprise_id = ?',
+      [telephone, entrepriseId]
+    );
+    if (dupPhone.length > 0) {
+      return res.status(409).json({ error: 'Ce numéro de téléphone est déjà inscrit.' });
+    }
+
+    const [dupEmail] = await pool.query(
+      'SELECT id FROM clients WHERE email = ? AND entreprise_id = ?',
+      [email, entrepriseId]
+    );
+    if (dupEmail.length > 0) {
+      return res.status(409).json({ error: 'Cette adresse email est déjà inscrite.' });
+    }
+
+    const clientId = randomUUID();
+    await pool.query(
+      'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin) VALUES (?, ?, ?, ?, ?, ?, 0, ?, 0)',
+      [clientId, entrepriseId, nom, prenom, telephone, email, type_wallet]
+    );
+
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    const apiBase = frontendUrl.endsWith('/') ? frontendUrl.slice(0, -1) : frontendUrl;
+    const downloadUrl = `${apiBase}/api/app/wallet/client-download/${clientId}`;
+
+    try {
+      await emailService.sendClientInviteEmail({ email, prenom, downloadUrl, companyName });
+    } catch (mailErr) {
+      logger.error('Échec envoi email invitation client (non bloquant):', { error: mailErr.message });
+    }
+
+    logger.info(`✅ Client créé et invité par pro: ${clientId} (${prenom} ${nom})`);
+    return res.status(201).json({ success: true, clientId, message: 'Client créé et email d\'invitation envoyé' });
+  } catch (err) {
+    logger.error('Erreur createClientAndInvite:', { error: err.message });
+    return res.status(500).json({ error: 'Erreur lors de la création du client' });
+  }
+};
+
+export const sendClientDownloadLinks = async (req, res) => {
+  const entrepriseId = req.user.id; // always from JWT
+  const { clientIds } = req.body;
+
+  if (!Array.isArray(clientIds) || clientIds.length === 0) {
+    return res.status(400).json({ error: 'clientIds doit être un tableau non vide' });
+  }
+  if (clientIds.length > 100) {
+    return res.status(400).json({ error: 'Maximum 100 clients par envoi' });
+  }
+  // Validate UUIDs to prevent injection
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!clientIds.every(id => typeof id === 'string' && uuidRegex.test(id))) {
+    return res.status(400).json({ error: 'Format de clientId invalide' });
+  }
+
+  try {
+    const [companyRows] = await pool.query(
+      'SELECT id, nom FROM entreprises WHERE id = ? AND statut = "actif"',
+      [entrepriseId]
+    );
+    if (companyRows.length === 0) {
+      return res.status(404).json({ error: 'Entreprise non trouvée' });
+    }
+    const companyName = companyRows[0].nom;
+
+    // Fetch only clients that belong to this enterprise (security: ignore IDs from other tenants)
+    const placeholders = clientIds.map(() => '?').join(',');
+    const [clients] = await pool.query(
+      `SELECT id, prenom, nom, email FROM clients WHERE id IN (${placeholders}) AND entreprise_id = ?`,
+      [...clientIds, entrepriseId]
+    );
+
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    const apiBase = frontendUrl.endsWith('/') ? frontendUrl.slice(0, -1) : frontendUrl;
+
+    let sent = 0;
+    let skipped = 0;
+    for (const client of clients) {
+      if (!client.email) { skipped++; continue; }
+      const downloadUrl = `${apiBase}/api/app/wallet/client-download/${client.id}`;
+      try {
+        await emailService.sendCardDownloadLinkEmail({ email: client.email, prenom: client.prenom, downloadUrl, companyName });
+        sent++;
+      } catch (mailErr) {
+        logger.error(`Échec envoi lien re-téléchargement à ${client.id}:`, { error: mailErr.message });
+        skipped++;
+      }
+    }
+
+    logger.info(`✅ Liens re-téléchargement envoyés: ${sent} succès, ${skipped} ignorés (entreprise ${entrepriseId})`);
+    return res.json({ success: true, sent, skipped });
+  } catch (err) {
+    logger.error('Erreur sendClientDownloadLinks:', { error: err.message });
+    return res.status(500).json({ error: 'Erreur serveur' });
+  }
+};
+
 // ===== CARD CUSTOMIZATION CONTROLLERS =====
 
 export const getCardCustomization = async (req, res) => {

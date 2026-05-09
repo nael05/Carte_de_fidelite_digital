@@ -242,6 +242,12 @@ class GoogleWalletGenerator {
         id: 'promo_module'
       });
     }
+    if (config?.points_expiration_months) {
+      const body = config.soonExpiringPoints > 0
+        ? `⚠️ Certains de vos points arrivent à expiration dans moins de 7 jours. Venez vite les utiliser !`
+        : `Vos points sont valables ${config.points_expiration_months} mois à compter de leur date d'acquisition.`;
+      textModulesData.push({ header: "Validité des points", body, id: 'expiration_module' });
+    }
 
     const loyaltyObject = {
       id: objectId,
@@ -401,6 +407,12 @@ class GoogleWalletGenerator {
         body: config.relevant_text,
         id: 'promo_module'
       });
+    }
+    if (config?.points_expiration_months) {
+      const body = config.soonExpiringPoints > 0
+        ? `⚠️ Certains de vos points arrivent à expiration dans moins de 7 jours. Venez vite les utiliser !`
+        : `Vos points sont valables ${config.points_expiration_months} mois à compter de leur date d'acquisition.`;
+      textModulesData.push({ header: "Validité des points", body, id: 'expiration_module' });
     }
 
     const patchBody = {

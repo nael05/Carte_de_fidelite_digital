@@ -42,7 +42,24 @@ class WalletSyncService {
         'SELECT * FROM card_customization WHERE company_id = ? AND loyalty_type = ?',
         [companyId, client.loyalty_type || 'points']
       );
-      const clientCustomization = custRows[0] || null;
+      const [lcRows] = await db.query(
+        'SELECT points_expiration_months FROM loyalty_config WHERE entreprise_id = ?',
+        [companyId]
+      );
+      const expirationMonths = lcRows[0]?.points_expiration_months ?? null;
+      let soonExpiringPoints = 0;
+      if (expirationMonths) {
+        try {
+          const { computeClientExpiration } = await import('../controllers/loyaltyController.js');
+          const { soonPoints } = await computeClientExpiration(clientId, expirationMonths);
+          soonExpiringPoints = soonPoints;
+        } catch (err) {
+          logger.warn(`[SYNC] computeClientExpiration failed for ${clientId}`, { error: err.message });
+        }
+      }
+      const clientCustomization = custRows[0]
+        ? { ...custRows[0], points_expiration_months: expirationMonths, soonExpiringPoints }
+        : null;
 
       // 3. Mettre à jour la base de données de synchronisation (wallet_cards)
       // On force last_updated = NOW(3) pour avoir une précision à la milliseconde pour Apple

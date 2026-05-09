@@ -354,6 +354,16 @@ class GoogleWalletGenerator {
       });
       const accessToken = await auth.getAccessToken();
 
+      // Nettoyer les anciens messages avant d'en ajouter un nouveau
+      await axios.patch(
+        `https://walletobjects.googleapis.com/walletobjects/v1/loyaltyObject/${encodeURIComponent(objectId)}`,
+        { messages: [] },
+        { headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' } }
+      );
+
+      const startDate = new Date().toISOString();
+      const endDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+
       await axios.post(
         `https://walletobjects.googleapis.com/walletobjects/v1/loyaltyObject/${encodeURIComponent(objectId)}/addMessage`,
         {
@@ -361,7 +371,12 @@ class GoogleWalletGenerator {
             header,
             body,
             id: `msg_${now}`,
-            messageType: 'TEXT_AND_NOTIFY'
+            messageType: 'TEXT_AND_NOTIFY',
+            displayInterval: {
+              kind: 'walletobjects#timeInterval',
+              start: { date: startDate },
+              end: { date: endDate }
+            }
           }
         },
         {
@@ -372,7 +387,7 @@ class GoogleWalletGenerator {
         }
       );
 
-      logger.info(`✅ [GOOGLE MSG] Notification envoyée à ${objectId}`);
+      logger.info(`✅ [GOOGLE MSG] Notification envoyée à ${objectId} (expire ${endDate.slice(0, 10)})`);
     } catch (err) {
       await db.query(
         'DELETE FROM google_wallet_message_log WHERE object_id = ? AND sent_at = ? LIMIT 1',

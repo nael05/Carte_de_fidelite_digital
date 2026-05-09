@@ -232,11 +232,13 @@ export const getUpdatedPass = async (req, res) => {
               cc.back_fields_facebook, cc.back_fields_tiktok,
               cc.apple_review_url,
               cc.latitude, cc.longitude, cc.relevant_text, cc.locations,
-              wc.last_points_change
+              wc.last_points_change,
+              lc.points_expiration_months
        FROM wallet_cards wc
        JOIN clients c ON wc.client_id = c.id
        JOIN entreprises e ON c.entreprise_id = e.id
        LEFT JOIN card_customization cc ON e.id = cc.company_id
+       LEFT JOIN loyalty_config lc ON lc.entreprise_id = e.id
        WHERE wc.pass_serial_number = ?
        ORDER BY cc.updated_at DESC
        LIMIT 1`,
@@ -284,6 +286,17 @@ export const getUpdatedPass = async (req, res) => {
     }
 
     // 2️⃣ Préparer les données pour la génération
+    let soonExpiringPoints = 0;
+    if (data.points_expiration_months) {
+      try {
+        const { computeClientExpiration } = await import('./loyaltyController.js');
+        const { soonPoints } = await computeClientExpiration(data.id, data.points_expiration_months);
+        soonExpiringPoints = soonPoints;
+      } catch (err) {
+        logger.warn(`[APPLE SYNC] computeClientExpiration failed for ${data.id}`, { error: err.message });
+      }
+    }
+
     const passData = {
       clientId: data.id,
       firstName: data.prenom,
@@ -291,11 +304,13 @@ export const getUpdatedPass = async (req, res) => {
       phoneNumber: data.telephone,
       companyName: data.company_name,
       loyaltyType: loyaltyType,
-      balance: currentPoints, // Envoyer le solde réel actuel
+      balance: currentPoints,
       rewardTiers: tiers,
       lastPointsChange: Number(data.last_points_change) || 0,
       createdAt: data.created_at,
       qrCodeValue: data.id.toString(),
+      points_expiration_months: data.points_expiration_months ?? null,
+      soonExpiringPoints,
     };
 
     const customization = {

@@ -52,8 +52,8 @@ function OverviewTab() {
     : null
 
   const walletData = [
-    { name: 'Apple', value: data.appleClients },
-    { name: 'Google', value: data.googleClients },
+    { name: 'Apple', value: Number(data.appleClients) },
+    { name: 'Google', value: Number(data.googleClients) },
   ].filter(d => d.value > 0)
 
   return (

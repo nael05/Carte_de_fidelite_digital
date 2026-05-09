@@ -40,8 +40,8 @@ export default function AdminStatsPanel() {
   const { platform, clients, activity, topEnterprises, growth, enterpriseGrowth } = data
 
   const walletData = [
-    { name: 'Apple', value: clients.appleClients },
-    { name: 'Google', value: clients.googleClients },
+    { name: 'Apple', value: Number(clients.appleClients) },
+    { name: 'Google', value: Number(clients.googleClients) },
   ].filter(d => d.value > 0)
 
   const growthData = growth.map(g => ({

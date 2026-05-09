@@ -206,6 +206,47 @@
   font-size: 14px;
 }
 
+.st-wallet-bars {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.st-wallet-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.st-wallet-name {
+  font-size: 13px;
+  font-weight: 600;
+  width: 52px;
+  flex-shrink: 0;
+}
+.st-wallet-bar-wrap {
+  flex: 1;
+  height: 10px;
+  background: var(--bg-subtle, #f3f4f6);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.st-wallet-bar {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.4s ease;
+  min-width: 4px;
+}
+.st-wallet-val {
+  font-size: 13px;
+  font-weight: 700;
+  width: 70px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
 @media (max-width: 360px) {
   .st-grid-2 { grid-template-columns: 1fr; }
   .st-card-value { font-size: 20px; }

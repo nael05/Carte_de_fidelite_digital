@@ -80,17 +80,20 @@ function OverviewTab() {
       {walletData.length > 0 && (
         <>
           <SectionTitle>Répartition Wallet</SectionTitle>
-          <div className="st-pie-wrap">
-            <ResponsiveContainer width="100%" height={180}>
-              <PieChart>
-                <Pie data={walletData} cx="50%" cy="50%" innerRadius={50} outerRadius={75}
-                  dataKey="value" label={({ name, value }) => `${name}: ${value}`}
-                  labelLine={false}>
-                  {walletData.map((_, i) => <Cell key={i} fill={COLORS[i]} />)}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+          <div className="st-wallet-bars">
+            {walletData.map((item, i) => {
+              const total = walletData.reduce((s, d) => s + d.value, 0)
+              const pct = Math.round((item.value / total) * 100)
+              return (
+                <div key={item.name} className="st-wallet-row">
+                  <span className="st-wallet-name">{item.name}</span>
+                  <div className="st-wallet-bar-wrap">
+                    <div className="st-wallet-bar" style={{ width: `${pct}%`, background: COLORS[i] }} />
+                  </div>
+                  <span className="st-wallet-val">{item.value} <span style={{ opacity: 0.6, fontSize: 11 }}>({pct}%)</span></span>
+                </div>
+              )
+            })}
           </div>
         </>
       )}

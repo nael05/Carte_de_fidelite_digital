@@ -523,7 +523,9 @@ export class PassGenerator {
 
         if (expMonths !== null) {
           if (clientData.soonExpiringPoints > 0) {
-            expirationLine = `⚠️ Certains de vos points arrivent à expiration dans moins de 7 jours. Venez vite les utiliser !`;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            expirationLine = `⚠️ Certains de vos points expirent bientôt (mis à jour le ${today.toLocaleDateString('fr-FR')}). Venez vite les utiliser !`;
           } else {
             expirationLine = `Vos points sont valables ${expMonths} mois à compter de leur date d'acquisition.`;
           }
@@ -535,7 +537,7 @@ export class PassGenerator {
             key: 'terms',
             label: 'CONDITIONS',
             value: finalTerms,
-            ...(clientData.soonExpiringPoints > 0 ? { changeMessage: '⚠️ Des points expirent bientôt ! Il vous reste 7 jours pour les utiliser. %@' } : {})
+            ...(clientData.soonExpiringPoints > 0 ? { changeMessage: '⚠️ Des points expirent bientôt ! Venez vite les utiliser avant qu\'il ne soit trop tard.' } : {})
           });
         }
       }

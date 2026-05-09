@@ -198,6 +198,7 @@ if (process.env.NODE_APP_INSTANCE === '0') {
                    WHERE wc.client_id = ?`,
                   [client.id]
                 );
+                // Apple push
                 if (regRows.length > 0) {
                   const tokens = regRows.map(r => r.push_token);
                   const { apnService } = await import('./utils/apnService.js');
@@ -206,6 +207,16 @@ if (process.env.NODE_APP_INSTANCE === '0') {
                     '⏳ Vos points expirent bientôt !',
                     `Il vous reste 7 jours pour utiliser ${soonPoints} point${soonPoints > 1 ? 's' : ''}. Venez vite !`
                   );
+                }
+
+                // Google Wallet push
+                const [gwRows] = await pool.query(
+                  `SELECT pass_serial_number FROM wallet_cards WHERE client_id = ? AND pass_serial_number LIKE 'GOOGLE_%'`,
+                  [client.id]
+                );
+                if (gwRows.length > 0) {
+                  const { default: googleWalletGenerator } = await import('./utils/googleWalletGenerator.js');
+                  await googleWalletGenerator.sendExpirationNotification(client.id, soonPoints);
                 }
               }
             } catch (err) {

@@ -188,7 +188,25 @@ if (process.env.NODE_APP_INSTANCE === '0') {
             try {
               const { soonPoints } = await computeClientExpiration(client.id, points_expiration_months);
               if (soonPoints > 0) {
+                // Mise à jour silencieuse de la carte (texte J-7 au dos)
                 await walletSyncService.syncClientWallet(client.id, entrepriseId, 0);
+
+                // Notification push visible
+                const [regRows] = await pool.query(
+                  `SELECT apr.push_token FROM apple_pass_registrations apr
+                   JOIN wallet_cards wc ON wc.pass_serial_number = apr.pass_serial_number
+                   WHERE wc.client_id = ?`,
+                  [client.id]
+                );
+                if (regRows.length > 0) {
+                  const tokens = regRows.map(r => r.push_token);
+                  const { apnService } = await import('./utils/apnService.js');
+                  await apnService.sendBulkAlertNotifications(
+                    tokens,
+                    '⏳ Vos points expirent bientôt !',
+                    `Il vous reste 7 jours pour utiliser ${soonPoints} point${soonPoints > 1 ? 's' : ''}. Venez vite !`
+                  );
+                }
               }
             } catch (err) {
               logger.warn(`[CRON] J-7 sync failed for client ${client.id}`, { error: err.message });

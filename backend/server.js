@@ -211,8 +211,8 @@ if (process.env.NODE_APP_INSTANCE === '0') {
 
                 // Google Wallet push
                 const [gwRows] = await pool.query(
-                  `SELECT pass_serial_number FROM wallet_cards WHERE client_id = ? AND pass_serial_number LIKE 'GOOGLE_%'`,
-                  [client.id]
+                  `SELECT pass_serial_number FROM wallet_cards WHERE client_id = ? AND company_id = ? AND pass_serial_number LIKE 'GOOGLE_%'`,
+                  [client.id, entrepriseId]
                 );
                 if (gwRows.length > 0) {
                   const { default: googleWalletGenerator } = await import('./utils/googleWalletGenerator.js');

@@ -290,8 +290,8 @@ export const sendPushNotification = async (req, res) => {
       const [googleCards] = await pool.query(
         `SELECT DISTINCT w.client_id
          FROM wallet_cards w
-         WHERE w.client_id IN (?) AND w.pass_serial_number LIKE 'GOOGLE_%'`,
-        [clientIds]
+         WHERE w.client_id IN (?) AND w.company_id = ? AND w.pass_serial_number LIKE 'GOOGLE_%'`,
+        [clientIds, empresaId]
       );
       googleCards.forEach(c =>
         googleWalletGenerator.addMessageToObject(c.client_id, title, message).catch(err =>

@@ -7,6 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const uploadsDir = path.join(__dirname, '..', 'uploads');
 import * as apiController from '../controllers/apiController.js';
+import * as statsController from '../controllers/statsController.js';
 import * as loyaltyController from '../controllers/loyaltyController.js';
 import * as migrationController from '../controllers/migrationController.js';
 import * as pushController from '../controllers/pushController.js';
@@ -86,6 +87,13 @@ router.get('/pro/notifications/:notificationId', verifyToken, isPro, loyaltyCont
 
 // ===== Loyalty Stats Routes =====
 router.get('/pro/loyalty/stats', verifyToken, isPro, loyaltyController.getLoyaltyStats);
+
+// ===== Analytics Stats Routes =====
+router.get('/pro/stats/overview', verifyToken, isPro, statsController.getProOverview);
+router.get('/pro/stats/activity', verifyToken, isPro, statsController.getProActivity);
+router.get('/pro/stats/clients', verifyToken, isPro, statsController.getProClients);
+router.get('/pro/stats/rewards', verifyToken, isPro, statsController.getProRewards);
+router.get('/admin/stats', verifyToken, isAdmin, statsController.getAdminStats);
 
 // ===== Points Expiration Routes =====
 router.get('/pro/loyalty/expiration', verifyToken, isPro, loyaltyController.getExpirationConfig);

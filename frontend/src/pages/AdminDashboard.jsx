@@ -9,6 +9,7 @@ import {
   Sun, Moon, PieChart, PlusCircle, Filter, Edit2, TrendingUp, Activity, Building2, Store, AlertTriangle,
   FileText, Save
 } from 'lucide-react'
+import AdminStatsPanel from '../components/AdminStatsPanel'
 import './AdminDashboard.css'
 
 function AdminDashboard() {
@@ -367,6 +368,9 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
           <button className={`ux-tab-btn ${activeTab === 'create' ? 'active' : ''}`} onClick={() => setActiveTab('create')}>
             <PlusCircle size={18} /> Nouveau
           </button>
+          <button className={`ux-tab-btn ${activeTab === 'stats' ? 'active' : ''}`} onClick={() => setActiveTab('stats')}>
+            <TrendingUp size={18} /> Statistiques
+          </button>
           <button className={`ux-tab-btn ${activeTab === 'legal' ? 'active' : ''}`} onClick={() => setActiveTab('legal')}>
             <FileText size={18} /> Légal
           </button>
@@ -387,6 +391,7 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
         <button className={activeTab === 'overview' ? 'active' : ''} onClick={() => setActiveTab('overview')}><PieChart size={20} /></button>
         <button className={activeTab === 'list' ? 'active' : ''} onClick={() => setActiveTab('list')}><LayoutDashboard size={20} /></button>
         <button className={activeTab === 'create' ? 'active' : ''} onClick={() => setActiveTab('create')}><PlusCircle size={20} /></button>
+        <button className={activeTab === 'stats' ? 'active' : ''} onClick={() => setActiveTab('stats')}><TrendingUp size={20} /></button>
         <button className={activeTab === 'legal' ? 'active' : ''} onClick={() => setActiveTab('legal')}><FileText size={20} /></button>
       </div>
 
@@ -600,6 +605,9 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
             </div>
           </div>
         )}
+        {/* VIEW: STATS */}
+        {activeTab === 'stats' && <AdminStatsPanel />}
+
         {/* VIEW: LEGAL */}
         {activeTab === 'legal' && (
           <div className="ux-view-fade">

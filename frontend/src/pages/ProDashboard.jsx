@@ -9,7 +9,8 @@ import CardCustomizer from '../components/CardCustomizer'
 import appleLogo from '../assets/apple.svg'
 import googleLogo from '../assets/google.svg'
 import HistoryModal from '../components/HistoryModal'
-import { LogOut, ScanLine, Users, Link as LinkIcon, Palette, Smartphone, X, Copy, Plus, Minus, AlertCircle, Loader2, Phone, Mail, Award, Check, Settings, Save, Trash2, Sun, Moon, Gift, Lock, ChevronRight, PlusCircle, History, Globe, RotateCw, Bell, MapPin, Navigation, UserPlus, Send } from 'lucide-react'
+import StatsPanel from '../components/StatsPanel'
+import { LogOut, ScanLine, Users, Link as LinkIcon, Palette, Smartphone, X, Copy, Plus, Minus, AlertCircle, Loader2, Phone, Mail, Award, Check, Settings, Save, Trash2, Sun, Moon, Gift, Lock, ChevronRight, PlusCircle, History, Globe, RotateCw, Bell, MapPin, Navigation, UserPlus, Send, TrendingUp } from 'lucide-react'
 import './ProDashboard.css'
 
 function ProDashboard() {
@@ -923,6 +924,14 @@ function ProDashboard() {
                       </span>
                       <ChevronRight size={16} className="stg-hub-chevron" />
                     </button>
+                    <button className="stg-hub-item" onClick={() => setSettingsPage('statistiques')}>
+                      <span className="stg-hub-icon stg-hub-icon--blue"><TrendingUp size={18} /></span>
+                      <span className="stg-hub-text">
+                        <span className="stg-hub-title">Statistiques</span>
+                        <span className="stg-hub-desc">Activité, clients, récompenses et tendances</span>
+                      </span>
+                      <ChevronRight size={16} className="stg-hub-chevron" />
+                    </button>
                   </nav>
                 </>
               )}
@@ -1207,6 +1216,11 @@ function ProDashboard() {
                     </button>
                   </div>
                 </>
+              )}
+
+              {/* ── SOUS-PAGE : Statistiques ── */}
+              {settingsPage === 'statistiques' && (
+                <StatsPanel onBack={() => setSettingsPage(null)} />
               )}
 
               {/* ── SOUS-PAGE : Géolocalisation ── */}

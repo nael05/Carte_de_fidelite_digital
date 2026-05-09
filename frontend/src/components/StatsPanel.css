@@ -1,0 +1,212 @@
+.st-panel {
+  padding-bottom: 32px;
+}
+
+.st-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 0 16px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.st-tabs::-webkit-scrollbar { display: none; }
+
+.st-tab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 13px;
+  border-radius: 20px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.st-tab.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.st-content {
+  padding: 0 16px;
+}
+
+.st-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  margin: 20px 0 10px;
+}
+
+.st-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.st-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 14px 12px;
+}
+.st-card-value {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.st-card-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.st-card-sub {
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-top: 3px;
+  opacity: 0.75;
+}
+
+.st-chart-wrap {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 12px 8px 8px;
+  margin-bottom: 4px;
+}
+
+.st-pie-wrap {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 8px;
+}
+
+.st-period-btns {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.st-period-btn {
+  padding: 5px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.st-period-btn.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.st-retention {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.st-retention-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.st-retention-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  width: 130px;
+  flex-shrink: 0;
+}
+.st-retention-bar-wrap {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-subtle, #f3f4f6);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.st-retention-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+  min-width: 2px;
+}
+.st-retention-count {
+  font-size: 13px;
+  font-weight: 600;
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.st-tiers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.st-tier-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.st-tier-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.st-tier-info { flex: 1; }
+.st-tier-name { font-size: 13px; font-weight: 600; }
+.st-tier-pts { font-size: 11px; color: var(--text-secondary); }
+.st-tier-count {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.st-empty {
+  text-align: center;
+  padding: 32px 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.st-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 48px 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+@media (max-width: 360px) {
+  .st-grid-2 { grid-template-columns: 1fr; }
+  .st-card-value { font-size: 20px; }
+}

@@ -535,7 +535,7 @@ export class PassGenerator {
             key: 'terms',
             label: 'CONDITIONS',
             value: finalTerms,
-            ...(clientData.soonExpiringPoints > 0 ? { changeMessage: '⚠️ Des points expirent bientôt ! Il vous reste 7 jours pour les utiliser.' } : {})
+            ...(clientData.soonExpiringPoints > 0 ? { changeMessage: '⚠️ Des points expirent bientôt ! Il vous reste 7 jours pour les utiliser. %@' } : {})
           });
         }
       }

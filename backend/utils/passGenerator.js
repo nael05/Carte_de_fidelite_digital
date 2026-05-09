@@ -395,11 +395,15 @@ export class PassGenerator {
         }
       ];
 
-      if (appleNotifMessage) {
+      const notifValue = clientData.soonExpiringPoints > 0
+        ? `⚠️ Des points expirent bientôt ! Venez vite les utiliser (${new Date().toLocaleDateString('fr-FR')})`
+        : appleNotifMessage;
+
+      if (notifValue) {
         this.safeAddField(pass.backFields, {
           key: 'notif_msg',
           label: 'DERNIÈRE MISE À JOUR',
-          value: appleNotifMessage,
+          value: notifValue,
           changeMessage: '%@'
         });
       }

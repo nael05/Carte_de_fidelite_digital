@@ -445,25 +445,11 @@ class GoogleWalletGenerator {
   }
 
   async sendExpirationNotification(clientId, soonPoints) {
-    if (!this.client) return;
-    const objectId = `${this.issuerId}.${clientId}_loyalty_object`;
-    try {
-      await this.client.loyaltyobject.addmessage({
-        resourceId: objectId,
-        requestBody: {
-          message: {
-            header: '⏳ Vos points expirent bientôt !',
-            body: `Il vous reste 7 jours pour utiliser ${soonPoints} point${soonPoints > 1 ? 's' : ''}. Venez vite !`,
-            id: `expiration_warning_${new Date().toISOString().slice(0, 10)}`,
-            messageType: 'TEXT_AND_NOTIFY'
-          }
-        }
-      });
-      logger.info(`✅ [GOOGLE] Notification J-7 envoyée pour client ${clientId}`);
-    } catch (err) {
-      if (err.code === 404) return;
-      logger.warn(`⚠️ [GOOGLE] Notification J-7 échouée pour ${clientId}: ${err.message}`);
-    }
+    return this.addMessageToObject(
+      clientId,
+      '⏳ Vos points expirent bientôt !',
+      `Il vous reste 7 jours pour utiliser ${soonPoints} point${soonPoints > 1 ? 's' : ''}. Venez vite !`
+    );
   }
 
   _generateSaveLink(loyaltyObject) {

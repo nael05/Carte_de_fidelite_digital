@@ -42,7 +42,7 @@
   text-decoration: underline;
 }
 
-/* Séparateur entre brand et copy */
+
 .site-footer-brand::after {
   content: '·';
   margin-left: 20px;

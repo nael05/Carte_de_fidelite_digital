@@ -11,17 +11,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * POST /api/admin/migrations/run
  */
 export const runMigrations = async (req, res) => {
-  try {
-    // Lire le fichier migration
+  try {
     const migrationPath = path.join(__dirname, '../migrations/optimize-wallet-sync.sql');
     
     if (!fs.existsSync(migrationPath)) {
       return res.status(404).json({ error: 'Migration file not found' });
     }
 
-    const sql = fs.readFileSync(migrationPath, 'utf8');
-    
-    // Diviser par les ; pour exécuter chaque statement
+    const sql = fs.readFileSync(migrationPath, 'utf8');
     const statements = sql.split(';').filter(stmt => stmt.trim().length > 0);
 
     let executed = 0;
@@ -31,16 +28,14 @@ export const runMigrations = async (req, res) => {
       try {
         await pool.query(statement);
         executed++;
-      } catch (stmtErr) {
-        // Ignorer certaines erreurs (table existe, champ existe)
+      } catch (stmtErr) {
         if (stmtErr.message.includes('already exists') || 
             stmtErr.message.includes('Duplicate') ||
             stmtErr.message.includes('no such table') ||
             stmtErr.message.includes('Unknown table')) {
           logger.warn(`Skipped: ${stmtErr.message.substring(0, 50)}...`);
           continue;
-        }
-        // Autres erreurs = vraie erreur
+        }
         throw stmtErr;
       }
     }

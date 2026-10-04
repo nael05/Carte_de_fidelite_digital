@@ -15,11 +15,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export class APNService {
-  constructor() {
-    // Utiliser un chemin absolu basé sur le dossier 'utils' pour remonter à la racine du backend
-    const rawPath = (process.env.APPLE_APN_KEY_PATH || '').trim();
-    
-    // Résolution STRICTEMENT ABSOLUE via __dirname (plus fiable sous PM2)
+  constructor() {
+    const rawPath = (process.env.APPLE_APN_KEY_PATH || '').trim();
     this.apnKeyPath = rawPath 
       ? (path.isAbsolute(rawPath) ? rawPath : path.resolve(__dirname, '..', rawPath))
       : null;
@@ -40,9 +37,7 @@ export class APNService {
       if (!this.apnKeyPath || !this.apnKeyId || !this.apnTeamId) {
         logger.warn('⚠️ Configuration APNs incomplète - Notifications push désactivées');
         return;
-      }
-
-      // Vérification physique du fichier avec chemin absolu
+      }
       if (!fs.existsSync(this.apnKeyPath)) {
         logger.error(`❌ Fichier de clé Apple (.p8) introuvable au chemin ABSOLU: ${this.apnKeyPath}`);
         return;
@@ -84,22 +79,13 @@ export class APNService {
     }
 
     try {
-      const notification = new apn.Notification();
-      // Apple Wallet exige très strictement un payload vide {"aps": {}}
-      notification.rawPayload = { aps: {} };
-
-      // Apple Wallet exige le type 'pass' pour l'instantanéité
-      notification.pushType = 'pass';
-
-      // Priorité 10 (Maximum) pour une livraison immédiate
+      const notification = new apn.Notification();
+      notification.rawPayload = { aps: {} };
+      notification.pushType = 'pass';
       notification.priority = 10;
       const topic = (process.env.APPLE_PASS_TYPE_ID || '').trim();
-      notification.topic = topic;
-
-      // Envoyer
-      const result = await this.provider.send(notification, pushToken);
-
-      // Vérifier le résultat
+      notification.topic = topic;
+      const result = await this.provider.send(notification, pushToken);
       if (result.failed && result.failed.length > 0) {
         const failure = result.failed[0];
         logger.warn(
@@ -218,8 +204,6 @@ export class APNService {
       logger.info('✅ Connexion APNs fermée');
     }
   }
-}
-
-// Exporter une instance singleton (Initialisation IMMÉDIATE pour voir les logs)
+}
 export const apnService = new APNService();
 export default apnService;

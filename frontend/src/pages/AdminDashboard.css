@@ -1,8 +1,3 @@
-/* ============================================================
-   FIDELYZ - MASTER ADMIN "ADAPTIVE LUXE" (UX v3)
-   Comprehensive Responsive & Theme-Aware System
-   ============================================================ */
-
 .admin-ux-v3 {
   min-height: 100vh;
   background-color: var(--bg-app);
@@ -23,7 +18,7 @@
   opacity: 0.6;
 }
 
-/* ---- NAVBAR ---- */
+
 .ux-navbar {
   position: sticky;
   top: 0;
@@ -137,7 +132,7 @@
   transform: translateY(-1px);
 }
 
-/* ---- MOBILE NAV ---- */
+
 .ux-mobile-tabs {
   position: fixed;
   bottom: 24px;
@@ -172,7 +167,7 @@
   box-shadow: 0 10px 20px var(--accent-light);
 }
 
-/* ---- CONTENT ---- */
+
 .ux-content {
   flex: 1;
   width: 100%;
@@ -207,7 +202,7 @@
   color: var(--text-secondary);
 }
 
-/* ---- OVERVIEW ---- */
+
 .ux-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -264,7 +259,7 @@
 }
 .ux-btn-accent:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
 
-/* ---- LIST VIEW ---- */
+
 .ux-search-box {
   display: flex;
   gap: 12px;
@@ -346,7 +341,7 @@
 .ux-btn-icon.green:hover { background: rgba(16, 185, 129, 0.1); color: #10B981; border-color: rgba(16, 185, 129, 0.3); }
 .ux-btn-icon.red:hover { background: rgba(239, 68, 68, 0.1); color: #EF4444; border-color: rgba(239, 68, 68, 0.3); }
 
-/* ---- FORMS ---- */
+
 .ux-form-premium {
   max-width: 600px; margin: 0 auto;
   background: var(--bg-elevated);
@@ -396,7 +391,7 @@
 
 .ux-mini-copy:hover { color: var(--accent); transform: scale(1.1); }
 
-/* ---- MODAL PREMIUM ---- */
+
 .ux-modal-overlay {
   position: fixed; inset: 0; z-index: 2000;
   background: rgba(0,0,0,0.6); backdrop-filter: blur(12px);
@@ -418,7 +413,7 @@
 .ux-copy-group code { font-family: monospace; font-weight: 700; color: var(--text-primary); }
 .ux-copy-group button { background: transparent; border: none; color: var(--accent); cursor: pointer; }
 
-/* ---- RESPONSIVE ---- */
+
 .mobile-only { display: none; }
 
 @media (max-width: 1024px) {

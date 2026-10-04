@@ -15,9 +15,7 @@ function ProLogin() {
 
   const navigate = useNavigate()
   const { login, isAuthenticated, loading: authLoading, role } = useAuth()
-  const redirectedRef = useRef(false)
-
-  // Theme initialization
+  const redirectedRef = useRef(false)
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'dark'
     if (savedTheme === 'dark') {
@@ -27,18 +25,14 @@ function ProLogin() {
       document.documentElement.classList.remove('dark-mode')
       document.documentElement.setAttribute('data-theme', 'light')
     }
-  }, [])
-
-  // Redirect if already logged in
+  }, [])
   useEffect(() => {
     if (authLoading) return
     if (isAuthenticated && role === 'pro' && !redirectedRef.current) {
       redirectedRef.current = true
       navigate('/pro/dashboard')
     }
-  }, [authLoading, isAuthenticated, role, navigate])
-
-  // Load remembered email
+  }, [authLoading, isAuthenticated, role, navigate])
   useEffect(() => {
     const remembered = localStorage.getItem('rememberedEmail')
     if (remembered) {

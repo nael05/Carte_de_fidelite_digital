@@ -32,9 +32,7 @@ const WalletAddModal = ({ isOpen, onClose, clientId, clientName, onSuccess }) =>
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || `Erreur ${response.status}: ${response.statusText}`);
-      }
-
-      // Traiter selon la plateforme
+      }
       if (platform === 'apple') {
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
@@ -45,8 +43,7 @@ const WalletAddModal = ({ isOpen, onClose, clientId, clientName, onSuccess }) =>
         a.click();
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
-      } else {
-        // Google Wallet redirection
+      } else {
         const data = await response.json();
         if (data.saveUrl) {
           window.open(data.saveUrl, '_blank');

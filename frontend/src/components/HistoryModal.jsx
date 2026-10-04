@@ -12,13 +12,10 @@ const TYPES = {
   redeem_reward: { label: 'Cadeau utilisé',  iconClass: 'hist-icon-redeem', Icon: Gift  },
   remove_points: { label: 'Points retirés',  iconClass: 'hist-icon-remove', Icon: Minus },
   add_stamps:    { label: 'Tampons ajoutés', iconClass: 'hist-icon-add',    Icon: Plus  },
-}
-
-// Robuste face aux Date objects MySQL ou strings ISO
+}
 function toIsoDay(val) {
   if (!val) return ''
-  const d = val instanceof Date ? val : new Date(val)
-  // Utilise la date locale du serveur retournée en ISO
+  const d = val instanceof Date ? val : new Date(val)
   return d.toISOString().slice(0, 10)
 }
 

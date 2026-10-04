@@ -1,7 +1,5 @@
 import pool from '../db.js';
-import logger from '../utils/logger.js';
-
-// ===== PRO STATS =====
+import logger from '../utils/logger.js';
 
 export const getProOverview = async (req, res) => {
   const entrepriseId = req.user.id;
@@ -215,9 +213,7 @@ export const getProRewards = async (req, res) => {
     logger.error('getProRewards error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
-
-// ===== ADMIN STATS =====
+};
 
 export const getAdminStats = async (req, res) => {
   try {

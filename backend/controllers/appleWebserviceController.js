@@ -30,9 +30,7 @@ export const authenticateApplePass = async (req, res, next) => {
 
     if (!serialNumber) {
       return res.status(400).json({ error: 'Missing serialNumber' });
-    }
-
-    // Vérifier que le token correspond au serial number
+    }
     const [tokenRows] = await db.query(
       'SELECT id, client_id FROM wallet_cards WHERE pass_serial_number = ? AND authentication_token = ?',
       [serialNumber, token]
@@ -41,9 +39,7 @@ export const authenticateApplePass = async (req, res, next) => {
     if (!tokenRows || tokenRows.length === 0) {
       logger.warn(`⚠️ Authentification échouée: serial=${serialNumber}, token=${token.substring(0, 20)}...`);
       return res.status(401).json({ error: 'Invalid authentication token' });
-    }
-
-    // Attacher au request pour les modules suivants
+    }
     req.authPass = tokenRows[0];
     req.authPass.serialNumber = serialNumber;
     next();
@@ -64,15 +60,11 @@ export const authenticateApplePass = async (req, res, next) => {
 export const registerDevice = async (req, res) => {
   try {
     const { deviceLibraryIdentifier, passTypeIdentifier, serialNumber } = req.params;
-    const { pushToken } = req.body;
-
-    // 1. Vérification du PassTypeID
+    const { pushToken } = req.body;
     if (passTypeIdentifier !== process.env.APPLE_PASS_TYPE_ID) {
       logger.warn(`⚠️ Tentative d'enregistrement pour un PassTypeID incorrect: ${passTypeIdentifier}`);
       return res.status(404).json({ error: 'Incorrect pass type' });
-    }
-
-    // 2. Vérification de l'authentification (ApplePass <token>)
+    }
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('ApplePass ')) {
       logger.warn(`⚠️ Enregistrement refusé: Header ApplePass manquant pour ${serialNumber}`);
@@ -82,9 +74,7 @@ export const registerDevice = async (req, res) => {
 
     if (!deviceLibraryIdentifier || !serialNumber || !pushToken) {
       return res.status(400).json({ error: 'Missing required parameters' });
-    }
-
-    // 3. Vérifier que le pass existe et que le token est valide
+    }
     const [passRows] = await db.query(
       'SELECT id, authentication_token FROM wallet_cards WHERE pass_serial_number = ?',
       [serialNumber]
@@ -98,9 +88,7 @@ export const registerDevice = async (req, res) => {
     if (passRows[0].authentication_token !== authToken) {
       logger.warn(`🔒 Enregistrement refusé: Token invalide pour le pass ${serialNumber}`);
       return res.status(401).json({ error: 'Invalid authentication token' });
-    }
-
-    // 4. Insérer ou mettre à jour l'enregistrement du device
+    }
     logger.info(`📝 [SQL] Inscription terminal: Serial=${serialNumber}, DeviceID=${deviceLibraryIdentifier.substring(0, 15)}...`);
     
     const [regResult] = await db.query(
@@ -139,9 +127,7 @@ export const getUpdatedPasses = async (req, res) => {
 
     logger.info(
       `🔍 Vérification passes mis à jour: device=${deviceLibraryIdentifier.substring(0, 20)}..., since=${passesUpdatedSince || 'null'}`
-    );
-
-    // Récupérer les passes enregistrés sur ce device avec leur date de dernière mise à jour de données
+    );
     const [registrations] = await db.query(
       `SELECT DISTINCT apr.pass_serial_number, wc.last_updated
        FROM apple_pass_registrations apr
@@ -153,28 +139,19 @@ export const getUpdatedPasses = async (req, res) => {
     if (!registrations || registrations.length === 0) {
       logger.info(`ℹ️ Aucun pass pour ce device`);
       return res.status(204).send();
-    }
-
-    // Filtrer par date si fournie
+    }
     let updatedPasses = registrations;
-    if (passesUpdatedSince) {
-      // On utilise >= pour s'assurer que si une mise à jour a eu lieu à l'instant même du tag, elle est incluse.
-      // Apple attend les changements DEPUIS (since) le tag.
+    if (passesUpdatedSince) {
       const sinceDate = new Date(parseInt(passesUpdatedSince));
       updatedPasses = registrations.filter(
         (p) => new Date(p.last_updated) >= sinceDate
       );
-    }
-
-    // Si rien de nouveau, retourner 204
+    }
     if (updatedPasses.length === 0) {
       logger.info(`✅ Aucun pass mis à jour depuis ${passesUpdatedSince}`);
       return res.status(204).send();
-    }
-
-    // Retourner la liste des passes mis à jour
-    const serialNumbers = updatedPasses.map((p) => p.pass_serial_number);
-    // Utiliser un tag précis (timestamp + un petit buffer pour forcer la mise à jour si nécessaire)
+    }
+    const serialNumbers = updatedPasses.map((p) => p.pass_serial_number);
     const latestDate = Math.max(...updatedPasses.map((p) => new Date(p.last_updated).getTime()));
     const lastUpdatedTag = latestDate.toString();
 
@@ -203,21 +180,15 @@ export const getUpdatedPass = async (req, res) => {
 
     if (!serialNumber) {
       return res.status(400).json({ error: 'Missing serialNumber' });
-    }
-
-    // 1. Vérification du PassTypeID
+    }
     if (passTypeIdentifier !== process.env.APPLE_PASS_TYPE_ID) {
       return res.status(404).json({ error: 'Incorrect pass type' });
-    }
-
-    // 2. Authentification très stricte
+    }
     const authHeader = req.headers.authorization;
     let authToken = null;
     if (authHeader && authHeader.startsWith('ApplePass ')) {
       authToken = authHeader.split(' ')[1];
-    }
-
-    // 3. Récupérer les données avec vérification du token
+    }
     const [clientRows] = await db.query(
       `SELECT c.id, c.prenom, c.nom, c.telephone, c.points, c.created_at,
               wc.pass_serial_number, wc.authentication_token, wc.points_balance,
@@ -251,9 +222,7 @@ export const getUpdatedPass = async (req, res) => {
     }
 
     const data = clientRows[0];
-    logger.info(`🔍 [APPLE SYNC DEBUG] Pass found for client ${data.id}`);
-    
-    // LOGIQUE DE SECOURS (FALLBACK) : Si Apple est vide, on prend le générique
+    logger.info(`🔍 [APPLE SYNC DEBUG] Pass found for client ${data.id}`);
     const finalDesign = {
       apple_background_color: data.apple_background_color || data.generic_color || '#1f2937',
       apple_label_color: data.apple_label_color || data.generic_label || '#a8a8a8',
@@ -269,23 +238,17 @@ export const getUpdatedPass = async (req, res) => {
     logger.info(`   > Couleur Fond : ${finalDesign.apple_background_color}`);
     logger.info(`   > Logo URL : ${finalDesign.apple_logo_url || 'AUCUN'}`);
     logger.info(`🎨 -----------------------------------------------------------`);
-    const loyaltyType = data.loyalty_type || 'points';
-
-    // Récupérer les paliers de récompense
+    const loyaltyType = data.loyalty_type || 'points';
     const [tiers] = await db.query(
       'SELECT * FROM reward_tiers WHERE entreprise_id = ? ORDER BY points_required ASC',
       [data.company_id]
     );
 
-    const currentPoints = Number(data.points) || 0;
-
-    // Vérification stricte du token de sécurité Apple
+    const currentPoints = Number(data.points) || 0;
     if (data.authentication_token !== authToken) {
       logger.warn(`🔒 Token invalide lors de la récupération du pass ${serialNumber}`);
       return res.status(401).json({ error: 'Unauthorized' });
-    }
-
-    // 2️⃣ Préparer les données pour la génération
+    }
     let soonExpiringPoints = 0;
     if (data.points_expiration_months) {
       try {
@@ -330,13 +293,7 @@ export const getUpdatedPass = async (req, res) => {
       back_fields_facebook: data.back_fields_facebook,
       back_fields_tiktok: data.back_fields_tiktok,
       apple_review_url: data.apple_review_url,
-    };
-
-    // 3️⃣ Générer le nouveau pass (utilise l'instance globale importée)
-    // passGenerator est l'instance par défaut importée en haut du fichier
-    
-    
-    // Forcer HTTPS obligatoirement pour Apple Wallet (exigence stricte)
+    };
     let backendUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
     if (backendUrl.startsWith('http://')) {
       backendUrl = backendUrl.replace('http://', 'https://');
@@ -371,17 +328,12 @@ export const getUpdatedPass = async (req, res) => {
     if (!passBuffer) {
       logger.warn('⚠️ Aucun pass généré (possiblement désactivé).');
       return res.status(503).json({ error: 'Service temporairement indisponible (Génération Pass)' });
-    }
-
-    // 4️⃣ Mettre à jour SEULEMENT le solde synchronisé (NE PAS toucher à last_updated ici pour éviter les boucles infinies)
+    }
     await db.query(
       'UPDATE wallet_cards SET points_balance = ? WHERE pass_serial_number = ?',
       [currentPoints, serialNumber]
-    );
-
-    // 5️⃣ Envoyer le fichier
-    res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
-    // CACHE-BUSTER: On envoie systématiquement la date actuelle pour forcer Apple à considérer le pass comme frais
+    );
+    res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
     res.setHeader('Last-Modified', new Date().toUTCString());
     res.setHeader('Content-Length', passBuffer.length);
     res.send(passBuffer);
@@ -402,14 +354,10 @@ export const getUpdatedPass = async (req, res) => {
  */
 export const unregisterDevice = async (req, res) => {
   try {
-    const { deviceLibraryIdentifier, passTypeIdentifier, serialNumber } = req.params;
-
-    // 1. Vérification du PassTypeID
+    const { deviceLibraryIdentifier, passTypeIdentifier, serialNumber } = req.params;
     if (passTypeIdentifier !== process.env.APPLE_PASS_TYPE_ID) {
       return res.status(404).json({ error: 'Incorrect pass type' });
-    }
-
-    // 2. Vérification de l'authentification (ApplePass <token>)
+    }
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('ApplePass ')) {
       return res.status(401).json({ error: 'Unauthorized' });
@@ -418,9 +366,7 @@ export const unregisterDevice = async (req, res) => {
 
     if (!deviceLibraryIdentifier || !serialNumber) {
       return res.status(400).json({ error: 'Missing parameters' });
-    }
-
-    // 3. Vérifier que le pass existe ET que le token correspond
+    }
     const [passRows] = await db.query(
       'SELECT authentication_token FROM wallet_cards WHERE pass_serial_number = ?',
       [serialNumber]
@@ -433,9 +379,7 @@ export const unregisterDevice = async (req, res) => {
 
     logger.info(
       `🗑️ Désenregistrement device: serial=${serialNumber}, device=${deviceLibraryIdentifier.substring(0, 20)}...`
-    );
-
-    // 4. Supprimer l'enregistrement
+    );
     const [result] = await db.query(
       'DELETE FROM apple_pass_registrations WHERE pass_serial_number = ? AND device_library_identifier = ?',
       [serialNumber, deviceLibraryIdentifier]
@@ -468,9 +412,7 @@ export const logAppleWalletErrors = async (req, res) => {
 
     if (!Array.isArray(logs) || logs.length === 0) {
       return res.status(400).json({ error: 'logs array required' });
-    }
-
-    // Enregistrer les logs
+    }
     logs.slice(0, 50).forEach((log) => {
       logger.warn(`🍎 [APPLE WALLET DEVICE LOG]: ${String(log).substring(0, 500)}`);
     });

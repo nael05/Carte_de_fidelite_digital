@@ -15,9 +15,7 @@ dotenv.config();
 
 class GoogleWalletGenerator {
   constructor() {
-    const rawPath = process.env.GOOGLE_WALLET_KEY_PATH || 'certs/google-wallet-key.json';
-    
-    // Résolution robuste du chemin absolu pour le fichier de clés Google
+    const rawPath = process.env.GOOGLE_WALLET_KEY_PATH || 'certs/google-wallet-key.json';
     this.keyFilePath = path.isAbsolute(rawPath) 
       ? rawPath 
       : path.resolve(__dirname, '..', rawPath);
@@ -47,16 +45,12 @@ class GoogleWalletGenerator {
   }
 
   async createOrUpdateClass(empresaId, config, empresaName, loyaltyType = 'points') {
-    if (!this.client) return null;
-
-    // RETOUR À L'ID D'ORIGINE POUR LA STABILITÉ
+    if (!this.client) return null;
     const classId = `${this.issuerId}.${empresaId}_loyalty_class`;
     
     const logoUrl = config.google_logo_url || config.logo_url;
     const heroImageUrl = config.google_hero_image_url;
-    const bgColor = config.google_primary_color || '#1f2937';
-
-    // Détection des fichiers locaux avant d'envoyer l'URL à Google pour éviter les erreurs 400
+    const bgColor = config.google_primary_color || '#1f2937';
     const resolvedLogoPath = logoUrl ? path.resolve(__dirname, '..', logoUrl.replace(/^api\/uploads\//, 'uploads/')) : null;
     const uploadsBase = path.resolve(__dirname, '..', 'uploads');
     const localLogoPath = (resolvedLogoPath && resolvedLogoPath.startsWith(uploadsBase + path.sep)) ? resolvedLogoPath : null;
@@ -120,11 +114,8 @@ class GoogleWalletGenerator {
     try {
       try {
         await this.client.loyaltyclass.get({ resourceId: classId });
-        logger.info(`Classe existante trouvée: ${classId}, tentative de mise à jour...`);
-        
-        // Préparer le body pour le patch: supprimer ID et reviewStatus s'ils traînent
-        try {
-          // reviewStatus: 'UNDER_REVIEW' est obligatoire pour patcher une classe en état APPROVED
+        logger.info(`Classe existante trouvée: ${classId}, tentative de mise à jour...`);
+        try {
           const { id: _, ...patchBody } = loyaltyClass;
           patchBody.reviewStatus = 'UNDER_REVIEW';
 
@@ -136,9 +127,7 @@ class GoogleWalletGenerator {
         } catch (patchErr) {
           const errMsg = patchErr.message || '';
           logger.warn(`⚠️ Échec de la mise à jour complète Google Wallet: ${errMsg}`);
-          logger.warn(`⚠️ Détail complet erreur PATCH classe: ${JSON.stringify(patchErr, Object.getOwnPropertyNames(patchErr), 2)}`);
-
-          // Fallback : titre + sous-titre + couleur + logo (sans heroImage)
+          logger.warn(`⚠️ Détail complet erreur PATCH classe: ${JSON.stringify(patchErr, Object.getOwnPropertyNames(patchErr), 2)}`);
           try {
              const minimalBody = {
                issuerName: loyaltyClass.issuerName,
@@ -154,8 +143,7 @@ class GoogleWalletGenerator {
              await this.client.loyaltyclass.patch({ resourceId: classId, requestBody: minimalBody });
              logger.info(`✅ Mise à jour sans hero image réussie.`);
           } catch (minErr) {
-             logger.warn(`⚠️ Échec mise à jour sans hero: ${minErr.message}`);
-             // Dernier recours : titre + sous-titre + couleur (sans images)
+             logger.warn(`⚠️ Échec mise à jour sans hero: ${minErr.message}`);
              try {
                await this.client.loyaltyclass.patch({
                  resourceId: classId,
@@ -175,20 +163,16 @@ class GoogleWalletGenerator {
         }
       } catch (err) {
         if (err.code === 404) {
-          logger.info(`Création de la classe: ${classId}`);
-          // Pour l'insertion, on peut ajouter UNDER_REVIEW par défaut
+          logger.info(`Création de la classe: ${classId}`);
           const insertBody = { ...loyaltyClass, reviewStatus: 'UNDER_REVIEW' };
           await this.client.loyaltyclass.insert({ requestBody: insertBody });
         } else {
           throw err;
         }
-      }
-
-      // Synchronisation déjà gérée par l'ID principal désormais unifié
+      }
       
       return classId;
-    } catch (err) {
-      // FALLBACK BLINDÉ: Si Google rejette les images (tunnel local)
+    } catch (err) {
       if (err.message && (err.message.toLowerCase().includes('image cannot be loaded') || err.message.includes('400'))) {
         logger.warn('⚠️ Échec probable de validation d\'image Google ou erreur 400. Tentative de fallback sans images.');
         const fallbackClass = {
@@ -265,16 +249,11 @@ class GoogleWalletGenerator {
         value: clientId.toString(),
         alternateText: clientId.toString()
       }
-    };
-
-    // Liens cliquables (contact, réseaux sociaux) et offre en cours depuis la config
+    };
     if (config) {
       const { linksModuleData } = this._buildLinksAndOfferModules(config);
       if (linksModuleData) loyaltyObject.linksModuleData = linksModuleData;
-    }
-
-    // On désactive l'image hero sur les objets pour éviter les erreurs de timeout/chargement Google
-    // qui bloquent la redirection sur les tunnels locaux.
+    }
 
     try {
       const executeRequest = async (obj) => {
@@ -292,14 +271,12 @@ class GoogleWalletGenerator {
 
       try {
         await executeRequest(loyaltyObject);
-      } catch (err) {
-        // Fallback total si l'image pose problème (chargement impossible via tunnel)
+      } catch (err) {
         if (err.message && err.message.includes('image cannot be loaded') && loyaltyObject.heroImage) {
           logger.warn(`⚠️ Échec critique image pour ${objectId}, repli sans image pour garantir la redirection.`);
           const fallbackObject = { ...loyaltyObject };
           delete fallbackObject.heroImage;
-          await executeRequest(fallbackObject);
-          // On utilise l'objet sans image pour générer le lien de sauvegarde final
+          await executeRequest(fallbackObject);
           return this._generateSaveLink(fallbackObject);
         } else {
           throw err;
@@ -352,9 +329,7 @@ class GoogleWalletGenerator {
         credentials: this.credentials,
         scopes: ['https://www.googleapis.com/auth/wallet_object.issuer'],
       });
-      const accessToken = await auth.getAccessToken();
-
-      // Nettoyer les anciens messages avant d'en ajouter un nouveau
+      const accessToken = await auth.getAccessToken();
       await axios.patch(
         `https://walletobjects.googleapis.com/walletobjects/v1/loyaltyObject/${encodeURIComponent(objectId)}`,
         { messages: [] },

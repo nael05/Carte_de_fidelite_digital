@@ -1,12 +1,7 @@
-/* ============================================================
-   FIDELYZ - PREMIUM DESIGN SYSTEM v3
-   Theme: Slate Grey Luxe — Glassmorphism & Modernity
-   ============================================================ */
-
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* ===== PALETTE PREMIUM SLATE (Light Base) ===== */
+  
   --bg-app: #f8fafc;
   --bg-surface: rgba(255, 255, 255, 0.82);
   --bg-elevated: #ffffff;
@@ -14,7 +9,7 @@
   --bg-hover: #e2e8f0;
   --bg-dark: #0f172a;
 
-  /* ===== BORDURES & EFFETS ===== */
+  
   --border-light: rgba(148, 163, 184, 0.15);
   --border-medium: rgba(148, 163, 184, 0.25);
   --border-dark: #475569;
@@ -23,13 +18,13 @@
   --glass-border: rgba(255, 255, 255, 0.5);
   --blur: blur(14px);
 
-  /* ===== TYPOGRAPHIE SLATE ===== */
-  --text-primary: #0f172a;   /* Slate 900 */
-  --text-secondary: #475569; /* Slate 600 */
-  --text-tertiary: #94a3b8;  /* Slate 400 */
+  
+  --text-primary: #0f172a;   
+  --text-secondary: #475569; 
+  --text-tertiary: #94a3b8;  
   --text-inverse: #ffffff;
 
-  /* ===== ACCENT & ETATS ===== */
+  
   --accent: #2563eb;
   --accent-hover: #1d4ed8;
   --accent-light: rgba(37, 99, 235, 0.1);
@@ -42,7 +37,7 @@
   --error-text: #991b1b;
   --error-border: #fecaca;
 
-  /* ===== DESIGN SYSTEM UTILS ===== */
+  
   --radius-sm: 10px;
   --radius-md: 14px;
   --radius-lg: 24px;
@@ -56,20 +51,20 @@
   --font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
 }
 
-/* ===== MODE SOMBRE PREMIUM (Premium Slate) ===== */
+
 .dark-mode {
-  --bg-app: #020617;      /* Slate 950 */
+  --bg-app: #020617;      
   --bg-surface: rgba(15, 23, 42, 0.8);
-  --bg-elevated: #0f172a;  /* Slate 900 */
-  --bg-subtle: #1e293b;   /* Slate 800 */
-  --bg-hover: #334155;    /* Slate 700 */
+  --bg-elevated: #0f172a;  
+  --bg-subtle: #1e293b;   
+  --bg-hover: #334155;    
   
   --border-light: rgba(148, 163, 184, 0.1);
   --border-medium: rgba(148, 163, 184, 0.2);
   
-  --text-primary: #f8fafc;   /* Slate 50 */
-  --text-secondary: #94a3b8; /* Slate 400 */
-  --text-tertiary: #64748b;  /* Slate 500 */
+  --text-primary: #f8fafc;   
+  --text-secondary: #94a3b8; 
+  --text-tertiary: #64748b;  
   
   --glass-bg: rgba(15, 23, 42, 0.85);
   --glass-border: rgba(255, 255, 255, 0.05);
@@ -78,9 +73,7 @@
   --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.5);
 }
 
-/* ============================================================
-   RESET
-   ============================================================ */
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body, #root {
@@ -101,9 +94,7 @@ a:hover { color: var(--accent-hover); }
 
 ::selection { background: rgba(0, 122, 255, 0.15); color: var(--text-primary); }
 
-/* ============================================================
-   TYPOGRAPHIE FLUIDE (V3)
-   ============================================================ */
+
 h1 { 
   font-size: clamp(22px, 5vw, 32px); 
   font-weight: 800; 
@@ -133,7 +124,7 @@ p {
 }
 small { font-size: 13px; color: var(--text-tertiary); }
 
-/* Glassmorphism Utility */
+
 .glass-effect {
   background: var(--glass-bg);
   backdrop-filter: var(--blur);
@@ -141,9 +132,7 @@ small { font-size: 13px; color: var(--text-tertiary); }
   border: 1px solid var(--glass-border);
 }
 
-/* ============================================================
-   BOUTONS
-   ============================================================ */
+
 .btn-primary, button[type="submit"] {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
   padding: 10px 20px;
@@ -207,16 +196,14 @@ small { font-size: 13px; color: var(--text-tertiary); }
 
 .btn-small { padding: 6px 12px; font-size: 13px; }
 
-/* ============================================================
-   FORMULAIRES
-   ============================================================ */
+
 label { display: block; font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px; }
 
 input[type="text"], input[type="email"], input[type="password"],
 input[type="tel"], input[type="number"], textarea, select {
   width: 100%; min-height: 44px; padding: 10px 14px;
   background: var(--bg-surface);
-  color: var(--text-primary); /* Adapted color for theme compatibility */
+  color: var(--text-primary); 
   border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
   font-size: 15px; font-family: var(--font-family); transition: var(--transition);
@@ -231,9 +218,7 @@ select { appearance: none; cursor: pointer; padding-right: 32px;
   background-repeat: no-repeat; background-position: right 10px center; background-size: 18px;
 }
 
-/* ============================================================
-   CARTES & SURFACES
-   ============================================================ */
+
 .card, .dashboard-content, .login-container {
   background: var(--bg-surface);
   border: 1px solid var(--border-light);
@@ -244,9 +229,7 @@ select { appearance: none; cursor: pointer; padding-right: 32px;
 }
 .card:hover { box-shadow: var(--shadow-md); }
 
-/* ============================================================
-   DASHBOARD
-   ============================================================ */
+
 .dashboard-container { max-width: 1100px; margin: 0 auto; padding: var(--space-8) var(--space-6); }
 .dashboard-header {
   display: flex; justify-content: space-between; align-items: center;
@@ -255,9 +238,7 @@ select { appearance: none; cursor: pointer; padding-right: 32px;
 }
 .dashboard-header h1 { margin-bottom: 0; }
 
-/* ============================================================
-   TABS
-   ============================================================ */
+
 .tabs {
   display: flex; gap: 4px; margin-bottom: var(--space-6);
   background: var(--bg-subtle); border-radius: var(--radius-md);
@@ -281,9 +262,7 @@ select { appearance: none; cursor: pointer; padding-right: 32px;
 .tab-content { display: none; }
 .tab-content.active { display: block; animation: fadeSlideUp 250ms ease-out; }
 
-/* ============================================================
-   MODALES
-   ============================================================ */
+
 .modal-backdrop {
   position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(12px);
   display: flex; align-items: center; justify-content: center; z-index: 100;
@@ -309,9 +288,7 @@ select { appearance: none; cursor: pointer; padding-right: 32px;
 }
 .modal-close:hover { color: var(--text-primary); background: var(--bg-subtle); }
 
-/* ============================================================
-   TABLEAU
-   ============================================================ */
+
 table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; }
 thead { background: var(--bg-subtle); }
 th { padding: 12px 16px; text-align: left; font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); border-bottom: 1px solid var(--border-light); }
@@ -322,9 +299,7 @@ tbody tr { transition: var(--transition); }
 tbody tr:hover { background: var(--bg-subtle); }
 .action-buttons { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 
-/* ============================================================
-   BADGES & ALERTS
-   ============================================================ */
+
 .badge { display: inline-flex; align-items: center; padding: 3px 10px; font-size: 12px; font-weight: 500; border-radius: var(--radius-full); }
 .badge.success { background: var(--success-bg); color: var(--success-text); }
 .badge.error { background: var(--error-bg); color: var(--error-text); }
@@ -344,9 +319,7 @@ tbody tr:hover { background: var(--bg-subtle); }
 
 .error-message { color: var(--error-text); font-size: 13px; margin-top: -4px; margin-bottom: var(--space-4); }
 
-/* ============================================================
-   ANIMATIONS
-   ============================================================ */
+
 @keyframes scaleIn {
   from { opacity: 0; transform: scale(0.95) translateY(8px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
@@ -363,9 +336,7 @@ tbody tr:hover { background: var(--bg-subtle); }
   to { transform: rotate(360deg); }
 }
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
+
 @media (max-width: 768px) {
   .dashboard-container { padding: var(--space-4); }
   .tabs { flex-wrap: wrap; }

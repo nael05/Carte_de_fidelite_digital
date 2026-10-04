@@ -4,19 +4,13 @@
  */
 
 export function validatePassword(password) {
-  const errors = [];
-
-  // Vérification 1: Longueur minimale
+  const errors = [];
   if (!password || password.length < 6) {
     errors.push('Minimum 6 caractères requis');
-  }
-
-  // Vérification 2: Au moins une majuscule
+  }
   if (!/[A-Z]/.test(password)) {
     errors.push('Au moins une majuscule requise');
-  }
-
-  // Vérification 3: Au moins un chiffre ou caractère spécial
+  }
   if (!/[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
     errors.push('Au moins un chiffre ou caractère spécial requis');
   }
@@ -39,18 +33,14 @@ export async function validatePasswordChange(
   hashedOldPassword,
   plainOldPassword = null
 ) {
-  const bcrypt = await import('bcryptjs');
-
-  // Valider la complexité du nouveau mot de passe
+  const bcrypt = await import('bcryptjs');
   const complexityCheck = validatePassword(newPassword);
   if (!complexityCheck.isValid) {
     return {
       isValid: false,
       error: 'Exigences du mot de passe non respectées: ' + complexityCheck.errors.join(', '),
     };
-  }
-
-  // Vérifier que le nouveau mot de passe n'est pas identique à l'ancien
+  }
   if (plainOldPassword) {
     const isSamePassword = await bcrypt.default.compare(plainOldPassword, hashedOldPassword);
     if (isSamePassword) {

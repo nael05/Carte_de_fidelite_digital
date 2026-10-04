@@ -29,9 +29,7 @@ function LoadingState() {
       <span>Chargement…</span>
     </div>
   )
-}
-
-// ── VUE D'ENSEMBLE ──
+}
 function OverviewTab() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -99,9 +97,7 @@ function OverviewTab() {
       )}
     </div>
   )
-}
-
-// ── ACTIVITÉ ──
+}
 function ActivityTab() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -178,9 +174,7 @@ function ActivityTab() {
       </div>
     </div>
   )
-}
-
-// ── CLIENTS ──
+}
 function ClientsTab() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -254,9 +248,7 @@ function ClientsTab() {
       )}
     </div>
   )
-}
-
-// ── RÉCOMPENSES ──
+}
 function RewardsTab() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -320,9 +312,7 @@ function RewardsTab() {
       )}
     </div>
   )
-}
-
-// ── COMPOSANT PRINCIPAL ──
+}
 const TABS = [
   { id: 'overview', label: 'Vue d\'ensemble', icon: TrendingUp },
   { id: 'activity', label: 'Activité', icon: Zap },

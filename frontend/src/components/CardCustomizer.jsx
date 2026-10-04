@@ -84,9 +84,7 @@ const CardCustomizer = ({ proInfo, onSaveSuccess }) => {
   const loadCustomization = async () => {
     setLoading(true);
     try {
-      const { data } = await api.get(`/pro/card-customization/${proInfo.id}?loyaltyType=${proInfo.loyalty_type || 'points'}`);
-
-      // Note: extractSocialHandle is defined below but hoisted via const — we inline logic here
+      const { data } = await api.get(`/pro/card-customization/${proInfo.id}?loyaltyType=${proInfo.loyalty_type || 'points'}`);
       const cleanSocial = (val) => {
         if (!val) return '';
         const v = val.trim();
@@ -142,21 +140,18 @@ const CardCustomizer = ({ proInfo, onSaveSuccess }) => {
 
   const extractSocialHandle = (value, platform) => {
     const v = value.trim();
-    if (!v) return '';
-    // Si c'est une URL complète, extraire le dernier segment du chemin
+    if (!v) return '';
     if (v.startsWith('http://') || v.startsWith('https://')) {
       try {
         const url = new URL(v);
         const parts = url.pathname.split('/').filter(Boolean);
         if (parts.length > 0) {
-          const raw = parts[parts.length - 1];
-          // Enlever le @ si déjà présent (TikTok: /@handle)
+          const raw = parts[parts.length - 1];
           return '@' + raw.replace(/^@/, '');
         }
       } catch (e) { }
       return v; // Fallback si URL invalide
-    }
-    // Sinon normaliser le @
+    }
     const handle = v.startsWith('@') ? v : `@${v}`;
     return handle;
   };
@@ -164,9 +159,7 @@ const CardCustomizer = ({ proInfo, onSaveSuccess }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     const socialFields = ['back_fields_instagram', 'back_fields_facebook', 'back_fields_tiktok', 'google_back_instagram', 'google_back_facebook', 'google_back_tiktok'];
-    if (socialFields.includes(name)) {
-      // Nettoyer uniquement si l'utilisateur a fini de taper (colle un lien entier)
-      // On nettoie seulement si c'est clairement une URL complète
+    if (socialFields.includes(name)) {
       const v = value.trim();
       if (v.startsWith('http://') || v.startsWith('https://')) {
         const cleaned = extractSocialHandle(v, name);
@@ -254,15 +247,13 @@ const CardCustomizer = ({ proInfo, onSaveSuccess }) => {
       console.error('Save error:', err);
       setStatus({ type: 'error', message: 'Erreur lors de la sauvegarde.' });
     } finally {
-      setSaving(false);
-      // Auto-hide success message
+      setSaving(false);
       setTimeout(() => setStatus({ type: '', message: '' }), 4000);
     }
   };
 
   const getContrastColor = (hexcolor) => {
-    if (!hexcolor) return '#ffffff';
-    // If it's not a hex color (like 'transparent' or similar), default to white or black
+    if (!hexcolor) return '#ffffff';
     if (!hexcolor.startsWith('#')) return '#000000';
 
     const r = parseInt(hexcolor.slice(1, 3), 16);
@@ -273,26 +264,18 @@ const CardCustomizer = ({ proInfo, onSaveSuccess }) => {
   };
 
   const getMediaUrl = (url) => {
-    if (!url) return null;
-
-    // Maintient les URLs externes qui ne sont pas des uploads locaux
+    if (!url) return null;
     if (url.startsWith('http') && !url.includes('uploads/')) {
       return url;
-    }
-
-    // 1. On nettoie le chemin pour garder uniquement ce qui est après uploads/
+    }
     let cleanPath = url;
     if (url.includes('uploads/')) {
       cleanPath = url.substring(url.indexOf('uploads/') + 8);
     } else {
       cleanPath = cleanPath.replace(/^\//, '');
-    }
-
-    // 2. On récupère la base URL
+    }
     let baseUrl = import.meta.env.VITE_API_URL || window.location.origin + '/api';
-    baseUrl = baseUrl.replace(/\/$/, '');
-
-    // 3. On force le passage par /api/uploads pour le proxy VPS
+    baseUrl = baseUrl.replace(/\/$/, '');
     const finalBase = baseUrl.includes('/api') ? baseUrl : `${baseUrl}/api`;
     return `${finalBase}/uploads/${cleanPath}`;
   };

@@ -38,9 +38,7 @@ export const sendNotification = async (req, res) => {
     return res.status(400).json({ error: 'Veuillez sélectionner au moins un client' });
   }
 
-  try {
-    // 1. Récupérer les push tokens pour les clients sélectionnés
-    // On cherche dans apple_pass_registrations en passant par wallet_cards
+  try {
     const [registrations] = await pool.query(
       `SELECT r.push_token, w.client_id, c.prenom, c.nom 
        FROM apple_pass_registrations r
@@ -48,9 +46,7 @@ export const sendNotification = async (req, res) => {
        JOIN clients c ON w.client_id = c.id
        WHERE w.client_id IN (?) AND w.company_id = ?`,
       [clientIds, empresaId]
-    );
-
-    // Vérifier aussi les clients Google avant de rejeter
+    );
     const [googleCheck] = await pool.query(
       `SELECT 1 FROM wallet_cards WHERE client_id IN (?) AND pass_serial_number LIKE 'GOOGLE_%' AND company_id = ? LIMIT 1`,
       [clientIds, empresaId]

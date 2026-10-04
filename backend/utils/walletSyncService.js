@@ -13,9 +13,7 @@ class WalletSyncService {
    */
   async syncClientWallet(clientId, companyId, lastPointsChange = 0) {
     try {
-      logger.info(`🔄 [SYNC] Début synchronisation pour client ${clientId} (Entreprise: ${companyId})`);
-
-      // 1. Récupérer les données fraîches du client et de son entreprise
+      logger.info(`🔄 [SYNC] Début synchronisation pour client ${clientId} (Entreprise: ${companyId})`);
       const [clientRows] = await db.query(
         `SELECT c.id, c.points, c.type_wallet, e.nom as company_name, e.loyalty_type
          FROM clients c
@@ -30,9 +28,7 @@ class WalletSyncService {
       }
 
       const client = clientRows[0];
-      const newBalance = client.points || 0;
-
-      // 2. Récupérer les paliers de récompense actuels pour les inclure dans le texte
+      const newBalance = client.points || 0;
       const [tiers] = await db.query(
         'SELECT * FROM reward_tiers WHERE entreprise_id = ? ORDER BY points_required ASC',
         [companyId]
@@ -59,27 +55,19 @@ class WalletSyncService {
       }
       const clientCustomization = custRows[0]
         ? { ...custRows[0], points_expiration_months: expirationMonths, soonExpiringPoints }
-        : null;
-
-      // 3. Mettre à jour la base de données de synchronisation (wallet_cards)
-      // On force last_updated = NOW(3) pour avoir une précision à la milliseconde pour Apple
+        : null;
       await db.query(
         'UPDATE wallet_cards SET points_balance = ?, last_points_change = ?, last_updated = NOW(3) WHERE client_id = ? AND company_id = ?',
         [newBalance, lastPointsChange, clientId, companyId]
-      );
-
-      // 4. Récupérer les infos de la carte pour Apple Wallet
+      );
       const [walletRows] = await db.query(
         'SELECT pass_serial_number FROM wallet_cards WHERE client_id = ? AND company_id = ?',
         [clientId, companyId]
       );
 
-      if (walletRows.length > 0) {
-        // 🔄 PARALLÉLISATION : On lance toutes les mises à jour (Apple et Google) en même temps
+      if (walletRows.length > 0) {
         const syncPromises = walletRows.map(async (wallet) => {
-          const serial = wallet.pass_serial_number;
-
-          // SYNCHRO APPLE WALLET
+          const serial = wallet.pass_serial_number;
           if (serial && !serial.startsWith('GOOGLE_')) {
             const [registrations] = await db.query(
               'SELECT push_token FROM apple_pass_registrations WHERE pass_serial_number = ?',
@@ -90,9 +78,7 @@ class WalletSyncService {
               const tokens = registrations.map(r => r.push_token);
               return apnService.sendBulkUpdateNotifications(tokens);
             }
-          }
-
-          // SYNCHRO GOOGLE WALLET
+          }
           if (serial && serial.startsWith('GOOGLE_')) {
             logger.info(`   🤖 [SYNC] Mise à jour Google Wallet`);
             await googleWalletGenerator.updateLoyaltyObject(clientId, companyId, newBalance, tiers, clientCustomization);
@@ -115,9 +101,7 @@ class WalletSyncService {
               await googleWalletGenerator.addMessageToObject(clientId, title, msgBody);
             }
           }
-        });
-
-        // On attend que TOUT soit lancé
+        });
         await Promise.all(syncPromises).catch(err => logger.error('Parallel sync error', err));
       }
 
@@ -134,27 +118,20 @@ class WalletSyncService {
    */
   async syncCompanyWallets(companyId) {
     try {
-      logger.info(`🔄 Synchronisation GLOBALE pour l'entreprise ${companyId}`);
-
-      // 1. Mettre à jour la classe Google Wallet (Style/Template)
+      logger.info(`🔄 Synchronisation GLOBALE pour l'entreprise ${companyId}`);
       const [customRows] = await db.query('SELECT * FROM card_customization WHERE company_id = ?', [companyId]);
       const [companyRows] = await db.query('SELECT nom FROM entreprises WHERE id = ?', [companyId]);
       
-      if (customRows.length > 0 && companyRows.length > 0) {
-        // On met à jour la classe pour chaque type de fidélité existant dans la personnalisation
+      if (customRows.length > 0 && companyRows.length > 0) {
         for (const config of customRows) {
           await googleWalletGenerator.createOrUpdateClass(companyId, config, companyRows[0].nom, config.loyalty_type);
         }
         logger.info(`   🤖 Google Class synchronisée`);
-      }
-
-      // 2. Forcer la mise à jour de la date sur TOUTES les cartes existantes pour Apple Wallet
+      }
       await db.query(
         'UPDATE wallet_cards SET last_updated = NOW(3) WHERE company_id = ?',
         [companyId]
-      );
-
-      // 3. Envoyer le Push Apple à TOUS les clients enregistrés
+      );
       logger.info(`   🍎 [SYNC GLOBALE] Recherche de terminaux Apple pour l'entreprise ID: ${companyId}...`);
       
       const [registrations] = await db.query(
@@ -167,20 +144,15 @@ class WalletSyncService {
       
       if (registrations.length > 0) {
         const tokens = registrations.map(r => r.push_token);
-        logger.info(`   🍎 [SYNC GLOBALE] ${tokens.length} terminal/terminaux trouvé(s). Envoi des notifications...`);
-        // Non-bloquant pour la réactivité globale
+        logger.info(`   🍎 [SYNC GLOBALE] ${tokens.length} terminal/terminaux trouvé(s). Envoi des notifications...`);
         apnService.sendBulkUpdateNotifications(tokens).catch(err => 
           logger.error(`   🍎 [SYNC GLOBALE] Échec Push arrière-plan:`, err.message)
         );
       } else {
-        logger.warn(`   ⚠️ [SYNC GLOBALE] Aucun terminal Apple enregistré trouvé pour l'entreprise ${companyId}.`);
-        // Diagnostic : voir s'il y a des cartes sans enregistrements
+        logger.warn(`   ⚠️ [SYNC GLOBALE] Aucun terminal Apple enregistré trouvé pour l'entreprise ${companyId}.`);
         const [cardCount] = await db.query('SELECT COUNT(*) as count FROM wallet_cards WHERE company_id = ?', [companyId]);
         logger.info(`   📊 Diagnostic : ${cardCount[0].count} carte(s) trouvée(s) en base pour cette entreprise, mais 0 enregistrement Push.`);
-      }
-
-      // 4. Forcer la mise à jour visuelle pour Google Wallet (Touch des objets individuels)
-      // V8.6 : Requête groupée (JOIN) pour éviter de requêter dans la boucle !
+      }
       const [googleWallets] = await db.query(
         `SELECT w.client_id, c.points 
          FROM wallet_cards w
@@ -195,16 +167,12 @@ class WalletSyncService {
           [companyId]
         );
 
-        logger.info(`   🚀 [SUPERCHARGED SYNC] Lancement global pour ${googleWallets.length} objets Google...`);
-
-        // V8.6 : Regroupement total en paquets de 25 lancés EN PARALLÈLE
+        logger.info(`   🚀 [SUPERCHARGED SYNC] Lancement global pour ${googleWallets.length} objets Google...`);
         const chunkSize = 25;
         const chunks = [];
         for (let i = 0; i < googleWallets.length; i += chunkSize) {
           chunks.push(googleWallets.slice(i, i + chunkSize));
-        }
-
-        // On lance TOUS les paquets en même temps sans attendre le précédent
+        }
         await Promise.all(chunks.map(async (chunk, index) => {
           try {
             await Promise.all(chunk.map(wallet => 

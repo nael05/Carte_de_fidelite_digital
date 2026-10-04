@@ -58,9 +58,7 @@ EMAIL : ${ent.email}
 PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
 -----------------------`.trim()
     copyToClipboard(text, 'Toutes les infos ont été copiées !')
-  }
-
-  // Theme synchronization
+  }
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark-mode')
@@ -84,8 +82,7 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
     try {
       const res = await api.get('/settings/mentions-legales')
       setLegalContent(res.data.content || '')
-    } catch {
-      // silently ignore — table might not exist yet
+    } catch {
     }
   }
 

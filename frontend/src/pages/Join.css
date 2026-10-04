@@ -1,12 +1,12 @@
 @import './Auth.css';
 
-/* Spécificités pour la page d'inscription Luxe */
+
 
 .luxe-auth-card {
   max-width: 500px !important;
 }
 
-/* Animations additionnelles pour les options de wallet */
+
 .luxe-wallet-opt {
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -21,7 +21,7 @@
   box-shadow: 0 4px 15px var(--accent-light);
 }
 
-/* Responsive fixes */
+
 @media (max-width: 640px) {
   .luxe-auth-container {
     padding: 20px;
@@ -68,7 +68,7 @@
   box-shadow: 0 15px 30px rgba(59, 130, 246, 0.4);
 }
 
-/* Wallet Selector Styles */
+
 .wallet-selector-group {
   display: flex;
   flex-direction: column;
@@ -108,7 +108,7 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* Footer Info */
+
 .join-info-footer {
   padding: 24px 40px;
   text-align: center;
@@ -116,7 +116,7 @@
   border-top: 1px solid rgba(255,255,255,0.05);
 }
 
-/* Responsive */
+
 @media (max-width: 640px) {
   .join-container { padding: 0; background: #020617; }
   .join-card { border: none; border-radius: 0; box-shadow: none; min-height: 100vh; }

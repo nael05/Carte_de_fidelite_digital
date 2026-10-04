@@ -12,9 +12,7 @@ function AdminLogin() {
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
-  const { login, isAuthenticated, isAdmin } = useAuth()
-
-  // Theme initialization
+  const { login, isAuthenticated, isAdmin } = useAuth()
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'dark'
     if (savedTheme === 'dark') {

@@ -6,9 +6,7 @@ import pool from '../db.js'
  */
 export const generateDeviceFingerprint = (req) => {
   const userAgent = req.headers['user-agent'] || 'unknown'
-  const ip = req.ip || req.connection.remoteAddress || 'unknown'
-  
-  // Créer un hash du User-Agent + IP pour une empreinte cohérente
+  const ip = req.ip || req.connection.remoteAddress || 'unknown'
   const fingerprint = crypto
     .createHash('sha256')
     .update(`${userAgent}:${ip}`)
@@ -23,22 +21,14 @@ export const generateDeviceFingerprint = (req) => {
  */
 export const createSession = async (empresaId, deviceId, deviceName, token, expiresIn = '24h') => {
   try {
-    const sessionId = randomUUID()
-    
-    // Parser l'expiration (ex: '24h' -> millisecondes)
+    const sessionId = randomUUID()
     const expiresMs = expiresIn === '7d' ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000
-    const expiresAt = new Date(Date.now() + expiresMs)
-    
-    // Hash du token pour sécurité
-    const tokenHash = crypto.createHash('sha256').update(token + 'salt').digest('hex')
-    
-    // Supprimer les anciennes sessions du même device
+    const expiresAt = new Date(Date.now() + expiresMs)
+    const tokenHash = crypto.createHash('sha256').update(token + 'salt').digest('hex')
     await pool.query(
       'DELETE FROM sessions WHERE entreprise_id = ? AND device_id = ?',
       [empresaId, deviceId]
-    )
-    
-    // Créer la nouvelle session
+    )
     await pool.query(
       `INSERT INTO sessions (id, entreprise_id, device_id, device_name, token_hash, expires_at)
        VALUES (?, ?, ?, ?, ?, ?)`,
@@ -69,18 +59,12 @@ export const verifySessionValidity = async (empresaId, deviceId) => {
       return null
     }
     
-    const session = rows[0]
-    
-    // Vérifier l'expiration
+    const session = rows[0]
     if (new Date() > new Date(session.expires_at)) {
-      console.log(`⚠️ [SESSION] Session expirée: ${empresaId}`)
-      // Supprimer la session expirée
+      console.log(`⚠️ [SESSION] Session expirée: ${empresaId}`)
       await pool.query('DELETE FROM sessions WHERE id = ?', [session.id])
       return null
-    }
-    
-    // Mettre à jour last_activity et prolonger l'expiration (Sliding Session)
-    // On repousse de 24h à chaque activité pour rester connecté si utilisé
+    }
     const lastActivityTime = new Date(session.last_activity)
     const now = new Date()
     

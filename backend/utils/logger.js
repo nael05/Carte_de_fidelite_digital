@@ -16,15 +16,13 @@ const logger = winston.createLogger({
       format: isDev
         ? winston.format.simple()
         : winston.format.json(),
-    }),
-    // Logs d'erreur
+    }),
     new winston.transports.File({
       filename: 'logs/error.log',
       level: 'error',
       maxsize: 5242880, // 5MB
       maxFiles: 5,
-    }),
-    // Tous les logs
+    }),
     isDev
       ? null
       : new winston.transports.File({

@@ -25,17 +25,14 @@ function Join() {
   const [marketingOptIn, setMarketingOptIn] = useState(false)
   const [showRgpdModal, setShowRgpdModal] = useState(false)
 
-  useEffect(() => {
-    // Force dark mode by default for Premium Experience
+  useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'dark'
     if (savedTheme === 'dark') {
       document.documentElement.classList.add('dark-mode')
     } else {
       document.documentElement.classList.remove('dark-mode')
     }
-  }, [])
-
-  // Charger les infos de l'entreprise
+  }, [])
   useEffect(() => {
     if (!empresaId) {
       setError('ID entreprise manquant')
@@ -81,9 +78,7 @@ function Join() {
     if (!formData.email.trim()) {
       setError('L\'email est requis')
       return false
-    }
-
-    // Email validation
+    }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.email)) {
       setError('Email invalide')
@@ -118,8 +113,7 @@ function Join() {
 
     setFormSubmitting(true)
 
-    try {
-      // Étape 1: Enregistrer le client
+    try {
       const registrationResponse = await api.post(`/join/${empresaId}`, {
         nom: formData.lastName,
         prenom: formData.firstName,
@@ -140,12 +134,9 @@ function Join() {
         return;
       }
 
-      setSuccess(`Inscription réussie ! Préparation de votre carte...`);
-
-      // Redirection automatique via GET vers la route téléchargement natif
+      setSuccess(`Inscription réussie ! Préparation de votre carte...`);
       setTimeout(() => {
-        const apiUrl = import.meta.env.VITE_API_URL || '/api';
-        // Nettoyage de l'URL pour éviter les double slash
+        const apiUrl = import.meta.env.VITE_API_URL || '/api';
         const baseApi = apiUrl.endsWith('/') ? apiUrl.slice(0, -1) : apiUrl;
         window.location.href = `${baseApi}/app/wallet/client-download/${clientId}`;
       }, 1000)

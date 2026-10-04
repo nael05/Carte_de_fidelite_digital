@@ -9,9 +9,7 @@ export function AuthProvider({ children }) {
   const [role, setRole] = useState(localStorage.getItem('userRole') || null)
   const [loading, setLoading] = useState(true)
   const [isSuspended, setIsSuspended] = useState(false)
-  const [mustChangePassword, setMustChangePassword] = useState(false)
-
-  // Récupérer token et role au chargement
+  const [mustChangePassword, setMustChangePassword] = useState(false)
   useEffect(() => {
     const storedToken = localStorage.getItem('token')
     const storedRole = localStorage.getItem('userRole')
@@ -22,9 +20,7 @@ export function AuthProvider({ children }) {
     }
     
     setLoading(false)
-  }, [])
-
-  // Synchroniser token with localStorage
+  }, [])
   useEffect(() => {
     if (token) {
       localStorage.setItem('token', token)
@@ -32,22 +28,16 @@ export function AuthProvider({ children }) {
       localStorage.removeItem('token')
       localStorage.removeItem('userRole')
     }
-  }, [token])
-
-  // Synchroniser role with localStorage
+  }, [token])
   useEffect(() => {
     if (role) {
       localStorage.setItem('userRole', role)
     } else {
       localStorage.removeItem('userRole')
     }
-  }, [role])
-
-  // Vérifier le statut pour les pro (une seule fois après authentification)
+  }, [role])
   useEffect(() => {
-    if (!token || role !== 'pro' || loading) return
-
-    // Utiliser une ref pour ne faire ça qu'une fois
+    if (!token || role !== 'pro' || loading) return
     let isMounted = true
 
     const checkStatus = async () => {
@@ -63,14 +53,11 @@ export function AuthProvider({ children }) {
         }
       } catch (err) {
         if (isMounted) {
-          console.error('Erreur vérification statut:', err)
-          // Ne pas bloquer l'application en cas d'erreur
+          console.error('Erreur vérification statut:', err)
           setIsSuspended(false)
         }
       }
-    }
-
-    // Laisser un délai d'une seconde après authentification avant de vérifier le statut
+    }
     const timer = setTimeout(checkStatus, 1000)
 
     return () => {
@@ -94,16 +81,14 @@ export function AuthProvider({ children }) {
     setRole(null)
     setUser(null)
     setIsSuspended(false)
-    setMustChangePassword(false)  // 🔐 Réinitialiser le flag
-    // Nettoyer les données de session pour la sécurité
+    setMustChangePassword(false)  // 🔐 Réinitialiser le flag
     localStorage.removeItem('deviceId')
     localStorage.removeItem('companyId')
     localStorage.removeItem('companyName')
   }
 
   const isAdmin = () => role === 'admin'
-  const isPro = () => role === 'pro'
-  // isAuthenticated est maintenant une valeur booléenne, pas une fonction
+  const isPro = () => role === 'pro'
   const isAuthenticated = !!token
 
   const value = {

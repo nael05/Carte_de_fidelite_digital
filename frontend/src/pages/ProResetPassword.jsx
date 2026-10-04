@@ -17,9 +17,7 @@ function ProResetPassword() {
   
   const navigate = useNavigate()
   const location = useLocation()
-  const { token, updateMustChangePassword } = useAuth()
-
-  // Theme initialization
+  const { token, updateMustChangePassword } = useAuth()
   useEffect(() => {
     const savedTheme = localStorage.getItem('fidelyz-theme')
     if (savedTheme === 'dark') {
@@ -27,9 +25,7 @@ function ProResetPassword() {
     } else {
       document.documentElement.setAttribute('data-theme', 'light')
     }
-  }, [])
-
-  // Vérifier que l'user peut accéder à cette page
+  }, [])
   useEffect(() => {
     const fromProLogin = location.state?.fromLogin
     

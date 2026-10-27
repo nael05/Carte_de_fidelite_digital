@@ -152,7 +152,18 @@ export const applyPromoCode = async (req, res) => {
 
     const promo = promoCode.data[0];
 
-    // Store promo code for next renewal
+    const [rows] = await pool.query(
+      'SELECT stripe_subscription_id FROM entreprises WHERE id = ?',
+      [entrepriseId]
+    );
+    if (!rows[0]?.stripe_subscription_id) {
+      return res.status(400).json({ error: "Pas d'abonnement actif" });
+    }
+
+    // La remise s'applique à la prochaine facture de l'abonnement
+    await stripe.subscriptions.update(rows[0].stripe_subscription_id, {
+      discounts: [{ promotion_code: promo.id }]
+    });
     await pool.query(
       'UPDATE entreprises SET pending_promo_code = ? WHERE id = ?',
       [promo.id, entrepriseId]

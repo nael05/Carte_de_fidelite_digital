@@ -21,7 +21,7 @@ const validateStripeConfig = () => {
 
 // Initialize Stripe with secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-12-15.acacia', // Latest stable API version
+  apiVersion: '2024-12-18.acacia', // Latest stable API version
   appInfo: {
     name: 'Fidelyz',
     version: '1.0.0',

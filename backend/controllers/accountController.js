@@ -230,10 +230,11 @@ export const deleteAccount = async (req, res) => {
     if (rows[0].stripe_subscription_id) {
       try {
         const { stripe } = await import('../utils/stripeConfig.js');
-        await stripe.subscriptions.del(rows[0].stripe_subscription_id);
-        logger.info('Stripe subscription deleted', { entreprise_id: entrepriseId });
+        await stripe.subscriptions.cancel(rows[0].stripe_subscription_id);
+        logger.info('Stripe subscription canceled', { entreprise_id: entrepriseId });
       } catch (stripeErr) {
-        logger.warn('Failed to delete Stripe subscription', { error: stripeErr.message });
+        // Abonnement déjà inexistant côté Stripe : on peut poursuivre. Toute autre erreur annule la suppression.
+        if (stripeErr.code !== 'resource_missing') throw stripeErr;
       }
     }
 

@@ -139,7 +139,7 @@ export const cancelSubscription = async (entrepriseId, immediately = false) => {
     );
 
     if (immediately) {
-      await stripe.subscriptions.del(entreprise.stripe_subscription_id);
+      await stripe.subscriptions.cancel(entreprise.stripe_subscription_id);
     }
 
     // Update database

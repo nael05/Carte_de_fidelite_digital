@@ -125,7 +125,7 @@ export const downloadInvoicePdf = async (req, res) => {
         try {
           const stripeInvoice = await stripe.invoices.retrieve(invoice.stripe_invoice_id);
           if (stripeInvoice.invoice_pdf) {
-            return res.redirect(stripeInvoice.invoice_pdf);
+            return res.json({ pdf_url: stripeInvoice.invoice_pdf });
           }
         } catch (err) {
           logger.warn('Failed to get PDF from Stripe', { error: err.message });
@@ -135,7 +135,7 @@ export const downloadInvoicePdf = async (req, res) => {
     }
 
     // Redirect to Stripe-hosted PDF
-    res.redirect(pdfUrl);
+    res.json({ pdf_url: pdfUrl });
   } catch (err) {
     logger.error('Download invoice error', { error: err.message });
     res.status(500).json({ error: 'Erreur lors du téléchargement de la facture' });

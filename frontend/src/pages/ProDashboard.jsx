@@ -36,10 +36,10 @@ function ProDashboard() {
   const [redeemModal, setRedeemModal] = useState(null); // { clientId, clientName, rewards }
   const [deleteModal, setDeleteModal] = useState(null); // { clientId, clientName }
   const [showHistory, setShowHistory] = useState(false)
-  const [pointsToAdd, setPointsToAdd] = useState('');
+  const [pointsToAdd, setPointsToAdd] = useState('');
   const [activeTransaction, setActiveTransaction] = useState(null); // { clientId, clientName, currentPoints, allRewards, nextTier }
   const [scanStep, setScanStep] = useState(null); // null, 'reward', 'points'
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [loyaltyConfig, setLoyaltyConfig] = useState({
     points_adding_mode: 'automatic',
     points_per_purchase: 10,
@@ -47,20 +47,20 @@ function ProDashboard() {
     points_shortcuts: [],
     reward_tiers: []
   })
-  const [shortcutInput, setShortcutInput] = useState('')
+  const [shortcutInput, setShortcutInput] = useState('')
   const [newTier, setNewTier] = useState({ points_required: '', title: '' })
   
   const [savingSettings, setSavingSettings] = useState(false)
   const [proxConfig, setProxConfig] = useState({ relevant_text: '', locations: [] })
   const [proxSaving, setProxSaving] = useState(false)
-  const [settingsPage, setSettingsPage] = useState(null)
+  const [settingsPage, setSettingsPage] = useState(null)
   const [showCreateClientModal, setShowCreateClientModal] = useState(false)
   const [createClientForm, setCreateClientForm] = useState({ nom: '', prenom: '', telephone: '', email: '', type_wallet: 'apple' })
-  const [createClientLoading, setCreateClientLoading] = useState(false)
+  const [createClientLoading, setCreateClientLoading] = useState(false)
   const [expirationConfig, setExpirationConfig] = useState({ points_expiration_months: null })
   const [expirationSlider, setExpirationSlider] = useState(12)
   const [expirationIndeterminate, setExpirationIndeterminate] = useState(true)
-  const [expirationSaving, setExpirationSaving] = useState(false)
+  const [expirationSaving, setExpirationSaving] = useState(false)
   const [showResendModal, setShowResendModal] = useState(false)
   const [resendSearch, setResendSearch] = useState('')
   const [resendSelected, setResendSelected] = useState(new Set())
@@ -220,7 +220,7 @@ function ProDashboard() {
   }
 
   const initScanner = async () => {
-    if (!scannerRef.current) return;
+    if (!scannerRef.current) return;
     if (scannerInstance.current) return;
 
     try {
@@ -231,7 +231,7 @@ function ProDashboard() {
         fps: 15, 
         qrbox: { width: 250, height: 250 },
         aspectRatio: 1.0
-      };
+      };
       await html5QrCode.start(
         { facingMode: "environment" },
         config,
@@ -242,7 +242,7 @@ function ProDashboard() {
             processScan(decodedText);
           });
         },
-        (errorMessage) => {
+        (errorMessage) => {
         }
       );
     } catch (err) {
@@ -288,7 +288,7 @@ function ProDashboard() {
         const response = await api.post('/pro/redeem-reward', { 
           clientId: activeTransaction.clientId, 
           rewardTierId: rewardToClaim.id 
-        });
+        });
         setActiveTransaction(prev => ({
           ...prev,
           currentPoints: prev.currentPoints - rewardToClaim.points_required
@@ -300,7 +300,7 @@ function ProDashboard() {
         setIsProcessing(false);
         return; // On ne passe pas à la suite si erreur
       }
-    }
+    }
     setPointsToAdd(loyaltyConfig.points_adding_mode === 'automatic' ? loyaltyConfig.points_per_purchase.toString() : '');
     setScanStep('points');
     setIsProcessing(false);
@@ -359,7 +359,7 @@ function ProDashboard() {
       const response = await api.post('/pro/redeem-reward', { 
         clientId: redeemModal.clientId, 
         rewardTierId 
-      })
+      })
       setRedeemModal(null)
       setLastScan(null)
       addToast('Cadeau validé avec succès !')
@@ -575,6 +575,9 @@ function ProDashboard() {
         <div className="pro-topbar-right">
           <button className="pro-topbar-btn theme-toggle" onClick={() => setDarkMode(!darkMode)} title="Changer de thème">
             {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+          <button className="pro-topbar-btn" onClick={() => navigate('/pro/account')} title="Mon compte">
+            Mon compte
           </button>
           <button className="pro-topbar-btn logout-btn" onClick={handleLogout} title="Déconnexion">
             <LogOut size={18} />

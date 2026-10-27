@@ -8,6 +8,8 @@ import AdminDashboard from './pages/AdminDashboard'
 import ProLogin from './pages/ProLogin'
 import ProResetPassword from './pages/ProResetPassword'
 import ProDashboard from './pages/ProDashboard'
+import ProAccount from './pages/ProAccount'
+import ProConfirmEmail from './pages/ProConfirmEmail'
 import Join from './pages/Join'
 import ForgotPassword from './pages/ForgotPassword'
 import PublicResetPassword from './pages/PublicResetPassword'
@@ -34,6 +36,8 @@ function App() {
           <Route path="/password-recovery" element={<PublicResetPassword />} />
           <Route path="/pro/secure-password" element={<ProResetPassword />} />
           <Route path="/pro/dashboard" element={<PrivateProRoute element={<ProDashboard />} />} />
+          <Route path="/pro/account" element={<PrivateProRoute element={<ProAccount />} />} />
+          <Route path="/pro/confirm-email" element={<PrivateProRoute element={<ProConfirmEmail />} />} />
 
           {/* Mentions légales */}
           <Route path="/mentions-legales" element={<MentionsLegales />} />

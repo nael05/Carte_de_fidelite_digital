@@ -71,7 +71,7 @@ router.put('/pro/account/password', verifyToken, isPro, accountController.change
 router.delete('/pro/account', verifyToken, isPro, accountController.deleteAccount);
 
 // Subscription Management
-router.get('/pro/subscription', verifyToken, isPro, requireActiveSubscription, subscriptionController.getSubscription);
+router.get('/pro/subscription', verifyToken, isPro, checkSubscriptionStatus, subscriptionController.getSubscription);
 router.post('/pro/subscription/switch-plan', verifyToken, isPro, requireActiveSubscription, subscriptionController.switchPlan);
 router.post('/pro/subscription/apply-promo', verifyToken, isPro, requireActiveSubscription, subscriptionController.applyPromoCode);
 router.post('/pro/subscription/cancel', verifyToken, isPro, checkSubscriptionStatus, subscriptionController.cancelSubscription);

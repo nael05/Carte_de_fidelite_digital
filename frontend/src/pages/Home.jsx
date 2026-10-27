@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ArrowRight, ChevronRight, CheckCircle2, Check, Plus, Search, Loader2, X,
-  Play, Bell, MapPin, ShieldCheck, Lock, Repeat, Fingerprint, Store, Palette, Send
+  Play, Bell, MapPin, ShieldCheck, Lock, Repeat, Fingerprint, Store, Palette, Send, Coffee
 } from 'lucide-react'
 import api from '../api'
 import Footer from '../components/Footer'
@@ -92,7 +92,9 @@ function QRCode({ className }) {
   )
 }
 
-/* ═══════════ Carte 3D ═══════════ */
+/* ═══════════ Pass Apple Wallet en 3D ═══════════
+   Même structure que l'aperçu du CardCustomizer :
+   en-tête (logo + POINTS), bannière, champs, QR code. */
 const SKINS = [
   { id: 'graphite', label: 'Graphite' },
   { id: 'azur', label: 'Bleu nuit' },
@@ -100,8 +102,11 @@ const SKINS = [
   { id: 'ivory', label: 'Ivoire' },
 ]
 
-function Card3D({ skin = 'graphite', points = 480 }) {
-  const filled = Math.floor(points / 50)
+function Card3D({
+  skin = 'graphite', points = 480, name = 'Maison Lumière', mark = 'L',
+  holder = 'CAMILLE', cardId = '2BF10B', scanning = false,
+}) {
+  const filled = Math.min(10, Math.floor(points / 50))
   return (
     <div className={`c3 c3-${skin}`}>
       <div className="c3-edge" aria-hidden>
@@ -109,47 +114,66 @@ function Card3D({ skin = 'graphite', points = 480 }) {
       </div>
 
       <div className="c3-face c3-front">
-        <div className="c3-texture" />
         <div className="c3-foil" />
-        <div className="c3-row">
-          <div className="c3-brand">
-            <span className="c3-mark">L</span>
-            <span className="c3-name">Maison Lumière</span>
+        <div className="wp-head">
+          <div className="wp-logo">
+            <span className="wp-mark">{mark}</span>
+            <span className="wp-org">{name}</span>
           </div>
-          <span className="c3-issuer">FIDELYZ</span>
-        </div>
-        <div className="c3-mid">
-          <span className="c3-label">Points</span>
-          <span className="c3-pts">{points}</span>
-        </div>
-        <div className="c3-progress">
-          {Array.from({ length: 10 }).map((_, i) => (
-            <span key={i} className={i < filled ? 'on' : ''} />
-          ))}
-        </div>
-        <div className="c3-row c3-foot">
-          <div>
-            <span className="c3-label">Récompense</span>
-            <span className="c3-val">Café offert</span>
+          <div className="wp-hfield">
+            <span className="wp-label">POINTS</span>
+            <span className="wp-hval">{points}</span>
           </div>
-          <div className="c3-right">
-            <span className="c3-label">Statut</span>
-            <span className="c3-val">Gold</span>
+        </div>
+
+        <div className="wp-strip">
+          <div className="wp-stamps">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <span key={i} className={i < filled ? 'on' : ''}>
+                {i < filled && <Coffee strokeWidth={2.2} />}
+              </span>
+            ))}
           </div>
+        </div>
+
+        <div className="wp-fields">
+          <div className="wp-col">
+            <span className="wp-label">BONJOUR</span>
+            <span className="wp-val-lg">{holder}</span>
+          </div>
+          <div className="wp-col wp-right">
+            <span className="wp-label">DÉTAILS DES RÉCOMPENSES</span>
+            <span className="wp-val">Au dos</span>
+          </div>
+        </div>
+
+        <div className="wp-barcode">
+          <div className="wp-qr">
+            <QRCode />
+            {scanning && <span className="c3-scan" />}
+          </div>
+          <span className="wp-id">N° Carte : {cardId}</span>
         </div>
       </div>
 
       <div className="c3-face c3-back">
-        <div className="c3-texture" />
-        <div className="c3-back-in">
-          <div className="c3-qr">
-            <QRCode />
-            <span className="c3-scan" />
-          </div>
-          <div className="c3-back-copy">
-            <span className="c3-label">Scannez en caisse</span>
-            <span className="c3-val">N° 0482 · Maison Lumière</span>
-          </div>
+        <div className="wp-back-row">
+          <span className="wp-back-label">Détails des récompenses</span>
+          <span>500 points = 1 café offert</span>
+        </div>
+        <div className="wp-back-row">
+          <span className="wp-back-label">Solde</span>
+          <span>{points} points</span>
+        </div>
+        <div className="wp-back-row">
+          <span className="wp-back-label">Boutique</span>
+          <span>{name}</span>
+        </div>
+        <div className="wp-back-row wp-toggle">
+          <span>Mises à jour automatiques</span><i />
+        </div>
+        <div className="wp-back-row wp-toggle">
+          <span>Autoriser les notifications</span><i />
         </div>
       </div>
     </div>
@@ -252,27 +276,30 @@ function Story() {
   const cardRef = useRef(null)
   const [stage, setStage] = useState(0)
   const [skin, setSkin] = useState(3)
+  const [credited, setCredited] = useState(false)
 
   useScrollProgress(secRef, p => {
     const s = p < 0.34 ? 0 : p < 0.67 ? 1 : 2
     setStage(s)
     let ry = 0
-    let rx = 8
+    let rx = 6
     if (s === 0) {
       const t = p / 0.34
       // Ivoire → Champagne → Bleu nuit → Graphite
       setSkin(3 - Math.min(3, Math.floor(t * 4)))
-      ry = -22 + t * 22
+      ry = -24 + t * 24
     } else if (s === 1) {
       setSkin(0)
+      // Un tour complet (on aperçoit le dos du pass), puis le scan
       const t = (p - 0.34) / 0.33
-      ry = 180 * ease(clamp((t - 0.05) / 0.45))
-      rx = 8 - 4 * Math.sin(Math.PI * clamp(t))
+      ry = 360 * ease(clamp(t / 0.5))
+      rx = 6 - 4 * Math.sin(Math.PI * clamp(t / 0.5))
     } else {
       setSkin(0)
       const t = (p - 0.67) / 0.33
-      ry = 180 + 180 * ease(clamp(t / 0.45))
+      ry = 360 + 14 * ease(clamp(t / 0.4))
     }
+    setCredited(p > 0.34 + 0.33 * 0.75)
     if (cardRef.current) {
       cardRef.current.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`
     }
@@ -296,7 +323,7 @@ function Story() {
           <div className="story-stage">
             <div className="story-light" aria-hidden />
             <div className="story-card" ref={cardRef}>
-              <Card3D skin={SKINS[skin].id} points={stage === 2 ? 480 : 460} />
+              <Card3D skin={SKINS[skin].id} points={credited ? 480 : 460} scanning={stage === 1} />
             </div>
 
             <div className={`story-swatches${stage === 0 ? ' on' : ''}`}>
@@ -306,7 +333,7 @@ function Story() {
               <span className="sw-label">{SKINS[skin].label}</span>
             </div>
 
-            <div className={`story-tag${stage === 1 ? ' on' : ''}`}>
+            <div className={`story-tag${stage === 1 && credited ? ' on' : ''}`}>
               <span className="chip-ico chip-ok"><Check size={12} strokeWidth={3} /></span>
               +20 points crédités
             </div>
@@ -355,25 +382,22 @@ function Manifesto() {
 }
 
 /* ═══════════ Visuels du bento ═══════════ */
-function MiniPass({ skin, name, pts, style }) {
-  return (
-    <div className={`mp c3-${skin}`} style={style}>
-      <div className="mp-row">
-        <span className="mp-mark">{name[0]}</span>
-        <span className="mp-name">{name}</span>
-      </div>
-      <div className="mp-pts"><span>Points</span>{pts}</div>
-    </div>
-  )
-}
+/* Pile de passes comme dans l'app Wallet */
+const WALLET_STACK = [
+  { skin: 'ivory', name: 'Atelier Nord', mark: 'A', pts: 120 },
+  { skin: 'champagne', name: 'Fleurs & Co', mark: 'F', pts: 260 },
+  { skin: 'azur', name: 'Le Comptoir', mark: 'C', pts: 90 },
+  { skin: 'graphite', name: 'Maison Lumière', mark: 'L', pts: 480 },
+]
 
 function WalletVis() {
   return (
     <div className="wv">
-      <MiniPass skin="ivory" name="Atelier Nord" pts={120} style={{ '--k': 0 }} />
-      <MiniPass skin="champagne" name="Fleurs & Co" pts={260} style={{ '--k': 1 }} />
-      <MiniPass skin="azur" name="Le Comptoir" pts={90} style={{ '--k': 2 }} />
-      <MiniPass skin="graphite" name="Maison Lumière" pts={480} style={{ '--k': 3 }} />
+      {WALLET_STACK.map((c, k) => (
+        <div key={c.name} className="mp" style={{ '--k': k }}>
+          <Card3D skin={c.skin} name={c.name} mark={c.mark} points={c.pts} />
+        </div>
+      ))}
     </div>
   )
 }

@@ -36,14 +36,10 @@ function ProDashboard() {
   const [redeemModal, setRedeemModal] = useState(null); // { clientId, clientName, rewards }
   const [deleteModal, setDeleteModal] = useState(null); // { clientId, clientName }
   const [showHistory, setShowHistory] = useState(false)
-  const [pointsToAdd, setPointsToAdd] = useState('');
-
-  // Two-Step Transaction Flow
+  const [pointsToAdd, setPointsToAdd] = useState('');
   const [activeTransaction, setActiveTransaction] = useState(null); // { clientId, clientName, currentPoints, allRewards, nextTier }
   const [scanStep, setScanStep] = useState(null); // null, 'reward', 'points'
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  // Loyalty Settings
+  const [isProcessing, setIsProcessing] = useState(false);
   const [loyaltyConfig, setLoyaltyConfig] = useState({
     points_adding_mode: 'automatic',
     points_per_purchase: 10,
@@ -51,28 +47,20 @@ function ProDashboard() {
     points_shortcuts: [],
     reward_tiers: []
   })
-  const [shortcutInput, setShortcutInput] = useState('')
-  
-  // Tiers Form
+  const [shortcutInput, setShortcutInput] = useState('')
   const [newTier, setNewTier] = useState({ points_required: '', title: '' })
   
   const [savingSettings, setSavingSettings] = useState(false)
   const [proxConfig, setProxConfig] = useState({ relevant_text: '', locations: [] })
   const [proxSaving, setProxSaving] = useState(false)
-  const [settingsPage, setSettingsPage] = useState(null)
-
-  // Modal: créer un client depuis le pro
+  const [settingsPage, setSettingsPage] = useState(null)
   const [showCreateClientModal, setShowCreateClientModal] = useState(false)
   const [createClientForm, setCreateClientForm] = useState({ nom: '', prenom: '', telephone: '', email: '', type_wallet: 'apple' })
-  const [createClientLoading, setCreateClientLoading] = useState(false)
-
-  // Expiration des points
+  const [createClientLoading, setCreateClientLoading] = useState(false)
   const [expirationConfig, setExpirationConfig] = useState({ points_expiration_months: null })
   const [expirationSlider, setExpirationSlider] = useState(12)
   const [expirationIndeterminate, setExpirationIndeterminate] = useState(true)
-  const [expirationSaving, setExpirationSaving] = useState(false)
-
-  // Modal: renvoyer un lien de téléchargement
+  const [expirationSaving, setExpirationSaving] = useState(false)
   const [showResendModal, setShowResendModal] = useState(false)
   const [resendSearch, setResendSearch] = useState('')
   const [resendSelected, setResendSelected] = useState(new Set())
@@ -232,9 +220,7 @@ function ProDashboard() {
   }
 
   const initScanner = async () => {
-    if (!scannerRef.current) return;
-    
-    // Si une instance existe déjà, on ne fait rien
+    if (!scannerRef.current) return;
     if (scannerInstance.current) return;
 
     try {
@@ -245,9 +231,7 @@ function ProDashboard() {
         fps: 15, 
         qrbox: { width: 250, height: 250 },
         aspectRatio: 1.0
-      };
-
-      // Démarrage immédiat sur la caméra arrière
+      };
       await html5QrCode.start(
         { facingMode: "environment" },
         config,
@@ -258,8 +242,7 @@ function ProDashboard() {
             processScan(decodedText);
           });
         },
-        (errorMessage) => {
-          // On ignore les erreurs de scan silencieuses
+        (errorMessage) => {
         }
       );
     } catch (err) {
@@ -305,9 +288,7 @@ function ProDashboard() {
         const response = await api.post('/pro/redeem-reward', { 
           clientId: activeTransaction.clientId, 
           rewardTierId: rewardToClaim.id 
-        });
-        
-        // Mettre à jour les points locaux pour l'étape suivante
+        });
         setActiveTransaction(prev => ({
           ...prev,
           currentPoints: prev.currentPoints - rewardToClaim.points_required
@@ -319,9 +300,7 @@ function ProDashboard() {
         setIsProcessing(false);
         return; // On ne passe pas à la suite si erreur
       }
-    }
-
-    // Passage à l'étape points
+    }
     setPointsToAdd(loyaltyConfig.points_adding_mode === 'automatic' ? loyaltyConfig.points_per_purchase.toString() : '');
     setScanStep('points');
     setIsProcessing(false);
@@ -380,9 +359,7 @@ function ProDashboard() {
       const response = await api.post('/pro/redeem-reward', { 
         clientId: redeemModal.clientId, 
         rewardTierId 
-      })
-      
-      // On ferme tout immédiatement (Règle : 1 cadeau max par passage)
+      })
       setRedeemModal(null)
       setLastScan(null)
       addToast('Cadeau validé avec succès !')

@@ -3,9 +3,7 @@ import pool from '../db.js';
 import logger from '../utils/logger.js';
 import apnService from '../utils/apnService.js';
 import googleWalletGenerator from '../utils/googleWalletGenerator.js';
-import walletSyncService from '../utils/walletSyncService.js';
-
-// ===== LOYALTY CONFIGURATION CONTROLLERS =====
+import walletSyncService from '../utils/walletSyncService.js';
 
 /**
  * Obtenir la configuration de fidélité et les paliers d'une entreprise
@@ -21,9 +19,7 @@ export const getLoyaltyConfig = async (req, res) => {
 
     if (config.length === 0) {
       return res.status(404).json({ error: 'Configuration de fidélité non trouvée' });
-    }
-
-    // Récupérer les paliers de récompense
+    }
     const [tiers] = await pool.query(
       `SELECT * FROM reward_tiers WHERE entreprise_id = ? ORDER BY points_required ASC`,
       [empresaId]
@@ -67,8 +63,7 @@ export const updateLoyaltyConfig = async (req, res) => {
       [empresaId]
     );
 
-    if (existing.length > 0) {
-      // Construction dynamique de la requête d'UPDATE
+    if (existing.length > 0) {
       const updates = [];
       const params = [];
 
@@ -93,13 +88,11 @@ export const updateLoyaltyConfig = async (req, res) => {
         params.push(push_notifications_enabled ? 1 : 0);
       }
       if (max_points_balance !== undefined) {
-        updates.push('max_points_balance = ?');
-        // null = pas de limite, sinon valeur entière positive
+        updates.push('max_points_balance = ?');
         params.push(max_points_balance === null ? null : Math.max(1, parseInt(max_points_balance) || 1));
       }
       if (points_shortcuts !== undefined) {
-        updates.push('points_shortcuts = ?');
-        // null ou tableau vide = pas de raccourcis perso (utilise les défauts côté frontend)
+        updates.push('points_shortcuts = ?');
         const arr = Array.isArray(points_shortcuts) ? points_shortcuts.filter(n => Number.isInteger(n) && n > 0) : [];
         params.push(arr.length > 0 ? JSON.stringify(arr) : null);
       }
@@ -127,9 +120,7 @@ export const updateLoyaltyConfig = async (req, res) => {
           push_notifications_enabled !== false ? 1 : 0
         ]
       );
-    }
-
-    // 🔄 Synchronisation en temps réel pour tous les clients du club
+    }
     walletSyncService.syncCompanyWallets(empresaId).catch(err => 
       logger.error('Global synchronization failed after loyalty config update', err)
     );
@@ -139,13 +130,10 @@ export const updateLoyaltyConfig = async (req, res) => {
     logger.error('Update loyalty config error for enterprise: ' + empresaId, { 
       error: err.message, 
       stack: err.stack 
-    });
-    // Message V3 pour confirmer que le code est bien à jour sur le serveur
+    });
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
-
-// ===== REWARD TIERS CONTROLLERS =====
+};
 
 export const getRewardTiers = async (req, res) => {
   const empresaId = req.user.id;
@@ -174,9 +162,7 @@ export const createRewardTier = async (req, res) => {
     await pool.query(
       `INSERT INTO reward_tiers (id, entreprise_id, points_required, title, description) VALUES (?, ?, ?, ?, ?)`,
       [id, empresaId, points_required, title, description || '']
-    );
-
-    // 🔄 Sync Wallets (Background)
+    );
     walletSyncService.syncCompanyWallets(empresaId).catch(err => logger.error('Sync failed tier create', err));
 
     res.status(201).json({ success: true, id, message: 'Palier ajouté' });
@@ -199,9 +185,7 @@ export const updateRewardTier = async (req, res) => {
     await pool.query(
       `UPDATE reward_tiers SET points_required = COALESCE(?, points_required), title = COALESCE(?, title), description = COALESCE(?, description) WHERE id = ? AND entreprise_id = ?`,
       [points_required, title, description, tierId, empresaId]
-    );
-
-    // 🔄 Sync Wallets (Background)
+    );
     walletSyncService.syncCompanyWallets(empresaId).catch(err => logger.error('Sync failed tier update', err));
 
     res.json({ success: true, message: 'Palier mis à jour' });
@@ -219,9 +203,7 @@ export const deleteRewardTier = async (req, res) => {
     await pool.query(
       `DELETE FROM reward_tiers WHERE id = ? AND entreprise_id = ?`,
       [tierId, empresaId]
-    );
-
-    // 🔄 Sync Wallets (Background)
+    );
     walletSyncService.syncCompanyWallets(empresaId).catch(err => logger.error('Sync failed tier delete', err));
 
     res.json({ success: true, message: 'Palier supprimé' });
@@ -229,9 +211,7 @@ export const deleteRewardTier = async (req, res) => {
     logger.error('Delete reward tier error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
-
-// ===== PUSH NOTIFICATIONS CONTROLLERS =====
+};
 
 export const sendPushNotification = async (req, res) => {
   const empresaId = req.user.id;
@@ -269,9 +249,7 @@ export const sendPushNotification = async (req, res) => {
       await pool.query(
         `INSERT INTO client_push_notifications (id, client_id, notification_id, status) VALUES ?`,
         [values]
-      );
-
-      // Apple push notifications
+      );
       const [appleRegs] = await pool.query(
         `SELECT DISTINCT r.push_token
          FROM apple_pass_registrations r
@@ -284,9 +262,7 @@ export const sendPushNotification = async (req, res) => {
         apnService.sendBulkAlertNotifications(pushTokens, title, message).catch(err =>
           logger.error('Broadcast Apple push failed', { error: err.message })
         );
-      }
-
-      // Google Wallet messages
+      }
       const [googleCards] = await pool.query(
         `SELECT DISTINCT w.client_id
          FROM wallet_cards w
@@ -374,9 +350,7 @@ export const getPushNotificationDetails = async (req, res) => {
     logger.error('Get push notification details error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
-
-// ===== POINTS EXPIRATION =====
+};
 
 /**
  * Calcule via FIFO combien de points d'un client ont expiré (non encore déduits).
@@ -395,9 +369,7 @@ export const computeClientExpiration = async (clientId, expirationMonths) => {
     `SELECT points_change, type, created_at FROM transaction_history
      WHERE client_id = ? ORDER BY created_at ASC`,
     [clientId]
-  );
-
-  // Simulation FIFO
+  );
   const batches = []; // { amount, date }
   for (const t of txns) {
     if (t.points_change > 0) {
@@ -493,9 +465,7 @@ export const getExpirationConfig = async (req, res) => {
 
 export const updateExpirationConfig = async (req, res) => {
   const empresaId = req.user.id;
-  const { points_expiration_months } = req.body;
-
-  // null = indéterminé, sinon entier entre 1 et 36
+  const { points_expiration_months } = req.body;
   if (points_expiration_months !== null &&
       (!Number.isInteger(points_expiration_months) ||
        points_expiration_months < 1 || points_expiration_months > 36)) {
@@ -506,9 +476,7 @@ export const updateExpirationConfig = async (req, res) => {
     await pool.query(
       `UPDATE loyalty_config SET points_expiration_months = ? WHERE entreprise_id = ?`,
       [points_expiration_months, empresaId]
-    );
-
-    // Si on active ou réduit l'expiration, appliquer immédiatement
+    );
     let expired = 0;
     if (points_expiration_months !== null) {
       expired = await runExpirationForEnterprise(empresaId, points_expiration_months);

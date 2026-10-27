@@ -34,12 +34,8 @@ const upload = multer({
     if (file.mimetype.startsWith('image/')) cb(null, true);
     else cb(new Error('Seules les images sont autorisées'));
   }
-});
-
-// ===== GLOBAL RATE LIMITER =====
-router.use(apiLimiter);
-
-// ===== Master Admin Routes =====
+});
+router.use(apiLimiter);
 router.post('/admin/login', loginLimiter, apiController.adminLogin);
 router.post('/admin/migrations/run', verifyToken, isAdmin, migrationController.runMigrations);
 router.get('/admin/enterprises', verifyToken, isAdmin, apiController.getEnterprises);
@@ -47,9 +43,7 @@ router.post('/admin/create-company', verifyToken, isAdmin, apiController.createC
 router.put('/admin/suspend-company/:companyId', verifyToken, isAdmin, apiController.suspendCompany);
 router.put('/admin/reactivate-company/:companyId', verifyToken, isAdmin, apiController.reactivateCompany);
 router.delete('/admin/delete-company/:companyId', verifyToken, isAdmin, apiController.deleteCompany);
-router.put('/admin/update-company/:companyId', verifyToken, isAdmin, apiController.updateCompany);
-
-// ===== Pro Routes =====
+router.put('/admin/update-company/:companyId', verifyToken, isAdmin, apiController.updateCompany);
 router.post('/pro/login', loginLimiter, apiController.proLogin);
 router.get('/pro/status', verifyToken, isPro, apiController.getProStatus);
 router.get('/pro/sessions', verifyToken, isPro, apiController.getProSessions);
@@ -67,39 +61,25 @@ router.get('/pro/history', verifyToken, isPro, apiController.getTransactionHisto
 router.delete('/pro/history', verifyToken, isPro, apiController.deleteTransactionHistory);
 
 router.get('/pro/info', verifyToken, isPro, apiController.getProInfo);
-router.delete('/pro/clients/:clientId', verifyToken, isPro, apiController.deleteClient);
-
-// ===== Loyalty Configuration Routes =====
+router.delete('/pro/clients/:clientId', verifyToken, isPro, apiController.deleteClient);
 router.get('/pro/loyalty/config', verifyToken, isPro, loyaltyController.getLoyaltyConfig);
-router.put('/pro/loyalty/config', verifyToken, isPro, loyaltyController.updateLoyaltyConfig);
-
-// ===== Reward Tiers Routes =====
+router.put('/pro/loyalty/config', verifyToken, isPro, loyaltyController.updateLoyaltyConfig);
 router.get('/pro/reward-tiers', verifyToken, isPro, loyaltyController.getRewardTiers);
 router.post('/pro/reward-tiers', verifyToken, isPro, loyaltyController.createRewardTier);
 router.put('/pro/reward-tiers/:id', verifyToken, isPro, loyaltyController.updateRewardTier);
 router.delete('/pro/reward-tiers/:id', verifyToken, isPro, loyaltyController.deleteRewardTier);
-router.post('/pro/redeem-reward', verifyToken, isPro, apiController.redeemReward);
-
-// ===== Push Notifications Routes =====
+router.post('/pro/redeem-reward', verifyToken, isPro, apiController.redeemReward);
 router.post('/pro/notifications/send', verifyToken, isPro, loyaltyController.sendPushNotification);
 router.get('/pro/notifications/history', verifyToken, isPro, loyaltyController.getPushNotificationHistory);
-router.get('/pro/notifications/:notificationId', verifyToken, isPro, loyaltyController.getPushNotificationDetails);
-
-// ===== Loyalty Stats Routes =====
-router.get('/pro/loyalty/stats', verifyToken, isPro, loyaltyController.getLoyaltyStats);
-
-// ===== Analytics Stats Routes =====
+router.get('/pro/notifications/:notificationId', verifyToken, isPro, loyaltyController.getPushNotificationDetails);
+router.get('/pro/loyalty/stats', verifyToken, isPro, loyaltyController.getLoyaltyStats);
 router.get('/pro/stats/overview', verifyToken, isPro, statsController.getProOverview);
 router.get('/pro/stats/activity', verifyToken, isPro, statsController.getProActivity);
 router.get('/pro/stats/clients', verifyToken, isPro, statsController.getProClients);
 router.get('/pro/stats/rewards', verifyToken, isPro, statsController.getProRewards);
-router.get('/admin/stats', verifyToken, isAdmin, statsController.getAdminStats);
-
-// ===== Points Expiration Routes =====
+router.get('/admin/stats', verifyToken, isAdmin, statsController.getAdminStats);
 router.get('/pro/loyalty/expiration', verifyToken, isPro, loyaltyController.getExpirationConfig);
-router.put('/pro/loyalty/expiration', verifyToken, isPro, loyaltyController.updateExpirationConfig);
-
-// ===== Card Customization Routes =====
+router.put('/pro/loyalty/expiration', verifyToken, isPro, loyaltyController.updateExpirationConfig);
 router.get('/pro/card-customization/:empresaId', verifyToken, isPro, apiController.getCardCustomization);
 router.put('/pro/card-customization/:empresaId', verifyToken, isPro, apiController.updateCardCustomization);
 router.patch('/pro/card-customization/:empresaId/gps', verifyToken, isPro, apiController.updateCardCustomizationGPS);
@@ -111,27 +91,14 @@ router.post('/pro/upload-logo', verifyToken, isPro, (req, res, next) => {
     if (err) return res.status(400).json({ error: err.message });
     next();
   });
-}, apiController.uploadLogo);
-
-// ===== PRO CLIENT INVITE ROUTES =====
+}, apiController.uploadLogo);
 router.post('/pro/clients/create-invite', verifyToken, isPro, apiController.createClientAndInvite);
-router.post('/pro/clients/resend-links', verifyToken, isPro, apiController.sendClientDownloadLinks);
-
-// ===== PUSH NOTIFICATION ROUTES =====
+router.post('/pro/clients/resend-links', verifyToken, isPro, apiController.sendClientDownloadLinks);
 router.post('/pro/push/send', verifyToken, isPro, pushController.sendNotification);
-router.get('/pro/push/history', verifyToken, isPro, pushController.getHistory);
-
-// ===== APPLE WALLET ROUTES =====
-// Import et utilisation des routes Apple Wallet (contient les endpoints frontend + Apple Web Service)
-// Frontend: /api/app/wallet /*
-// Apple Web Service: /api/wallet/v1/*
-router.use('/', walletRoutes);
-
-// ===== Site Settings Routes =====
+router.get('/pro/push/history', verifyToken, isPro, pushController.getHistory);
+router.use('/', walletRoutes);
 router.get('/settings/mentions-legales', siteSettingsController.getMentionsLegales);
-router.put('/admin/settings/mentions-legales', verifyToken, isAdmin, siteSettingsController.updateMentionsLegales);
-
-// ===== Public Client Routes =====
+router.put('/admin/settings/mentions-legales', verifyToken, isAdmin, siteSettingsController.updateMentionsLegales);
 router.get('/public/enterprises', apiController.getPublicEnterprises);
 router.get('/companies/:companyId/info', apiController.getCompanyInfo);
 router.get('/companies/:companyId/card-customization', apiController.getCardCustomization);

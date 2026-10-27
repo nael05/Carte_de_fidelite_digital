@@ -1,8 +1,3 @@
-/* ============================================================
-   FIDELYZ - HOME PAGE "DEEP MIDNIGHT LUXE" - V2 POLISHED
-   Aesthetics: Premium, High-Contrast, Immersive, Ultra-Modern
-   ============================================================ */
-
 :root {
   --luxe-black: #050608;
   --luxe-deep-blue: #0F172A;
@@ -23,7 +18,7 @@
   font-family: 'Inter', -apple-system, sans-serif;
 }
 
-/* ---- BACKGROUND DECORATIONS ---- */
+
 .luxe-bg-glow {
   position: fixed;
   top: -10%; left: -10%;
@@ -45,7 +40,7 @@
   opacity: 0.8;
 }
 
-/* ---- NAVBAR ---- */
+
 .luxe-navbar {
   position: sticky;
   top: 0;
@@ -109,7 +104,7 @@
   transform: translateY(-1px);
 }
 
-/* ---- HERO SECTION ---- */
+
 .hero-section {
   position: relative;
   z-index: 10;
@@ -217,7 +212,7 @@
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-/* ---- FEATURES SHOWCASE ---- */
+
 .features-showcase {
   position: relative;
   z-index: 10;
@@ -267,7 +262,7 @@
   line-height: 1.6;
 }
 
-/* ---- ACCESS SECTION ---- */
+
 .access-section {
   position: relative;
   z-index: 10;
@@ -395,7 +390,7 @@
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* ---- DEMO FORM LUXE POLISHED ---- */
+
 .client-demo-wrapper {
   margin-top: 24px;
 }
@@ -466,7 +461,7 @@
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 14px;
-  padding: 14px 16px 14px 52px !important; /* INCREASED PADDING TO PREVENT OVERLAP */
+  padding: 14px 16px 14px 52px !important; 
   color: white;
   font-size: 15px;
   transition: all 0.3s ease;
@@ -522,7 +517,7 @@
   box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
 }
 
-/* ---- FOOTER ---- */
+
 .luxe-footer {
   padding: 120px 24px 60px;
   max-width: 1200px;
@@ -558,9 +553,7 @@
   color: #64748B;
 }
 
-/* ============================================================
-   MOBILE RESPONSIVE "INCROYABLE"
-   ============================================================ */
+
 @media (max-width: 1024px) {
   .grid-piliers { grid-template-columns: repeat(2, 1fr); gap: 24px; }
   .features-showcase { gap: 24px; }
@@ -588,11 +581,11 @@
   .footer-content { flex-direction: column; text-align: center; }
 }
 
-/* Animations fixes */
+
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
 
-/* Scrollbar Style */
+
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }

@@ -12,32 +12,24 @@ axiosInstance.interceptors.request.use((config) => {
   
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
-  }
-  
-  // Ajouter le deviceId pour les vérifications de session
+  }
   if (deviceId) {
     config.headers['X-Device-Id'] = deviceId
   }
   
   return config
-})
-
-// Handle 401 errors (expired/invalid session)
+})
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Session expirée - nettoyer et rediriger
-      // Stocker le role AVANT de le supprimer
+    if (error.response?.status === 401) {
       const userRole = localStorage.getItem('userRole')
       
       localStorage.removeItem('token')
       localStorage.removeItem('userRole')
       localStorage.removeItem('deviceId')
       localStorage.removeItem('companyId')
-      localStorage.removeItem('companyName')
-      
-      // Rediriger vers login approprié (SAUF si on est déjà en train d'essayer de se connecter)
+      localStorage.removeItem('companyName')
       const isLoginRequest = error.config.url.includes('login')
       
       if (!isLoginRequest) {

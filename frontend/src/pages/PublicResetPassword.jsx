@@ -17,9 +17,7 @@ function PublicResetPassword() {
   const location = useLocation()
   
   const queryParams = new URLSearchParams(location.search)
-  const token = queryParams.get('token')
-
-  // Initialisation du thème
+  const token = queryParams.get('token')
   useEffect(() => {
     const savedTheme = localStorage.getItem('fidelyz-theme') || 'dark'
     if (savedTheme === 'dark') {
@@ -45,9 +43,7 @@ function PublicResetPassword() {
         setError('Les mots de passe ne correspondent pas')
         setLoading(false)
         return
-      }
-
-      // Validation rigoureuse (Majuscule + Chiffre/Spécial + 6 chars)
+      }
       const hasMinLength = newPassword.length >= 6;
       const hasUppercase = /(?=.*[A-Z])/.test(newPassword);
       const hasSpecial = /(?=.*[0-9!@#$%^&*])/.test(newPassword);

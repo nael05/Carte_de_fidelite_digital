@@ -6,9 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key_change_in_producti
 
 export const generateToken = (userId, role) => {
   return jwt.sign({ id: userId, role }, JWT_SECRET, { expiresIn: '7d' });
-};
-
-// Wrapper pour middlewares async
+};
 const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };

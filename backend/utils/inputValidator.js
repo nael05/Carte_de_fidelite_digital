@@ -1,11 +1,9 @@
-// Validation des entrées
 export const validateEmail = (email) => {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email) && email.length <= 255;
 };
 
-export const validatePhone = (phone) => {
-  // Accepte formats: +33123456789, 0123456789, +33 1 23 45 67 89, etc.
+export const validatePhone = (phone) => {
   const regex = /^\+?[0-9\s\-().]{7,20}$/;
   return regex.test(phone?.trim());
 };

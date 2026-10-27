@@ -20,7 +20,7 @@
   z-index: 0;
 }
 
-/* ── Navbar ── */
+
 .ml-navbar {
   position: sticky;
   top: 0;
@@ -57,7 +57,7 @@
   color: var(--text-primary, #fff);
 }
 
-/* ── Container ── */
+
 .ml-container {
   flex: 1;
   max-width: 780px;
@@ -68,7 +68,7 @@
   z-index: 1;
 }
 
-/* ── States ── */
+
 .ml-state {
   display: flex;
   flex-direction: column;
@@ -83,7 +83,7 @@
   color: #f87171;
 }
 
-/* ── Article (contenu HTML venant de la DB) ── */
+
 .ml-article {
   background: var(--bg-card, rgba(255,255,255,0.03));
   border: 1px solid var(--border-light, rgba(255,255,255,0.08));
@@ -156,7 +156,7 @@
   opacity: 0.8;
 }
 
-/* ── Footer ── */
+
 .ml-footer {
   display: flex;
   align-items: center;
@@ -178,7 +178,7 @@
   color: var(--accent, #6366f1);
 }
 
-/* ── Responsive ── */
+
 @media (max-width: 640px) {
   .ml-navbar {
     padding: 14px 20px;

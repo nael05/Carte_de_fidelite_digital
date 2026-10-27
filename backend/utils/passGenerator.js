@@ -28,9 +28,7 @@ export class PassGenerator {
       if (this.configLoaded) return true;
 
       this.certPath = process.env.APPLE_CERT_PATH;
-      this.keyPath = process.env.APPLE_KEY_PATH || this.certPath;
-
-      // Convertir en chemins absolus si nécessaire
+      this.keyPath = process.env.APPLE_KEY_PATH || this.certPath;
       if (this.certPath && !path.isAbsolute(this.certPath)) {
         this.certPath = path.resolve(__dirname, '..', this.certPath);
       }
@@ -41,9 +39,7 @@ export class PassGenerator {
       this.certPassword = process.env.APPLE_CERT_PASSWORD || '';
       this.teamId = process.env.APPLE_TEAM_ID;
       this.passTypeId = process.env.APPLE_PASS_TYPE_ID;
-      this.webserviceUrl = process.env.APPLE_WALLET_WEBSERVICE_URL;
-
-      // Normaliser l'URL
+      this.webserviceUrl = process.env.APPLE_WALLET_WEBSERVICE_URL;
       if (typeof this.webserviceUrl === 'string' && this.webserviceUrl.endsWith('/')) {
         this.webserviceUrl = this.webserviceUrl.slice(0, -1);
       }
@@ -98,8 +94,7 @@ export class PassGenerator {
   async fetchImageBuffer(urlOrPath) {
     if (!urlOrPath || typeof urlOrPath !== 'string') return null;
 
-    try {
-      // Détection plus robuste des fichiers locaux dans le dossier 'uploads'
+    try {
       const isLocalUpload = urlOrPath.includes('uploads/');
       if (isLocalUpload) {
         const cleanPath = urlOrPath.substring(urlOrPath.indexOf('uploads/'));
@@ -238,10 +233,7 @@ export class PassGenerator {
       const cleanKey = this.extractPEM(keyBuffer);
 
       template.setCertificate(cleanCert);
-      template.setPrivateKey(cleanKey, this.certPassword || undefined);
-
-      // 2. Chargement PARALLÈLE des images
-      // Fallback robuste : si apple_logo_url est vide, on utilise logo_url
+      template.setPrivateKey(cleanKey, this.certPassword || undefined);
       const finalLogoUrl = customization?.apple_logo_url || customization?.logo_url;
       const finalIconUrl = customization?.apple_icon_url || customization?.icon_url;
       const finalStripUrl = customization?.apple_strip_image_url || customization?.strip_image_url;
@@ -250,16 +242,12 @@ export class PassGenerator {
         this.fetchImageBuffer(finalLogoUrl),
         this.fetchImageBuffer(finalIconUrl),
         this.fetchImageBuffer(finalStripUrl)
-      ]);
-
-      // Ajout sécurisé des images
+      ]);
       await this.safeAddImage(template, "logo", logoBuffer);
       await this.safeAddImage(template, "icon", iconBuffer);
       if (stripBuffer) {
         await this.safeAddImage(template, "strip", stripBuffer);
-      }
-
-      // Fallbacks par défaut (Images visibles si rien n'est trouvé pour éviter les espaces vides)
+      }
       if (!iconBuffer) {
         const defaultIcon = await this.fetchImageBuffer('https://dummyimage.com/29x29/000/fff.png&text=Icon');
         if (defaultIcon) await this.safeAddImage(template, "icon", defaultIcon);
@@ -282,13 +270,9 @@ export class PassGenerator {
           locationsArray = typeof customization.locations === 'string'
             ? JSON.parse(customization.locations)
             : customization.locations;
-        } catch (e) {
-          // ignore parsing error
+        } catch (e) {
         }
-      }
-
-      // Collecter toutes les localisations valides puis les injecter via setLocations()
-      // (la lib stocke en interne via un Symbol — push direct sur pass.locations n'écrit pas dans le pass.json)
+      }
       const validLocations = [];
 
       if (Array.isArray(locationsArray) && locationsArray.length > 0) {
@@ -311,17 +295,13 @@ export class PassGenerator {
         const fbLng = Number(customization?.longitude);
         const fbLatValid = customization?.latitude !== '' && customization?.latitude != null && !isNaN(fbLat) && fbLat >= -90 && fbLat <= 90;
         const fbLngValid = customization?.longitude !== '' && customization?.longitude != null && !isNaN(fbLng) && fbLng >= -180 && fbLng <= 180;
-        if (fbLatValid && fbLngValid) {
-          // Fallback ultime s'il reste des vieilles coordonnées non migrées
+        if (fbLatValid && fbLngValid) {
           const rawFallbackText = (customization.relevant_text || customization.relevantText || '').replace(/Bientot/gi, '').replace(/Soon/gi, '').trim();
           const cleanFallbackText = rawFallbackText || `Bienvenue chez ${clientData.companyName || 'nous'}`;
           validLocations.push({ latitude: fbLat, longitude: fbLng, relevantText: cleanFallbackText.substring(0, 255) });
           logger.info(`📍 [APPLE FALLBACK ADD] Lat: ${fbLat}, Lng: ${fbLng}, Text: "${cleanFallbackText}"`);
         }
-      }
-
-      // Injecter les localisations via setLocations() (API officielle de la lib)
-      // Fallback sur affectation directe si la méthode n'existe pas ou échoue
+      }
       if (validLocations.length > 0) {
         try {
           if (typeof pass.setLocations === 'function') {
@@ -340,11 +320,7 @@ export class PassGenerator {
           }
         } catch (_) { /* ignore */ }
         pass.locations = [];
-      }
-
-      // --- LAYOUT PREMIUM (Style Fidelyz) ---
-
-      // 1. Points (Header)
+      }
       const currentBalance = clientData.balance || 0;
       const pointsDelta = clientData.lastPointsChange || 0;
       const rewardTiers = Array.isArray(clientData.rewardTiers) ? clientData.rewardTiers : [];
@@ -369,9 +345,7 @@ export class PassGenerator {
         key: 'points_header',
         label: 'POINTS',
         value: `${currentBalance}`
-      });
-
-      // 2. Bonjour (Secondary)
+      });
       this.safeAddField(pass.secondaryFields, {
         key: 'greeting',
         label: 'BONJOUR',
@@ -382,9 +356,7 @@ export class PassGenerator {
         key: 'reward_hint',
         label: 'DÉTAILS DES RÉCOMPENSES',
         value: 'Au dos'
-      });
-
-      // 4. Barcode
+      });
       const shortId = clientData.clientId ? String(clientData.clientId).slice(-6).toUpperCase() : 'N/A';
       pass.barcodes = [
         {
@@ -472,10 +444,7 @@ export class PassGenerator {
           if (platform === 'instagram') url = `https://instagram.com/${handle}`;
           else if (platform === 'tiktok') url = `https://tiktok.com/@${handle}`;
           else if (platform === 'facebook') url = `https://facebook.com/${handle}`;
-        }
-
-        // On met l'URL dans value (iOS la détectera via PKDataDetectorTypeLink)
-        // et le handle propre dans attributedValue pour les versions supportant le HTML
+        }
         return { url, displayHandle };
       };
 
@@ -516,10 +485,7 @@ export class PassGenerator {
             dataDetectorTypes: ['PKDataDetectorTypeLink']
           });
         }
-      }
-
-
-      // Texte conditions + injection expiration automatique
+      }
       {
         const baseTerms = customization?.back_fields_terms || '';
         const expMonths = clientData.points_expiration_months ?? null;
@@ -562,9 +528,7 @@ export class PassGenerator {
           label: 'INFOS COMPLÉMENTAIRES',
           value: customization.back_fields_info
         });
-      }
-
-      // --- SECTION PROMO AU DOS (Comme demandé) ---
+      }
       if (customization?.relevant_text) {
         this.safeAddField(pass.backFields, {
           key: 'promotion',

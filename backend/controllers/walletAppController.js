@@ -22,9 +22,7 @@ export const createWalletPass = async (req, res) => {
 
     if (!clientId) {
       return res.status(400).json({ error: 'clientId manquant' });
-    }
-
-    // 1️⃣ Récupérer le client + entreprise + customization + loyalty_config
+    }
     const [clientRows] = await db.query(
       `SELECT c.id, c.prenom, c.nom, c.telephone, c.points, c.type_wallet,
               e.id as company_id, e.nom as company_name,
@@ -71,9 +69,7 @@ export const createWalletPass = async (req, res) => {
 
     const client = clientRows[0];
     let type_wallet = bodyWalletType || client.type_wallet || 'apple';
-    const { company_id, company_name, points, points_for_reward } = client;
-
-    // Mettre à jour en base si le type a changé
+    const { company_id, company_name, points, points_for_reward } = client;
     if (bodyWalletType && bodyWalletType !== client.type_wallet) {
       await db.query('UPDATE clients SET type_wallet = ? WHERE id = ?', [bodyWalletType, client.id]);
     }
@@ -82,16 +78,12 @@ export const createWalletPass = async (req, res) => {
       return res.status(400).json({ error: 'Client sans entreprise associée' });
     }
 
-    logger.info(`📱 Création pass ${type_wallet === 'google' ? 'Google' : 'Apple'} Wallet pour client: ${clientId}`);
-
-    // LOGIQUE GOOGLE WALLET
+    logger.info(`📱 Création pass ${type_wallet === 'google' ? 'Google' : 'Apple'} Wallet pour client: ${clientId}`);
     if (type_wallet === 'google') {
       try {
         const [tiers] = await db.query('SELECT * FROM reward_tiers WHERE entreprise_id = ? ORDER BY points_required ASC', [company_id]);
         await googleWalletGenerator.createOrUpdateClass(company_id, client, company_name);
-        const saveUrl = await googleWalletGenerator.createLoyaltyObject(client.id, company_id, `${client.prenom} ${client.nom}`, points || 0, client, tiers);
-
-        // Sauvegarder/Mettre à jour la référence dans wallet_cards pour permettre les mises à jour ultérieures
+        const saveUrl = await googleWalletGenerator.createLoyaltyObject(client.id, company_id, `${client.prenom} ${client.nom}`, points || 0, client, tiers);
         const googleSerial = `GOOGLE_${client.id}`;
         const [existing] = await db.query('SELECT id FROM wallet_cards WHERE client_id = ? AND pass_serial_number LIKE "GOOGLE_%"', [client.id]);
         
@@ -118,10 +110,7 @@ export const createWalletPass = async (req, res) => {
         logger.error('Erreur génération Google Wallet', err);
         return res.status(500).json({ error: 'Erreur génération Google Wallet' });
       }
-    }
-
-    // LOGIQUE APPLE WALLET
-    // 2️⃣ Vérifier si le client a déjà une carte
+    }
     const [existingCards] = await db.query(
       'SELECT id FROM wallet_cards WHERE client_id = ? AND pass_serial_number NOT LIKE "GOOGLE_%"',
       [client.id]
@@ -132,13 +121,9 @@ export const createWalletPass = async (req, res) => {
         error: 'Ce client possède déjà une carte Apple Wallet',
         serialNumber: existingCards[0].pass_serial_number,
       });
-    }
-
-    // 3️⃣ Utiliser l'id client comme serial number pour la cohérence
+    }
     const serialNumber = client.id.replace(/-/g, '').substring(0, 20).toUpperCase();
-    const authenticationToken = randomUUID();
-
-    // 4️⃣ Préparer données pour la génération du pass
+    const authenticationToken = randomUUID();
     const [tiers] = await db.query(
       'SELECT * FROM reward_tiers WHERE entreprise_id = ? ORDER BY points_required ASC',
       [company_id]
@@ -171,10 +156,7 @@ export const createWalletPass = async (req, res) => {
       relevant_text: client.relevant_text,
       apple_review_url: client.apple_review_url,
       locations: client.locations,
-    };
-    // 5️⃣ Générer le pass Apple Wallet
-    
-    // Forcer l'URL de production pour Apple Wallet (HTTPS OBLIGATOIRE)
+    };
     let backendUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
     if (backendUrl.startsWith('http://')) {
       backendUrl = backendUrl.replace('http://', 'https://');
@@ -193,9 +175,7 @@ export const createWalletPass = async (req, res) => {
 
     if (!passBuffer) {
       return res.status(503).json({ error: 'Service Apple Wallet temporairement désactivé (certificat manquant)' });
-    }
-
-    // 6️⃣ Sauvegarder en BD
+    }
     await db.query(
       `INSERT INTO wallet_cards (
         client_id, company_id, pass_serial_number, authentication_token,
@@ -213,9 +193,7 @@ export const createWalletPass = async (req, res) => {
         points || 0,
         client.id.toString(),
       ]
-    );
-
-    // 7️⃣ Envoyer le fichier .pkpass
+    );
     res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
     res.setHeader('Content-Disposition', `attachment; filename="${serialNumber}.pkpass"`);
     res.setHeader('Content-Length', passBuffer.length);
@@ -426,17 +404,13 @@ export const downloadClientPass = async (req, res) => {
     const client = clientRows[0];
     const requestedType = req.query.type; // ?type=apple ou ?type=google
     const userAgent = req.headers['user-agent'] || '';
-    const isIOS = /iPhone|iPad|iPod/.test(userAgent);
-
-    // Déterminer le type final : soit forcé par l'URL, soit détecté par l'appareil, soit par défaut en DB
+    const isIOS = /iPhone|iPad|iPod/.test(userAgent);
     let finalType = client.type_wallet;
     if (requestedType === 'apple' || requestedType === 'google') {
       finalType = requestedType;
     } else if (isIOS) {
       finalType = 'apple';
-    }
-
-    // SI GOOGLE WALLET -> Rediriger vers l'URL
+    }
     if (finalType === 'google') {
       try {
         const [tiers] = await db.query(
@@ -445,9 +419,7 @@ export const downloadClientPass = async (req, res) => {
         );
 
         await googleWalletGenerator.createOrUpdateClass(client.company_id, client, client.company_name, 'points');
-        const saveUrl = await googleWalletGenerator.createLoyaltyObject(client.id, client.company_id, `${client.prenom} ${client.nom}`, client.points || 0, client, tiers);
-        
-        // Assurer que la référence existe en base pour les mises à jour
+        const saveUrl = await googleWalletGenerator.createLoyaltyObject(client.id, client.company_id, `${client.prenom} ${client.nom}`, client.points || 0, client, tiers);
         const [existing] = await db.query('SELECT id FROM wallet_cards WHERE client_id = ? AND pass_serial_number LIKE "GOOGLE_%"', [client.id]);
         if (existing.length === 0) {
           const googleToken = `GOOGLE_${randomUUID()}`;
@@ -468,22 +440,16 @@ export const downloadClientPass = async (req, res) => {
         logger.error('Erreur redirection Google Wallet', err);
         return res.status(500).send('Erreur lors de la redirection Google Wallet.');
       }
-    }
-
-    // SI APPLE WALLET -> Générer .pkpass
+    }
     logger.info(`🔍 [APPLE DOWNLOAD DEBUG] Client: ${client.prenom} ${client.nom}, Locations JSON: ${JSON.stringify(client.locations)}`);
-    const serialNumber = client.id.replace(/-/g, '').substring(0, 20).toUpperCase();
-    
-    // Récupérer le token existant s'il y en a un pour ne pas casser la synchro APNs
+    const serialNumber = client.id.replace(/-/g, '').substring(0, 20).toUpperCase();
     const [existingTokenRow] = await db.query('SELECT authentication_token FROM wallet_cards WHERE pass_serial_number = ?', [serialNumber]);
     const authenticationToken = existingTokenRow.length > 0 ? existingTokenRow[0].authentication_token : randomUUID();
 
     const [tiers] = await db.query(
       'SELECT * FROM reward_tiers WHERE entreprise_id = ? ORDER BY points_required ASC',
       [client.company_id]
-    );
-
-    // Calcul points expirant bientôt pour le texte au dos
+    );
     let soonExpiringPoints = 0;
     if (client.points_expiration_months) {
       try {
@@ -528,9 +494,7 @@ export const downloadClientPass = async (req, res) => {
       back_fields_tiktok: client.back_fields_tiktok,
       apple_review_url: client.apple_review_url,
       locations: client.locations,
-    };
-
-    // Détermination de l'URL du webservice (Indispensable pour la synchro)
+    };
     let backendUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
     if (backendUrl.startsWith('http://')) backendUrl = backendUrl.replace('http://', 'https://');
     const webServiceURL = `${backendUrl}/api/wallet`;
@@ -541,9 +505,7 @@ export const downloadClientPass = async (req, res) => {
       serialNumber, 
       authenticationToken,
       { webServiceURL }
-    );
-
-    // 6️⃣ Sauvegarder en BD (CRITIQUE pour Apple Wallet Sync)
+    );
     await db.query(
       `INSERT INTO wallet_cards (
         id, client_id, company_id, pass_serial_number, authentication_token,

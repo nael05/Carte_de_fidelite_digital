@@ -1,18 +1,13 @@
-/* ============================================================
-   PRO DASHBOARD — Mobile-First, Card-Based UX
-   ============================================================ */
-
-/* ---- LAYOUT ---- */
 .pro-dash {
   min-height: 100vh;
-  min-height: 100dvh; /* mobile safe area */
+  min-height: 100dvh; 
   background: var(--bg-app);
   display: flex;
   flex-direction: column;
-  padding-bottom: 72px; /* space for bottom nav */
+  padding-bottom: 72px; 
 }
 
-/* ---- TOP BAR ---- */
+
 .pro-topbar {
   position: sticky;
   top: 0;
@@ -88,7 +83,7 @@
   border-color: var(--error-border);
 }
 
-/* ---- SUSPENDED ---- */
+
 .pro-suspended-banner {
   display: flex;
   align-items: flex-start;
@@ -104,7 +99,7 @@
 .pro-suspended-banner strong { display: block; margin-bottom: 2px; }
 .pro-suspended-banner p { margin: 0; font-size: 13px; opacity: 0.85; }
 
-/* ---- LOADING ---- */
+
 .pro-loading {
   display: flex;
   flex-direction: column;
@@ -118,7 +113,7 @@
 .pro-spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ---- ALERTS ---- */
+
 .pro-alert {
   display: flex;
   align-items: flex-start;
@@ -147,7 +142,7 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ---- MAIN ---- */
+
 .pro-main {
   flex: 1;
   padding: 24px 20px 100px;
@@ -156,12 +151,12 @@
   width: 100%;
 }
 
-/* ---- DESKTOP TABS ---- */
+
 .pro-tabs-desktop {
-  display: none; /* shown on desktop only */
+  display: none; 
 }
 
-/* ---- BOTTOM NAV (mobile) ---- */
+
 .pro-bottom-nav {
   position: fixed;
   bottom: 20px; left: 20px; right: 20px;
@@ -205,7 +200,7 @@
   transform: scale(0.92);
 }
 
-/* ---- SECTIONS ---- */
+
 .pro-section {
   animation: fadeSlideUp 250ms ease-out;
 }
@@ -249,7 +244,7 @@
 }
 .pro-export-btn:hover { background: var(--bg-hover); transform: translateY(-1px); }
 
-/* ---- SCANNER ---- */
+
 .pro-scanner-area {
   display: flex;
   flex-direction: column;
@@ -304,7 +299,7 @@
 }
 .pro-btn-secondary:hover { border-color: var(--border-medium); color: var(--text-primary); }
 
-/* ---- SEARCH ---- */
+
 .pro-search-bar {
   margin-bottom: 16px;
 }
@@ -322,7 +317,7 @@
 .pro-search-bar input::placeholder { color: var(--text-tertiary); }
 .pro-search-bar input:focus { outline: none; border-color: var(--accent); box-shadow: var(--shadow-focus); }
 
-/* ---- CLIENT CARDS ---- */
+
 .pro-client-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -470,7 +465,7 @@
 }
 .pro-empty p { margin: 0; font-size: 15px; }
 
-/* ---- RECRUIT ---- */
+
 .pro-recruit-content {
   display: flex;
   flex-direction: column;
@@ -563,7 +558,7 @@
     width: auto;
   }
 }
-/* ---- CLIENT MODAL ---- */
+
 .pro-modal {
   background: var(--bg-surface);
   border-radius: var(--radius-lg);
@@ -632,7 +627,7 @@
 }
 .pro-modal-actions .pro-action-btn:last-child { border-right: none; }
 
-/* ---- DELETE CONFIRM MODAL ---- */
+
 .delete-confirm-modal {
   padding: 32px 28px 28px;
 }
@@ -687,15 +682,13 @@
 }
 .delete-confirm-ok:hover { background: #dc2626; transform: translateY(-1px); }
 
-/* ============================================================
-   DESKTOP (>= 768px)
-   ============================================================ */
+
 @media (min-width: 768px) {
   .pro-dash {
-    padding-bottom: 0; /* no bottom nav on desktop */
+    padding-bottom: 0; 
   }
 
-  /* Show desktop tabs */
+  
   .pro-tabs-desktop {
     display: flex;
     width: fit-content;
@@ -728,10 +721,10 @@
     font-weight: 600;
   }
 
-  /* Hide bottom nav */
+  
   .pro-bottom-nav { display: none; }
 
-  /* Wider main */
+  
   .pro-main {
     max-width: 800px;
     padding: 24px;
@@ -741,7 +734,7 @@
     padding: 14px 24px;
   }
 
-  /* Client cards as 2-col grid on desktop */
+  
   .pro-client-list {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -760,7 +753,7 @@
   }
 }
 
-/* ==================== PUSH NOTIFICATIONS ==================== */
+
 .pro-push-container {
   display: flex;
   flex-direction: column;
@@ -898,7 +891,7 @@
   text-overflow: ellipsis;
 }
 
-/* History */
+
 .pro-push-history {
   display: flex;
   flex-direction: column;
@@ -1140,9 +1133,7 @@
   100% { opacity: 0.6; }
 }
 
-/* ============================================================ 
-   PREMIUM SCAN JOURNEY 
-   ============================================================ */
+
 
 .pro-scan-btn-premium {
   width: 100%;
@@ -1196,7 +1187,7 @@
 .scan-text span { display: block; font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--text-primary); }
 .scan-text p { margin: 0; font-size: 14px; color: var(--text-tertiary); }
 
-/* Scanner Overlay */
+
 .scanner-full-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -1257,7 +1248,7 @@
   font-size: 14px;
 }
 
-/* Premium Modal Box */
+
 .pro-modal-box-premium {
   background: var(--bg-surface);
   border-radius: 24px;
@@ -1358,7 +1349,7 @@
 .pro-btn-primary-premium { background: var(--accent); color: #fff; border: none; }
 .pro-btn-secondary-premium { background: var(--bg-subtle); color: var(--text-secondary); border: 1px solid var(--border-light); }
 
-/* Success View */
+
 .success-view { text-align: center; }
 .circle-check {
   width: 80px; height: 80px;
@@ -1450,7 +1441,7 @@
   cursor: pointer;
 }
 
-/* Reward Selection */
+
 .reward-scroll-list {
   display: flex;
   flex-direction: column;
@@ -1490,7 +1481,7 @@
   }
   .points-current-val { font-size: 48px; }
 }
-/* ---- PREMIUM REWARD MODAL ---- */
+
 .reward-item-premium {
   display: flex;
   align-items: center;
@@ -1553,7 +1544,7 @@
   opacity: 0.8;
 }
 
-/* ---- RESPONSIVE REWARDS ---- */
+
 .tier-item-row {
   display: flex;
   align-items: center;
@@ -1628,7 +1619,7 @@
   }
 }
 
-/* ---- DESKTOP SCANNER CENTERING ---- */
+
 @media (min-width: 768px) {
   .scanner-full-overlay {
     background: rgba(0, 0, 0, 0.85);
@@ -1667,7 +1658,7 @@
   }
 }
 
-/* ---- GLOBAL RESPONSIVE FINISHES ---- */
+
 @media (max-width: 480px) {
   .pro-topbar-left { gap: 8px; }
   .pro-company-name { font-size: 15px; }
@@ -1675,7 +1666,7 @@
   .pro-section-header h2 { font-size: 18px; }
   
   .pro-client-card { margin-bottom: 8px; }
-  .pro-action-btn { padding: 12px; } /* larger touch targets on small mobile */
+  .pro-action-btn { padding: 12px; } 
   
   .pro-recruit-content .pro-qr-display {
     padding: 10px;
@@ -1691,7 +1682,7 @@
   }
 }
 
-/* Modal centering on larger screens */
+
 @media (min-width: 768px) {
   .modal-backdrop {
     display: flex;
@@ -1705,7 +1696,7 @@
   }
 }
 
-/* ---- PREMIUM POLISH V3 ---- */
+
 body {
   transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1745,7 +1736,7 @@ body {
   box-shadow: 0 0 0 4000px rgba(0,0,0,0.85);
 }
 
-/* Scrollbar Premium */
+
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -1760,10 +1751,10 @@ body {
   background: var(--border-dark);
 }
 
-/* ---- UX MASTERY : TOASTS ---- */
+
 .pro-toast-container {
   position: fixed;
-  top: 80px; /* Under topbar */
+  top: 80px; 
   left: 50%;
   transform: translateX(-50%);
   z-index: 1300;
@@ -1809,7 +1800,7 @@ body {
   display: flex;
 }
 
-/* ---- UX MASTERY : SKELETONS ---- */
+
 .skeleton-card {
   height: 100px;
   background: var(--bg-subtle);
@@ -1835,7 +1826,7 @@ body {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
 }
 
-/* ---- SEARCH IMPROVEMENTS ---- */
+
 .pro-search-wrapper {
   position: relative;
   width: 100%;
@@ -1861,7 +1852,7 @@ body {
 
 .pro-search-clear:hover { background: var(--bg-hover); color: var(--text-primary); }
 
-/* --- BUTTON PRESS FEEDBACK --- */
+
 button:active {
   transform: scale(0.96);
 }
@@ -1872,7 +1863,7 @@ button:active {
   object-fit: cover;
   border-radius: inherit;
 }
-/* ==================== TWO-STEP SCAN FLOW (PREMIUM) ==================== */
+
 .centered-modal {
   position: fixed !important;
   top: 0; left: 0;
@@ -2033,7 +2024,7 @@ button:active {
   color: var(--text-primary);
 }
 
-/* Points View */
+
 .points-pills.large {
   font-size: 32px;
   font-weight: 800;
@@ -2104,9 +2095,7 @@ button:active {
   }
 }
 
-/* ============================================================
-   SETTINGS TAB — cfg-* design system
-   ============================================================ */
+
 
 .cfg-wrap {
   max-width: 580px;
@@ -2117,7 +2106,7 @@ button:active {
   padding-bottom: 40px;
 }
 
-/* ---- Section block ---- */
+
 .cfg-section {
   background: var(--bg-surface);
   border: 1px solid var(--border-light);
@@ -2144,7 +2133,7 @@ button:active {
 }
 .cfg-section-label svg { color: var(--accent); }
 
-/* ---- Mode toggle ---- */
+
 .cfg-mode-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2182,7 +2171,7 @@ button:active {
   font-weight: 400;
 }
 
-/* ---- Field ---- */
+
 .cfg-field {
   display: flex;
   flex-direction: column;
@@ -2218,7 +2207,7 @@ button:active {
   line-height: 1.5;
 }
 
-/* ---- Pill badges ---- */
+
 .cfg-pill {
   display: inline-flex;
   align-items: center;
@@ -2231,7 +2220,7 @@ button:active {
 .cfg-pill--blue { background: var(--accent-light); color: var(--accent); }
 .cfg-pill--gray { background: var(--bg-hover); color: var(--text-secondary); font-weight: 500; }
 
-/* ---- Input row ---- */
+
 .cfg-input-row {
   display: flex;
   align-items: center;
@@ -2266,7 +2255,7 @@ button:active {
   white-space: nowrap;
 }
 
-/* ---- Chips (shortcuts) ---- */
+
 .cfg-chips {
   display: flex;
   flex-wrap: wrap;
@@ -2305,7 +2294,7 @@ button:active {
   font-style: italic;
 }
 
-/* ---- Buttons ---- */
+
 .cfg-btn-add {
   display: inline-flex;
   align-items: center;
@@ -2342,7 +2331,7 @@ button:active {
 }
 .cfg-btn-ghost:hover { background: var(--bg-hover); }
 
-/* ---- Save button ---- */
+
 .cfg-save-btn {
   align-self: flex-end;
   display: inline-flex;
@@ -2363,7 +2352,7 @@ button:active {
 .cfg-save-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
 .cfg-save-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-/* ---- Tiers list ---- */
+
 .cfg-tiers {
   display: flex;
   flex-direction: column;
@@ -2440,7 +2429,7 @@ button:active {
   font-size: 13px;
 }
 
-/* ---- Responsive ---- */
+
 @media (max-width: 500px) {
   .cfg-section { padding: 16px; gap: 14px; }
   .cfg-mode-toggle { grid-template-columns: 1fr 1fr; gap: 6px; }
@@ -2450,7 +2439,7 @@ button:active {
   .cfg-tier-add .cfg-btn-add { flex: 1; justify-content: center; }
 }
 
-/* ---- HISTORY OPEN BUTTON ---- */
+
 .hist-open-btn {
   margin-top: 20px;
   display: flex;
@@ -2505,9 +2494,7 @@ button:active {
   color: var(--text-tertiary);
 }
 
-/* ════════════════════════════════════════
-   GPS & NOTIFICATIONS — gn-* design system
-════════════════════════════════════════ */
+
 .gn-wrap {
   display: flex;
   flex-direction: column;
@@ -2523,7 +2510,7 @@ button:active {
   background: linear-gradient(145deg, var(--bg-surface), var(--bg-elevated));
 }
 
-/* En-tête */
+
 .gn-section-head {
   display: flex;
   align-items: center;
@@ -2555,7 +2542,7 @@ button:active {
   margin-top: 2px;
 }
 
-/* Cards internes */
+
 .gn-card {
   background: var(--bg-app);
   border: 1px solid var(--border-light);
@@ -2574,7 +2561,7 @@ button:active {
   background: var(--bg-elevated);
 }
 
-/* Header card */
+
 .gn-card-header {
   display: flex;
   align-items: center;
@@ -2600,7 +2587,7 @@ button:active {
   gap: 8px;
 }
 
-/* Badges */
+
 .gn-badge {
   display: inline-flex;
   align-items: center;
@@ -2632,7 +2619,7 @@ button:active {
   color: #34d399;
 }
 
-/* Grille plateforme */
+
 .gn-platform-grid {
   display: flex;
   flex-direction: column;
@@ -2653,7 +2640,7 @@ button:active {
 .gn-platform-icon { flex-shrink: 0; font-size: 14px; line-height: 1.4; }
 .gn-platform-text strong { color: var(--text-primary); font-weight: 700; }
 
-/* Compteur lieux */
+
 .gn-loc-count {
   font-size: 12px;
   font-weight: 700;
@@ -2664,7 +2651,7 @@ button:active {
   padding: 2px 9px;
 }
 
-/* Champs */
+
 .gn-field { display: flex; flex-direction: column; gap: 6px; }
 
 .gn-label {
@@ -2725,7 +2712,7 @@ button:active {
 }
 .gn-input::placeholder { color: var(--text-tertiary); font-weight: 400; }
 
-/* Prévisualisation notification */
+
 .gn-preview { display: flex; flex-direction: column; gap: 6px; }
 .gn-preview-label {
   font-size: 11px;
@@ -2773,7 +2760,7 @@ button:active {
   word-break: break-word;
 }
 
-/* Info / tip */
+
 .gn-info {
   display: flex;
   align-items: flex-start;
@@ -2795,7 +2782,7 @@ button:active {
 }
 .gn-desc-muted { color: var(--text-tertiary); }
 
-/* Bouton Ajouter */
+
 .gn-add-btn {
   display: inline-flex;
   align-items: center;
@@ -2815,7 +2802,7 @@ button:active {
 .gn-add-btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
 .gn-add-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* Liste lieux vide */
+
 .gn-empty {
   display: flex;
   flex-direction: column;
@@ -2836,7 +2823,7 @@ button:active {
   color: var(--text-tertiary);
 }
 
-/* Lieux */
+
 .gn-locs { display: flex; flex-direction: column; gap: 10px; }
 
 .gn-loc {
@@ -2911,7 +2898,7 @@ button:active {
   border-color: rgba(239, 68, 68, 0.3);
 }
 
-/* Tip */
+
 .gn-tip {
   display: flex;
   align-items: flex-start;
@@ -2928,7 +2915,7 @@ button:active {
 .gn-tip svg { flex-shrink: 0; margin-top: 1px; }
 .gn-tip strong { font-weight: 700; }
 
-/* Bouton Enregistrer */
+
 .gn-save-btn {
   display: flex;
   align-items: center;
@@ -2954,7 +2941,7 @@ button:active {
 }
 .gn-save-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
-/* ── Responsive ── */
+
 @media (max-width: 600px) {
   .gn-wrap { padding: 16px; gap: 14px; }
   .gn-card { padding: 14px; gap: 12px; }
@@ -2971,9 +2958,7 @@ button:active {
   .gn-card-header-right { flex-wrap: wrap; }
 }
 
-/* ════════════════════════════════════════
-   SETTINGS HUB — stg-* design system
-════════════════════════════════════════ */
+
 
 .stg-hub {
   display: flex;
@@ -3059,7 +3044,7 @@ button:active {
   transform: translateX(2px);
 }
 
-/* ── Sub-page header ── */
+
 
 .stg-subpage-head {
   max-width: 580px;
@@ -3107,7 +3092,7 @@ button:active {
   margin: 3px 0 0;
 }
 
-/* ── Sub-page content wrapper ── */
+
 
 .stg-content {
   display: flex;
@@ -3118,7 +3103,7 @@ button:active {
   width: 100%;
 }
 
-/* ── Platform compatibility note ── */
+
 
 .stg-platform-note {
   font-size: 12px;
@@ -3131,7 +3116,7 @@ button:active {
   line-height: 1.5;
 }
 
-/* ── Responsive ── */
+
 @media (max-width: 600px) {
   .stg-hub-item { padding: 13px 14px; gap: 12px; }
   .stg-hub-icon { width: 36px; height: 36px; border-radius: 9px; }

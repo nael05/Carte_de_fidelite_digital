@@ -26,16 +26,11 @@ if (missingEnv.length > 0) {
 
 const app = express();
 app.set('trust proxy', 1);
-const PORT = process.env.PORT || 5000;
-
-// ===== SECURITY MIDDLEWARES =====
-// Helmet config - désactiver hsts en développement local
+const PORT = process.env.PORT || 5000;
 app.use(helmet({
   hsts: process.env.NODE_ENV === 'production' ? { maxAge: 31536000 } : false,
   contentSecurityPolicy: false, // Laisser CORS gérer
-}));
-
-// CORS configuré correctement (liste blanche)
+}));
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
   : [
@@ -63,8 +58,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
 const ipRangeRegex = /^http:\/\/(192\.168|10)\.\d+\.\d+:(300[0-9]|5[0-9]{3})$/;
 
 app.use(cors({
-  origin: (origin, callback) => {
-    // Requêtes sans origine (ex: Postman, appels server-to-server Apple Wallet)
+  origin: (origin, callback) => {
     if (!origin) return callback(null, true);
     const allowed = allowedOrigins.some(o =>
       typeof o === 'string' ? o === origin : o.test(origin)
@@ -76,26 +70,18 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Device-Id'],
   maxAge: 86400,
-}));
-
-// ===== BODY PARSER =====
+}));
 app.use(express.json({ limit: '1mb' }));
-app.use(express.urlencoded({ limit: '1mb', extended: true }));
-
-// ===== STATIC FILES =====
+app.use(express.urlencoded({ limit: '1mb', extended: true }));
 logger.info(`📁 Uploads directory: ${uploadsDir}`);
 app.use('/uploads', express.static(uploadsDir));
-app.use('/api/uploads', express.static(uploadsDir)); // Frontend compatibility
-
-// ===== ROUTES =====
+app.use('/api/uploads', express.static(uploadsDir)); // Frontend compatibility
 app.get('/api/wallet', (req, res) => {
   logger.info('🔍 [APPLE CONNECT] L\'iPhone a testé la racine du WebService');
   res.json({ status: 'active', service: 'Apple Wallet WebService' });
 });
 
-app.use('/api', apiRoutes);
-
-// ===== HEALTH CHECK avec DB =====
+app.use('/api', apiRoutes);
 app.get('/health', async (req, res) => {
   try {
     const [result] = await pool.query('SELECT 1');
@@ -104,18 +90,13 @@ app.get('/health', async (req, res) => {
     logger.error('Health check failed - DB connection issue', { error: err.message });
     res.status(503).json({ status: 'ERROR', database: 'disconnected', error: err.message });
   }
-});
-
-// ===== HEALTH CHECK & DIAGNOSTICS =====
+});
 app.get('/api/wallet/health', (req, res) => {
-  try {
-    // Test PassGenerator configuration
+  try {
     import('./utils/passGenerator.js').then((module) => {
       const pg = module.passGenerator;
       pg.validateConfiguration();
-    });
-
-    // Test APNService configuration  
+    });
     import('./utils/apnService.js').then((module) => {
       const apn = module.apnService;
       logger.info('✅ Provider APNs prêt');
@@ -133,15 +114,9 @@ app.get('/api/wallet/health', (req, res) => {
     logger.error('Health check error', err);
     res.status(500).json({ error: err.message });
   }
-});
-
-// ===== 404 HANDLER =====
-app.use(notFoundHandler);
-
-// ===== ERROR HANDLER (doit être dernier) =====
-app.use(errorHandler);
-
-// ===== START SERVER =====
+});
+app.use(notFoundHandler);
+app.use(errorHandler);
 app.listen(PORT, () => {
   logger.info(`✅ Backend démarré sur http://localhost:${PORT}`);
   logger.info(`📍 Environnement: ${process.env.NODE_ENV || 'development'}`);
@@ -159,8 +134,7 @@ app.listen(PORT, () => {
   }, 100);
 });
 
-if (process.env.NODE_APP_INSTANCE === '0') {
-  // Daily at 2am: expire points + send J-7 warnings
+if (process.env.NODE_APP_INSTANCE === '0') {
   cron.schedule('0 2 * * *', async () => {
     logger.info('[CRON] Points expiration job started');
     try {
@@ -173,9 +147,7 @@ if (process.env.NODE_APP_INSTANCE === '0') {
         } catch (err) {
           logger.error(`[CRON] Expiration failed for enterprise ${entrepriseId}`, { error: err.message });
         }
-      }
-
-      // J-7 warnings: find clients with soon-expiring points and force card sync
+      }
       for (const { id: entrepriseId, points_expiration_months } of enterprises) {
         try {
           const [clients] = await pool.query(
@@ -187,18 +159,14 @@ if (process.env.NODE_APP_INSTANCE === '0') {
           for (const client of clients) {
             try {
               const { soonPoints } = await computeClientExpiration(client.id, points_expiration_months);
-              if (soonPoints > 0) {
-                // Mise à jour silencieuse de la carte (texte J-7 au dos)
-                await walletSyncService.syncClientWallet(client.id, entrepriseId, 0);
-
-                // Notification push visible
+              if (soonPoints > 0) {
+                await walletSyncService.syncClientWallet(client.id, entrepriseId, 0);
                 const [regRows] = await pool.query(
                   `SELECT apr.push_token FROM apple_pass_registrations apr
                    JOIN wallet_cards wc ON wc.pass_serial_number = apr.pass_serial_number
                    WHERE wc.client_id = ?`,
                   [client.id]
-                );
-                // Apple push
+                );
                 if (regRows.length > 0) {
                   const tokens = regRows.map(r => r.push_token);
                   const { apnService } = await import('./utils/apnService.js');
@@ -207,9 +175,7 @@ if (process.env.NODE_APP_INSTANCE === '0') {
                     '⏳ Vos points expirent bientôt !',
                     `Il vous reste 7 jours pour utiliser ${soonPoints} point${soonPoints > 1 ? 's' : ''}. Venez vite !`
                   );
-                }
-
-                // Google Wallet push
+                }
                 const [gwRows] = await pool.query(
                   `SELECT pass_serial_number FROM wallet_cards WHERE client_id = ? AND company_id = ? AND pass_serial_number LIKE 'GOOGLE_%'`,
                   [client.id, entrepriseId]
@@ -231,9 +197,7 @@ if (process.env.NODE_APP_INSTANCE === '0') {
     } catch (err) {
       logger.error('[CRON] Points expiration job failed', { error: err.message });
     }
-  });
-
-  // Daily at 3am: purge old transaction history (keep at least 37 months to cover max expiration)
+  });
   cron.schedule('0 3 * * *', async () => {
     try {
       const [rows] = await pool.query(

@@ -14,9 +14,7 @@ import googleWalletGenerator from '../utils/googleWalletGenerator.js';
 import { sendLoyaltyUpdateNotification } from '../utils/notificationService.js';
 import walletSyncService from '../utils/walletSyncService.js';
 import emailService from '../utils/emailService.js';
-import crypto from 'crypto';
-
-// ===== HELPERS RGPD =====
+import crypto from 'crypto';
 const maskPhone = (phone) => {
   if (!phone) return null;
   const digits = phone.replace(/\D/g, '');
@@ -31,9 +29,7 @@ const maskEmail = (email) => {
   const domainParts = domain.split('.');
   const tld = domainParts.pop();
   return `${local[0]}***@***.${tld}`;
-};
-
-// ===== MASTER ADMIN CONTROLLERS =====
+};
 
 export const adminLogin = async (req, res) => {
   const { identifiant, mot_de_passe } = req.body;
@@ -262,9 +258,7 @@ export const updateCompany = async (req, res) => {
     }
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
-
-// ===== PRO / COMPANY CONTROLLERS =====
+};
 
 export const proLogin = async (req, res) => {
   const { email, mot_de_passe } = req.body;
@@ -291,28 +285,20 @@ export const proLogin = async (req, res) => {
       return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
     }
 
-    const token = generateToken(company.id, 'pro');
-
-    // Générer une empreinte d'appareil unique
+    const token = generateToken(company.id, 'pro');
     const deviceFingerprint = generateDeviceFingerprint(req);
-    const deviceName = req.headers['user-agent']?.substring(0, 100) || 'Unknown Device';
-
-    // 🔐 Convertir must_change_password en boolean strict
+    const deviceName = req.headers['user-agent']?.substring(0, 100) || 'Unknown Device';
     const mustChangePassword = Boolean(company.must_change_password);
     if (mustChangePassword) {
       logger.info('First login - password change required');
-    }
-
-    // Créer la session (valide 24h) - OBLIGATOIRE, bloque le login
+    }
     try {
       await createSession(company.id, deviceFingerprint, deviceName, token, '24h');
       logger.debug('Session created successfully');
     } catch (sessionErr) {
       logger.error('Session creation failed', { error: sessionErr.message });
       return res.status(500).json({ error: 'Unable to create session' });
-    }
-
-    // Retourner les informations de connexion
+    }
     res.json({
       token,
       deviceId: deviceFingerprint,
@@ -333,13 +319,10 @@ export const changePassword = async (req, res) => {
   const { newPassword } = req.body;
   const empresaId = req.user.id;
 
-  try {
-    // Vérifier que le champ newPassword existe
+  try {
     if (!newPassword) {
       return res.status(400).json({ error: 'Le nouveau mot de passe est requis' });
-    }
-
-    // Récupérer l'entreprise actuelle
+    }
     const [rows] = await pool.query(
       'SELECT mot_de_passe, must_change_password FROM entreprises WHERE id = ?',
       [empresaId]
@@ -349,27 +332,20 @@ export const changePassword = async (req, res) => {
       return res.status(404).json({ error: 'Entreprise non trouvée' });
     }
 
-    const company = rows[0];
-
-    // 🔐 Vérification 1: Valider la complexité du nouveau mot de passe
+    const company = rows[0];
     const complexityCheck = validatePassword(newPassword);
     if (!complexityCheck.isValid) {
       return res.status(400).json({
         error: 'Exigences du mot de passe non respectées',
         details: complexityCheck.errors
       });
-    }
-
-    // 🔐 Vérification 2: S'assurer que le nouveau mot de passe est différent de l'ancien
-    // (Important pour éviter que l'utilisateur garde le même mot de passe temporaire)
+    }
     const isSamePassword = await bcrypt.compare(newPassword, company.mot_de_passe);
     if (isSamePassword) {
       return res.status(400).json({
         error: 'Le nouveau mot de passe doit être différent de l\'ancien mot de passe'
       });
-    }
-
-    // 🔐 Vérification 3: Hash du nouveau mot de passe
+    }
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     const [updateResult] = await pool.query(
@@ -452,9 +428,7 @@ export const getProStatus = async (req, res) => {
     logger.error('Get pro status error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
-
-// Enumerates active sessions of the enterprise
+};
 export const getProSessions = async (req, res) => {
   const empresaId = req.user.id;
 
@@ -476,9 +450,7 @@ export const getProSessions = async (req, res) => {
     logger.error('Register client error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
-
-// 🆕 Déconnecter d'un appareil spécifique
+};
 export const logoutProDevice = async (req, res) => {
   const empresaId = req.user.id;
   const { deviceId } = req.body;
@@ -502,9 +474,7 @@ export const logoutProDevice = async (req, res) => {
     logger.error('Logout pro device error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
-
-// 🆕 Déconnecter de tous les appareils (sauf celui actuel optionnel)
+};
 export const logoutProAll = async (req, res) => {
   const empresaId = req.user.id;
   const { keepCurrent } = req.body; // Optional: keep current device connected
@@ -534,8 +504,7 @@ export const logoutProAll = async (req, res) => {
 export const getClients = async (req, res) => {
   const empresaId = req.user.id;
 
-  try {
-    // Obtenir le type de fidélité
+  try {
     const [configRows] = await pool.query(
       'SELECT loyalty_type FROM loyalty_config WHERE entreprise_id = ?',
       [empresaId]
@@ -632,8 +601,7 @@ export const deleteClient = async (req, res) => {
   const { clientId } = req.params;
   const empresaId = req.user.id;
 
-  try {
-    // Vérifier que le client appartient bien à l'entreprise
+  try {
     const [clientRows] = await pool.query(
       'SELECT id FROM clients WHERE id = ? AND entreprise_id = ?',
       [clientId, empresaId]
@@ -641,9 +609,7 @@ export const deleteClient = async (req, res) => {
 
     if (clientRows.length === 0) {
       return res.status(404).json({ error: 'Client non trouvé ou non autorisé' });
-    }
-
-    // Suppression du client (cascades gérées par la DB pour wallet_cards et transaction_history)
+    }
     await pool.query(
       'DELETE FROM clients WHERE id = ? AND entreprise_id = ?',
       [clientId, empresaId]
@@ -685,12 +651,8 @@ export const handleScan = async (req, res) => {
       return res.status(400).json({ error: 'Configuration de fidélité non trouvée' });
     }
 
-    const loyaltyConfig = config[0];
-
-    // Calcul des points à ajouter : On vérifie si on a une valeur numérique valide > 0
-    let pointsToAdd = Number(points_to_add);
-
-    // Si la valeur est 0, vide ou invalide, et qu'on est en mode auto, on prend la config
+    const loyaltyConfig = config[0];
+    let pointsToAdd = Number(points_to_add);
     if ((isNaN(pointsToAdd) || pointsToAdd <= 0) && loyaltyConfig.points_adding_mode === 'automatic') {
       pointsToAdd = Number(loyaltyConfig.points_per_purchase) || 10;
     } else if (isNaN(pointsToAdd) || pointsToAdd < 0) {
@@ -730,9 +692,7 @@ export const handleScan = async (req, res) => {
 
     sendLoyaltyUpdateNotification(clientId, empresaId, pointsToAdd, false).catch(e =>
       logger.warn('Push scan notification failed', e.message)
-    );
-
-    // 🚀 RÉPONSE RAPIDE : On ne recalcule pas tout (le frontend a déjà les infos du lookup)
+    );
     res.json({
       success: true,
       clientId,
@@ -763,15 +723,11 @@ export const getScanInfo = async (req, res) => {
       return res.status(404).json({ error: 'Client non trouvé' });
     }
 
-    const client = clientRows[0];
-
-    // 1. Récupérer TOUS les paliers pour affichage complet
+    const client = clientRows[0];
     const [allTiers] = await pool.query(
       'SELECT * FROM reward_tiers WHERE entreprise_id = ? ORDER BY points_required ASC',
       [empresaId]
-    );
-
-    // 2. Détection du prochain palier (motivation)
+    );
     const [nextTiers] = await pool.query(
       'SELECT * FROM reward_tiers WHERE entreprise_id = ? AND points_required > ? ORDER BY points_required ASC LIMIT 1',
       [empresaId, client.points]
@@ -1021,9 +977,7 @@ export const registerClientAndGeneratePass = async (req, res) => {
       [clientId, entrepriseId, nom, prenom, telephone, email, type_wallet, marketingOptinValue]
     );
 
-    logger.info(`✅ Client créé avec succès: ${clientId} (${prenom} ${nom}), marketing_optin=${marketingOptinValue}`);
-
-    // Retour explicite du clientId
+    logger.info(`✅ Client créé avec succès: ${clientId} (${prenom} ${nom}), marketing_optin=${marketingOptinValue}`);
     return res.status(201).json({
       success: true,
       clientId: clientId,
@@ -1033,10 +987,7 @@ export const registerClientAndGeneratePass = async (req, res) => {
     logger.error('Erreur lors de la création du client (SQL/Logic):', { error: err.message });
     return res.status(500).json({ error: 'Erreur lors de la création de la carte' });
   }
-};
-
-
-// ===== PRO CLIENT INVITE / RESEND LINK =====
+};
 
 export const createClientAndInvite = async (req, res) => {
   const entrepriseId = req.user.id; // always from JWT, never from body
@@ -1116,8 +1067,7 @@ export const sendClientDownloadLinks = async (req, res) => {
   }
   if (clientIds.length > 100) {
     return res.status(400).json({ error: 'Maximum 100 clients par envoi' });
-  }
-  // Validate UUIDs to prevent injection
+  }
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   if (!clientIds.every(id => typeof id === 'string' && uuidRegex.test(id))) {
     return res.status(400).json({ error: 'Format de clientId invalide' });
@@ -1131,9 +1081,7 @@ export const sendClientDownloadLinks = async (req, res) => {
     if (companyRows.length === 0) {
       return res.status(404).json({ error: 'Entreprise non trouvée' });
     }
-    const companyName = companyRows[0].nom;
-
-    // Fetch only clients that belong to this enterprise (security: ignore IDs from other tenants)
+    const companyName = companyRows[0].nom;
     const placeholders = clientIds.map(() => '?').join(',');
     const [clients] = await pool.query(
       `SELECT id, prenom, nom, email FROM clients WHERE id IN (${placeholders}) AND entreprise_id = ?`,
@@ -1163,9 +1111,7 @@ export const sendClientDownloadLinks = async (req, res) => {
     logger.error('Erreur sendClientDownloadLinks:', { error: err.message });
     return res.status(500).json({ error: 'Erreur serveur' });
   }
-};
-
-// ===== CARD CUSTOMIZATION CONTROLLERS =====
+};
 
 export const getCardCustomization = async (req, res) => {
   const companyId = req.params.companyId ?? req.params.empresaId;
@@ -1181,8 +1127,7 @@ export const getCardCustomization = async (req, res) => {
       [companyId, loyaltyType]
     );
 
-    if (customization.length === 0) {
-      // Retourner les paramètres par défaut si aucune personnalisation
+    if (customization.length === 0) {
       return res.json({
         primary_color: '#1f2937',
         text_color: '#ffffff',
@@ -1401,14 +1346,10 @@ export const updateCardCustomization = async (req, res) => {
           loyaltyType
         ]
       );
-    }
-
-    // Push visible si l'offre en cours vient d'être créée ou modifiée
+    }
     const prevOffer = existing[0]?.prev_relevant_text || '';
     if (relevant_text && relevant_text.trim() !== prevOffer) {
-      const offerText = relevant_text.trim();
-
-      // Apple Wallet — alert push
+      const offerText = relevant_text.trim();
       const [pushRegs] = await pool.query(
         `SELECT DISTINCT r.push_token
          FROM apple_pass_registrations r
@@ -1422,9 +1363,7 @@ export const updateCardCustomization = async (req, res) => {
           'Nouvelle offre !',
           offerText
         ).catch(err => logger.error('Offer push Apple failed', err.message));
-      }
-
-      // Google Wallet — addMessageToObject (TEXT_AND_NOTIFY → notif système)
+      }
       const [googleWallets] = await pool.query(
         `SELECT client_id FROM wallet_cards WHERE company_id = ? AND pass_serial_number LIKE 'GOOGLE_%'`,
         [empresaId]
@@ -1437,9 +1376,7 @@ export const updateCardCustomization = async (req, res) => {
           )
         ).catch(() => {});
       }
-    }
-
-    // 📱 Synchronisation en temps réel (Apple & Google) via WalletSyncService
+    }
     walletSyncService.syncCompanyWallets(empresaId).catch(err =>
       logger.error('Global synchronization failed after customization update', err)
     );
@@ -1530,40 +1467,29 @@ export const uploadLogo = async (req, res) => {
 
     const tempPath = req.file.path;
     const finalFilename = req.file.filename + '-resized.png';
-    const finalPath = path.join(req.file.destination, finalFilename);
-
-    // Define sizes based on type and platform
-    // Logan Apple: Hauteur max 50px, largeur proportinelle (max 160px) sans padding
+    const finalPath = path.join(req.file.destination, finalFilename);
     let resizeOpts = { height: 50, width: 160, fit: 'inside' };
 
     if (platform === 'google') {
-      if (imageType === 'logo') {
-        // Google recommande 660x660 carré pour le logo
+      if (imageType === 'logo') {
         resizeOpts = { width: 660, height: 660, fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } };
-      } else if (imageType === 'hero') {
-        // Hero image 1032x336 (3:1)
+      } else if (imageType === 'hero') {
         resizeOpts = { width: 1032, height: 336, fit: 'cover' };
       }
-    } else {
-      // Logic Apple (ou par défaut)
+    } else {
       if (imageType === 'icon' || imageType === 'notification_icon') {
         resizeOpts = { width: 58, height: 58, fit: 'cover' }; // @2x size for clarity
-      } else if (imageType === 'strip') {
-        // Bannière Apple: 375x123 (on utilise fit: cover pour "rogner" si nécessaire)
+      } else if (imageType === 'strip') {
         resizeOpts = { width: 375, height: 123, fit: 'cover' };
       }
-    }
-
-    // Processing avec Sharp
+    }
     await sharp(tempPath)
       .rotate() // Gère l'orientation automatique (photos smartphone)
       .resize(resizeOpts) // On a retiré withoutEnlargement pour forcer la taille minimale
       .png()
       .toFile(finalPath);
 
-    fs.unlinkSync(tempPath);
-
-    // Return relative path instead of absolute URL to ensure portability
+    fs.unlinkSync(tempPath);
     const fileUrl = `uploads/${finalFilename}`;
 
     res.json({ success: true, url: fileUrl });
@@ -1620,9 +1546,7 @@ export const redeemReward = async (req, res) => {
     logger.error('Redeem reward error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
-
-// ===== PASSWORD RESET CONTROLLERS =====
+};
 
 /**
  * Demande de réinitialisation de mot de passe
@@ -1634,33 +1558,25 @@ export const forgotPassword = async (req, res) => {
     return res.status(400).json({ error: 'Email requis' });
   }
 
-  try {
-    // 1. Vérifier si l'email existe dans la table entreprises
+  try {
     const [rows] = await pool.query(
       'SELECT id, nom FROM entreprises WHERE email = ?',
       [email]
     );
 
-    if (rows.length === 0) {
-      // Pour la sécurité, on ne dit pas si l'email existe ou pas
+    if (rows.length === 0) {
       return res.json({
         success: true,
         message: 'Si cet email est enregistré, vous recevrez un lien de réinitialisation sous peu.'
       });
-    }
-
-    // 2. Générer un jeton sécurisé
+    }
     const token = crypto.randomBytes(32).toString('hex');
-    const expiresAt = new Date(Date.now() + 3600000); // 1 heure de validité
-
-    // 3. Enregistrer en base de données (supprimer les anciens jetons pour cet email avant)
+    const expiresAt = new Date(Date.now() + 3600000); // 1 heure de validité
     await pool.query('DELETE FROM password_resets WHERE email = ?', [email]);
     await pool.query(
       'INSERT INTO password_resets (email, token, expires_at) VALUES (?, ?, ?)',
       [email, token, expiresAt]
-    );
-
-    // 4. Envoyer l'email
+    );
     const frontendUrl = process.env.FRONTEND_URL || 'https://fidelyzapp.fr';
     const resetUrl = `${frontendUrl}/password-recovery?token=${token}`;
     await emailService.sendPasswordResetEmail(email, resetUrl);

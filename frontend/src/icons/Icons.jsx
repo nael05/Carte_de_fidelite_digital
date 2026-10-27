@@ -1,6 +1,3 @@
-// Icons SVG réutilisables - Style Lucide/Feather
-// stroke-width: 1.5px pour tous les icônes
-
 export const ChevronDown = ({ size = 24, className = "" }) => (
   <svg
     width={size}

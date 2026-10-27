@@ -6,9 +6,7 @@ import './Auth.css'
 
 function ForgotPassword() {
   const [email, setEmail] = useState('')
-  const navigate = useNavigate()
-
-  // Initialisation du thème
+  const navigate = useNavigate()
   useEffect(() => {
     const savedTheme = localStorage.getItem('fidelyz-theme') || 'dark'
     if (savedTheme === 'dark') {

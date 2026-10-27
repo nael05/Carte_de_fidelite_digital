@@ -14,19 +14,11 @@ import { verifyToken, isPro, isAdmin } from '../middlewares/auth.js';
 import db from '../db.js';
 import logger from '../utils/logger.js';
 
-const router = express.Router();
-
-// Diagnostic middleware pour les routes Apple (debug 404)
+const router = express.Router();
 router.use('/wallet/v1/*', (req, res, next) => {
   logger.info(`🔍 [APPLE WALLET REQ] ${req.method} ${req.originalUrl}`);
   next();
-});
-
-// ============================================================================
-// GROUPE 1: API FRONTEND (utilisée par notre application)
-// Prefix: /app/wallet
-// Authentification: JWT Token (client/pro)
-// ============================================================================
+});
 
 /**
  * POST /api/app/wallet/create
@@ -61,13 +53,7 @@ router.post('/app/wallet/add-points', verifyToken, isPro, walletAppController.ad
  *
  * Response: { balance, devicesRegistered, lastUpdated, ... }
  */
-router.get('/app/wallet/status/:clientId', verifyToken, isPro, walletAppController.getWalletStatus);
-
-// ============================================================================
-// GROUPE 2: API APPLE WEB SERVICE (utilisée par Apple Wallet)
-// Prefix: /wallet (pas de /app)
-// Authentification: Token Apple (Authorization: ApplePass <token>)
-// ============================================================================
+router.get('/app/wallet/status/:clientId', verifyToken, isPro, walletAppController.getWalletStatus);
 
 /**
  * POST /api/wallet/v1/devices/:deviceLibraryIdentifier/registrations/:passTypeIdentifier/:serialNumber
@@ -127,11 +113,7 @@ router.delete(
  * Body: { logs: ["error 1", ...] }
  * Response: 200
  */
-router.post('/wallet/v1/log', appleWebserviceController.logAppleWalletErrors);
-
-// ============================================================================
-// ROUTES ADMIN (OPTIONNEL)
-// ============================================================================
+router.post('/wallet/v1/log', appleWebserviceController.logAppleWalletErrors);
 
 /**
  * GET /api/app/wallet/admin/cards/:companyId

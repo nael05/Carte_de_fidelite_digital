@@ -1,7 +1,8 @@
 import pool from '../db.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import { v4 as randomUUID } from 'uuid';
+import { randomUUID } from 'crypto';
+import { validatePassword } from '../utils/passwordValidator.js';
 import logger from '../utils/logger.js';
 import emailService from '../utils/emailService.js';
 
@@ -152,8 +153,9 @@ export const changePassword = async (req, res) => {
     return res.status(400).json({ error: 'Ancien et nouveau mot de passe requis' });
   }
 
-  if (new_password.length < 8) {
-    return res.status(400).json({ error: 'Le nouveau mot de passe doit faire minimum 8 caractères' });
+  const complexity = validatePassword(new_password);
+  if (!complexity.isValid) {
+    return res.status(400).json({ error: complexity.errors.join(', ') });
   }
 
   if (old_password === new_password) {
@@ -265,6 +267,12 @@ export const deleteAccount = async (req, res) => {
       'DELETE FROM transaction_history WHERE client_id IN (SELECT id FROM clients WHERE entreprise_id = ?)',
       [entrepriseId]
     );
+
+    await connection.query(
+      "UPDATE entreprises SET statut = 'suspendu', subscription_status = 'canceled', stripe_subscription_id = NULL, cancel_at_period_end = 0, email_change_token = NULL, email_change_new_email = NULL, email_change_expiry = NULL WHERE id = ?",
+      [entrepriseId]
+    );
+    await connection.query('DELETE FROM sessions WHERE entreprise_id = ?', [entrepriseId]);
 
     await connection.commit();
 

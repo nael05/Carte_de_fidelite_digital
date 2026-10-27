@@ -13,7 +13,6 @@ import * as migrationController from '../controllers/migrationController.js';
 import * as pushController from '../controllers/pushController.js';
 import * as siteSettingsController from '../controllers/siteSettingsController.js';
 import * as proSignupController from '../controllers/proSignupController.js';
-import * as webhookController from '../controllers/webhookController.js';
 import * as accountController from '../controllers/accountController.js';
 import * as subscriptionController from '../controllers/subscriptionController.js';
 import * as billingController from '../controllers/billingController.js';
@@ -43,11 +42,9 @@ const upload = multer({
 });
 router.use(apiLimiter);
 
-// Stripe Webhook (must be first, needs raw body)
-router.post('/stripe/webhook', webhookController.stripeWebhook);
-
 // Pro Signup (public endpoints)
 router.post('/pro/signup', proSignupController.proSignup);
+router.post('/pro/validate-promo', proSignupController.validatePromoCode);
 router.post('/pro/checkout/success', proSignupController.checkoutSuccess);
 router.get('/pro/stripe-key', proSignupController.getStripeKey);
 
@@ -55,7 +52,7 @@ router.get('/pro/stripe-key', proSignupController.getStripeKey);
 router.post('/admin/login', loginLimiter, apiController.adminLogin);
 router.post('/admin/migrations/run', verifyToken, isAdmin, migrationController.runMigrations);
 router.get('/admin/enterprises', verifyToken, isAdmin, apiController.getEnterprises);
-router.post('/admin/create-company', verifyToken, isAdmin, apiController.createCompany);
+router.post('/admin/create-company', verifyToken, isAdmin, (req, res) => res.status(410).json({ error: "La création manuelle est désactivée : les entreprises s'inscrivent via /api/pro/signup (paiement Stripe obligatoire)" }));
 router.put('/admin/suspend-company/:companyId', verifyToken, isAdmin, apiController.suspendCompany);
 router.put('/admin/reactivate-company/:companyId', verifyToken, isAdmin, apiController.reactivateCompany);
 router.delete('/admin/delete-company/:companyId', verifyToken, isAdmin, apiController.deleteCompany);

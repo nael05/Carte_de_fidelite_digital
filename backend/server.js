@@ -7,6 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import cron from 'node-cron';
 import apiRoutes from './routes/apiRoutes.js';
+import { stripeWebhook } from './controllers/webhookController.js';
 import { computeClientExpiration, runExpirationForEnterprise } from './controllers/loyaltyController.js';
 import walletSyncService from './utils/walletSyncService.js';
 
@@ -71,6 +72,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Device-Id'],
   maxAge: 86400,
 }));
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), (req, res, next) => { req.rawBody = req.body; next(); }, stripeWebhook);
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ limit: '1mb', extended: true }));
 logger.info(`📁 Uploads directory: ${uploadsDir}`);
@@ -79,12 +81,6 @@ app.use('/api/uploads', express.static(uploadsDir)); // Frontend compatibility
 app.get('/api/wallet', (req, res) => {
   logger.info('🔍 [APPLE CONNECT] L\'iPhone a testé la racine du WebService');
   res.json({ status: 'active', service: 'Apple Wallet WebService' });
-});
-
-// Stripe webhook needs raw body before JSON parsing
-app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), (req, res, next) => {
-  req.rawBody = req.body;
-  next();
 });
 
 app.use('/api', apiRoutes);

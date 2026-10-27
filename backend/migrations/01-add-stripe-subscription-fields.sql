@@ -1,26 +1,19 @@
--- Migration: Add Stripe subscription fields to entreprises table
--- Date: 2026-10-27
--- Description: Add Stripe customer and subscription tracking fields
-
+-- Stripe: champs abonnement + informations légales d'inscription (MySQL 8)
 SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
 
--- Add Stripe fields to entreprises table
-ALTER TABLE `entreprises` ADD COLUMN IF NOT EXISTS `stripe_customer_id` VARCHAR(255) UNIQUE COMMENT 'Stripe customer ID' AFTER `created_at`;
+ALTER TABLE `entreprises`
+  ADD COLUMN `raison_sociale` VARCHAR(255) NULL,
+  ADD COLUMN `siret_tva` VARCHAR(64) NULL,
+  ADD COLUMN `adresse` VARCHAR(500) NULL,
+  ADD COLUMN `stripe_customer_id` VARCHAR(255) NULL,
+  ADD COLUMN `stripe_subscription_id` VARCHAR(255) NULL,
+  ADD COLUMN `subscription_status` ENUM('active','trialing','past_due','canceled','unpaid') NOT NULL DEFAULT 'unpaid',
+  ADD COLUMN `subscription_plan` ENUM('monthly','yearly') NOT NULL DEFAULT 'monthly',
+  ADD COLUMN `current_period_end` DATETIME NULL,
+  ADD COLUMN `cancel_at_period_end` TINYINT(1) NOT NULL DEFAULT 0,
+  ADD UNIQUE KEY `uq_entreprises_stripe_customer` (`stripe_customer_id`),
+  ADD UNIQUE KEY `uq_entreprises_stripe_subscription` (`stripe_subscription_id`),
+  ADD KEY `idx_subscription_status` (`subscription_status`);
 
-ALTER TABLE `entreprises` ADD COLUMN IF NOT EXISTS `stripe_subscription_id` VARCHAR(255) UNIQUE COMMENT 'Stripe subscription ID' AFTER `stripe_customer_id`;
-
-ALTER TABLE `entreprises` ADD COLUMN IF NOT EXISTS `subscription_status` ENUM('active', 'trialing', 'past_due', 'canceled', 'unpaid') DEFAULT 'unpaid' COMMENT 'Current subscription status' AFTER `stripe_subscription_id`;
-
-ALTER TABLE `entreprises` ADD COLUMN IF NOT EXISTS `subscription_plan` ENUM('monthly', 'yearly') DEFAULT 'monthly' COMMENT 'Subscription billing period' AFTER `subscription_status`;
-
-ALTER TABLE `entreprises` ADD COLUMN IF NOT EXISTS `current_period_end` DATETIME COMMENT 'Current billing period end date' AFTER `subscription_plan`;
-
-ALTER TABLE `entreprises` ADD COLUMN IF NOT EXISTS `cancel_at_period_end` BOOLEAN DEFAULT FALSE COMMENT 'If true, subscription will be canceled at period end' AFTER `current_period_end`;
-
--- Create indexes for faster lookups
-CREATE INDEX IF NOT EXISTS `idx_stripe_customer_id` ON `entreprises`(`stripe_customer_id`);
-CREATE INDEX IF NOT EXISTS `idx_stripe_subscription_id` ON `entreprises`(`stripe_subscription_id`);
-CREATE INDEX IF NOT EXISTS `idx_subscription_status` ON `entreprises`(`subscription_status`);
-
-SET FOREIGN_KEY_CHECKS = 1;
+-- Comptes créés avant la mise en place du paiement : accès conservé
+UPDATE `entreprises` SET `subscription_status` = 'active' WHERE `stripe_customer_id` IS NULL;

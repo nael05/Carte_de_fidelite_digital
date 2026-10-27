@@ -279,9 +279,9 @@ export const logEmail = async (entrepriseId, recipient, subject, type, metadata 
     const connection = await pool.getConnection();
     await connection.execute(
       `INSERT INTO email_logs
-       (entreprise_id, recipient, subject, type, metadata)
-       VALUES (?, ?, ?, ?, ?)`,
-      [entrepriseId, recipient, subject, type, JSON.stringify(metadata)]
+       (entreprise_id, recipient, subject, type, status, metadata)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [entrepriseId, recipient, subject, type, metadata.error ? 'failed' : 'sent', JSON.stringify(metadata)]
     );
     connection.release();
     console.log(`✅ Email logged: ${type} to ${recipient}`);

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ArrowRight, ChevronRight, CheckCircle2, Check, Plus, Search, Loader2, X,
-  Play, Bell, MapPin, ShieldCheck, Lock, Repeat, Fingerprint, Store, Palette, Send, Coffee
+  Play, Bell, MapPin, ShieldCheck, Lock, Repeat, Fingerprint, Store, Palette, Send
 } from 'lucide-react'
 import api from '../api'
 import Footer from '../components/Footer'
@@ -92,6 +92,110 @@ function QRCode({ className }) {
   )
 }
 
+/* Bannière (strip image) du pass : photo vue de dessus d'un café sur une table en bois */
+function StripPhoto() {
+  return (
+    <svg className="wp-photo" viewBox="0 0 320 120" preserveAspectRatio="xMidYMid slice" aria-hidden>
+      <defs>
+        <linearGradient id="spWood" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#5b3a22" />
+          <stop offset="55%" stopColor="#3f2615" />
+          <stop offset="100%" stopColor="#24150b" />
+        </linearGradient>
+        <filter id="spGrain" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.006 0.32" numOctaves="3" seed="8" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0.08  0 0 0 0 0.04  0 0 0 0 0.01  0 0 0 1.1 -0.35" />
+        </filter>
+        <filter id="spBlur6"><feGaussianBlur stdDeviation="6" /></filter>
+        <filter id="spBlur2"><feGaussianBlur stdDeviation="1.6" /></filter>
+        <filter id="spSoft"><feGaussianBlur stdDeviation="0.5" /></filter>
+        <radialGradient id="spSaucer" cx="40%" cy="35%" r="70%">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="70%" stopColor="#ebe6df" />
+          <stop offset="100%" stopColor="#c9c1b6" />
+        </radialGradient>
+        <radialGradient id="spCup" cx="38%" cy="32%" r="75%">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="80%" stopColor="#e9e4dd" />
+          <stop offset="100%" stopColor="#bdb4a8" />
+        </radialGradient>
+        <radialGradient id="spCoffee" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#d9a46a" />
+          <stop offset="55%" stopColor="#a5642f" />
+          <stop offset="88%" stopColor="#6a3816" />
+          <stop offset="100%" stopColor="#3d1f0b" />
+        </radialGradient>
+        <radialGradient id="spBean" cx="35%" cy="30%" r="80%">
+          <stop offset="0%" stopColor="#7a4523" />
+          <stop offset="100%" stopColor="#24120a" />
+        </radialGradient>
+        <linearGradient id="spSpoon" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#f4f4f6" />
+          <stop offset="50%" stopColor="#a9a9b0" />
+          <stop offset="100%" stopColor="#e3e3e8" />
+        </linearGradient>
+        <radialGradient id="spLight" cx="15%" cy="0%" r="90%">
+          <stop offset="0%" stopColor="#fff3df" stopOpacity="0.28" />
+          <stop offset="60%" stopColor="#fff3df" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="spVignette" cx="50%" cy="50%" r="75%">
+          <stop offset="60%" stopColor="#000" stopOpacity="0" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.55" />
+        </radialGradient>
+      </defs>
+
+      {/* Table */}
+      <rect width="320" height="120" fill="url(#spWood)" />
+      <rect width="320" height="120" filter="url(#spGrain)" />
+      <path d="M0 38 H320 M0 82 H320" stroke="#1a0e06" strokeOpacity="0.5" strokeWidth="1.2" />
+
+      {/* Grains de café */}
+      {[[46, 30, -20], [72, 86, 35], [104, 52, 10], [30, 72, 60], [128, 98, -40], [150, 22, 25]].map(([x, y, r], i) => (
+        <g key={i} transform={`translate(${x} ${y}) rotate(${r})`}>
+          <ellipse cx="2" cy="3" rx="7.5" ry="5.4" fill="#000" opacity="0.45" filter="url(#spBlur2)" />
+          <ellipse rx="7.5" ry="5.4" fill="url(#spBean)" />
+          <path d="M-6 0 C -2 -2.4, 2 2.4, 6 0" stroke="#160a04" strokeWidth="1.1" fill="none" />
+        </g>
+      ))}
+
+      {/* Ombre de la tasse */}
+      <ellipse cx="232" cy="70" rx="54" ry="52" fill="#000" opacity="0.55" filter="url(#spBlur6)" />
+
+      {/* Soucoupe */}
+      <circle cx="224" cy="60" r="50" fill="url(#spSaucer)" />
+      <circle cx="224" cy="60" r="38" fill="none" stroke="#000" strokeOpacity="0.07" strokeWidth="2" />
+
+      {/* Cuillère */}
+      <g transform="rotate(-38 190 92)">
+        <rect x="150" y="89" width="40" height="3.4" rx="1.7" fill="url(#spSpoon)" />
+        <ellipse cx="196" cy="90.7" rx="9" ry="5.5" fill="url(#spSpoon)" />
+      </g>
+
+      {/* Tasse + anse */}
+      <rect x="250" y="53" width="24" height="13" rx="6.5" fill="url(#spCup)" />
+      <circle cx="226" cy="58" r="31" fill="#000" opacity="0.25" filter="url(#spBlur2)" />
+      <circle cx="224" cy="58" r="30" fill="url(#spCup)" />
+
+      {/* Café + latte art */}
+      <circle cx="224" cy="58" r="24.5" fill="url(#spCoffee)" />
+      <g filter="url(#spSoft)" fill="none" stroke="#f3e2c8" strokeLinecap="round">
+        <path d="M212 70 Q224 64 236 70" strokeWidth="1.6" strokeOpacity="0.55" />
+        <path d="M214 74 Q224 69 234 74" strokeWidth="1.3" strokeOpacity="0.4" />
+      </g>
+      <path
+        d="M224 66 C 213 59, 211 50, 217 47.5 C 221 46, 224 49, 224 51.5 C 224 49, 227 46, 231 47.5 C 237 50, 235 59, 224 66 Z"
+        fill="#f6e8d2"
+        filter="url(#spSoft)"
+      />
+      <ellipse cx="216" cy="49" rx="6" ry="3" fill="#fff" opacity="0.18" />
+
+      {/* Lumière et vignettage */}
+      <rect width="320" height="120" fill="url(#spLight)" />
+      <rect width="320" height="120" fill="url(#spVignette)" />
+    </svg>
+  )
+}
+
 /* ═══════════ Pass Apple Wallet en 3D ═══════════
    Même structure que l'aperçu du CardCustomizer :
    en-tête (logo + POINTS), bannière, champs, QR code. */
@@ -106,7 +210,6 @@ function Card3D({
   skin = 'graphite', points = 480, name = 'Maison Lumière', mark = 'L',
   holder = 'CAMILLE', cardId = '2BF10B', scanning = false,
 }) {
-  const filled = Math.min(10, Math.floor(points / 50))
   return (
     <div className={`c3 c3-${skin}`}>
       <div className="c3-edge" aria-hidden>
@@ -127,13 +230,7 @@ function Card3D({
         </div>
 
         <div className="wp-strip">
-          <div className="wp-stamps">
-            {Array.from({ length: 10 }).map((_, i) => (
-              <span key={i} className={i < filled ? 'on' : ''}>
-                {i < filled && <Coffee strokeWidth={2.2} />}
-              </span>
-            ))}
-          </div>
+          <StripPhoto />
         </div>
 
         <div className="wp-fields">

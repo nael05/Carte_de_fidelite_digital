@@ -523,38 +523,16 @@
   white-space: nowrap;
 }
 
-/* Bannière (strip) avec tampons */
+/* Bannière (strip image) : une photo, comme sur un vrai pass */
 .wp-strip {
   position: relative;
   margin: 0 -1.25em;
   height: 7.5em;
   flex-shrink: 0;
-  background: var(--strip);
-  display: grid;
-  place-items: center;
+  background: #2a1a0f;
   overflow: hidden;
 }
-.wp-stamps {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.5em 0.7em;
-}
-.wp-stamps span {
-  width: 2.1em;
-  height: 2.1em;
-  border-radius: 50%;
-  border: 1.5px dashed var(--stamp-line);
-  display: grid;
-  place-items: center;
-  transition: background 0.4s, border-color 0.4s;
-}
-.wp-stamps span.on {
-  border: 1.5px solid transparent;
-  background: var(--stamp-on);
-  color: var(--stamp-ink);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-}
-.wp-stamps svg { width: 1.05em; height: 1.05em; }
+.wp-photo { display: block; width: 100%; height: 100%; }
 
 /* Champs secondaires */
 .wp-fields {
@@ -647,10 +625,6 @@
   --edge: #0e0e10;
   --mark-bg: linear-gradient(135deg, #f6e4c8, #b8926a);
   --mark-ink: #1d1d1f;
-  --strip: radial-gradient(120% 140% at 15% 0%, #3c3c41 0%, #1a1a1d 55%, #0f0f11 100%);
-  --stamp-line: rgba(255, 255, 255, 0.28);
-  --stamp-on: linear-gradient(135deg, #f6e4c8, #c9a57c);
-  --stamp-ink: #1d1d1f;
 }
 .c3-azur {
   --pass-bg: #0b3a8f;
@@ -659,10 +633,6 @@
   --edge: #072a66;
   --mark-bg: #ffffff;
   --mark-ink: #0b3a8f;
-  --strip: radial-gradient(120% 140% at 15% 0%, #2f74e8 0%, #0d409c 55%, #072a66 100%);
-  --stamp-line: rgba(255, 255, 255, 0.4);
-  --stamp-on: #ffffff;
-  --stamp-ink: #0b3a8f;
 }
 .c3-champagne {
   --pass-bg: #dcc39d;
@@ -671,10 +641,6 @@
   --edge: #b8986c;
   --mark-bg: #2b1f12;
   --mark-ink: #f1dcc0;
-  --strip: radial-gradient(120% 140% at 15% 0%, #f6e8d3 0%, #d8bb92 55%, #c2a072 100%);
-  --stamp-line: rgba(43, 31, 18, 0.35);
-  --stamp-on: #2b1f12;
-  --stamp-ink: #f1dcc0;
 }
 .c3-ivory {
   --pass-bg: #f5f5f7;
@@ -683,10 +649,6 @@
   --edge: #c7c7cc;
   --mark-bg: #1d1d1f;
   --mark-ink: #ffffff;
-  --strip: radial-gradient(120% 140% at 15% 0%, #ffffff 0%, #e8e8ed 55%, #d6d6dc 100%);
-  --stamp-line: rgba(0, 0, 0, 0.22);
-  --stamp-on: #1d1d1f;
-  --stamp-ink: #ffffff;
 }
 
 /* ═══════════ STATS ═══════════ */

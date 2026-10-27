@@ -530,6 +530,173 @@ class EmailService {
       throw new Error('Erreur lors de l\'envoi de la notification d\'annulation');
     }
   }
+
+  async sendEmailConfirmationLink({ current_email, new_email, confirm_url }) {
+    if (!this.apiKey) throw new Error('Service d\'email non configuré');
+    const safeNewEmail = escHtml(new_email);
+    try {
+      await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: this.sender,
+        to: [{ email: new_email }],
+        subject: `Confirmez votre changement d'email Fidelyz`,
+        htmlContent: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:32px 16px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e2e4e9;">
+      <tr><td style="background:#6366F1;padding:32px 40px;text-align:center;">
+        <p style="margin:0;font-size:20px;font-weight:700;color:#ffffff;">Confirmation d'email</p>
+      </td></tr>
+      <tr><td style="padding:36px 40px 0;">
+        <p style="margin:0 0 6px;font-size:18px;font-weight:700;color:#111827;">Confirmez votre nouvelle adresse</p>
+        <p style="margin:0;font-size:14px;color:#6b7280;line-height:1.7;">
+          Vous avez demandé de changer votre adresse email Fidelyz vers <strong>${safeNewEmail}</strong>.<br>
+          Cliquez sur le bouton ci-dessous pour confirmer ce changement. Ce lien est valable 24 heures.
+        </p>
+      </td></tr>
+      <tr><td style="padding:28px 40px 36px;text-align:center;">
+        <a href="${confirm_url}" style="display:inline-block;background:#6366F1;color:#ffffff;padding:12px 30px;text-decoration:none;border-radius:7px;font-size:14px;font-weight:600;">Confirmer mon email</a>
+      </td></tr>
+      <tr><td style="background:#f9fafb;padding:16px 40px;border-top:1px solid #e2e4e9;text-align:center;">
+        <p style="margin:0;font-size:11px;color:#9ca3af;">Email automatique — merci de ne pas répondre.</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`
+      }, { headers: { 'api-key': this.apiKey, 'Content-Type': 'application/json' } });
+      logger.info(`✅ Email de confirmation envoyé à ${new_email}`);
+    } catch (err) {
+      logger.error(`❌ Échec envoi confirmation à ${new_email}:`, err.response?.data || err.message);
+      throw new Error('Erreur lors de l\'envoi de la confirmation');
+    }
+  }
+
+  async sendPlanChangeEmail({ email, nom, new_plan, effective_date }) {
+    if (!this.apiKey) throw new Error('Service d\'email non configuré');
+    const safeName = escHtml(nom);
+    try {
+      await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: this.sender,
+        to: [{ email }],
+        subject: `Changement de plan Fidelyz - ${new_plan}`,
+        htmlContent: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:32px 16px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e2e4e9;">
+      <tr><td style="background:#10b981;padding:32px 40px;text-align:center;">
+        <p style="margin:0;font-size:20px;font-weight:700;color:#ffffff;">Changement de plan confirmé</p>
+      </td></tr>
+      <tr><td style="padding:36px 40px 0;">
+        <p style="margin:0 0 6px;font-size:18px;font-weight:700;color:#111827;">Bonjour ${safeName},</p>
+        <p style="margin:0;font-size:14px;color:#6b7280;line-height:1.7;">
+          Votre passage au plan <strong>${new_plan}</strong> a été confirmé et sera effectif à partir du ${effective_date}.
+        </p>
+      </td></tr>
+      <tr><td style="background:#f9fafb;padding:16px 40px;border-top:1px solid #e2e4e9;text-align:center;">
+        <p style="margin:0;font-size:11px;color:#9ca3af;">Email automatique — merci de ne pas répondre.</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`
+      }, { headers: { 'api-key': this.apiKey, 'Content-Type': 'application/json' } });
+      logger.info(`✅ Notification changement de plan envoyée à ${email}`);
+    } catch (err) {
+      logger.error(`❌ Échec envoi changement plan à ${email}:`, err.response?.data || err.message);
+      throw new Error('Erreur lors de l\'envoi de la notification');
+    }
+  }
+
+  async sendSubscriptionCancellationNoticeEmail({ email, nom, period_end }) {
+    if (!this.apiKey) throw new Error('Service d\'email non configuré');
+    const safeName = escHtml(nom);
+    try {
+      await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: this.sender,
+        to: [{ email }],
+        subject: `Votre abonnement Fidelyz sera annulé le ${period_end}`,
+        htmlContent: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:32px 16px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e2e4e9;">
+      <tr><td style="background:#f59e0b;padding:32px 40px;text-align:center;">
+        <p style="margin:0;font-size:20px;font-weight:700;color:#ffffff;">Annulation programmée</p>
+      </td></tr>
+      <tr><td style="padding:36px 40px 0;">
+        <p style="margin:0 0 6px;font-size:18px;font-weight:700;color:#111827;">Bonjour ${safeName},</p>
+        <p style="margin:0;font-size:14px;color:#6b7280;line-height:1.7;">
+          Votre abonnement Fidelyz sera annulé le <strong>${period_end}</strong>. Vous aurez accès à votre compte jusqu'à cette date.
+        </p>
+      </td></tr>
+      <tr><td style="padding:24px 40px 0;">
+        <p style="margin:0;font-size:13px;color:#6b7280;">Si vous changez d'avis, vous pouvez réactiver votre abonnement à tout moment depuis votre Espace Pro.</p>
+      </td></tr>
+      <tr><td style="background:#f9fafb;padding:16px 40px;border-top:1px solid #e2e4e9;text-align:center;">
+        <p style="margin:0;font-size:11px;color:#9ca3af;">Email automatique — merci de ne pas répondre.</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`
+      }, { headers: { 'api-key': this.apiKey, 'Content-Type': 'application/json' } });
+      logger.info(`✅ Avis d'annulation envoyé à ${email}`);
+    } catch (err) {
+      logger.error(`❌ Échec envoi avis d'annulation à ${email}:`, err.response?.data || err.message);
+      throw new Error('Erreur lors de l\'envoi de l\'avis d\'annulation');
+    }
+  }
+
+  async sendSubscriptionReactivatedEmail({ email, nom }) {
+    if (!this.apiKey) throw new Error('Service d\'email non configuré');
+    const safeName = escHtml(nom);
+    try {
+      await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: this.sender,
+        to: [{ email }],
+        subject: `Votre abonnement Fidelyz a été réactivé`,
+        htmlContent: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:32px 16px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e2e4e9;">
+      <tr><td style="background:#10b981;padding:32px 40px;text-align:center;">
+        <p style="margin:0;font-size:20px;font-weight:700;color:#ffffff;">Abonnement réactivé</p>
+      </td></tr>
+      <tr><td style="padding:36px 40px 0;">
+        <p style="margin:0 0 6px;font-size:18px;font-weight:700;color:#111827;">Bienvenue de retour, ${safeName}!</p>
+        <p style="margin:0;font-size:14px;color:#6b7280;line-height:1.7;">
+          Votre abonnement Fidelyz a été réactivé avec succès. Vous avez accès à l'intégralité de vos fonctionnalités Pro.
+        </p>
+      </td></tr>
+      <tr><td style="background:#f9fafb;padding:16px 40px;border-top:1px solid #e2e4e9;text-align:center;">
+        <p style="margin:0;font-size:11px;color:#9ca3af;">Email automatique — merci de ne pas répondre.</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`
+      }, { headers: { 'api-key': this.apiKey, 'Content-Type': 'application/json' } });
+      logger.info(`✅ Confirmation de réactivation envoyée à ${email}`);
+    } catch (err) {
+      logger.error(`❌ Échec envoi confirmation réactivation à ${email}:`, err.response?.data || err.message);
+      throw new Error('Erreur lors de l\'envoi de la confirmation');
+    }
+  }
 }
 
 export default new EmailService();

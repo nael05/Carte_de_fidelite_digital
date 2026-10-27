@@ -14,6 +14,9 @@ import * as pushController from '../controllers/pushController.js';
 import * as siteSettingsController from '../controllers/siteSettingsController.js';
 import * as proSignupController from '../controllers/proSignupController.js';
 import * as webhookController from '../controllers/webhookController.js';
+import * as accountController from '../controllers/accountController.js';
+import * as subscriptionController from '../controllers/subscriptionController.js';
+import * as billingController from '../controllers/billingController.js';
 import walletRoutes from './walletRoutes.js';
 import { verifyToken, isAdmin, isPro } from '../middlewares/auth.js';
 import { requireActiveSubscription, checkSubscriptionStatus, allowReadOnlyForCanceled } from '../middlewares/subscriptionStatus.js';
@@ -59,6 +62,27 @@ router.delete('/admin/delete-company/:companyId', verifyToken, isAdmin, apiContr
 router.put('/admin/update-company/:companyId', verifyToken, isAdmin, apiController.updateCompany);
 router.post('/pro/login', loginLimiter, apiController.proLogin);
 router.get('/pro/status', verifyToken, isPro, checkSubscriptionStatus, apiController.getProStatus);
+
+// Account Management
+router.get('/pro/account', verifyToken, isPro, checkSubscriptionStatus, accountController.getAccountInfo);
+router.put('/pro/account/email', verifyToken, isPro, accountController.requestEmailChange);
+router.post('/pro/account/confirm-email', verifyToken, isPro, accountController.confirmEmailChange);
+router.put('/pro/account/password', verifyToken, isPro, accountController.changePassword);
+router.delete('/pro/account', verifyToken, isPro, accountController.deleteAccount);
+
+// Subscription Management
+router.get('/pro/subscription', verifyToken, isPro, requireActiveSubscription, subscriptionController.getSubscription);
+router.post('/pro/subscription/switch-plan', verifyToken, isPro, requireActiveSubscription, subscriptionController.switchPlan);
+router.post('/pro/subscription/apply-promo', verifyToken, isPro, requireActiveSubscription, subscriptionController.applyPromoCode);
+router.post('/pro/subscription/cancel', verifyToken, isPro, checkSubscriptionStatus, subscriptionController.cancelSubscription);
+router.post('/pro/subscription/reactivate', verifyToken, isPro, checkSubscriptionStatus, subscriptionController.reactivateSubscription);
+router.get('/pro/subscription/portal-link', verifyToken, isPro, checkSubscriptionStatus, subscriptionController.getPortalLink);
+
+// Billing & Invoices
+router.get('/pro/billing/invoices', verifyToken, isPro, checkSubscriptionStatus, billingController.getInvoices);
+router.get('/pro/billing/invoices/:invoiceId', verifyToken, isPro, checkSubscriptionStatus, billingController.getInvoiceDetails);
+router.get('/pro/billing/invoices/:invoiceId/pdf', verifyToken, isPro, checkSubscriptionStatus, billingController.downloadInvoicePdf);
+router.get('/pro/billing/summary', verifyToken, isPro, checkSubscriptionStatus, billingController.getBillingSummary);
 router.get('/pro/sessions', verifyToken, isPro, checkSubscriptionStatus, apiController.getProSessions);
 router.post('/pro/logout-device', verifyToken, isPro, checkSubscriptionStatus, apiController.logoutProDevice);
 router.post('/pro/logout-all', verifyToken, isPro, checkSubscriptionStatus, apiController.logoutProAll);

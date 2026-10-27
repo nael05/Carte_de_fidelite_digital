@@ -373,6 +373,163 @@ class EmailService {
       throw new Error('Erreur lors de l\'envoi de l\'email');
     }
   }
+  async sendInvoiceEmail({ email, nom, invoice_number, amount, currency, date, pdf_url }) {
+    if (!this.apiKey) throw new Error('Service d\'email non configuré');
+    const safeName = escHtml(nom);
+    try {
+      await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: this.sender,
+        to: [{ email }],
+        subject: `Votre facture Fidelyz #${invoice_number}`,
+        htmlContent: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:32px 16px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e2e4e9;">
+      <tr><td style="background:#10b981;padding:32px 40px;text-align:center;">
+        <p style="margin:0;font-size:20px;font-weight:700;color:#ffffff;">Facture reçue</p>
+      </td></tr>
+      <tr><td style="padding:36px 40px 0;">
+        <p style="margin:0 0 6px;font-size:18px;font-weight:700;color:#111827;">Bonjour ${safeName},</p>
+        <p style="margin:0;font-size:14px;color:#6b7280;line-height:1.7;">
+          Votre paiement a été bien reçu. Retrouvez les détails de votre facture ci-dessous.
+        </p>
+      </td></tr>
+      <tr><td style="padding:24px 40px 0;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;border:1px solid #e2e4e9;border-radius:8px;">
+          <tr><td style="padding:16px 20px;border-bottom:1px solid #e2e4e9;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding:6px 0;font-size:13px;color:#6b7280;">Numéro de facture</td>
+                <td style="padding:6px 0;font-size:13px;font-weight:600;color:#111827;text-align:right;">#${invoice_number}</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 0;font-size:13px;color:#6b7280;">Date</td>
+                <td style="padding:6px 0;font-size:13px;color:#111827;text-align:right;">${date}</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 0;font-size:13px;color:#6b7280;">Montant</td>
+                <td style="padding:6px 0;font-size:16px;font-weight:700;color:#10b981;text-align:right;">${amount} ${currency}</td>
+              </tr>
+            </table>
+          </td></tr>
+        </table>
+      </td></tr>
+      <tr><td style="padding:28px 40px 36px;text-align:center;">
+        ${pdf_url ? `<a href="${pdf_url}" style="display:inline-block;background:#6366F1;color:#ffffff;padding:12px 30px;text-decoration:none;border-radius:7px;font-size:14px;font-weight:600;">Télécharger la facture PDF</a>` : ''}
+      </td></tr>
+      <tr><td style="background:#f9fafb;padding:16px 40px;border-top:1px solid #e2e4e9;text-align:center;">
+        <p style="margin:0;font-size:11px;color:#9ca3af;">Email automatique — merci de ne pas répondre.</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`
+      }, { headers: { 'api-key': this.apiKey, 'Content-Type': 'application/json' } });
+      logger.info(`✅ Facture envoyée à ${email}`);
+    } catch (err) {
+      logger.error(`❌ Échec envoi facture à ${email}:`, err.response?.data || err.message);
+      throw new Error('Erreur lors de l\'envoi de la facture');
+    }
+  }
+
+  async sendPaymentFailedEmail({ email, nom, amount, currency, retry_date }) {
+    if (!this.apiKey) throw new Error('Service d\'email non configuré');
+    const safeName = escHtml(nom);
+    try {
+      await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: this.sender,
+        to: [{ email }],
+        subject: `Paiement échoué - Action requise`,
+        htmlContent: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:32px 16px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e2e4e9;">
+      <tr><td style="background:#ef4444;padding:32px 40px;text-align:center;">
+        <p style="margin:0;font-size:20px;font-weight:700;color:#ffffff;">Paiement échoué</p>
+      </td></tr>
+      <tr><td style="padding:36px 40px 0;">
+        <p style="margin:0 0 6px;font-size:18px;font-weight:700;color:#111827;">Bonjour ${safeName},</p>
+        <p style="margin:0;font-size:14px;color:#6b7280;line-height:1.7;">
+          Le paiement de votre abonnement Fidelyz a échoué. Votre accès Pro est temporairement suspendu.
+        </p>
+      </td></tr>
+      <tr><td style="padding:24px 40px 0;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#fef2f2;border:1px solid #ef4444;border-radius:8px;padding:16px 20px;">
+          <tr><td>
+            <p style="margin:0 0 8px;font-size:13px;font-weight:600;color:#991b1b;">Montant à payer</p>
+            <p style="margin:0;font-size:18px;font-weight:700;color:#111827;">${amount} ${currency}</p>
+            <p style="margin:8px 0 0;font-size:12px;color:#6b7280;">Nouvelle tentative prévue le ${retry_date}</p>
+          </td></tr>
+        </table>
+      </td></tr>
+      <tr><td style="padding:28px 40px 36px;text-align:center;">
+        <a href="${process.env.FRONTEND_URL || 'https://fidelyzapp.fr'}/pro/billing" style="display:inline-block;background:#ef4444;color:#ffffff;padding:12px 30px;text-decoration:none;border-radius:7px;font-size:14px;font-weight:600;">Mettre à jour mon moyen de paiement</a>
+      </td></tr>
+      <tr><td style="background:#f9fafb;padding:16px 40px;border-top:1px solid #e2e4e9;text-align:center;">
+        <p style="margin:0;font-size:11px;color:#9ca3af;">Email automatique — merci de ne pas répondre.</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`
+      }, { headers: { 'api-key': this.apiKey, 'Content-Type': 'application/json' } });
+      logger.info(`✅ Alerte paiement échoué envoyée à ${email}`);
+    } catch (err) {
+      logger.error(`❌ Échec envoi alerte paiement à ${email}:`, err.response?.data || err.message);
+      throw new Error('Erreur lors de l\'envoi de l\'alerte paiement');
+    }
+  }
+
+  async sendSubscriptionCanceledEmail({ email, nom, canceled_at }) {
+    if (!this.apiKey) throw new Error('Service d\'email non configuré');
+    const safeName = escHtml(nom);
+    try {
+      await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: this.sender,
+        to: [{ email }],
+        subject: `Votre abonnement Fidelyz a été annulé`,
+        htmlContent: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:32px 16px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e2e4e9;">
+      <tr><td style="background:#8b5cf6;padding:32px 40px;text-align:center;">
+        <p style="margin:0;font-size:20px;font-weight:700;color:#ffffff;">Abonnement annulé</p>
+      </td></tr>
+      <tr><td style="padding:36px 40px 0;">
+        <p style="margin:0 0 6px;font-size:18px;font-weight:700;color:#111827;">Bonjour ${safeName},</p>
+        <p style="margin:0;font-size:14px;color:#6b7280;line-height:1.7;">
+          Votre abonnement Fidelyz a été annulé le ${canceled_at}. Vos données client restent accessibles en lecture seule.
+        </p>
+      </td></tr>
+      <tr><td style="padding:24px 40px 0;">
+        <p style="margin:0;font-size:13px;color:#6b7280;">Si vous souhaitez réactiver votre abonnement, n'hésitez pas à nous contacter au support Fidelyz.</p>
+      </td></tr>
+      <tr><td style="background:#f9fafb;padding:16px 40px;border-top:1px solid #e2e4e9;text-align:center;">
+        <p style="margin:0;font-size:11px;color:#9ca3af;">Email automatique — merci de ne pas répondre.</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`
+      }, { headers: { 'api-key': this.apiKey, 'Content-Type': 'application/json' } });
+      logger.info(`✅ Notification annulation envoyée à ${email}`);
+    } catch (err) {
+      logger.error(`❌ Échec envoi annulation à ${email}:`, err.response?.data || err.message);
+      throw new Error('Erreur lors de l\'envoi de la notification d\'annulation');
+    }
+  }
 }
 
 export default new EmailService();

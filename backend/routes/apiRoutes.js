@@ -12,8 +12,11 @@ import * as loyaltyController from '../controllers/loyaltyController.js';
 import * as migrationController from '../controllers/migrationController.js';
 import * as pushController from '../controllers/pushController.js';
 import * as siteSettingsController from '../controllers/siteSettingsController.js';
+import * as proSignupController from '../controllers/proSignupController.js';
+import * as webhookController from '../controllers/webhookController.js';
 import walletRoutes from './walletRoutes.js';
 import { verifyToken, isAdmin, isPro } from '../middlewares/auth.js';
+import { requireActiveSubscription, checkSubscriptionStatus, allowReadOnlyForCanceled } from '../middlewares/subscriptionStatus.js';
 import { loginLimiter, apiLimiter } from '../middlewares/rateLimiter.js';
 
 const router = express.Router();
@@ -34,8 +37,18 @@ const upload = multer({
     if (file.mimetype.startsWith('image/')) cb(null, true);
     else cb(new Error('Seules les images sont autorisées'));
   }
-});
-router.use(apiLimiter);
+});
+router.use(apiLimiter);
+
+// Stripe Webhook (must be first, needs raw body)
+router.post('/stripe/webhook', webhookController.stripeWebhook);
+
+// Pro Signup (public endpoints)
+router.post('/pro/signup', proSignupController.proSignup);
+router.post('/pro/checkout/success', proSignupController.checkoutSuccess);
+router.get('/pro/stripe-key', proSignupController.getStripeKey);
+
+// Admin routes
 router.post('/admin/login', loginLimiter, apiController.adminLogin);
 router.post('/admin/migrations/run', verifyToken, isAdmin, migrationController.runMigrations);
 router.get('/admin/enterprises', verifyToken, isAdmin, apiController.getEnterprises);
@@ -43,43 +56,43 @@ router.post('/admin/create-company', verifyToken, isAdmin, apiController.createC
 router.put('/admin/suspend-company/:companyId', verifyToken, isAdmin, apiController.suspendCompany);
 router.put('/admin/reactivate-company/:companyId', verifyToken, isAdmin, apiController.reactivateCompany);
 router.delete('/admin/delete-company/:companyId', verifyToken, isAdmin, apiController.deleteCompany);
-router.put('/admin/update-company/:companyId', verifyToken, isAdmin, apiController.updateCompany);
+router.put('/admin/update-company/:companyId', verifyToken, isAdmin, apiController.updateCompany);
 router.post('/pro/login', loginLimiter, apiController.proLogin);
-router.get('/pro/status', verifyToken, isPro, apiController.getProStatus);
-router.get('/pro/sessions', verifyToken, isPro, apiController.getProSessions);
-router.post('/pro/logout-device', verifyToken, isPro, apiController.logoutProDevice);
-router.post('/pro/logout-all', verifyToken, isPro, apiController.logoutProAll);
-router.put('/pro/change-password', verifyToken, isPro, apiController.changePassword);
+router.get('/pro/status', verifyToken, isPro, checkSubscriptionStatus, apiController.getProStatus);
+router.get('/pro/sessions', verifyToken, isPro, checkSubscriptionStatus, apiController.getProSessions);
+router.post('/pro/logout-device', verifyToken, isPro, checkSubscriptionStatus, apiController.logoutProDevice);
+router.post('/pro/logout-all', verifyToken, isPro, checkSubscriptionStatus, apiController.logoutProAll);
+router.put('/pro/change-password', verifyToken, isPro, checkSubscriptionStatus, apiController.changePassword);
 router.post('/pro/forgot-password', loginLimiter, apiController.forgotPassword);
 router.post('/pro/reset-password', loginLimiter, apiController.resetPassword);
-router.get('/pro/clients', verifyToken, isPro, apiController.getClients);
-router.post('/pro/scan', verifyToken, isPro, apiController.handleScan);
-router.get('/pro/scan-lookup/:clientId', verifyToken, isPro, apiController.getScanInfo);
-router.post('/pro/scan/finalize', verifyToken, isPro, apiController.finalizeFullTransaction);
-router.put('/pro/adjust-points/:clientId', verifyToken, isPro, apiController.adjustPoints);
+router.get('/pro/clients', verifyToken, isPro, requireActiveSubscription, apiController.getClients);
+router.post('/pro/scan', verifyToken, isPro, requireActiveSubscription, apiController.handleScan);
+router.get('/pro/scan-lookup/:clientId', verifyToken, isPro, checkSubscriptionStatus, apiController.getScanInfo);
+router.post('/pro/scan/finalize', verifyToken, isPro, requireActiveSubscription, apiController.finalizeFullTransaction);
+router.put('/pro/adjust-points/:clientId', verifyToken, isPro, requireActiveSubscription, apiController.adjustPoints);
 router.get('/pro/history', verifyToken, isPro, apiController.getTransactionHistory);
 router.delete('/pro/history', verifyToken, isPro, apiController.deleteTransactionHistory);
 
 router.get('/pro/info', verifyToken, isPro, apiController.getProInfo);
-router.delete('/pro/clients/:clientId', verifyToken, isPro, apiController.deleteClient);
+router.delete('/pro/clients/:clientId', verifyToken, isPro, apiController.deleteClient);
 router.get('/pro/loyalty/config', verifyToken, isPro, loyaltyController.getLoyaltyConfig);
-router.put('/pro/loyalty/config', verifyToken, isPro, loyaltyController.updateLoyaltyConfig);
+router.put('/pro/loyalty/config', verifyToken, isPro, loyaltyController.updateLoyaltyConfig);
 router.get('/pro/reward-tiers', verifyToken, isPro, loyaltyController.getRewardTiers);
 router.post('/pro/reward-tiers', verifyToken, isPro, loyaltyController.createRewardTier);
 router.put('/pro/reward-tiers/:id', verifyToken, isPro, loyaltyController.updateRewardTier);
 router.delete('/pro/reward-tiers/:id', verifyToken, isPro, loyaltyController.deleteRewardTier);
-router.post('/pro/redeem-reward', verifyToken, isPro, apiController.redeemReward);
+router.post('/pro/redeem-reward', verifyToken, isPro, apiController.redeemReward);
 router.post('/pro/notifications/send', verifyToken, isPro, loyaltyController.sendPushNotification);
 router.get('/pro/notifications/history', verifyToken, isPro, loyaltyController.getPushNotificationHistory);
-router.get('/pro/notifications/:notificationId', verifyToken, isPro, loyaltyController.getPushNotificationDetails);
-router.get('/pro/loyalty/stats', verifyToken, isPro, loyaltyController.getLoyaltyStats);
+router.get('/pro/notifications/:notificationId', verifyToken, isPro, loyaltyController.getPushNotificationDetails);
+router.get('/pro/loyalty/stats', verifyToken, isPro, loyaltyController.getLoyaltyStats);
 router.get('/pro/stats/overview', verifyToken, isPro, statsController.getProOverview);
 router.get('/pro/stats/activity', verifyToken, isPro, statsController.getProActivity);
 router.get('/pro/stats/clients', verifyToken, isPro, statsController.getProClients);
 router.get('/pro/stats/rewards', verifyToken, isPro, statsController.getProRewards);
-router.get('/admin/stats', verifyToken, isAdmin, statsController.getAdminStats);
+router.get('/admin/stats', verifyToken, isAdmin, statsController.getAdminStats);
 router.get('/pro/loyalty/expiration', verifyToken, isPro, loyaltyController.getExpirationConfig);
-router.put('/pro/loyalty/expiration', verifyToken, isPro, loyaltyController.updateExpirationConfig);
+router.put('/pro/loyalty/expiration', verifyToken, isPro, loyaltyController.updateExpirationConfig);
 router.get('/pro/card-customization/:empresaId', verifyToken, isPro, apiController.getCardCustomization);
 router.put('/pro/card-customization/:empresaId', verifyToken, isPro, apiController.updateCardCustomization);
 router.patch('/pro/card-customization/:empresaId/gps', verifyToken, isPro, apiController.updateCardCustomizationGPS);
@@ -91,14 +104,14 @@ router.post('/pro/upload-logo', verifyToken, isPro, (req, res, next) => {
     if (err) return res.status(400).json({ error: err.message });
     next();
   });
-}, apiController.uploadLogo);
+}, apiController.uploadLogo);
 router.post('/pro/clients/create-invite', verifyToken, isPro, apiController.createClientAndInvite);
-router.post('/pro/clients/resend-links', verifyToken, isPro, apiController.sendClientDownloadLinks);
+router.post('/pro/clients/resend-links', verifyToken, isPro, apiController.sendClientDownloadLinks);
 router.post('/pro/push/send', verifyToken, isPro, pushController.sendNotification);
-router.get('/pro/push/history', verifyToken, isPro, pushController.getHistory);
-router.use('/', walletRoutes);
+router.get('/pro/push/history', verifyToken, isPro, pushController.getHistory);
+router.use('/', walletRoutes);
 router.get('/settings/mentions-legales', siteSettingsController.getMentionsLegales);
-router.put('/admin/settings/mentions-legales', verifyToken, isAdmin, siteSettingsController.updateMentionsLegales);
+router.put('/admin/settings/mentions-legales', verifyToken, isAdmin, siteSettingsController.updateMentionsLegales);
 router.get('/public/enterprises', apiController.getPublicEnterprises);
 router.get('/companies/:companyId/info', apiController.getCompanyInfo);
 router.get('/companies/:companyId/card-customization', apiController.getCardCustomization);

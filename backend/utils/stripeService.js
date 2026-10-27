@@ -10,7 +10,7 @@ import pool from '../db.js';
 
 /**
  * Create a Stripe customer for an enterprise
- * @param {Object} entrepriseData - Enterprise info { id, nom, email }
+ * @param {Object} entrepriseData - Enterprise info { id, nom, email }. id can be null for new signups
  * @returns {Promise<string>} Stripe customer ID
  */
 export const createStripeCustomer = async (entrepriseData) => {
@@ -18,20 +18,27 @@ export const createStripeCustomer = async (entrepriseData) => {
     const customer = await stripe.customers.create({
       email: entrepriseData.email,
       name: entrepriseData.nom,
-      metadata: {
-        entreprise_id: entrepriseData.id.toString()
-      }
+      ...(entrepriseData.id && {
+        metadata: {
+          entreprise_id: entrepriseData.id.toString()
+        }
+      })
     });
 
-    // Save Stripe customer ID to database
-    const connection = await pool.getConnection();
-    await connection.execute(
-      'UPDATE entreprises SET stripe_customer_id = ? WHERE id = ?',
-      [customer.id, entrepriseData.id]
-    );
-    connection.release();
+    // If entrepriseData.id is provided, save to database
+    if (entrepriseData.id) {
+      const connection = await pool.getConnection();
+      try {
+        await connection.query(
+          'UPDATE entreprises SET stripe_customer_id = ? WHERE id = ?',
+          [customer.id, entrepriseData.id]
+        );
+      } finally {
+        connection.release();
+      }
+    }
 
-    console.log(`✅ Stripe customer created: ${customer.id} for entreprise ${entrepriseData.id}`);
+    console.log(`✅ Stripe customer created: ${customer.id}` + (entrepriseData.id ? ` for entreprise ${entrepriseData.id}` : ''));
     return customer.id;
   } catch (error) {
     console.error('❌ Error creating Stripe customer:', error.message);

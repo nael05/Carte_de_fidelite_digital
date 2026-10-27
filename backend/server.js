@@ -26,11 +26,11 @@ if (missingEnv.length > 0) {
 
 const app = express();
 app.set('trust proxy', 1);
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 app.use(helmet({
   hsts: process.env.NODE_ENV === 'production' ? { maxAge: 31536000 } : false,
   contentSecurityPolicy: false, // Laisser CORS gérer
-}));
+}));
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
   : [
@@ -58,7 +58,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
 const ipRangeRegex = /^http:\/\/(192\.168|10)\.\d+\.\d+:(300[0-9]|5[0-9]{3})$/;
 
 app.use(cors({
-  origin: (origin, callback) => {
+  origin: (origin, callback) => {
     if (!origin) return callback(null, true);
     const allowed = allowedOrigins.some(o =>
       typeof o === 'string' ? o === origin : o.test(origin)
@@ -70,18 +70,24 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Device-Id'],
   maxAge: 86400,
-}));
+}));
 app.use(express.json({ limit: '1mb' }));
-app.use(express.urlencoded({ limit: '1mb', extended: true }));
+app.use(express.urlencoded({ limit: '1mb', extended: true }));
 logger.info(`📁 Uploads directory: ${uploadsDir}`);
 app.use('/uploads', express.static(uploadsDir));
-app.use('/api/uploads', express.static(uploadsDir)); // Frontend compatibility
+app.use('/api/uploads', express.static(uploadsDir)); // Frontend compatibility
 app.get('/api/wallet', (req, res) => {
   logger.info('🔍 [APPLE CONNECT] L\'iPhone a testé la racine du WebService');
   res.json({ status: 'active', service: 'Apple Wallet WebService' });
 });
 
-app.use('/api', apiRoutes);
+// Stripe webhook needs raw body before JSON parsing
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), (req, res, next) => {
+  req.rawBody = req.body;
+  next();
+});
+
+app.use('/api', apiRoutes);
 app.get('/health', async (req, res) => {
   try {
     const [result] = await pool.query('SELECT 1');
@@ -90,13 +96,13 @@ app.get('/health', async (req, res) => {
     logger.error('Health check failed - DB connection issue', { error: err.message });
     res.status(503).json({ status: 'ERROR', database: 'disconnected', error: err.message });
   }
-});
+});
 app.get('/api/wallet/health', (req, res) => {
-  try {
+  try {
     import('./utils/passGenerator.js').then((module) => {
       const pg = module.passGenerator;
       pg.validateConfiguration();
-    });
+    });
     import('./utils/apnService.js').then((module) => {
       const apn = module.apnService;
       logger.info('✅ Provider APNs prêt');
@@ -114,9 +120,9 @@ app.get('/api/wallet/health', (req, res) => {
     logger.error('Health check error', err);
     res.status(500).json({ error: err.message });
   }
-});
-app.use(notFoundHandler);
-app.use(errorHandler);
+});
+app.use(notFoundHandler);
+app.use(errorHandler);
 app.listen(PORT, () => {
   logger.info(`✅ Backend démarré sur http://localhost:${PORT}`);
   logger.info(`📍 Environnement: ${process.env.NODE_ENV || 'development'}`);
@@ -134,7 +140,7 @@ app.listen(PORT, () => {
   }, 100);
 });
 
-if (process.env.NODE_APP_INSTANCE === '0') {
+if (process.env.NODE_APP_INSTANCE === '0') {
   cron.schedule('0 2 * * *', async () => {
     logger.info('[CRON] Points expiration job started');
     try {
@@ -147,7 +153,7 @@ if (process.env.NODE_APP_INSTANCE === '0') {
         } catch (err) {
           logger.error(`[CRON] Expiration failed for enterprise ${entrepriseId}`, { error: err.message });
         }
-      }
+      }
       for (const { id: entrepriseId, points_expiration_months } of enterprises) {
         try {
           const [clients] = await pool.query(
@@ -159,14 +165,14 @@ if (process.env.NODE_APP_INSTANCE === '0') {
           for (const client of clients) {
             try {
               const { soonPoints } = await computeClientExpiration(client.id, points_expiration_months);
-              if (soonPoints > 0) {
-                await walletSyncService.syncClientWallet(client.id, entrepriseId, 0);
+              if (soonPoints > 0) {
+                await walletSyncService.syncClientWallet(client.id, entrepriseId, 0);
                 const [regRows] = await pool.query(
                   `SELECT apr.push_token FROM apple_pass_registrations apr
                    JOIN wallet_cards wc ON wc.pass_serial_number = apr.pass_serial_number
                    WHERE wc.client_id = ?`,
                   [client.id]
-                );
+                );
                 if (regRows.length > 0) {
                   const tokens = regRows.map(r => r.push_token);
                   const { apnService } = await import('./utils/apnService.js');
@@ -175,7 +181,7 @@ if (process.env.NODE_APP_INSTANCE === '0') {
                     '⏳ Vos points expirent bientôt !',
                     `Il vous reste 7 jours pour utiliser ${soonPoints} point${soonPoints > 1 ? 's' : ''}. Venez vite !`
                   );
-                }
+                }
                 const [gwRows] = await pool.query(
                   `SELECT pass_serial_number FROM wallet_cards WHERE client_id = ? AND company_id = ? AND pass_serial_number LIKE 'GOOGLE_%'`,
                   [client.id, entrepriseId]
@@ -197,7 +203,7 @@ if (process.env.NODE_APP_INSTANCE === '0') {
     } catch (err) {
       logger.error('[CRON] Points expiration job failed', { error: err.message });
     }
-  });
+  });
   cron.schedule('0 3 * * *', async () => {
     try {
       const [rows] = await pool.query(

@@ -68,4 +68,11 @@ export const STRIPE_PRODUCTS = {
   }
 };
 
+// Pro plan pricing (used in signup)
+export const PRO_PLANS = {
+  monthly: process.env.STRIPE_PRICE_PRO_MONTHLY || 'price_pro_monthly',
+  yearly: process.env.STRIPE_PRICE_PRO_YEARLY || 'price_pro_yearly'
+};
+
+export { stripe, validateStripeConfig };
 export default stripe;

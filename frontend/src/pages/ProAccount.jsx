@@ -99,13 +99,13 @@ function ProfileTab() {
               onChange={e => setPwd({ ...pwd, old_password: e.target.value })} />
           </div>
           <div className="ui-field">
-            <label className="ui-label">Nouveau mot de passe <span className="ui-hint">8 caractères min.</span></label>
-            <input className="ui-input" type="password" required minLength={8} autoComplete="new-password" value={pwd.new_password}
+            <label className="ui-label">Nouveau mot de passe <span className="ui-hint">10 caractères min., majuscule, minuscule et chiffre ou caractère spécial</span></label>
+            <input className="ui-input" type="password" required minLength={10} autoComplete="new-password" value={pwd.new_password}
               onChange={e => setPwd({ ...pwd, new_password: e.target.value })} />
           </div>
           <div className="ui-field">
             <label className="ui-label">Confirmer le nouveau mot de passe</label>
-            <input className="ui-input" type="password" required minLength={8} autoComplete="new-password" value={pwd.confirm}
+            <input className="ui-input" type="password" required minLength={10} autoComplete="new-password" value={pwd.confirm}
               onChange={e => setPwd({ ...pwd, confirm: e.target.value })} />
           </div>
           <button className="ui-btn" type="submit">Modifier le mot de passe</button>

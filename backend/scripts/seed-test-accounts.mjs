@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const API = process.env.SEED_API_URL || 'http://localhost:5000/api';
-export const TEST_PASSWORD = 'Test-Fidelyz2026!';
+export const TEST_PASSWORD = 'Test-Compte2026!';
 
 const ACCOUNTS = [
   { email: 'gratuit@fidelyz.test', nom: 'Test Gratuit', tier: 'free', clients: 12 },

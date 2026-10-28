@@ -4,14 +4,10 @@ import api from '../api'
 import { AlertCircle, CheckCircle2, Loader2, Eye, EyeOff } from 'lucide-react'
 import AuthShell from '../components/AuthShell'
 import PlanPicker from '../components/PlanPicker'
+import { PASSWORD_RULES } from '../utils/passwordValidator'
 import './Auth.css'
 import './ProSignup.css'
 
-const PASSWORD_RULES = [
-  { test: (p) => p.length >= 6, label: '6 caractères minimum' },
-  { test: (p) => /[A-Z]/.test(p), label: 'Une majuscule' },
-  { test: (p) => /[0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(p), label: 'Un chiffre ou un caractère spécial' }
-]
 
 import usePageTitle from '../utils/usePageTitle'
 

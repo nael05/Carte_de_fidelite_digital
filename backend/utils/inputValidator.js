@@ -13,7 +13,7 @@ export const validateName = (name, minLength = 2, maxLength = 100) => {
   return trimmed && trimmed.length >= minLength && trimmed.length <= maxLength;
 };
 
-export const validatePassword = (password, minLength = 6) => {
+export const validatePassword = (password, minLength = 10) => {
   return password && password.length >= minLength && password.length <= 255;
 };
 
@@ -59,7 +59,7 @@ export const validateLoginInput = (data) => {
     errors.push('Email invalide');
   }
 
-  if (!validatePassword(data.mot_de_passe, 6)) {
+  if (!validatePassword(data.mot_de_passe, 10)) {
     errors.push('Mot de passe requis');
   }
 

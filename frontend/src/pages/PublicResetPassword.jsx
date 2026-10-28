@@ -1,3 +1,4 @@
+import { validatePassword, PASSWORD_RULES } from '../utils/passwordValidator'
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import api from '../api'
@@ -48,14 +49,10 @@ function PublicResetPassword() {
         setLoading(false)
         return
       }
-      const hasMinLength = newPassword.length >= 6;
-      const hasUppercase = /(?=.*[A-Z])/.test(newPassword);
-      const hasSpecial = /(?=.*[0-9!@#$%^&*])/.test(newPassword);
-
-      if (!hasMinLength || !hasUppercase || !hasSpecial) {
-        setError('Le mot de passe ne respecte pas les critères de sécurité');
-        setLoading(false);
-        return;
+      if (!validatePassword(newPassword).isValid) {
+        setError('Le mot de passe ne respecte pas les critères de sécurité')
+        setLoading(false)
+        return
       }
 
       await api.post('/pro/reset-password', { token, newPassword })
@@ -148,15 +145,14 @@ function PublicResetPassword() {
               <div className="luxe-criteria-box">
                 <span className="luxe-criteria-title">Votre mot de passe doit contenir</span>
                 <ul className="luxe-criteria-list">
-                  <li className={`luxe-criteria-item ${newPassword.length >= 6 ? 'valid' : ''}`}>
-                    {newPassword.length >= 6 ? <CheckCircle2 size={14} /> : <Circle size={14} />} 6 caractères min.
-                  </li>
-                  <li className={`luxe-criteria-item ${/(?=.*[A-Z])/.test(newPassword) ? 'valid' : ''}`}>
-                    {/(?=.*[A-Z])/.test(newPassword) ? <CheckCircle2 size={14} /> : <Circle size={14} />} Une majuscule
-                  </li>
-                  <li className={`luxe-criteria-item ${/(?=.*[0-9!@#$%^&*])/.test(newPassword) ? 'valid' : ''}`}>
-                    {/(?=.*[0-9!@#$%^&*])/.test(newPassword) ? <CheckCircle2 size={14} /> : <Circle size={14} />} Chiffre / Spécial
-                  </li>
+                  {PASSWORD_RULES.map((rule) => {
+                    const ok = rule.test(newPassword)
+                    return (
+                      <li key={rule.id} className={`luxe-criteria-item ${ok ? 'valid' : ''}`}>
+                        {ok ? <CheckCircle2 size={14} /> : <Circle size={14} />} {rule.label}
+                      </li>
+                    )
+                  })}
                 </ul>
               </div>
             )}

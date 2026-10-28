@@ -66,7 +66,7 @@ export default function TeamPanel() {
   }
 
   const resetPassword = (member) => {
-    const value = window.prompt(`Nouveau mot de passe pour ${member.nom} (6 caractères min., une majuscule, un chiffre ou caractère spécial) :`, randomPassword())
+    const value = window.prompt(`Nouveau mot de passe pour ${member.nom} (10 caractères min., majuscule, minuscule, chiffre ou caractère spécial) :`, randomPassword())
     if (!value) return
     run(() => api.put(`/pro/staff/${member.id}`, { mot_de_passe: value }), `Mot de passe de ${member.nom} modifié`)
       .then((ok) => ok && setCreated({ email: member.email, password: value }))

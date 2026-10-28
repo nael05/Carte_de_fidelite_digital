@@ -1,32 +1,32 @@
+// Règles de mot de passe : mêmes critères que le serveur (backend/utils/passwordValidator.js).
+export const PASSWORD_MIN_LENGTH = 10;
+
+const COMMON_FRAGMENTS = ['password', 'motdepasse', 'azerty', 'qwerty', '123456', 'abcdef', 'fidelyz', 'bienvenue', 'welcome'];
+const isCommon = (p) => {
+  const simplified = p.normalize('NFD').replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+  return COMMON_FRAGMENTS.some((fragment) => simplified.includes(fragment));
+};
+
+// Critères affichés à l'utilisateur pendant la saisie.
+export const PASSWORD_RULES = [
+  { id: 'length', label: `${PASSWORD_MIN_LENGTH} caractères minimum`, test: (p) => p.length >= PASSWORD_MIN_LENGTH },
+  { id: 'upper', label: 'Une majuscule', test: (p) => /[A-Z]/.test(p) },
+  { id: 'lower', label: 'Une minuscule', test: (p) => /[a-z]/.test(p) },
+  { id: 'digit', label: 'Un chiffre ou un caractère spécial', test: (p) => /[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(p) },
+  { id: 'common', label: 'Pas un mot de passe courant', test: (p) => !!p && !isCommon(p) },
+];
+
 /**
  * Validate password strength and requirements
  * @param {string} password - Password to validate
  * @returns {object} - { isValid: boolean, errors: string[] }
  */
 export function validatePassword(password) {
-  const errors = [];
-  
   if (!password) {
-    errors.push('Le mot de passe est requis');
-    return { isValid: false, errors };
+    return { isValid: false, errors: ['Le mot de passe est requis'] };
   }
-  
-  if (password.length < 6) {
-    errors.push('Minimum 6 caractères');
-  }
-  
-  if (!/[A-Z]/.test(password)) {
-    errors.push('Au moins une majuscule requise');
-  }
-  
-  if (!/[0-9]/.test(password) && !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-    errors.push('Au moins un chiffre ou caractère spécial requis');
-  }
-  
-  return {
-    isValid: errors.length === 0,
-    errors
-  };
+  const errors = PASSWORD_RULES.filter((rule) => !rule.test(password)).map((rule) => rule.label);
+  return { isValid: errors.length === 0, errors };
 }
 
 /**

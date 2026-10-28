@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { validatePassword } from '../utils/passwordValidator'
+import { validatePassword, PASSWORD_RULES } from '../utils/passwordValidator'
 import api from '../api'
 import { AlertCircle, Eye, EyeOff, Loader2, CheckCircle2, Circle } from 'lucide-react'
 import AuthShell from '../components/AuthShell'
@@ -147,16 +147,15 @@ function ProResetPassword() {
             <div className="luxe-criteria-box">
               <span className="luxe-criteria-title">Votre mot de passe doit contenir</span>
               <ul className="luxe-criteria-list">
-                <li className={`luxe-criteria-item ${newPassword.length >= 6 ? 'valid' : ''}`}>
-                  {newPassword.length >= 6 ? <CheckCircle2 size={14} /> : <Circle size={14} />} 6 caractères min.
-                </li>
-                <li className={`luxe-criteria-item ${/(?=.*[A-Z])/.test(newPassword) ? 'valid' : ''}`}>
-                  {/(?=.*[A-Z])/.test(newPassword) ? <CheckCircle2 size={14} /> : <Circle size={14} />} Une majuscule
-                </li>
-                <li className={`luxe-criteria-item ${/(?=.*[0-9!@#$%^&*])/.test(newPassword) ? 'valid' : ''}`}>
-                  {/(?=.*[0-9!@#$%^&*])/.test(newPassword) ? <CheckCircle2 size={14} /> : <Circle size={14} />} Chiffre / Spécial
-                </li>
-              </ul>
+                  {PASSWORD_RULES.map((rule) => {
+                    const ok = rule.test(newPassword)
+                    return (
+                      <li key={rule.id} className={`luxe-criteria-item ${ok ? 'valid' : ''}`}>
+                        {ok ? <CheckCircle2 size={14} /> : <Circle size={14} />} {rule.label}
+                      </li>
+                    )
+                  })}
+                </ul>
             </div>
           )}
 

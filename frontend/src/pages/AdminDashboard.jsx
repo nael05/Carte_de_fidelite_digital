@@ -364,9 +364,6 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
           <button className={`ux-tab-btn ${activeTab === 'list' ? 'active' : ''}`} onClick={() => setActiveTab('list')}>
             <LayoutDashboard size={18} /> Gestion
           </button>
-          <button className={`ux-tab-btn ${activeTab === 'create' ? 'active' : ''}`} onClick={() => setActiveTab('create')}>
-            <PlusCircle size={18} /> Nouveau
-          </button>
           <button className={`ux-tab-btn ${activeTab === 'stats' ? 'active' : ''}`} onClick={() => setActiveTab('stats')}>
             <TrendingUp size={18} /> Statistiques
           </button>
@@ -398,7 +395,6 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
       <div className="ux-mobile-tabs mobile-only">
         <button className={activeTab === 'overview' ? 'active' : ''} onClick={() => setActiveTab('overview')}><PieChart size={20} /></button>
         <button className={activeTab === 'list' ? 'active' : ''} onClick={() => setActiveTab('list')}><LayoutDashboard size={20} /></button>
-        <button className={activeTab === 'create' ? 'active' : ''} onClick={() => setActiveTab('create')}><PlusCircle size={20} /></button>
         <button className={activeTab === 'stats' ? 'active' : ''} onClick={() => setActiveTab('stats')}><TrendingUp size={20} /></button>
         <button className={activeTab === 'pricing' ? 'active' : ''} onClick={() => setActiveTab('pricing')}><Euro size={20} /></button>
         <button className={activeTab === 'promos' ? 'active' : ''} onClick={() => setActiveTab('promos')}><Tag size={20} /></button>
@@ -449,20 +445,6 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
-              <div className="ux-welcome-banner" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-light)', padding: '2rem', borderRadius: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-                <div className="ux-banner-text">
-                  <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '1.2rem', marginBottom: '8px' }}>
-                    <Store size={20} color="var(--accent-color)" />
-                    Ajouter un nouveau partenaire
-                  </h3>
-                  <p style={{ margin: 0, opacity: 0.7, maxWidth: '400px', lineHeight: '1.5' }}>Générez une nouvelle instance isolée pour un commerçant avec ses identifiants et accès en 2 clics.</p>
-                </div>
-                <button className="ux-btn-accent" onClick={() => setActiveTab('create')} style={{ padding: '12px 24px', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <PlusCircle size={18} /> Lancer la création
-                </button>
-              </div>
-            </div>
           </div>
         )}
 
@@ -560,63 +542,6 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
           </div>
         )}
 
-        {/* VIEW: CREATE */}
-        {activeTab === 'create' && (
-          <div className="ux-view-fade">
-             <header className="ux-view-header">
-              <h2>Nouveau Partenaire</h2>
-              <p>Remplissez les informations pour générer un compte commerçant.</p>
-            </header>
-
-            <div className="ux-form-container">
-              <form onSubmit={handleCreateCompany} className="ux-form-premium">
-                <div className="ux-form-group">
-                  <label>Nom de l'entreprise</label>
-                  <input 
-                    type="text" value={formData.nom} 
-                    onChange={e => setFormData({...formData, nom: e.target.value})}
-                    placeholder="Brasserie, Boutique, Coiffeur..." 
-                    required
-                  />
-                </div>
-                <div className="ux-form-row-compact">
-                  <div className="ux-form-group">
-                    <label>Prénom Gérant</label>
-                    <input 
-                      type="text" value={formData.prenom} 
-                      onChange={e => setFormData({...formData, prenom: e.target.value})}
-                      placeholder="Ex: Jean" 
-                    />
-                  </div>
-                  <div className="ux-form-group">
-                    <label>Téléphone</label>
-                    <input 
-                      type="tel" value={formData.telephone} 
-                      onChange={e => setFormData({...formData, telephone: e.target.value})}
-                      placeholder="06..." 
-                    />
-                  </div>
-                </div>
-                <div className="ux-form-group">
-                  <label>Email Administrateur</label>
-                  <input 
-                    type="email" value={formData.email} 
-                    onChange={e => setFormData({...formData, email: e.target.value})}
-                    placeholder="contact@commerce.fr" 
-                    required
-                  />
-                </div>
-                {/* Loyalty type removed, defaulting to points */}
-
-                <div className="ux-form-footer">
-                  <button type="submit" className="ux-btn-primary lrg" disabled={submitting}>
-                    {submitting ? <Loader2 className="spin" size={22} /> : 'Finaliser la création'}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
         {/* VIEW: STATS */}
         {activeTab === 'stats' && <AdminStatsPanel />}
 

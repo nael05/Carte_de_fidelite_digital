@@ -956,10 +956,26 @@ export const getCompanyInfo = async (req, res) => {
 
 export const registerClientAndGeneratePass = async (req, res) => {
   const { entrepriseId } = req.params;
-  const { nom, prenom, telephone, email, type_wallet, marketing_optin } = req.body;
+  const { nom, prenom, telephone, email, type_wallet, marketing_optin, website, started_at } = req.body;
+
+  // Anti-robot : champ piège (invisible pour un humain) et délai minimal depuis l'affichage du formulaire.
+  if (website) {
+    return res.status(400).json({ error: 'Inscription impossible' });
+  }
+  const startedAt = Number(started_at);
+  if (Number.isFinite(startedAt) && startedAt > 0 && Date.now() - startedAt < 3000) {
+    return res.status(400).json({ error: 'Veuillez prendre un instant pour remplir le formulaire, puis réessayez.' });
+  }
 
   if (!nom || !prenom || !telephone || !type_wallet) {
     return res.status(400).json({ error: 'Tous les champs sont requis' });
+  }
+  if (typeof nom !== 'string' || nom.length > 50 || typeof prenom !== 'string' || prenom.length > 50 ||
+      (email && (typeof email !== 'string' || email.length > 100))) {
+    return res.status(400).json({ error: 'Données invalides (longueur maximale dépassée)' });
+  }
+  if (!/^\+?[0-9]{8,15}$/.test(String(telephone).replace(/[ .-]/g, ''))) {
+    return res.status(400).json({ error: 'Numéro de téléphone invalide' });
   }
 
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {

@@ -16,6 +16,9 @@ function Join() {
   const [success, setSuccess] = useState('')
   const [companyInfo, setCompanyInfo] = useState(null)
   const [formSubmitting, setFormSubmitting] = useState(false)
+  // Anti-robot : champ piège invisible et heure d'affichage du formulaire (contrôlés côté serveur).
+  const [website, setWebsite] = useState('')
+  const [startedAt] = useState(() => Date.now())
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -124,6 +127,8 @@ function Join() {
         telephone: formData.phone,
         type_wallet: selectedWallet,
         marketing_optin: marketingOptIn,
+        website,
+        started_at: startedAt,
         establishment_id: new URLSearchParams(window.location.search).get('etab') || undefined
       })
 
@@ -198,6 +203,10 @@ function Join() {
         </div>
 
         <form onSubmit={handleSubmit} className="luxe-auth-form">
+          <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+            <label htmlFor="website">Ne pas remplir</label>
+            <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+          </div>
           <div className="luxe-form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
              <div className="luxe-form-group">
                 <label htmlFor="firstName">Prénom</label>

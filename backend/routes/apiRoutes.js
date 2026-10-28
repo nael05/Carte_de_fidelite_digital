@@ -25,7 +25,7 @@ import * as adminMailController from '../controllers/adminMailController.js';
 import walletRoutes from './walletRoutes.js';
 import { verifyToken, isAdmin, isPro } from '../middlewares/auth.js';
 import { requireActiveSubscription, requireAccountAccess, requireTier, checkSubscriptionStatus } from '../middlewares/subscriptionStatus.js';
-import { loginLimiter, apiLimiter } from '../middlewares/rateLimiter.js';
+import { loginLimiter, apiLimiter, joinIpLimiter, joinCompanyLimiter } from '../middlewares/rateLimiter.js';
 
 const router = express.Router();
 
@@ -170,6 +170,6 @@ router.put('/admin/settings/mentions-legales', verifyToken, isAdmin, siteSetting
 router.get('/public/enterprises', apiController.getPublicEnterprises);
 router.get('/companies/:companyId/info', apiController.getCompanyInfo);
 router.get('/companies/:companyId/card-customization', apiController.getCardCustomization);
-router.post('/join/:entrepriseId', apiController.registerClientAndGeneratePass);
+router.post('/join/:entrepriseId', joinIpLimiter, joinCompanyLimiter, apiController.registerClientAndGeneratePass);
 
 export default router;

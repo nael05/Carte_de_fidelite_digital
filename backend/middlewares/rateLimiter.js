@@ -73,4 +73,31 @@ export const strictLimiter = rateLimit({
   skip: (req) => process.env.NODE_ENV === 'development',
 });
 
+// Inscription publique des clients (/join) : deux plafonds pour empêcher qu'un robot remplisse un programme.
+//  - par adresse IP : 30 par heure (un magasin partage souvent une seule IP pour tous ses clients) ;
+//  - par commerce, toutes IP confondues : 120 par heure.
+const tooManyJoins = (req, res) =>
+  res.status(429).json({ error: "Trop d'inscriptions en peu de temps. Réessayez dans un moment.", code: 'too_many_registrations' });
+
+export const joinIpLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 30,
+  store: new MySQLRateLimitStore(60 * 60 * 1000, 'join-ip'),
+  handler: tooManyJoins,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => process.env.NODE_ENV === 'development',
+});
+
+export const joinCompanyLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 120,
+  store: new MySQLRateLimitStore(60 * 60 * 1000, 'join-company'),
+  keyGenerator: (req) => String(req.params.entrepriseId || 'inconnu'),
+  handler: tooManyJoins,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => process.env.NODE_ENV === 'development',
+});
+
 export default loginLimiter;

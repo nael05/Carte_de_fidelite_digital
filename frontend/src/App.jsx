@@ -9,6 +9,8 @@ import ProLogin from './pages/ProLogin'
 import ProResetPassword from './pages/ProResetPassword'
 import ProDashboard from './pages/ProDashboard'
 import ProAccount from './pages/ProAccount'
+import ProSignup from './pages/ProSignup'
+import { ProCheckoutSuccess, ProCheckoutCancel } from './pages/ProCheckoutResult'
 import ProConfirmEmail from './pages/ProConfirmEmail'
 import Join from './pages/Join'
 import ForgotPassword from './pages/ForgotPassword'
@@ -32,6 +34,9 @@ function App() {
 
           {/* Pro */}
           <Route path="/pro/login" element={<ProLogin />} />
+          <Route path="/pro/signup" element={<ProSignup />} />
+          <Route path="/pro/checkout/success" element={<ProCheckoutSuccess />} />
+          <Route path="/pro/checkout/cancel" element={<ProCheckoutCancel />} />
           <Route path="/pro/forgot-password" element={<ForgotPassword />} />
           <Route path="/password-recovery" element={<PublicResetPassword />} />
           <Route path="/pro/secure-password" element={<ProResetPassword />} />

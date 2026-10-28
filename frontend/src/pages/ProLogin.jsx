@@ -180,6 +180,7 @@ function ProLogin() {
         </form>
 
         <div className="luxe-auth-footer">
+          <p>Pas encore de compte ? <Link to="/pro/signup" style={{ color: '#6366F1', textDecoration: 'none', fontWeight: 500 }}>Créer mon espace Pro</Link></p>
           <p>© 2026 Fidelyz • Business Portal</p>
         </div>
       </div>

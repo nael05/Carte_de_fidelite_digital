@@ -652,6 +652,7 @@ export default function Home() {
   }, [])
 
   const goPro = () => navigate('/pro/login')
+  const goSignup = () => navigate('/pro/signup')
 
   return (
     <div className="fz" ref={rootRef}>
@@ -671,7 +672,7 @@ export default function Home() {
           </nav>
           <div className="fz-nav-ctas">
             <button className="fz-nav-login" onClick={goPro}>Connexion</button>
-            <button className="fz-btn fz-btn-sm" onClick={goPro}>Commencer</button>
+            <button className="fz-btn fz-btn-sm" onClick={goSignup}>Commencer</button>
           </div>
         </div>
       </header>
@@ -699,7 +700,7 @@ export default function Home() {
             Prêtes en cinq minutes. Sans application.
           </p>
           <div className="hero-ctas">
-            <button className="fz-btn" onClick={goPro}>
+            <button className="fz-btn" onClick={goSignup}>
               Commencer gratuitement
             </button>
             <a href="#film" className="fz-link">
@@ -876,7 +877,7 @@ export default function Home() {
               <p className="plan-ann">
                 {annual && p.a > 0 ? `Soit ${(p.a * 12).toLocaleString('fr-FR')} € facturés par an` : p.m === 0 ? 'Gratuit, pour toujours' : 'Facturé mensuellement'}
               </p>
-              <button className={`fz-btn plan-cta${p.featured ? '' : ' ghost'}`} onClick={goPro}>
+              <button className={`fz-btn plan-cta${p.featured ? '' : ' ghost'}`} onClick={p.featured ? goSignup : goPro}>
                 {p.cta}
               </button>
               <ul>
@@ -928,7 +929,7 @@ export default function Home() {
           </h2>
           <p>Rejoignez les commerçants qui ont dit adieu aux cartes tampons.</p>
           <div className="hero-ctas">
-            <button className="fz-btn fz-btn-lg" onClick={goPro}>
+            <button className="fz-btn fz-btn-lg" onClick={goSignup}>
               Créer mon espace pro <ArrowRight size={18} />
             </button>
           </div>

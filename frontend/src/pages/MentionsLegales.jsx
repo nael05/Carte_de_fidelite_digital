@@ -4,7 +4,10 @@ import api from '../api'
 import { Loader2, AlertTriangle, ArrowLeft } from 'lucide-react'
 import './MentionsLegales.css'
 
+import usePageTitle from '../utils/usePageTitle'
+
 function MentionsLegales() {
+  usePageTitle("Mentions légales | Fidelyz")
   const [content, setContent] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')

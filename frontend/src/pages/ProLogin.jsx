@@ -6,7 +6,10 @@ import { AlertCircle, Loader2, Eye, EyeOff, Building2, HelpCircle } from 'lucide
 import AuthShell from '../components/AuthShell'
 import './Auth.css'
 
+import usePageTitle from '../utils/usePageTitle'
+
 function ProLogin() {
+  usePageTitle("Connexion Pro | Fidelyz")
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -133,7 +136,7 @@ function ProLogin() {
             />
             <button
               type="button"
-              className="password-toggle-btn"
+              className="password-toggle-btn" aria-label="Afficher ou masquer le mot de passe"
               onClick={() => setShowPassword(!showPassword)}
               tabIndex="-1"
             >

@@ -1,0 +1,12 @@
+# Fidelyz : seules les pages publiques (accueil, inscription, mentions légales) sont à référencer.
+User-agent: *
+Allow: /
+Disallow: /pro/dashboard
+Disallow: /pro/account
+Disallow: /pro/secure-password
+Disallow: /pro/confirm-email
+Disallow: /pro/checkout/
+Disallow: /master-admin-secret
+Disallow: /password-recovery
+Disallow: /join/
+Disallow: /api/

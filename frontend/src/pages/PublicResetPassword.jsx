@@ -5,7 +5,10 @@ import { AlertCircle, Eye, EyeOff, Loader2, CheckCircle2, Circle, ArrowLeft } fr
 import AuthShell from '../components/AuthShell'
 import './Auth.css'
 
+import usePageTitle from '../utils/usePageTitle'
+
 function PublicResetPassword() {
+  usePageTitle("Nouveau mot de passe | Fidelyz", { noindex: true })
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
@@ -18,7 +21,7 @@ function PublicResetPassword() {
   const location = useLocation()
 
   const queryParams = new URLSearchParams(location.search)
-  const token = queryParams.get('token')
+  const token = queryParams.get('token')
   useEffect(() => {
     const savedTheme = localStorage.getItem('fidelyz-theme') || 'dark'
     if (savedTheme === 'dark') {
@@ -44,7 +47,7 @@ function PublicResetPassword() {
         setError('Les mots de passe ne correspondent pas')
         setLoading(false)
         return
-      }
+      }
       const hasMinLength = newPassword.length >= 6;
       const hasUppercase = /(?=.*[A-Z])/.test(newPassword);
       const hasSpecial = /(?=.*[0-9!@#$%^&*])/.test(newPassword);
@@ -111,7 +114,7 @@ function PublicResetPassword() {
               />
               <button
                 type="button"
-                className="password-toggle-btn"
+                className="password-toggle-btn" aria-label="Afficher ou masquer le mot de passe"
                 onClick={() => setShowPassword(!showPassword)}
                 tabIndex="-1"
               >
@@ -133,7 +136,7 @@ function PublicResetPassword() {
               />
               <button
                 type="button"
-                className="password-toggle-btn"
+                className="password-toggle-btn" aria-label="Afficher ou masquer le mot de passe"
                 onClick={() => setShowConfirm(!showConfirm)}
                 tabIndex="-1"
               >

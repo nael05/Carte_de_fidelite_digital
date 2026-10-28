@@ -5,7 +5,10 @@ import { AlertCircle, Loader2, CheckCircle2, ArrowLeft } from 'lucide-react'
 import AuthShell from '../components/AuthShell'
 import './Auth.css'
 
+import usePageTitle from '../utils/usePageTitle'
+
 function ForgotPassword() {
+  usePageTitle("Mot de passe oublié | Fidelyz", { noindex: true })
   const [email, setEmail] = useState('')
   const navigate = useNavigate()
   useEffect(() => {

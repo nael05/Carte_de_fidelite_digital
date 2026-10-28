@@ -24,7 +24,10 @@ import './ProDashboard.css'
 
 const TAB_IDS = ['scanner', 'clients', 'stats', 'register', 'design', 'settings', 'campaigns', 'business']
 
+import usePageTitle from '../utils/usePageTitle'
+
 function ProDashboard() {
+  usePageTitle("Tableau de bord | Fidelyz", { noindex: true })
   const [activeTab, setActiveTab] = useState(() => {
     const t = new URLSearchParams(window.location.search).get('tab')
     return TAB_IDS.includes(t) ? t : 'scanner'

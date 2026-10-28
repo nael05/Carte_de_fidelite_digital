@@ -7,7 +7,10 @@ import { AlertCircle, Eye, EyeOff, Loader2, CheckCircle2, Circle } from 'lucide-
 import AuthShell from '../components/AuthShell'
 import './Auth.css'
 
+import usePageTitle from '../utils/usePageTitle'
+
 function ProResetPassword() {
+  usePageTitle("Nouveau mot de passe | Fidelyz", { noindex: true })
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
@@ -18,7 +21,7 @@ function ProResetPassword() {
 
   const navigate = useNavigate()
   const location = useLocation()
-  const { token, updateMustChangePassword } = useAuth()
+  const { token, updateMustChangePassword } = useAuth()
   useEffect(() => {
     const savedTheme = localStorage.getItem('fidelyz-theme')
     if (savedTheme === 'dark') {
@@ -26,7 +29,7 @@ function ProResetPassword() {
     } else {
       document.documentElement.setAttribute('data-theme', 'light')
     }
-  }, [])
+  }, [])
   useEffect(() => {
     const fromProLogin = location.state?.fromLogin
 
@@ -110,7 +113,7 @@ function ProResetPassword() {
             />
             <button
               type="button"
-              className="password-toggle-btn"
+              className="password-toggle-btn" aria-label="Afficher ou masquer le mot de passe"
               onClick={() => setShowPassword(!showPassword)}
               tabIndex="-1"
             >
@@ -132,7 +135,7 @@ function ProResetPassword() {
             />
             <button
               type="button"
-              className="password-toggle-btn"
+              className="password-toggle-btn" aria-label="Afficher ou masquer le mot de passe"
               onClick={() => setShowConfirm(!showConfirm)}
               tabIndex="-1"
             >

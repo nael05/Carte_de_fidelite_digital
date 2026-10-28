@@ -13,7 +13,10 @@ import AdminStatsPanel from '../components/AdminStatsPanel'
 import { AdminPricingPanel, AdminPromosPanel, AdminMailPanel } from '../components/AdminBillingPanels'
 import './AdminDashboard.css'
 
+import usePageTitle from '../utils/usePageTitle'
+
 function AdminDashboard() {
+  usePageTitle("Administration | Fidelyz", { noindex: true })
   const [activeTab, setActiveTab] = useState('overview')
   const [contactTarget, setContactTarget] = useState('')
   const [darkMode, setDarkMode] = useState(() => (localStorage.getItem('theme') || 'dark') === 'dark')

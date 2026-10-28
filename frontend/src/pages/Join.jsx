@@ -4,7 +4,10 @@ import api from '../api'
 import { Loader2, AlertTriangle, AlertCircle, CheckCircle2, ArrowLeft, Check, Smartphone, X, Shield } from 'lucide-react'
 import './Join.css'
 
+import usePageTitle from '../utils/usePageTitle'
+
 function Join() {
+  usePageTitle("Rejoindre le programme de fidélité | Fidelyz", { noindex: true })
   const { empresaId } = useParams()
   const navigate = useNavigate()
 

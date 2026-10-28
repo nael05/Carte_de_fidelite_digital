@@ -13,7 +13,10 @@ const PASSWORD_RULES = [
   { test: (p) => /[0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(p), label: 'Un chiffre ou un caractère spécial' }
 ]
 
+import usePageTitle from '../utils/usePageTitle'
+
 function ProSignup() {
+  usePageTitle("Créer mon espace | Fidelyz")
   const [params] = useSearchParams()
   const [form, setForm] = useState({
     nom: '', raison_sociale: '', email: '', mot_de_passe: '', siret_tva: '', adresse: ''
@@ -128,7 +131,7 @@ function ProSignup() {
               disabled={loading}
               autoComplete="new-password"
             />
-            <button type="button" className="password-toggle-btn" onClick={() => setShowPassword(!showPassword)} tabIndex="-1">
+            <button type="button" className="password-toggle-btn" aria-label="Afficher ou masquer le mot de passe" onClick={() => setShowPassword(!showPassword)} tabIndex="-1">
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>

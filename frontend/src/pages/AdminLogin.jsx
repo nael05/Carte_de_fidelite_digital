@@ -6,14 +6,17 @@ import { AlertCircle, Loader2, Eye, EyeOff, ShieldCheck } from 'lucide-react'
 import AuthShell from '../components/AuthShell'
 import './Auth.css'
 
+import usePageTitle from '../utils/usePageTitle'
+
 function AdminLogin() {
+  usePageTitle("Administration | Fidelyz", { noindex: true })
   const [identifiant, setIdentifiant] = useState('')
   const [mot_de_passe, setMotDePasse] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
-  const { login, isAuthenticated, isAdmin } = useAuth()
+  const { login, isAuthenticated, isAdmin } = useAuth()
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'dark'
     if (savedTheme === 'dark') {
@@ -84,7 +87,7 @@ function AdminLogin() {
             />
             <button
               type="button"
-              className="password-toggle-btn"
+              className="password-toggle-btn" aria-label="Afficher ou masquer le mot de passe"
               onClick={() => setShowPassword(!showPassword)}
               tabIndex="-1"
             >

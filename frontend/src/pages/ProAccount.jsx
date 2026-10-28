@@ -440,7 +440,10 @@ const TABS = [
   { id: 'suppression', label: 'Suppression', icon: Trash2, Component: DeleteTab }
 ]
 
+import usePageTitle from '../utils/usePageTitle'
+
 export default function ProAccount() {
+  usePageTitle("Mon compte | Fidelyz", { noindex: true })
   const [tab, setTab] = useState('abonnement')
   const [darkMode, setDarkMode] = useTheme()
   const navigate = useNavigate()

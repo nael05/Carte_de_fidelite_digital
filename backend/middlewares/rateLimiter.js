@@ -2,8 +2,10 @@ import rateLimit from 'express-rate-limit';
 import pool from '../db.js';
 
 class MySQLRateLimitStore {
-  constructor(windowMs) {
+  // prefix : chaque limiteur a son propre compteur (sinon les appels d'API consomment le quota de connexion).
+  constructor(windowMs, prefix) {
     this.windowMs = windowMs;
+    this.prefix = prefix;
     pool.query(`
       CREATE TABLE IF NOT EXISTS rate_limit_store (
         key_id VARCHAR(255) NOT NULL,
@@ -14,7 +16,8 @@ class MySQLRateLimitStore {
     `).catch(() => {});
   }
 
-  async increment(key) {
+  async increment(rawKey) {
+    const key = `${this.prefix}:${rawKey}`;
     const now = Date.now();
     const resetTime = now + this.windowMs;
     await pool.query(
@@ -32,14 +35,16 @@ class MySQLRateLimitStore {
     return { totalHits: row.hits, resetTime: new Date(Number(row.reset_time)) };
   }
 
-  async decrement(key) {
+  async decrement(rawKey) {
+    const key = `${this.prefix}:${rawKey}`;
     await pool.query(
       'UPDATE rate_limit_store SET hits = GREATEST(0, hits - 1) WHERE key_id = ?',
       [key]
     );
   }
 
-  async resetKey(key) {
+  async resetKey(rawKey) {
+    const key = `${this.prefix}:${rawKey}`;
     await pool.query('DELETE FROM rate_limit_store WHERE key_id = ?', [key]);
   }
 }
@@ -47,7 +52,7 @@ class MySQLRateLimitStore {
 export const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5,
-  store: new MySQLRateLimitStore(15 * 60 * 1000),
+  store: new MySQLRateLimitStore(15 * 60 * 1000, 'login'),
   message: 'Trop de tentatives de connexion, réessayez plus tard',
   standardHeaders: true,
   legacyHeaders: false,
@@ -56,15 +61,15 @@ export const loginLimiter = rateLimit({
 
 export const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000,
-  max: 100,
-  store: new MySQLRateLimitStore(1 * 60 * 1000),
+  max: 300,
+  store: new MySQLRateLimitStore(1 * 60 * 1000, 'api'),
   skip: (req) => process.env.NODE_ENV === 'development',
 });
 
 export const strictLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   max: 10,
-  store: new MySQLRateLimitStore(60 * 60 * 1000),
+  store: new MySQLRateLimitStore(60 * 60 * 1000, 'strict'),
   skip: (req) => process.env.NODE_ENV === 'development',
 });
 

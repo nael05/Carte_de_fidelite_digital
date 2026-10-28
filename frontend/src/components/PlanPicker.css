@@ -24,7 +24,7 @@
   cursor: pointer;
 }
 .pp-interval button.on { background: var(--accent); color: #fff; }
-.pp-interval em { font-style: normal; font-size: 11.5px; font-weight: 700; padding: 2px 7px; border-radius: var(--radius-full); background: var(--gold-light); color: var(--gold); }
+.pp-interval em { white-space: nowrap; font-style: normal; font-size: 11.5px; font-weight: 700; padding: 2px 7px; border-radius: var(--radius-full); background: var(--gold-light); color: var(--gold); }
 .pp-interval button.on em { background: rgba(255, 255, 255, 0.22); color: #fff; }
 
 .pp-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }

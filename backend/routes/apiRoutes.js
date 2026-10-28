@@ -15,6 +15,7 @@ import * as siteSettingsController from '../controllers/siteSettingsController.j
 import * as proSignupController from '../controllers/proSignupController.js';
 import * as accountController from '../controllers/accountController.js';
 import * as subscriptionController from '../controllers/subscriptionController.js';
+import * as businessController from '../controllers/businessController.js';
 import * as plansController from '../controllers/plansController.js';
 import * as billingController from '../controllers/billingController.js';
 import * as adminPricingController from '../controllers/adminPricingController.js';
@@ -148,6 +149,12 @@ router.post('/pro/clients/create-invite', verifyToken, isPro, requireActiveSubsc
 router.post('/pro/clients/resend-links', verifyToken, isPro, requireActiveSubscription, apiController.sendClientDownloadLinks);
 router.post('/pro/push/send', verifyToken, isPro, requireActiveSubscription, pushController.sendNotification);
 router.get('/pro/push/history', verifyToken, isPro, pushController.getHistory);
+// Offre Business
+const business = [verifyToken, isPro, requireActiveSubscription, requireTier('business')];
+router.get('/pro/business/relaunch', ...business, businessController.getRelaunchList);
+router.get('/pro/business/insights', ...business, businessController.getInsights);
+router.get('/pro/business/export/clients.csv', ...business, businessController.exportClientsCsv);
+router.get('/pro/business/export/transactions.csv', ...business, businessController.exportTransactionsCsv);
 router.use('/', walletRoutes);
 router.get('/settings/mentions-legales', siteSettingsController.getMentionsLegales);
 router.put('/admin/settings/mentions-legales', verifyToken, isAdmin, siteSettingsController.updateMentionsLegales);

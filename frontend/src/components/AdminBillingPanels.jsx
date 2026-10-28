@@ -6,7 +6,9 @@ import './AdminBillingPanels.css'
 const errMsg = (e) => e.response?.data?.error || 'Une erreur est survenue'
 const money = (n, cur = 'eur') => Number(n).toLocaleString('fr-FR', { style: 'currency', currency: cur.toUpperCase() })
 const dateFr = (d) => (d ? new Date(d).toLocaleDateString('fr-FR') : '—')
-const PLAN_LABEL = { monthly: 'Mensuel', yearly: 'Annuel' }
+const PLAN_KEYS = ['monthly', 'yearly', 'business_monthly', 'business_yearly']
+const PLAN_LABEL = { monthly: 'Pro mensuel', yearly: 'Pro annuel', business_monthly: 'Business mensuel', business_yearly: 'Business annuel' }
+const emptyForm = () => Object.fromEntries(PLAN_KEYS.map((k) => [k, '']))
 
 function Notice({ notice }) {
   if (!notice) return null
@@ -17,7 +19,7 @@ function Notice({ notice }) {
 /* ───────────── TARIFS ───────────── */
 export function AdminPricingPanel() {
   const [data, setData] = useState(null)
-  const [form, setForm] = useState({ monthly: '', yearly: '' })
+  const [form, setForm] = useState(emptyForm())
   const [dates, setDates] = useState({})
   const [saving, setSaving] = useState(false)
   const [notice, setNotice] = useState(null)
@@ -26,7 +28,7 @@ export function AdminPricingPanel() {
     try {
       const { data: d } = await api.get('/admin/pricing')
       setData(d)
-      setForm({ monthly: d.plans.monthly.amount ?? '', yearly: d.plans.yearly.amount ?? '' })
+      setForm(Object.fromEntries(PLAN_KEYS.map((k) => [k, d.plans[k]?.amount ?? ''])))
     } catch (e) {
       setNotice({ type: 'err', text: errMsg(e) })
     }
@@ -39,8 +41,8 @@ export function AdminPricingPanel() {
     setNotice(null)
     try {
       const body = {}
-      for (const plan of ['monthly', 'yearly']) {
-        if (Number(form[plan]) !== data.plans[plan].amount) body[plan] = form[plan]
+      for (const plan of PLAN_KEYS) {
+        if (form[plan] !== '' && Number(form[plan]) !== data.plans[plan]?.amount) body[plan] = form[plan]
       }
       if (Object.keys(body).length === 0) {
         setNotice({ type: 'err', text: 'Aucun tarif modifié' })
@@ -83,11 +85,11 @@ export function AdminPricingPanel() {
       <Notice notice={notice} />
 
       <div className="abp-grid">
-        {['monthly', 'yearly'].map((plan) => {
-          const p = data.plans[plan]
+        {PLAN_KEYS.map((plan) => {
+          const p = data.plans[plan] || { configured: false }
           return (
             <div className="abp-card" key={plan}>
-              <span className="abp-label">Plan {PLAN_LABEL[plan]}</span>
+              <span className="abp-label">{PLAN_LABEL[plan]}</span>
               <div className="abp-price">{p.configured ? money(p.amount, p.currency) : 'Non configuré'}</div>
               {p.price_id && <code className="abp-code">{p.price_id}</code>}
               {p.error && <span className="abp-error">{p.error}</span>}
@@ -98,13 +100,13 @@ export function AdminPricingPanel() {
 
       <form className="abp-card" onSubmit={save}>
         <h3>Modifier les tarifs</h3>
+        <p className="abp-muted">Un prix non configuré sera créé dans Stripe à l'enregistrement. L'annuel = 12 mois -20 % (Pro 278,40 €, Business 566,40 €).</p>
         <div className="abp-form-row">
-          <label>Mensuel (€)
-            <input type="number" min="1" max="10000" step="0.01" value={form.monthly} onChange={(e) => setForm({ ...form, monthly: e.target.value })} required />
-          </label>
-          <label>Annuel (€)
-            <input type="number" min="1" max="10000" step="0.01" value={form.yearly} onChange={(e) => setForm({ ...form, yearly: e.target.value })} required />
-          </label>
+          {PLAN_KEYS.map((plan) => (
+            <label key={plan}>{PLAN_LABEL[plan]} (€)
+              <input type="number" min="1" max="10000" step="0.01" value={form[plan]} onChange={(e) => setForm({ ...form, [plan]: e.target.value })} />
+            </label>
+          ))}
         </div>
         <button className="ux-btn-primary" type="submit" disabled={saving}>
           {saving ? <Loader2 className="spin" size={16} /> : 'Enregistrer les nouveaux tarifs'}

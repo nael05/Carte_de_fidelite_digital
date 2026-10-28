@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import usePlans from '../utils/usePlans'
 import {
   ArrowRight, ChevronRight, CheckCircle2, Check, Plus, Search, Loader2, X,
   Play, Bell, MapPin, ShieldCheck, Lock, Repeat, Fingerprint, Store, Palette, Send
@@ -595,36 +596,40 @@ const FAQS = [
   },
 ]
 
+// Les prix viennent de l'API (/plans) : seules les descriptions sont ici.
 const PLANS = [
   {
-    name: 'Starter',
-    tagline: 'Pour découvrir',
-    m: 0, a: 0,
-    feats: ['1 commerce', "Jusqu'à 50 clients", 'Apple & Google Wallet', 'QR code sécurisé', 'Support par email'],
+    tier: 'free',
+    name: 'Gratuit',
+    tagline: 'Pour démarrer',
+    feats: ["Jusqu'à 15 clients", 'Apple & Google Wallet', 'QR code sécurisé', 'Points et récompenses', 'Statistiques de base'],
     cta: 'Commencer gratuitement',
   },
   {
+    tier: 'pro',
     name: 'Pro',
     tagline: 'Pour les commerçants actifs',
-    m: 29, a: 23,
-    feats: ['1 commerce', 'Clients illimités', 'Personnalisation complète', 'Notifications push Wallet', 'Statistiques avancées', 'Support 7j/7'],
-    cta: 'Essai gratuit de 14 jours',
+    feats: ['Clients illimités', 'Campagnes de notifications (4 par mois)', 'Statistiques et historique complets', 'Apple & Google Wallet', 'Sans engagement'],
+    cta: 'Choisir Pro',
     featured: true,
   },
   {
+    tier: 'business',
     name: 'Business',
-    tagline: 'Pour les réseaux',
-    m: 79, a: 63,
-    feats: ["Jusqu'à 5 commerces", 'Clients illimités', 'Marque blanche', 'API & webhooks', 'SLA 99,9 %', 'Interlocuteur dédié'],
-    cta: "Contacter l'équipe",
+    tagline: 'Pour aller plus loin',
+    feats: ['Tout Pro, et :', 'Campagnes de notifications (8 par mois)', 'Statistiques avancées et export CSV', 'Liste des clients à relancer', 'Plusieurs établissements (bientôt)', 'Comptes équipe (bientôt)'],
+    cta: 'Choisir Business',
   },
 ]
+
+const eur = (n) => Number(n).toLocaleString('fr-FR', { maximumFractionDigits: 2 })
 
 /* ═══════════════════ HOME ═══════════════════ */
 export default function Home() {
   const navigate = useNavigate()
   const rootRef = useRef(null)
   const [annual, setAnnual] = useState(false)
+  const planPrices = usePlans()
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -864,27 +869,33 @@ export default function Home() {
         </div>
 
         <div className="plans">
-          {PLANS.map((p, i) => (
-            <div key={p.name} className={`plan rv${p.featured ? ' featured' : ''}`} style={{ '--d': `${i * 0.1}s` }}>
-              {p.featured && <span className="plan-badge">Le plus choisi</span>}
-              <h3>{p.name}</h3>
-              <p className="plan-tag">{p.tagline}</p>
-              <div className="plan-price">
-                <span className="plan-amt">{annual ? p.a : p.m}</span>
-                <span className="plan-cur">€</span>
-                <span className="plan-per">/ mois</span>
+          {PLANS.map((p, i) => {
+            const paid = p.tier !== 'free'
+            const monthly = paid ? planPrices.prices[p.tier].monthly.amount : 0
+            const yearly = paid ? planPrices.prices[p.tier].yearly.amount : 0
+            const shown = annual ? yearly / 12 : monthly
+            return (
+              <div key={p.name} className={`plan rv${p.featured ? ' featured' : ''}`} style={{ '--d': `${i * 0.1}s` }}>
+                {p.featured && <span className="plan-badge">Le plus choisi</span>}
+                <h3>{p.name}</h3>
+                <p className="plan-tag">{p.tagline}</p>
+                <div className="plan-price">
+                  <span className="plan-amt">{eur(shown)}</span>
+                  <span className="plan-cur">€</span>
+                  <span className="plan-per">/ mois</span>
+                </div>
+                <p className="plan-ann">
+                  {!paid ? 'Gratuit, pour toujours' : annual ? `Soit ${eur(yearly)} € facturés par an` : 'Facturé mensuellement'}
+                </p>
+                <button className={`fz-btn plan-cta${p.featured ? '' : ' ghost'}`} onClick={() => navigate(`/pro/signup?tier=${p.tier}&plan=${annual ? 'yearly' : 'monthly'}`)}>
+                  {p.cta}
+                </button>
+                <ul>
+                  {p.feats.map(f => <li key={f}><Check size={15} strokeWidth={2.4} />{f}</li>)}
+                </ul>
               </div>
-              <p className="plan-ann">
-                {annual && p.a > 0 ? `Soit ${(p.a * 12).toLocaleString('fr-FR')} € facturés par an` : p.m === 0 ? 'Gratuit, pour toujours' : 'Facturé mensuellement'}
-              </p>
-              <button className={`fz-btn plan-cta${p.featured ? '' : ' ghost'}`} onClick={p.featured ? goSignup : goPro}>
-                {p.cta}
-              </button>
-              <ul>
-                {p.feats.map(f => <li key={f}><Check size={15} strokeWidth={2.4} />{f}</li>)}
-              </ul>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         <p className="pricing-trust rv">

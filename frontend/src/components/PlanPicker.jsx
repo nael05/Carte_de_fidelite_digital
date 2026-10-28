@@ -11,7 +11,7 @@ export default function PlanPicker({ tier, interval, onChange, tiers = TIER_ORDE
   const plans = usePlans()
 
   const priceLine = (t) => {
-    if (t === 'free') return { main: '0 €', unit: 'pour toujours', sub: `Jusqu'à ${plans.free_client_limit} clients` }
+    if (t === 'free') return { main: '0 €', unit: 'pour toujours', sub: 'Sans carte bancaire' }
     const monthly = plans.prices[t].monthly.amount
     const yearly = plans.prices[t].yearly.amount
     if (interval === 'yearly') {

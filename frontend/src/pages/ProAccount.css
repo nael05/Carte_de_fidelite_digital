@@ -71,3 +71,10 @@
   .acc-plan-price { font-size: 40px; }
   .acc-form .ui-btn { width: 100%; }
 }
+
+/* Offre gratuite : jauge de clients et actions empilées */
+.acc-stack { display: flex; flex-direction: column; gap: 10px; }
+.acc-meter { height: 8px; margin-top: 14px; border-radius: var(--radius-full); background: var(--bg-hover); overflow: hidden; }
+.acc-meter span { display: block; height: 100%; border-radius: inherit; background: var(--accent); transition: width 0.4s var(--ease, ease); }
+.acc-meter span.warn { background: var(--warning-text); }
+.acc-meter span.over { background: var(--error); }

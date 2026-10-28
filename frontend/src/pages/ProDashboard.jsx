@@ -7,18 +7,21 @@ import { useAuth } from '../context/AuthContext'
 
 import CardCustomizer from '../components/CardCustomizer'
 import AppShell, { PageHead } from '../components/AppShell'
+import PlanBanner from '../components/PlanBanner'
 import appleLogo from '../assets/apple.svg'
 import googleLogo from '../assets/google.svg'
 import HistoryModal from '../components/HistoryModal'
 import StatsPanel from '../components/StatsPanel'
+import CampaignsPanel from '../components/CampaignsPanel'
+import BusinessPanel from '../components/BusinessPanel'
 import {
   LogOut, ScanLine, Users, Palette, X, Copy, Plus, Minus, AlertCircle, Loader2, Phone, Mail, Award, Check,
   Settings, Save, Trash2, Sun, Moon, Gift, Lock, ChevronRight, History, Globe, Bell, MapPin, Navigation,
-  UserPlus, Send, TrendingUp, Search, Download, QrCode, CircleUser, Coins, Sparkles, Hourglass, Info, Zap
+  UserPlus, Send, Megaphone, TrendingUp, Search, Download, QrCode, CircleUser, Coins, Sparkles, Hourglass, Info, Zap
 } from 'lucide-react'
 import './ProDashboard.css'
 
-const TAB_IDS = ['scanner', 'clients', 'stats', 'register', 'design', 'settings']
+const TAB_IDS = ['scanner', 'clients', 'stats', 'register', 'design', 'settings', 'campaigns', 'business']
 
 function ProDashboard() {
   const [activeTab, setActiveTab] = useState(() => {
@@ -81,7 +84,7 @@ function ProDashboard() {
   const scannerRef = useRef(null)
   const scannerInstance = useRef(null)
   const qrRef = useRef(null)
-  const { token, isSuspended, logout } = useAuth()
+  const { token, isSuspended, logout, user } = useAuth()
 
   useEffect(() => {
     if (darkMode) {
@@ -604,6 +607,8 @@ function ProDashboard() {
       items: [
         { id: 'register', icon: QrCode, label: 'Recruter' },
         { id: 'design', icon: Palette, label: 'Ma carte' },
+        { id: 'campaigns', icon: Megaphone, label: 'Campagnes' },
+        { id: 'business', icon: Sparkles, label: 'Business' },
         { id: 'settings', icon: Settings, label: 'Réglages' },
       ]
     }
@@ -892,6 +897,8 @@ function ProDashboard() {
     { id: 'geolocalisation', icon: MapPin, tone: '', title: 'Géolocalisation', desc: 'La carte apparaît quand le client passe devant chez vous' },
     { id: 'historique', icon: History, tone: 'gold', title: 'Historique', desc: 'Points ajoutés, cadeaux utilisés, retraits', onClick: () => setShowHistory(true) },
     { id: 'statistiques', icon: TrendingUp, tone: 'neutral', title: 'Statistiques', desc: 'Activité, clients, récompenses et tendances', onClick: () => goTab('stats') },
+    { id: 'campagnes', icon: Megaphone, tone: 'gold', title: 'Campagnes', desc: 'Envoyer une notification promotionnelle à vos clients', onClick: () => goTab('campaigns') },
+    { id: 'business', icon: Sparkles, tone: '', title: 'Espace Business', desc: 'Clients à relancer, indicateurs avancés, exports CSV', onClick: () => goTab('business') },
   ]
 
   const backToSettings = () => { setSettingsPage(null); window.scrollTo({ top: 0 }) }
@@ -1248,6 +1255,28 @@ function ProDashboard() {
     </>
   )
 
+  const renderCampaigns = () => (
+    <>
+      <PageHead
+        eyebrow={<><Megaphone size={14} /> Marketing</>}
+        title="Campagnes"
+        sub="Des notifications utiles, en nombre limité, pour ne jamais lasser vos clients."
+      />
+      <CampaignsPanel />
+    </>
+  )
+
+  const renderBusiness = () => (
+    <>
+      <PageHead
+        eyebrow={<><Sparkles size={14} /> Offre Business</>}
+        title="Espace Business"
+        sub="Pilotez la fidélité de vos clients avec des indicateurs avancés."
+      />
+      {user ? <BusinessPanel tier={user.tier} /> : <div className="ui-card"><div className="ui-loading">Chargement…</div></div>}
+    </>
+  )
+
   const pages = {
     scanner: renderCaisse,
     clients: renderClients,
@@ -1255,6 +1284,8 @@ function ProDashboard() {
     register: renderRecruter,
     design: renderDesign,
     settings: renderSettings,
+    campaigns: renderCampaigns,
+    business: renderBusiness,
   }
 
   /* ───────── Rendu ───────── */
@@ -1299,6 +1330,8 @@ function ProDashboard() {
           </div>
         </div>
       )}
+
+      <PlanBanner refreshKey={clients.length} />
 
       {pageError && (
         <div className="ui-alert error">

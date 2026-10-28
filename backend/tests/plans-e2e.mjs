@@ -80,6 +80,9 @@ check('retour à 15 clients : déverrouillé', r.data?.locked === false && r.dat
 r = await call('POST', '/pro/notifications/send', { title: 'Promo', message: 'Test' });
 check('campagne refusée en gratuit', r.status === 403 && r.data?.code === 'upgrade_required', JSON.stringify(r));
 
+r = await call('GET', '/pro/business/insights');
+check('fonctions Business refusées en gratuit', r.status === 403 && r.data?.status === 'upgrade_required', JSON.stringify(r));
+
 // 6. passage à Business (checkout puis abonnement simulé + webhook signé)
 r = await call('POST', '/pro/subscription/checkout', { tier: 'business', plan: 'yearly' });
 check('checkout Business annuel créé', r.status === 200 && /checkout\.stripe\.com/.test(r.data?.checkout_url || ''), JSON.stringify(r));
@@ -118,6 +121,19 @@ if (r.data?.code === 'quiet_hours') {
   await pool.query('UPDATE push_notifications_sent SET created_at = DATE_SUB(NOW(), INTERVAL 3 DAY) WHERE entreprise_id = ?', [ent.id]);
   r = await call('POST', '/pro/notifications/send', { title: 'Promo3', message: 'Test' });
   check('campagne après 3 jours : aucun client éligible (cooldown 7 jours par client)', r.status === 422 && r.data?.code === 'no_eligible_recipients', JSON.stringify(r));
+}
+
+// 7b. fonctions Business
+r = await call('GET', '/pro/business/insights');
+check('insights Business', r.status === 200 && typeof r.data?.return_rate === 'number', JSON.stringify(r));
+r = await call('GET', '/pro/business/relaunch?days=30');
+check('clients à relancer', r.status === 200 && Array.isArray(r.data?.inactive) && r.data.inactive.length === 15, JSON.stringify(r).slice(0, 300));
+{
+  const res = await fetch(API + '/pro/business/export/clients.csv', { headers: { Authorization: 'Bearer ' + token, 'X-Device-Id': deviceId } });
+  const bytes = new Uint8Array(await res.clone().arrayBuffer());
+  const text = await res.text();
+  const rowsCount = text.trim().split(String.fromCharCode(10)).length;
+  check('export CSV clients (BOM, en-tête, 15 lignes)', res.status === 200 && bytes[0] === 0xEF && bytes[1] === 0xBB && bytes[2] === 0xBF && text.startsWith('Pr') && rowsCount === 16, text.slice(0, 120) + ' / lignes ' + rowsCount);
 }
 
 // 8. fin d'abonnement : retour au gratuit

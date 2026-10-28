@@ -944,3 +944,9 @@
   .kpi { padding: 16px; }
   .ui-row { padding: 12px 14px; gap: 12px; }
 }
+
+/* Bandeau d'état de l'offre gratuite (PlanBanner) */
+.plan-banner { align-items: center; margin-bottom: 16px; }
+.plan-banner > span { flex: 1; line-height: 1.45; }
+.plan-banner .ui-btn { flex-shrink: 0; }
+@media (max-width: 640px) { .plan-banner { flex-wrap: wrap; } .plan-banner .ui-btn { width: 100%; } }

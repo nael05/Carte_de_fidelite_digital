@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import api from '../api'
 import { AlertCircle, CheckCircle2, Loader2, Eye, EyeOff } from 'lucide-react'
 import AuthShell from '../components/AuthShell'
+import PlanPicker from '../components/PlanPicker'
 import './Auth.css'
 import './ProSignup.css'
-
-const PLANS = {
-  monthly: { label: 'Mensuel', price: '29 €', unit: '/ mois', note: 'Sans engagement' },
-  yearly: { label: 'Annuel', price: '290 €', unit: '/ an', note: '2 mois offerts' }
-}
 
 const PASSWORD_RULES = [
   { test: (p) => p.length >= 6, label: '6 caractères minimum' },
@@ -22,7 +18,10 @@ function ProSignup() {
   const [form, setForm] = useState({
     nom: '', raison_sociale: '', email: '', mot_de_passe: '', siret_tva: '', adresse: ''
   })
+  const navigate = useNavigate()
+  const [tier, setTier] = useState(['free', 'pro', 'business'].includes(params.get('tier')) ? params.get('tier') : 'pro')
   const [plan, setPlan] = useState(params.get('plan') === 'yearly' ? 'yearly' : 'monthly')
+  const paid = tier !== 'free'
   const [promoCode, setPromoCode] = useState('')
   const [promo, setPromo] = useState(null)
   const [promoLoading, setPromoLoading] = useState(false)
@@ -66,14 +65,19 @@ function ProSignup() {
     e.preventDefault()
     setError('')
     if (!passwordOk) return setError('Le mot de passe ne respecte pas les règles indiquées')
-    if (promoCode.trim() && !promo?.valid) return setError('Vérifiez votre code promo ou retirez-le')
+    if (paid && promoCode.trim() && !promo?.valid) return setError('Vérifiez votre code promo ou retirez-le')
     setLoading(true)
     try {
       const { data } = await api.post('/pro/signup', {
         ...form,
-        plan,
-        ...(promoCode.trim() && { code_promo: promoCode.trim() })
+        tier,
+        ...(paid && { plan }),
+        ...(paid && promoCode.trim() && { code_promo: promoCode.trim() })
       })
+      if (data.free) {
+        navigate('/pro/login', { replace: true, state: { notice: 'Compte gratuit créé : connectez-vous.' } })
+        return
+      }
       window.location.href = data.checkout_url
     } catch (err) {
       setError(err.response?.data?.error || 'Impossible de démarrer l\u2019inscription')
@@ -85,27 +89,16 @@ function ProSignup() {
     <AuthShell variant="pro" wide>
         <div className="luxe-auth-header">
           <h1>Créer mon espace Pro</h1>
-          <p>Paiement sécurisé par Stripe. Résiliable à tout moment.</p>
+          <p>{paid ? 'Paiement sécurisé par Stripe. Résiliable à tout moment.' : 'Gratuit, sans carte bancaire.'}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="luxe-auth-form">
-          <div className="signup-plans" role="radiogroup" aria-label="Formule">
-            {Object.entries(PLANS).map(([key, p]) => (
-              <button
-                type="button"
-                key={key}
-                role="radio"
-                aria-checked={plan === key}
-                className={`signup-plan${plan === key ? ' active' : ''}`}
-                onClick={() => setPlan(key)}
-                disabled={loading}
-              >
-                <span className="signup-plan-label">{p.label}</span>
-                <span className="signup-plan-price">{p.price} <small>{p.unit}</small></span>
-                <span className="signup-plan-note">{p.note}</span>
-              </button>
-            ))}
-          </div>
+          <PlanPicker
+            tier={tier}
+            interval={plan}
+            onChange={({ tier: t, interval }) => { setTier(t); setPlan(interval) }}
+            disabled={loading}
+          />
 
           <div className="signup-grid">
             <div className="luxe-form-group">
@@ -147,17 +140,21 @@ function ProSignup() {
             </ul>
           )}
 
-          <div className="luxe-form-group">
-            <label htmlFor="siret_tva">SIRET ou numéro de TVA</label>
-            <input id="siret_tva" className="luxe-input" value={form.siret_tva} onChange={set('siret_tva')} required disabled={loading} />
-          </div>
+          {paid && (
+            <>
+              <div className="luxe-form-group">
+                <label htmlFor="siret_tva">SIRET ou numéro de TVA</label>
+                <input id="siret_tva" className="luxe-input" value={form.siret_tva} onChange={set('siret_tva')} required disabled={loading} />
+              </div>
 
-          <div className="luxe-form-group">
-            <label htmlFor="adresse">Adresse de facturation</label>
-            <input id="adresse" className="luxe-input" value={form.adresse} onChange={set('adresse')} required disabled={loading} autoComplete="street-address" />
-          </div>
+              <div className="luxe-form-group">
+                <label htmlFor="adresse">Adresse de facturation</label>
+                <input id="adresse" className="luxe-input" value={form.adresse} onChange={set('adresse')} required disabled={loading} autoComplete="street-address" />
+              </div>
+            </>
+          )}
 
-          <div className="luxe-form-group">
+          {paid && <div className="luxe-form-group">
             <label htmlFor="promo">Code promo (facultatif)</label>
             <div className="signup-promo">
               <input
@@ -174,13 +171,15 @@ function ProSignup() {
             </div>
             {promo?.valid && <p className="signup-promo-ok"><CheckCircle2 size={14} /> {promoSummary()}</p>}
             {promo && !promo.valid && <p className="signup-promo-err">{promo.error}</p>}
-          </div>
+          </div>}
 
           <label className="signup-consent">
             <input type="checkbox" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} required />
             <span>
               J’accepte les <Link to="/mentions-legales" target="_blank">conditions et mentions légales</Link>.
-              L’abonnement se renouvelle automatiquement et se résilie à tout moment depuis mon espace.
+              {paid
+                ? ' L’abonnement se renouvelle automatiquement et se résilie à tout moment depuis mon espace.'
+                : ' L’offre gratuite est limitée à 15 clients.'}
             </span>
           </label>
 
@@ -191,7 +190,7 @@ function ProSignup() {
           )}
 
           <button type="submit" className="btn-luxe-submit" disabled={loading || !accepted}>
-            {loading ? <Loader2 className="spin" size={20} /> : <>Continuer vers le paiement</>}
+            {loading ? <Loader2 className="spin" size={20} /> : <>{paid ? 'Continuer vers le paiement' : 'Créer mon espace gratuit'}</>}
           </button>
         </form>
 

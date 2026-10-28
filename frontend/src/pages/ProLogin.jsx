@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../api'
 import { AlertCircle, Loader2, Eye, EyeOff, Building2, HelpCircle } from 'lucide-react'
@@ -15,8 +15,9 @@ function ProLogin() {
   const [rememberMe, setRememberMe] = useState(false)
 
   const navigate = useNavigate()
+  const notice = useLocation().state?.notice
   const { login, isAuthenticated, loading: authLoading, role } = useAuth()
-  const redirectedRef = useRef(false)
+  const redirectedRef = useRef(false)
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'dark'
     if (savedTheme === 'dark') {
@@ -26,14 +27,14 @@ function ProLogin() {
       document.documentElement.classList.remove('dark-mode')
       document.documentElement.setAttribute('data-theme', 'light')
     }
-  }, [])
+  }, [])
   useEffect(() => {
     if (authLoading) return
     if (isAuthenticated && role === 'pro' && !redirectedRef.current) {
       redirectedRef.current = true
       navigate('/pro/dashboard')
     }
-  }, [authLoading, isAuthenticated, role, navigate])
+  }, [authLoading, isAuthenticated, role, navigate])
   useEffect(() => {
     const remembered = localStorage.getItem('rememberedEmail')
     if (remembered) {
@@ -102,6 +103,7 @@ function ProLogin() {
         </div>
 
         <form onSubmit={handleSubmit} className="luxe-auth-form">
+          {notice && <div className="luxe-alert success"><span>{notice}</span></div>}
           <div className="luxe-form-group">
             <label htmlFor="email">Email professionnel</label>
             <input

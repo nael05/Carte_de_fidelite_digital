@@ -8,9 +8,15 @@ import api from '../api'
 import { useAuth } from '../context/AuthContext'
 import AppShell, { PageHead } from '../components/AppShell'
 import useTheme from '../utils/useTheme'
+import PlanPicker from '../components/PlanPicker'
+import PlanBanner from '../components/PlanBanner'
+import { TIER_LABELS } from '../utils/usePlans'
 import './ProAccount.css'
 
+const FREE_LIMIT = 15
+
 const STATUS_LABELS = {
+  free: 'Gratuit',
   active: 'Actif',
   trialing: "Période d'essai",
   past_due: 'Paiement en retard',
@@ -110,6 +116,74 @@ function ProfileTab() {
   )
 }
 
+function FreeOffers({ sub, busy, run }) {
+  const [tier, setTier] = useState('pro')
+  const [interval, setInterval] = useState('monthly')
+  const [promo, setPromo] = useState('')
+  const limit = sub.client_limit
+  const pct = Math.min(100, Math.round((sub.client_count / limit) * 100))
+
+  const checkout = () => run(async () => {
+    const r = await api.post('/pro/subscription/checkout', {
+      tier,
+      plan: interval,
+      ...(promo.trim() && { code_promo: promo.trim() })
+    })
+    window.location.href = r.data.checkout_url
+    return { data: { message: 'Redirection vers le paiement sécurisé…' } }
+  })
+
+  return (
+    <>
+      <section className="ui-card acc-plan">
+        <div className="acc-plan-top">
+          <span className="page-eyebrow">Mon abonnement</span>
+          <span className={`ui-badge ${sub.locked ? 'danger' : ''}`}><span className="dot" />{sub.locked ? 'Verrouillé' : 'Gratuit'}</span>
+        </div>
+        <div className="acc-plan-name">Fidelyz Gratuit</div>
+        <div className="acc-plan-price">{sub.client_count} <span>/ {limit} clients</span></div>
+        <div className="acc-meter" role="progressbar" aria-valuenow={sub.client_count} aria-valuemax={limit}>
+          <span className={sub.locked ? 'over' : pct >= 80 ? 'warn' : ''} style={{ width: `${pct}%` }} />
+        </div>
+        {sub.locked ? (
+          <div className="ui-note danger acc-gap">
+            <AlertCircle size={15} />
+            <span>
+              Compte verrouillé : supprimez {sub.client_count - limit} client{sub.client_count - limit > 1 ? 's' : ''} (vos données sont conservées)
+              ou passez à une offre payante pour reprendre.
+            </span>
+          </div>
+        ) : sub.client_count >= limit ? (
+          <div className="ui-note warning acc-gap">
+            <AlertCircle size={15} />
+            <span>Limite atteinte : les nouvelles inscriptions sont fermées jusqu'à votre passage à une offre payante.</span>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="ui-card acc-wide">
+        <h2 className="ui-card-title">Passer à une offre payante</h2>
+        <p className="ui-card-sub">Clients illimités, sans engagement. Paiement sécurisé par Stripe.</p>
+        <div className="acc-gap">
+          <PlanPicker
+            tiers={['pro', 'business']}
+            tier={tier}
+            interval={interval}
+            onChange={({ tier: t, interval: i }) => { setTier(t); setInterval(i) }}
+            disabled={busy}
+          />
+        </div>
+        <div className="acc-inline acc-gap">
+          <input className="ui-input" value={promo} onChange={e => setPromo(e.target.value)} placeholder="Code promo (facultatif)" />
+          <button className="ui-btn" disabled={busy} onClick={checkout}>
+            Passer à {TIER_LABELS[tier]} {interval === 'yearly' ? 'annuel' : 'mensuel'}
+          </button>
+        </div>
+      </section>
+    </>
+  )
+}
+
 function SubscriptionTab() {
   const [sub, setSub] = useState(null)
   const [promo, setPromo] = useState('')
@@ -143,9 +217,21 @@ function SubscriptionTab() {
     </div>
   )
 
+  if (sub.tier === 'free') {
+    return (
+      <div className="acc-grid">
+        <FreeOffers sub={sub} busy={busy} run={run} />
+        <div className="acc-wide"><Feedback fb={fb} /></div>
+      </div>
+    )
+  }
+
   const item = sub.stripe_subscription?.items?.[0]
   const otherPlan = sub.plan === 'yearly' ? 'monthly' : 'yearly'
+  const otherTier = sub.tier === 'business' ? 'pro' : 'business'
+  const tierLabel = TIER_LABELS[sub.tier] || 'Pro'
   const statusTone = ['active', 'trialing'].includes(sub.status) ? 'accent' : ['past_due', 'unpaid'].includes(sub.status) ? 'danger' : ''
+  const overFree = sub.total_clients > FREE_LIMIT
 
   return (
     <div className="acc-grid">
@@ -154,7 +240,7 @@ function SubscriptionTab() {
           <span className="page-eyebrow">Mon abonnement</span>
           <span className={`ui-badge ${statusTone}`}><span className="dot" />{STATUS_LABELS[sub.status] || sub.status}</span>
         </div>
-        <div className="acc-plan-name">Fidelyz Pro · {sub.plan === 'yearly' ? 'Annuel' : 'Mensuel'}</div>
+        <div className="acc-plan-name">Fidelyz {tierLabel} · {sub.plan === 'yearly' ? 'Annuel' : 'Mensuel'}</div>
         <div className="acc-plan-price">
           {item ? <>{item.amount.toFixed(2)} <span>{item.currency.toUpperCase()} / {sub.plan === 'yearly' ? 'an' : 'mois'}</span></> : '—'}
         </div>
@@ -165,7 +251,10 @@ function SubscriptionTab() {
         {sub.cancel_at_period_end && (
           <div className="ui-note warning acc-gap">
             <AlertCircle size={15} />
-            <span>Résiliation programmée : vous conservez 100 % des accès jusqu'au {fmtDate(sub.current_period_end)}.</span>
+            <span>
+              Résiliation programmée : vous conservez 100 % des accès jusqu'au {fmtDate(sub.current_period_end)}.
+              {overFree && ` Passé cette date, votre compte gratuit sera verrouillé tant que vous aurez plus de ${FREE_LIMIT} clients (vous en avez ${sub.total_clients}).`}
+            </span>
           </div>
         )}
         <Feedback fb={fb} />
@@ -174,10 +263,16 @@ function SubscriptionTab() {
       <section className="ui-card">
         <h2 className="ui-card-title">Changer de formule</h2>
         <p className="ui-card-sub">Le changement est facturé au prorata par Stripe.</p>
-        <button className="ui-btn secondary acc-gap" disabled={busy}
-          onClick={() => run(() => api.post('/pro/subscription/switch-plan', { new_plan: otherPlan }))}>
-          Passer au plan {otherPlan === 'yearly' ? 'annuel' : 'mensuel'}
-        </button>
+        <div className="acc-stack acc-gap">
+          <button className="ui-btn secondary" disabled={busy}
+            onClick={() => run(() => api.post('/pro/subscription/switch-plan', { new_plan: otherPlan }))}>
+            Passer au plan {otherPlan === 'yearly' ? 'annuel (-20 %)' : 'mensuel'}
+          </button>
+          <button className="ui-btn secondary" disabled={busy}
+            onClick={() => run(() => api.post('/pro/subscription/switch-plan', { new_tier: otherTier }))}>
+            {otherTier === 'business' ? 'Passer à Business' : 'Revenir à Pro'}
+          </button>
+        </div>
 
         <div className="acc-divider" />
 
@@ -201,12 +296,21 @@ function SubscriptionTab() {
           </>
         ) : !confirmCancel ? (
           <>
-            <p className="ui-card-sub">Sans engagement : vos accès restent complets jusqu'à la fin de la période payée.</p>
+            <p className="ui-card-sub">Sans engagement : vos accès restent complets jusqu'à la fin de la période payée. Votre compte repasse ensuite en offre gratuite ({FREE_LIMIT} clients maximum).</p>
             <button className="ui-btn danger acc-gap" onClick={() => setConfirmCancel(true)}>Résilier mon abonnement</button>
           </>
         ) : (
           <>
             <p className="ui-card-sub">Confirmer la résiliation à l'échéance du {fmtDate(sub.current_period_end)} ?</p>
+            {overFree && (
+              <div className="ui-note warning acc-gap">
+                <AlertCircle size={15} />
+                <span>
+                  Vous avez {sub.total_clients} clients : après l'échéance, votre compte sera verrouillé (données conservées)
+                  tant que vous n'aurez pas supprimé {sub.total_clients - FREE_LIMIT} client{sub.total_clients - FREE_LIMIT > 1 ? 's' : ''} ou repris un abonnement.
+                </span>
+              </div>
+            )}
             <div className="acc-inline acc-gap">
               <button className="ui-btn danger-solid" disabled={busy}
                 onClick={() => run(() => api.post('/pro/subscription/cancel')).then(() => setConfirmCancel(false))}>
@@ -403,6 +507,7 @@ export default function ProAccount() {
           </button>
         ))}
       </div>
+      <PlanBanner />
       <div className="acc-body" key={tab}>
         <Active />
       </div>

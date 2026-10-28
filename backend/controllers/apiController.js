@@ -17,7 +17,7 @@ import emailService from '../utils/emailService.js';
 import { withClientQuota, FreeLimitError, FREE_CLIENT_LIMIT, getAccess } from '../utils/plans.js';
 import { staffLogin } from './teamController.js';
 import { resolveEstablishmentId, findEstablishment } from '../utils/establishments.js';
-import crypto from 'crypto';
+import crypto from 'crypto';
 const maskPhone = (phone) => {
   if (!phone) return null;
   const digits = phone.replace(/\D/g, '');
@@ -32,7 +32,7 @@ const maskEmail = (email) => {
   const domainParts = domain.split('.');
   const tld = domainParts.pop();
   return `${local[0]}***@***.${tld}`;
-};
+};
 
 export const adminLogin = async (req, res) => {
   const { identifiant, mot_de_passe } = req.body;
@@ -79,9 +79,16 @@ export const getEnterprises = async (req, res) => {
 };
 
 export const getPublicEnterprises = async (req, res) => {
+  // Recherche par nom uniquement (2 lettres minimum, 8 résultats) : la liste complète des commerces
+  // clients de la plateforme n'est pas publique.
+  const term = typeof req.query.q === 'string' ? req.query.q.trim().slice(0, 60) : '';
+  if (term.length < 2) return res.json([]);
+
   try {
+    const like = `%${term.replace(/[\\%_]/g, '\\$&')}%`;
     const [enterprises] = await pool.query(
-      'SELECT id, nom FROM entreprises WHERE statut = "actif" ORDER BY nom ASC'
+      'SELECT id, nom FROM entreprises WHERE statut = "actif" AND nom LIKE ? ORDER BY nom ASC LIMIT 8',
+      [like]
     );
 
     res.json(enterprises);
@@ -261,7 +268,7 @@ export const updateCompany = async (req, res) => {
     }
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
+};
 
 export const proLogin = async (req, res) => {
   const { email, mot_de_passe } = req.body;
@@ -289,20 +296,20 @@ export const proLogin = async (req, res) => {
       return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
     }
 
-    const token = generateToken(company.id, 'pro');
+    const token = generateToken(company.id, 'pro');
     const deviceFingerprint = generateDeviceFingerprint(req);
-    const deviceName = req.headers['user-agent']?.substring(0, 100) || 'Unknown Device';
+    const deviceName = req.headers['user-agent']?.substring(0, 100) || 'Unknown Device';
     const mustChangePassword = Boolean(company.must_change_password);
     if (mustChangePassword) {
       logger.info('First login - password change required');
-    }
+    }
     try {
       await createSession(company.id, deviceFingerprint, deviceName, token, '24h');
       logger.debug('Session created successfully');
     } catch (sessionErr) {
       logger.error('Session creation failed', { error: sessionErr.message });
       return res.status(500).json({ error: 'Unable to create session' });
-    }
+    }
     res.json({
       token,
       deviceId: deviceFingerprint,
@@ -323,10 +330,10 @@ export const changePassword = async (req, res) => {
   const { newPassword } = req.body;
   const empresaId = req.user.id;
 
-  try {
+  try {
     if (!newPassword) {
       return res.status(400).json({ error: 'Le nouveau mot de passe est requis' });
-    }
+    }
     const [rows] = await pool.query(
       'SELECT mot_de_passe, must_change_password FROM entreprises WHERE id = ?',
       [empresaId]
@@ -336,20 +343,20 @@ export const changePassword = async (req, res) => {
       return res.status(404).json({ error: 'Entreprise non trouvée' });
     }
 
-    const company = rows[0];
+    const company = rows[0];
     const complexityCheck = validatePassword(newPassword);
     if (!complexityCheck.isValid) {
       return res.status(400).json({
         error: 'Exigences du mot de passe non respectées',
         details: complexityCheck.errors
       });
-    }
+    }
     const isSamePassword = await bcrypt.compare(newPassword, company.mot_de_passe);
     if (isSamePassword) {
       return res.status(400).json({
         error: 'Le nouveau mot de passe doit être différent de l\'ancien mot de passe'
       });
-    }
+    }
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     const [updateResult] = await pool.query(
@@ -443,7 +450,7 @@ export const getProStatus = async (req, res) => {
     logger.error('Get pro status error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
+};
 export const getProSessions = async (req, res) => {
   const empresaId = req.user.id;
 
@@ -465,7 +472,7 @@ export const getProSessions = async (req, res) => {
     logger.error('Register client error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
+};
 export const logoutProDevice = async (req, res) => {
   const empresaId = req.user.id;
   const { deviceId } = req.body;
@@ -489,7 +496,7 @@ export const logoutProDevice = async (req, res) => {
     logger.error('Logout pro device error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
+};
 export const logoutProAll = async (req, res) => {
   const empresaId = req.user.id;
   const { keepCurrent } = req.body; // Optional: keep current device connected
@@ -519,7 +526,7 @@ export const logoutProAll = async (req, res) => {
 export const getClients = async (req, res) => {
   const empresaId = req.user.id;
 
-  try {
+  try {
     const [configRows] = await pool.query(
       'SELECT loyalty_type FROM loyalty_config WHERE entreprise_id = ?',
       [empresaId]
@@ -616,7 +623,7 @@ export const deleteClient = async (req, res) => {
   const { clientId } = req.params;
   const empresaId = req.user.id;
 
-  try {
+  try {
     const [clientRows] = await pool.query(
       'SELECT id FROM clients WHERE id = ? AND entreprise_id = ?',
       [clientId, empresaId]
@@ -624,7 +631,7 @@ export const deleteClient = async (req, res) => {
 
     if (clientRows.length === 0) {
       return res.status(404).json({ error: 'Client non trouvé ou non autorisé' });
-    }
+    }
     await pool.query(
       'DELETE FROM clients WHERE id = ? AND entreprise_id = ?',
       [clientId, empresaId]
@@ -667,8 +674,8 @@ export const handleScan = async (req, res) => {
       return res.status(400).json({ error: 'Configuration de fidélité non trouvée' });
     }
 
-    const loyaltyConfig = config[0];
-    let pointsToAdd = Number(points_to_add);
+    const loyaltyConfig = config[0];
+    let pointsToAdd = Number(points_to_add);
     if ((isNaN(pointsToAdd) || pointsToAdd <= 0) && loyaltyConfig.points_adding_mode === 'automatic') {
       pointsToAdd = Number(loyaltyConfig.points_per_purchase) || 10;
     } else if (isNaN(pointsToAdd) || pointsToAdd < 0) {
@@ -708,7 +715,7 @@ export const handleScan = async (req, res) => {
 
     sendLoyaltyUpdateNotification(clientId, empresaId, pointsToAdd, false).catch(e =>
       logger.warn('Push scan notification failed', e.message)
-    );
+    );
     res.json({
       success: true,
       clientId,
@@ -739,11 +746,11 @@ export const getScanInfo = async (req, res) => {
       return res.status(404).json({ error: 'Client non trouvé' });
     }
 
-    const client = clientRows[0];
+    const client = clientRows[0];
     const [allTiers] = await pool.query(
       'SELECT * FROM reward_tiers WHERE entreprise_id = ? ORDER BY points_required ASC',
       [empresaId]
-    );
+    );
     const [nextTiers] = await pool.query(
       'SELECT * FROM reward_tiers WHERE entreprise_id = ? AND points_required > ? ORDER BY points_required ASC LIMIT 1',
       [empresaId, client.points]
@@ -1012,7 +1019,7 @@ export const registerClientAndGeneratePass = async (req, res) => {
       [clientId, entrepriseId, nom, prenom, telephone, email, type_wallet, marketingOptinValue, clientEstablishment]
     ));
 
-    logger.info(`✅ Client créé avec succès: ${clientId} (${prenom} ${nom}), marketing_optin=${marketingOptinValue}`);
+    logger.info(`✅ Client créé avec succès: ${clientId} (${prenom} ${nom}), marketing_optin=${marketingOptinValue}`);
     return res.status(201).json({
       success: true,
       clientId: clientId,
@@ -1025,7 +1032,7 @@ export const registerClientAndGeneratePass = async (req, res) => {
     logger.error('Erreur lors de la création du client (SQL/Logic):', { error: err.message });
     return res.status(500).json({ error: 'Erreur lors de la création de la carte' });
   }
-};
+};
 
 export const createClientAndInvite = async (req, res) => {
   const entrepriseId = req.user.id; // always from JWT, never from body
@@ -1108,7 +1115,7 @@ export const sendClientDownloadLinks = async (req, res) => {
   }
   if (clientIds.length > 100) {
     return res.status(400).json({ error: 'Maximum 100 clients par envoi' });
-  }
+  }
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   if (!clientIds.every(id => typeof id === 'string' && uuidRegex.test(id))) {
     return res.status(400).json({ error: 'Format de clientId invalide' });
@@ -1122,7 +1129,7 @@ export const sendClientDownloadLinks = async (req, res) => {
     if (companyRows.length === 0) {
       return res.status(404).json({ error: 'Entreprise non trouvée' });
     }
-    const companyName = companyRows[0].nom;
+    const companyName = companyRows[0].nom;
     const placeholders = clientIds.map(() => '?').join(',');
     const [clients] = await pool.query(
       `SELECT id, prenom, nom, email FROM clients WHERE id IN (${placeholders}) AND entreprise_id = ?`,
@@ -1152,7 +1159,7 @@ export const sendClientDownloadLinks = async (req, res) => {
     logger.error('Erreur sendClientDownloadLinks:', { error: err.message });
     return res.status(500).json({ error: 'Erreur serveur' });
   }
-};
+};
 
 export const getCardCustomization = async (req, res) => {
   const companyId = req.params.companyId ?? req.params.empresaId;
@@ -1168,7 +1175,7 @@ export const getCardCustomization = async (req, res) => {
       [companyId, loyaltyType]
     );
 
-    if (customization.length === 0) {
+    if (customization.length === 0) {
       return res.json({
         primary_color: '#1f2937',
         text_color: '#ffffff',
@@ -1387,10 +1394,10 @@ export const updateCardCustomization = async (req, res) => {
           loyaltyType
         ]
       );
-    }
+    }
     const prevOffer = existing[0]?.prev_relevant_text || '';
     if (relevant_text && relevant_text.trim() !== prevOffer) {
-      const offerText = relevant_text.trim();
+      const offerText = relevant_text.trim();
       const [pushRegs] = await pool.query(
         `SELECT DISTINCT r.push_token
          FROM apple_pass_registrations r
@@ -1404,7 +1411,7 @@ export const updateCardCustomization = async (req, res) => {
           'Nouvelle offre !',
           offerText
         ).catch(err => logger.error('Offer push Apple failed', err.message));
-      }
+      }
       const [googleWallets] = await pool.query(
         `SELECT client_id FROM wallet_cards WHERE company_id = ? AND pass_serial_number LIKE 'GOOGLE_%'`,
         [empresaId]
@@ -1417,7 +1424,7 @@ export const updateCardCustomization = async (req, res) => {
           )
         ).catch(() => {});
       }
-    }
+    }
     walletSyncService.syncCompanyWallets(empresaId).catch(err =>
       logger.error('Global synchronization failed after customization update', err)
     );
@@ -1508,29 +1515,29 @@ export const uploadLogo = async (req, res) => {
 
     const tempPath = req.file.path;
     const finalFilename = req.file.filename + '-resized.png';
-    const finalPath = path.join(req.file.destination, finalFilename);
+    const finalPath = path.join(req.file.destination, finalFilename);
     let resizeOpts = { height: 50, width: 160, fit: 'inside' };
 
     if (platform === 'google') {
-      if (imageType === 'logo') {
+      if (imageType === 'logo') {
         resizeOpts = { width: 660, height: 660, fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } };
-      } else if (imageType === 'hero') {
+      } else if (imageType === 'hero') {
         resizeOpts = { width: 1032, height: 336, fit: 'cover' };
       }
-    } else {
+    } else {
       if (imageType === 'icon' || imageType === 'notification_icon') {
         resizeOpts = { width: 58, height: 58, fit: 'cover' }; // @2x size for clarity
-      } else if (imageType === 'strip') {
+      } else if (imageType === 'strip') {
         resizeOpts = { width: 375, height: 123, fit: 'cover' };
       }
-    }
+    }
     await sharp(tempPath)
       .rotate() // Gère l'orientation automatique (photos smartphone)
       .resize(resizeOpts) // On a retiré withoutEnlargement pour forcer la taille minimale
       .png()
       .toFile(finalPath);
 
-    fs.unlinkSync(tempPath);
+    fs.unlinkSync(tempPath);
     const fileUrl = `uploads/${finalFilename}`;
 
     res.json({ success: true, url: fileUrl });
@@ -1588,7 +1595,7 @@ export const redeemReward = async (req, res) => {
     logger.error('Redeem reward error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
+};
 
 /**
  * Demande de réinitialisation de mot de passe
@@ -1600,25 +1607,25 @@ export const forgotPassword = async (req, res) => {
     return res.status(400).json({ error: 'Email requis' });
   }
 
-  try {
+  try {
     const [rows] = await pool.query(
       'SELECT id, nom FROM entreprises WHERE email = ?',
       [email]
     );
 
-    if (rows.length === 0) {
+    if (rows.length === 0) {
       return res.json({
         success: true,
         message: 'Si cet email est enregistré, vous recevrez un lien de réinitialisation sous peu.'
       });
-    }
+    }
     const token = crypto.randomBytes(32).toString('hex');
-    const expiresAt = new Date(Date.now() + 3600000); // 1 heure de validité
+    const expiresAt = new Date(Date.now() + 3600000); // 1 heure de validité
     await pool.query('DELETE FROM password_resets WHERE email = ?', [email]);
     await pool.query(
       'INSERT INTO password_resets (email, token, expires_at) VALUES (?, ?, ?)',
       [email, token, expiresAt]
-    );
+    );
     const frontendUrl = process.env.FRONTEND_URL || 'https://fidelyzapp.fr';
     const resetUrl = `${frontendUrl}/password-recovery?token=${token}`;
     await emailService.sendPasswordResetEmail(email, resetUrl);

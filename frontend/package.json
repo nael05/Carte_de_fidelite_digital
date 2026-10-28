@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^1.6.0",
+    "dompurify": "^3.4.17",
     "html5-qrcode": "^2.3.8",
     "lucide-react": "^1.8.0",
     "prop-types": "^15.8.1",

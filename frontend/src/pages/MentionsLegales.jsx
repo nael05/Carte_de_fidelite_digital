@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import DOMPurify from 'dompurify'
 import api from '../api'
 import { Loader2, AlertTriangle, ArrowLeft } from 'lucide-react'
 import './MentionsLegales.css'
@@ -55,7 +56,7 @@ function MentionsLegales() {
         {!loading && !error && (
           <article
             className="ml-article"
-            dangerouslySetInnerHTML={{ __html: content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content, { FORBID_ATTR: ['style'], FORBID_TAGS: ['style', 'form', 'input', 'iframe'] }) }}
           />
         )}
       </main>

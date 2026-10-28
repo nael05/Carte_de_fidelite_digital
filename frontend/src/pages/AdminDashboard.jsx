@@ -83,6 +83,9 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
     loadLegalContent()
   }, [token])
 
+  // Champs du modèle encore entre crochets, par exemple [NOM_ENTREPRISE].
+  const legalPlaceholders = [...new Set(legalContent.match(/\[[A-Z0-9_ÉÈÀÇ'’ -]{3,}\]/g) || [])]
+
   const loadLegalContent = async () => {
     try {
       const res = await api.get('/settings/mentions-legales')
@@ -96,9 +99,10 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
     setError('')
     setSuccess('')
     try {
-      await api.put('/admin/settings/mentions-legales', { content: legalContent })
-      setSuccess('Mentions légales mises à jour avec succès.')
-      setTimeout(() => setSuccess(''), 3000)
+      const res = await api.put('/admin/settings/mentions-legales', { content: legalContent })
+      if (typeof res.data.content === 'string') setLegalContent(res.data.content)
+      setSuccess(res.data.message || 'Mentions légales mises à jour avec succès.')
+      setTimeout(() => setSuccess(''), res.data.sanitized ? 8000 : 3000)
     } catch (err) {
       setError(err.response?.data?.error || 'Erreur lors de la sauvegarde.')
     } finally {
@@ -501,7 +505,7 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
           <PageHead
             eyebrow={<><FileText size={14} /> Contenu public</>}
             title="Mentions légales"
-            sub={<>Le contenu affiché sur la page publique <code>/mentions-legales</code>. Les balises HTML sont acceptées.</>}
+            sub={<>Le contenu affiché sur la page publique <code>/mentions-legales</code>. Les balises HTML de mise en forme sont acceptées ; scripts, styles et formulaires sont retirés à l'enregistrement.</>}
             actions={
               <>
                 <a href="/mentions-legales" target="_blank" rel="noopener noreferrer" className="ui-btn secondary">
@@ -514,6 +518,15 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
               </>
             }
           />
+          {legalPlaceholders.length > 0 && (
+            <div className="ui-note warning">
+              <AlertCircle size={15} />
+              <span>
+                Des champs restent à compléter avant publication : <strong>{legalPlaceholders.join(', ')}</strong>.
+                Les mentions légales exigent l'identité de l'éditeur (société, adresse, SIRET), le directeur de la publication et l'hébergeur.
+              </span>
+            </div>
+          )}
           <section className="ui-card flush ad-editor">
             <div className="ad-editor-bar">
               <span className="ad-editor-dots" aria-hidden><i /><i /><i /></span>

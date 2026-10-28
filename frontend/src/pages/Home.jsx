@@ -962,40 +962,35 @@ function DemoClientAccess() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedId, setSelectedId] = useState('')
   const [enterprises, setEnterprises] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [searching, setSearching] = useState(false)
   const [error, setError] = useState('')
 
+  // Recherche côté serveur (2 lettres minimum) : la liste complète des commerces n'est pas exposée.
   useEffect(() => {
-    if (showForm && enterprises.length === 0) {
-      fetchEnterprises()
+    if (!showForm) return
+    const term = searchTerm.trim()
+    if (term.length < 2) {
+      setEnterprises([])
+      setError('')
+      return
     }
-  }, [showForm])
-
-  const fetchEnterprises = async () => {
-    setLoading(true)
-    setError('')
-    try {
-      const response = await api.get('/public/enterprises')
-      let data = response.data
-      if (data && typeof data === 'object' && !Array.isArray(data)) {
-        data = data.value || []
+    let cancelled = false
+    const timer = setTimeout(async () => {
+      setSearching(true)
+      setError('')
+      try {
+        const response = await api.get('/public/enterprises', { params: { q: term } })
+        if (!cancelled) setEnterprises(Array.isArray(response.data) ? response.data : [])
+      } catch (err) {
+        if (!cancelled) setError('Serveur indisponible')
+      } finally {
+        if (!cancelled) setSearching(false)
       }
-      setEnterprises(Array.isArray(data) ? data : [])
-    } catch (err) {
-      setError('Serveur indisponible')
-    } finally {
-      setLoading(false)
-    }
-  }
+    }, 250)
+    return () => { cancelled = true; clearTimeout(timer) }
+  }, [showForm, searchTerm])
 
-  const filteredEnterprises = enterprises.filter(ent => {
-    const searchLower = searchTerm.toLowerCase().trim()
-    if (!searchLower) return true
-    return (
-      String(ent.id).toLowerCase().includes(searchLower) ||
-      (ent.nom || '').toLowerCase().includes(searchLower)
-    )
-  })
+  const filteredEnterprises = enterprises
 
   if (!showForm) {
     return (
@@ -1012,9 +1007,7 @@ function DemoClientAccess() {
         <h4>Rechercher un commerce</h4>
       </div>
 
-      {loading ? (
-        <div className="loading-state"><Loader2 size={24} className="spin" /></div>
-      ) : (
+      {(
         <>
           <div className="search-field-wrapper">
             <Search size={16} className="search-icon" />
@@ -1038,7 +1031,11 @@ function DemoClientAccess() {
                 {selectedId === ent.id && <CheckCircle2 size={16} />}
               </div>
             ))}
-            {filteredEnterprises.length === 0 && <p className="no-result">Aucun commerce trouvé</p>}
+            {filteredEnterprises.length === 0 && (
+              <p className="no-result">
+                {searchTerm.trim().length < 2 ? 'Saisissez au moins 2 lettres du nom du commerce' : searching ? 'Recherche…' : error || 'Aucun commerce trouvé'}
+              </p>
+            )}
           </div>
 
           {selectedId && (

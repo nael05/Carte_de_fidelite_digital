@@ -1,6 +1,8 @@
 import pool from '../db.js';
 import { stripe, STRIPE_PUBLISHABLE_KEY } from '../utils/stripeConfig.js';
-import { getPriceId, getPromoTarget } from '../utils/pricing.js';
+import { getTierPriceId, getPromoTarget } from '../utils/pricing.js';
+import { getAccess } from '../utils/plans.js';
+import { validatePromo } from './proSignupController.js';
 import logger from '../utils/logger.js';
 import emailService from '../utils/emailService.js';
 
@@ -21,6 +23,7 @@ export const getSubscription = async (req, res) => {
     }
 
     const entreprise = rows[0];
+    const access = await getAccess(entrepriseId);
 
     // Get Stripe subscription details
     let stripeDetails = null;
@@ -30,6 +33,10 @@ export const getSubscription = async (req, res) => {
 
     res.json({
       status: entreprise.subscription_status,
+      tier: access.tier,
+      client_count: access.client_count,
+      client_limit: access.limit,
+      locked: access.locked,
       plan: entreprise.subscription_plan,
       current_period_end: entreprise.current_period_end,
       cancel_at_period_end: entreprise.cancel_at_period_end,
@@ -55,76 +62,137 @@ export const getSubscription = async (req, res) => {
   }
 };
 
-// POST /api/pro/subscription/switch-plan - Switch between monthly and yearly
+// POST /api/pro/subscription/switch-plan { new_tier?: 'pro'|'business', new_plan?: 'monthly'|'yearly' }
+// Change d'offre et/ou d'intervalle de facturation, avec prorata.
 export const switchPlan = async (req, res) => {
-  const { new_plan } = req.body;
+  const { new_tier, new_plan } = req.body;
   const entrepriseId = req.user.id;
 
-  if (!['monthly', 'yearly'].includes(new_plan)) {
-    return res.status(400).json({ error: 'Plan invalide' });
-  }
+  if (!new_tier && !new_plan) return res.status(400).json({ error: 'Offre ou plan requis' });
+  if (new_plan && !['monthly', 'yearly'].includes(new_plan)) return res.status(400).json({ error: 'Plan invalide' });
+  if (new_tier && !['pro', 'business'].includes(new_tier)) return res.status(400).json({ error: 'Offre invalide' });
 
   try {
     const [rows] = await pool.query(
-      `SELECT stripe_subscription_id, subscription_plan, nom, email
+      `SELECT stripe_subscription_id, subscription_plan, tier, nom, email
        FROM entreprises WHERE id = ?`,
       [entrepriseId]
     );
 
     if (rows.length === 0 || !rows[0].stripe_subscription_id) {
-      return res.status(400).json({ error: 'Pas d\'abonnement actif' });
+      return res.status(400).json({ error: "Pas d'abonnement actif" });
     }
 
-    const { stripe_subscription_id, subscription_plan, nom, email } = rows[0];
+    const { stripe_subscription_id, subscription_plan, tier, nom, email } = rows[0];
+    const targetTier = new_tier || tier;
+    const targetPlan = new_plan || subscription_plan;
 
-    if (subscription_plan === new_plan) {
-      return res.status(400).json({ error: 'Même plan sélectionné' });
+    if (targetTier === tier && targetPlan === subscription_plan) {
+      return res.status(400).json({ error: 'Même offre sélectionnée' });
     }
 
-    // Get new price ID based on plan
-    const priceId = await getPriceId(new_plan);
-
+    const priceId = await getTierPriceId(targetTier, targetPlan);
     if (!priceId) {
       return res.status(500).json({ error: 'Prix non configuré' });
     }
 
-    // Get current subscription
     const subscription = await stripe.subscriptions.retrieve(stripe_subscription_id);
-
-    // Update subscription with new price (with proration)
     const updatedSubscription = await stripe.subscriptions.update(stripe_subscription_id, {
-      items: [{
-        id: subscription.items.data[0].id,
-        price: priceId
-      }],
+      items: [{ id: subscription.items.data[0].id, price: priceId }],
       proration_behavior: 'create_prorations'
     });
 
-    // Update database
     await pool.query(
-      'UPDATE entreprises SET subscription_plan = ? WHERE id = ?',
-      [new_plan, entrepriseId]
+      'UPDATE entreprises SET subscription_plan = ?, tier = ? WHERE id = ?',
+      [targetPlan, targetTier, entrepriseId]
     );
 
-    // Send confirmation email
+    const label = `${targetTier === 'business' ? 'Business' : 'Pro'} ${targetPlan === 'yearly' ? 'annuel' : 'mensuel'}`;
     emailService.sendPlanChangeEmail({
-      email: email,
-      nom: nom,
-      new_plan: new_plan === 'yearly' ? 'Annuel' : 'Mensuel',
+      email,
+      nom,
+      new_plan: label,
       effective_date: new Date(updatedSubscription.current_period_start * 1000).toLocaleDateString('fr-FR')
     }).catch(err => {
       logger.error('Failed to send plan change email', { error: err.message });
     });
 
-    logger.info('Subscription plan switched', { entreprise_id: entrepriseId, new_plan });
+    logger.info('Subscription plan switched', { entreprise_id: entrepriseId, tier: targetTier, plan: targetPlan });
     res.json({
       success: true,
-      new_plan: new_plan,
-      message: `Passage au plan ${new_plan === 'yearly' ? 'annuel' : 'mensuel'} effectué`
+      new_plan: targetPlan,
+      new_tier: targetTier,
+      message: `Passage à l'offre ${label} effectué`
     });
   } catch (err) {
     logger.error('Switch plan error', { error: err.message });
     res.status(500).json({ error: 'Erreur lors du changement de plan' });
+  }
+};
+
+// POST /api/pro/subscription/checkout { tier, plan, code_promo? }
+// Passage d'un compte gratuit (ou dont l'abonnement a pris fin) à une offre payante via Stripe Checkout.
+export const createUpgradeCheckout = async (req, res) => {
+  const { tier, plan, code_promo } = req.body;
+  const entrepriseId = req.user.id;
+
+  if (!['pro', 'business'].includes(tier) || !['monthly', 'yearly'].includes(plan)) {
+    return res.status(400).json({ error: 'Offre ou plan invalide' });
+  }
+
+  try {
+    const [[entreprise]] = await pool.query(
+      `SELECT email, raison_sociale, nom, stripe_customer_id, stripe_subscription_id, subscription_status
+       FROM entreprises WHERE id = ?`,
+      [entrepriseId]
+    );
+    if (!entreprise) return res.status(404).json({ error: 'Entreprise non trouvée' });
+    if (['active', 'trialing', 'past_due'].includes(entreprise.subscription_status)) {
+      return res.status(400).json({ error: 'Vous avez déjà un abonnement : utilisez le changement de formule.' });
+    }
+
+    const priceId = await getTierPriceId(tier, plan);
+    if (!priceId) return res.status(500).json({ error: 'Offre indisponible' });
+
+    let discounts;
+    if (code_promo) {
+      const promo = await validatePromo(code_promo);
+      if (!promo) return res.status(400).json({ error: 'Code promo invalide ou expiré' });
+      if ((await getPromoTarget(promo.id)) === 'renewal') {
+        return res.status(400).json({ error: 'Ce code est réservé aux renouvellements' });
+      }
+      discounts = [{ promotion_code: promo.id }];
+    }
+
+    let customerId = entreprise.stripe_customer_id;
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        email: entreprise.email,
+        name: entreprise.raison_sociale || entreprise.nom,
+        metadata: { entreprise_id: entrepriseId }
+      });
+      customerId = customer.id;
+      await pool.query('UPDATE entreprises SET stripe_customer_id = ? WHERE id = ?', [customerId, entrepriseId]);
+    }
+
+    const base = process.env.FRONTEND_URL || 'http://localhost:3000';
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      customer: customerId,
+      client_reference_id: entrepriseId,
+      line_items: [{ price: priceId, quantity: 1 }],
+      payment_method_collection: 'always',
+      subscription_data: { metadata: { entreprise_id: entrepriseId, tier } },
+      ...(discounts && { discounts }),
+      metadata: { entreprise_id: entrepriseId, tier },
+      success_url: `${base}/pro/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${base}/pro/account`
+    });
+
+    res.json({ success: true, checkout_url: session.url });
+  } catch (err) {
+    logger.error('Upgrade checkout error', { error: err.message });
+    res.status(500).json({ error: 'Erreur lors de la création du paiement' });
   }
 };
 
@@ -311,6 +379,7 @@ export const getPortalLink = async (req, res) => {
 export default {
   getSubscription,
   switchPlan,
+  createUpgradeCheckout,
   applyPromoCode,
   cancelSubscription,
   reactivateSubscription,

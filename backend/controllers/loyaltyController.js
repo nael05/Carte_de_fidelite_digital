@@ -3,7 +3,8 @@ import pool from '../db.js';
 import logger from '../utils/logger.js';
 import apnService from '../utils/apnService.js';
 import googleWalletGenerator from '../utils/googleWalletGenerator.js';
-import walletSyncService from '../utils/walletSyncService.js';
+import walletSyncService from '../utils/walletSyncService.js';
+import { prepareCampaign, getQuota } from '../utils/pushGuard.js';
 
 /**
  * Obtenir la configuration de fidélité et les paliers d'une entreprise
@@ -221,7 +222,15 @@ export const sendPushNotification = async (req, res) => {
     return res.status(400).json({ error: 'Titre et message requis' });
   }
 
+  if (String(title).length > 60 || String(message).length > 200) {
+    return res.status(400).json({ error: 'Titre (60 caractères max) ou message (200 caractères max) trop long' });
+  }
+
   try {
+    const campaign = await prepareCampaign(empresaId, { segment: target_segment });
+    if (campaign.error) return res.status(campaign.error.status).json(campaign.error.body);
+    const clientIds = campaign.clientIds;
+
     const notificationId = randomUUID();
     const sentAt = new Date();
 
@@ -231,18 +240,6 @@ export const sendPushNotification = async (req, res) => {
        VALUES (?, ?, ?, ?, ?, ?, 'sent', ?)`,
       [notificationId, empresaId, title, message, target_type, target_segment, sentAt]
     );
-
-    let clientQuery = `SELECT id FROM clients WHERE entreprise_id = ?`;
-    const params = [empresaId];
-
-    if (target_segment === 'active') {
-      clientQuery += ' AND points > 0';
-    } else if (target_segment === 'inactive') {
-      clientQuery += ' AND (points = 0 OR points IS NULL)';
-    }
-
-    const [clients] = await pool.query(clientQuery, params);
-    const clientIds = clients.map(c => c.id);
 
     if (clientIds.length > 0) {
       const values = clientIds.map(cid => [randomUUID(), cid, notificationId, 'pending']);
@@ -512,6 +509,17 @@ export const getLoyaltyStats = async (req, res) => {
     res.json(stats);
   } catch (err) {
     logger.error('Get loyalty stats error', { error: err.message });
+    res.status(500).json({ error: 'Erreur serveur' });
+  }
+};
+
+export const getPushQuota = async (req, res) => {
+  try {
+    const quota = await getQuota(req.user.id);
+    if (!quota) return res.status(404).json({ error: 'Entreprise non trouvée' });
+    res.json(quota);
+  } catch (err) {
+    logger.error('Get push quota error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
 };

@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { randomUUID } from 'crypto';
 import { stripe, STRIPE_PUBLISHABLE_KEY } from '../utils/stripeConfig.js';
 import { validatePassword } from '../utils/passwordValidator.js';
-import { getPriceId, getPromoTarget } from '../utils/pricing.js';
+import { getTierPriceId, getPromoTarget } from '../utils/pricing.js';
 import logger from '../utils/logger.js';
 
 const frontendUrl = () => process.env.FRONTEND_URL || 'http://localhost:3000';
@@ -21,13 +21,52 @@ export const validatePromo = async (code) => {
   return promo;
 };
 
+const insertAccount = async (account) => {
+  const hashed = await bcrypt.hash(account.mot_de_passe, 10);
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+    await connection.query(
+      `INSERT INTO entreprises
+       (id, nom, raison_sociale, email, mot_de_passe, siret_tva, adresse, stripe_customer_id,
+        subscription_status, tier, subscription_plan, must_change_password, statut, loyalty_type)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'free', ?, 0, 'actif', 'points')`,
+      [account.id, account.nom, account.raison_sociale, account.email, hashed, account.siret_tva || null,
+        account.adresse || null, account.stripe_customer_id || null, account.status, account.plan || 'monthly']
+    );
+    await connection.query(
+      `INSERT INTO loyalty_config (id, entreprise_id, loyalty_type, reward_title, reward_description,
+         points_per_purchase, points_for_reward, points_adding_mode)
+       VALUES (?, ?, 'points', 'Récompense spéciale', 'Vous avez atteint le nombre de points requis!', 10, 100, 'manual')`,
+      [randomUUID(), account.id]
+    );
+    await connection.query(
+      `INSERT INTO card_customization (id, company_id, loyalty_type, primary_color, text_color, accent_color, secondary_color)
+       VALUES (?, ?, 'points', '#1f2937', '#ffffff', '#3b82f6', '#374151')`,
+      [randomUUID(), account.id]
+    );
+    await connection.commit();
+  } catch (dbErr) {
+    await connection.rollback();
+    throw dbErr;
+  } finally {
+    connection.release();
+  }
+};
+
+// POST /api/pro/signup — tier : free (sans paiement), pro ou business (Stripe Checkout).
 export const proSignup = async (req, res) => {
   const { nom, raison_sociale, email, mot_de_passe, siret_tva, adresse, plan, code_promo } = req.body;
+  const tier = req.body.tier || 'pro';
+  const paid = tier !== 'free';
 
-  if (!nom || !raison_sociale || !email || !mot_de_passe || !siret_tva || !adresse || !plan) {
+  if (!['free', 'pro', 'business'].includes(tier)) {
+    return res.status(400).json({ error: 'Offre invalide' });
+  }
+  if (!nom || !raison_sociale || !email || !mot_de_passe || (paid && (!siret_tva || !adresse || !plan))) {
     return res.status(400).json({ error: 'Tous les champs sont requis' });
   }
-  if (!['monthly', 'yearly'].includes(plan)) {
+  if (paid && !['monthly', 'yearly'].includes(plan)) {
     return res.status(400).json({ error: 'Plan invalide' });
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -37,9 +76,9 @@ export const proSignup = async (req, res) => {
   if (!pwd.isValid) {
     return res.status(400).json({ error: pwd.errors.join(', ') });
   }
-  const priceId = await getPriceId(plan);
-  if (!priceId) {
-    logger.error('Prix Stripe non configuré', { plan });
+  const priceId = paid ? await getTierPriceId(tier, plan) : null;
+  if (paid && !priceId) {
+    logger.error('Prix Stripe non configuré', { tier, plan });
     return res.status(500).json({ error: 'Offre indisponible' });
   }
 
@@ -52,6 +91,11 @@ export const proSignup = async (req, res) => {
       const stale = existing[0].subscription_status === 'unpaid' && !existing[0].stripe_subscription_id;
       if (!stale) return res.status(400).json({ error: 'Cet email est déjà utilisé' });
       await pool.query('DELETE FROM entreprises WHERE id = ?', [existing[0].id]);
+    }
+
+    if (!paid) {
+      await insertAccount({ id: randomUUID(), nom, raison_sociale, email, mot_de_passe, siret_tva, adresse, status: 'free' });
+      return res.json({ success: true, free: true });
     }
 
     let discounts;
@@ -78,42 +122,21 @@ export const proSignup = async (req, res) => {
       client_reference_id: entrepriseId,
       line_items: [{ price: priceId, quantity: 1 }],
       payment_method_collection: 'always',
-      subscription_data: { metadata: { entreprise_id: entrepriseId } },
+      subscription_data: { metadata: { entreprise_id: entrepriseId, tier } },
       ...(discounts && { discounts }),
-      metadata: { entreprise_id: entrepriseId },
+      metadata: { entreprise_id: entrepriseId, tier },
       success_url: `${frontendUrl()}/pro/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${frontendUrl()}/pro/checkout/cancel`
     });
 
-    const hashed = await bcrypt.hash(mot_de_passe, 10);
-    const connection = await pool.getConnection();
     try {
-      await connection.beginTransaction();
-      await connection.query(
-        `INSERT INTO entreprises
-         (id, nom, raison_sociale, email, mot_de_passe, siret_tva, adresse, stripe_customer_id,
-          subscription_status, subscription_plan, must_change_password, statut, loyalty_type)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'unpaid', ?, 0, 'actif', 'points')`,
-        [entrepriseId, nom, raison_sociale, email, hashed, siret_tva, adresse, customer.id, plan]
-      );
-      await connection.query(
-        `INSERT INTO loyalty_config (id, entreprise_id, loyalty_type, reward_title, reward_description,
-           points_per_purchase, points_for_reward, points_adding_mode)
-         VALUES (?, ?, 'points', 'Récompense spéciale', 'Vous avez atteint le nombre de points requis!', 10, 100, 'manual')`,
-        [randomUUID(), entrepriseId]
-      );
-      await connection.query(
-        `INSERT INTO card_customization (id, company_id, loyalty_type, primary_color, text_color, accent_color, secondary_color)
-         VALUES (?, ?, 'points', '#1f2937', '#ffffff', '#3b82f6', '#374151')`,
-        [randomUUID(), entrepriseId]
-      );
-      await connection.commit();
+      await insertAccount({
+        id: entrepriseId, nom, raison_sociale, email, mot_de_passe, siret_tva, adresse,
+        stripe_customer_id: customer.id, status: 'unpaid', plan
+      });
     } catch (dbErr) {
-      await connection.rollback();
       await stripe.customers.del(customer.id).catch(() => {});
       throw dbErr;
-    } finally {
-      connection.release();
     }
 
     res.json({ success: true, checkout_url: session.url });

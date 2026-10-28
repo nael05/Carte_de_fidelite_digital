@@ -14,6 +14,7 @@ import googleWalletGenerator from '../utils/googleWalletGenerator.js';
 import { sendLoyaltyUpdateNotification } from '../utils/notificationService.js';
 import walletSyncService from '../utils/walletSyncService.js';
 import emailService from '../utils/emailService.js';
+import { withClientQuota, FreeLimitError, FREE_CLIENT_LIMIT, getAccess } from '../utils/plans.js';
 import crypto from 'crypto';
 const maskPhone = (phone) => {
   if (!phone) return null;
@@ -423,7 +424,15 @@ export const getProStatus = async (req, res) => {
       return res.status(404).json({ error: 'Entreprise non trouvée' });
     }
 
-    res.json(rows[0]);
+    const access = await getAccess(empresaId);
+    res.json({
+      ...rows[0],
+      tier: access.tier,
+      client_count: access.client_count,
+      client_limit: access.limit,
+      locked: access.locked,
+      blocked: access.blocked
+    });
   } catch (err) {
     logger.error('Get pro status error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
@@ -972,10 +981,10 @@ export const registerClientAndGeneratePass = async (req, res) => {
 
     const clientId = randomUUID();
     const marketingOptinValue = marketing_optin === true || marketing_optin === 'true' ? 1 : 0;
-    await pool.query(
+    await withClientQuota(entrepriseId, (conn) => conn.query(
       'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?)',
       [clientId, entrepriseId, nom, prenom, telephone, email, type_wallet, marketingOptinValue]
-    );
+    ));
 
     logger.info(`✅ Client créé avec succès: ${clientId} (${prenom} ${nom}), marketing_optin=${marketingOptinValue}`);
     return res.status(201).json({
@@ -984,6 +993,9 @@ export const registerClientAndGeneratePass = async (req, res) => {
       message: 'Client créé avec succès'
     });
   } catch (err) {
+    if (err instanceof FreeLimitError) {
+      return res.status(403).json({ error: "Les inscriptions sont momentanément fermées pour ce commerce.", code: 'registrations_closed' });
+    }
     logger.error('Erreur lors de la création du client (SQL/Logic):', { error: err.message });
     return res.status(500).json({ error: 'Erreur lors de la création de la carte' });
   }
@@ -1035,10 +1047,10 @@ export const createClientAndInvite = async (req, res) => {
     }
 
     const clientId = randomUUID();
-    await pool.query(
+    await withClientQuota(entrepriseId, (conn) => conn.query(
       'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin) VALUES (?, ?, ?, ?, ?, ?, 0, ?, 1)',
       [clientId, entrepriseId, nom, prenom, telephone, email, type_wallet]
-    );
+    ));
 
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
     const apiBase = frontendUrl.endsWith('/') ? frontendUrl.slice(0, -1) : frontendUrl;
@@ -1053,6 +1065,9 @@ export const createClientAndInvite = async (req, res) => {
     logger.info(`✅ Client créé et invité par pro: ${clientId} (${prenom} ${nom})`);
     return res.status(201).json({ success: true, clientId, message: 'Client créé et email d\'invitation envoyé' });
   } catch (err) {
+    if (err instanceof FreeLimitError) {
+      return res.status(403).json({ error: `Limite de ${FREE_CLIENT_LIMIT} clients atteinte avec l'offre gratuite : passez à Pro ou supprimez des clients.`, code: 'free_limit_reached', status: 'limit_exceeded' });
+    }
     logger.error('Erreur createClientAndInvite:', { error: err.message });
     return res.status(500).json({ error: 'Erreur lors de la création du client' });
   }

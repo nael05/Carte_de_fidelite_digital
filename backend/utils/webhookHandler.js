@@ -3,6 +3,7 @@ import pool from '../db.js';
 import logger from './logger.js';
 import emailService from './emailService.js';
 import { logEmail } from './stripeService.js';
+import { tierOfPrice } from './pricing.js';
 
 export const verifyWebhookSignature = (body, signature, secret) => {
   if (!secret) {
@@ -45,15 +46,17 @@ const findByCustomer = async (customerId) => {
 };
 
 const syncSubscription = async (entrepriseId, sub) => {
+  const tier = await tierOfPrice(sub.items?.data?.[0]?.price);
   await pool.query(
     `UPDATE entreprises
-     SET stripe_subscription_id = ?, subscription_status = ?, subscription_plan = ?,
+     SET stripe_subscription_id = ?, subscription_status = ?, subscription_plan = ?, tier = ?,
          current_period_end = ?, cancel_at_period_end = ?
      WHERE id = ?`,
     [
       sub.id,
       STATUS_MAP[sub.status] || 'unpaid',
       planOf(sub),
+      tier,
       periodEnd(sub),
       sub.cancel_at_period_end ? 1 : 0,
       entrepriseId
@@ -144,7 +147,7 @@ const onSubscriptionDeleted = async (sub) => {
   const entreprise = await findByCustomer(sub.customer);
   if (!entreprise) return logger.warn('subscription.deleted pour client inconnu', { customer: sub.customer });
   await pool.query(
-    "UPDATE entreprises SET subscription_status = 'canceled', cancel_at_period_end = 0 WHERE id = ?",
+    "UPDATE entreprises SET subscription_status = 'canceled', tier = 'free', cancel_at_period_end = 0 WHERE id = ?",
     [entreprise.id]
   );
   await notify(entreprise, 'subscription_canceled', 'Votre abonnement Fidelyz a pris fin', () =>

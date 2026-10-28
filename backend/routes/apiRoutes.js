@@ -15,13 +15,14 @@ import * as siteSettingsController from '../controllers/siteSettingsController.j
 import * as proSignupController from '../controllers/proSignupController.js';
 import * as accountController from '../controllers/accountController.js';
 import * as subscriptionController from '../controllers/subscriptionController.js';
+import * as plansController from '../controllers/plansController.js';
 import * as billingController from '../controllers/billingController.js';
 import * as adminPricingController from '../controllers/adminPricingController.js';
 import * as adminPromoController from '../controllers/adminPromoController.js';
 import * as adminMailController from '../controllers/adminMailController.js';
 import walletRoutes from './walletRoutes.js';
 import { verifyToken, isAdmin, isPro } from '../middlewares/auth.js';
-import { requireActiveSubscription, checkSubscriptionStatus, allowReadOnlyForCanceled } from '../middlewares/subscriptionStatus.js';
+import { requireActiveSubscription, requireAccountAccess, requireTier, checkSubscriptionStatus } from '../middlewares/subscriptionStatus.js';
 import { loginLimiter, apiLimiter } from '../middlewares/rateLimiter.js';
 
 const router = express.Router();
@@ -46,6 +47,7 @@ const upload = multer({
 router.use(apiLimiter);
 
 // Pro Signup (public endpoints)
+router.get('/plans', plansController.getPublicPlans);
 router.post('/pro/signup', proSignupController.proSignup);
 router.post('/pro/validate-promo', proSignupController.validatePromoCode);
 router.post('/pro/checkout/success', proSignupController.checkoutSuccess);
@@ -83,6 +85,7 @@ router.delete('/pro/account', verifyToken, isPro, accountController.deleteAccoun
 
 // Subscription Management
 router.get('/pro/subscription', verifyToken, isPro, checkSubscriptionStatus, subscriptionController.getSubscription);
+router.post('/pro/subscription/checkout', verifyToken, isPro, subscriptionController.createUpgradeCheckout);
 router.post('/pro/subscription/switch-plan', verifyToken, isPro, requireActiveSubscription, subscriptionController.switchPlan);
 router.post('/pro/subscription/apply-promo', verifyToken, isPro, requireActiveSubscription, subscriptionController.applyPromoCode);
 router.post('/pro/subscription/cancel', verifyToken, isPro, checkSubscriptionStatus, subscriptionController.cancelSubscription);
@@ -100,7 +103,7 @@ router.post('/pro/logout-all', verifyToken, isPro, checkSubscriptionStatus, apiC
 router.put('/pro/change-password', verifyToken, isPro, checkSubscriptionStatus, apiController.changePassword);
 router.post('/pro/forgot-password', loginLimiter, apiController.forgotPassword);
 router.post('/pro/reset-password', loginLimiter, apiController.resetPassword);
-router.get('/pro/clients', verifyToken, isPro, requireActiveSubscription, apiController.getClients);
+router.get('/pro/clients', verifyToken, isPro, requireAccountAccess, apiController.getClients);
 router.post('/pro/scan', verifyToken, isPro, requireActiveSubscription, apiController.handleScan);
 router.get('/pro/scan-lookup/:clientId', verifyToken, isPro, checkSubscriptionStatus, apiController.getScanInfo);
 router.post('/pro/scan/finalize', verifyToken, isPro, requireActiveSubscription, apiController.finalizeFullTransaction);
@@ -109,16 +112,17 @@ router.get('/pro/history', verifyToken, isPro, apiController.getTransactionHisto
 router.delete('/pro/history', verifyToken, isPro, apiController.deleteTransactionHistory);
 
 router.get('/pro/info', verifyToken, isPro, apiController.getProInfo);
-router.delete('/pro/clients/:clientId', verifyToken, isPro, apiController.deleteClient);
+router.delete('/pro/clients/:clientId', verifyToken, isPro, requireAccountAccess, apiController.deleteClient);
 router.get('/pro/loyalty/config', verifyToken, isPro, loyaltyController.getLoyaltyConfig);
 router.put('/pro/loyalty/config', verifyToken, isPro, loyaltyController.updateLoyaltyConfig);
 router.get('/pro/reward-tiers', verifyToken, isPro, loyaltyController.getRewardTiers);
 router.post('/pro/reward-tiers', verifyToken, isPro, loyaltyController.createRewardTier);
 router.put('/pro/reward-tiers/:id', verifyToken, isPro, loyaltyController.updateRewardTier);
 router.delete('/pro/reward-tiers/:id', verifyToken, isPro, loyaltyController.deleteRewardTier);
-router.post('/pro/redeem-reward', verifyToken, isPro, apiController.redeemReward);
-router.post('/pro/notifications/send', verifyToken, isPro, loyaltyController.sendPushNotification);
+router.post('/pro/redeem-reward', verifyToken, isPro, requireActiveSubscription, apiController.redeemReward);
+router.post('/pro/notifications/send', verifyToken, isPro, requireActiveSubscription, loyaltyController.sendPushNotification);
 router.get('/pro/notifications/history', verifyToken, isPro, loyaltyController.getPushNotificationHistory);
+router.get('/pro/notifications/quota', verifyToken, isPro, loyaltyController.getPushQuota);
 router.get('/pro/notifications/:notificationId', verifyToken, isPro, loyaltyController.getPushNotificationDetails);
 router.get('/pro/loyalty/stats', verifyToken, isPro, loyaltyController.getLoyaltyStats);
 router.get('/pro/stats/overview', verifyToken, isPro, statsController.getProOverview);
@@ -140,9 +144,9 @@ router.post('/pro/upload-logo', verifyToken, isPro, (req, res, next) => {
     next();
   });
 }, apiController.uploadLogo);
-router.post('/pro/clients/create-invite', verifyToken, isPro, apiController.createClientAndInvite);
-router.post('/pro/clients/resend-links', verifyToken, isPro, apiController.sendClientDownloadLinks);
-router.post('/pro/push/send', verifyToken, isPro, pushController.sendNotification);
+router.post('/pro/clients/create-invite', verifyToken, isPro, requireActiveSubscription, apiController.createClientAndInvite);
+router.post('/pro/clients/resend-links', verifyToken, isPro, requireActiveSubscription, apiController.sendClientDownloadLinks);
+router.post('/pro/push/send', verifyToken, isPro, requireActiveSubscription, pushController.sendNotification);
 router.get('/pro/push/history', verifyToken, isPro, pushController.getHistory);
 router.use('/', walletRoutes);
 router.get('/settings/mentions-legales', siteSettingsController.getMentionsLegales);

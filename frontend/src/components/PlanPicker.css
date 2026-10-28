@@ -1,0 +1,65 @@
+/* Sélecteur d'offre : Gratuit / Pro / Business */
+.pp { display: flex; flex-direction: column; gap: 14px; }
+.pp-interval {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 4px;
+  gap: 4px;
+  border-radius: var(--radius-full);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+}
+.pp-interval button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.pp-interval button.on { background: var(--accent); color: #fff; }
+.pp-interval em { font-style: normal; font-size: 11.5px; font-weight: 700; padding: 2px 7px; border-radius: var(--radius-full); background: var(--gold-light); color: var(--gold); }
+.pp-interval button.on em { background: rgba(255, 255, 255, 0.22); color: #fff; }
+
+.pp-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.pp-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.pp-card:hover:not(:disabled) { border-color: var(--border-medium); }
+.pp-card.active { border-color: var(--accent); background: var(--accent-light); box-shadow: inset 0 0 0 1px var(--accent); }
+.pp-card:disabled { opacity: 0.6; cursor: not-allowed; }
+.pp-name { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text-secondary); }
+.pp-name em { font-style: normal; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-full); background: var(--gold-light); color: var(--gold); }
+.pp-name em.current { background: var(--accent-light); color: var(--accent-text); }
+.pp-price { font-size: 28px; font-weight: 700; letter-spacing: -0.035em; font-variant-numeric: tabular-nums; }
+.pp-price small { font-size: 13.5px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0; }
+.pp-sub { font-size: 12.5px; color: var(--text-tertiary); }
+.pp-card ul { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 7px; font-size: 13px; color: var(--text-secondary); }
+.pp-card li { display: flex; align-items: flex-start; gap: 8px; line-height: 1.35; }
+.pp-card li svg { flex-shrink: 0; margin-top: 2px; color: var(--accent-text); }
+.pp-card li.soon { color: var(--text-tertiary); }
+.pp-card li.soon svg { color: var(--text-tertiary); }
+
+@media (max-width: 560px) {
+  .pp-cards { grid-template-columns: 1fr; }
+  .pp-interval { align-self: stretch; }
+  .pp-interval button { flex: 1; justify-content: center; }
+}

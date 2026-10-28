@@ -3,6 +3,7 @@ import pool from '../db.js';
 import apnService from '../utils/apnService.js';
 import googleWalletGenerator from '../utils/googleWalletGenerator.js';
 import logger from '../utils/logger.js';
+import { prepareCampaign } from '../utils/pushGuard.js';
 
 /**
  * Récupérer l'historique des notifications pour une entreprise
@@ -38,18 +39,26 @@ export const sendNotification = async (req, res) => {
     return res.status(400).json({ error: 'Veuillez sélectionner au moins un client' });
   }
 
-  try {
-    const [registrations] = await pool.query(
+  if (String(title).length > 60 || String(message).length > 200) {
+    return res.status(400).json({ error: 'Titre (60 caractères max) ou message (200 caractères max) trop long' });
+  }
+
+  try {
+    const campaign = await prepareCampaign(empresaId, { clientIds });
+    if (campaign.error) return res.status(campaign.error.status).json(campaign.error.body);
+    const eligibleIds = campaign.clientIds;
+
+        const [registrations] = await pool.query(
       `SELECT r.push_token, w.client_id, c.prenom, c.nom 
        FROM apple_pass_registrations r
        JOIN wallet_cards w ON r.pass_serial_number = w.pass_serial_number
        JOIN clients c ON w.client_id = c.id
        WHERE w.client_id IN (?) AND w.company_id = ?`,
-      [clientIds, empresaId]
+      [eligibleIds, empresaId]
     );
     const [googleCheck] = await pool.query(
       `SELECT 1 FROM wallet_cards WHERE client_id IN (?) AND pass_serial_number LIKE 'GOOGLE_%' AND company_id = ? LIMIT 1`,
-      [clientIds, empresaId]
+      [eligibleIds, empresaId]
     );
 
     if (registrations.length === 0 && googleCheck.length === 0) {
@@ -82,7 +91,7 @@ export const sendNotification = async (req, res) => {
       `SELECT DISTINCT w.client_id
        FROM wallet_cards w
        WHERE w.client_id IN (?) AND w.pass_serial_number LIKE 'GOOGLE_%' AND w.company_id = ?`,
-      [clientIds, empresaId]
+      [eligibleIds, empresaId]
     );
     const googleResults = await Promise.allSettled(
       googleCards.map(c => googleWalletGenerator.addMessageToObject(c.client_id, title, message))

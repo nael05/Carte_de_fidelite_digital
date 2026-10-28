@@ -1,14 +1,16 @@
 import pool from '../db.js';
 import { stripe } from '../utils/stripeConfig.js';
 import { PLANS, getPriceId } from '../utils/pricing.js';
+import { parsePlanKey } from '../utils/plans.js';
 import { logEmail } from '../utils/stripeService.js';
 import emailService from '../utils/emailService.js';
 import logger from '../utils/logger.js';
 
 const NOTICE_DAYS = 30;
 const SUBSCRIBER_STATUSES = ['active', 'trialing', 'past_due'];
-const PLAN_LABELS = { monthly: 'Mensuel', yearly: 'Annuel' };
+const PLAN_LABELS = { monthly: 'Pro mensuel', yearly: 'Pro annuel', business_monthly: 'Business mensuel', business_yearly: 'Business annuel' };
 const INTERVALS = { monthly: 'month', yearly: 'year' };
+const PRODUCT_NAMES = { pro: 'Fidelyz Pro', business: 'Fidelyz Business' };
 const MAX_AMOUNT_CENTS = 1_000_000;
 
 const isoDate = (d) => d.toISOString().slice(0, 10);
@@ -18,9 +20,9 @@ const minEffectiveDate = (change) => isoDate(addDays(change.new_amount > change.
 const subscribersOf = async (plan, conn = pool) => {
   const [rows] = await conn.query(
     `SELECT id, nom, email, stripe_subscription_id FROM entreprises
-     WHERE subscription_plan = ? AND stripe_subscription_id IS NOT NULL
+     WHERE tier = ? AND subscription_plan = ? AND stripe_subscription_id IS NOT NULL
        AND subscription_status IN (?) AND statut = 'actif'`,
-    [plan, SUBSCRIBER_STATUSES]
+    [parsePlanKey(plan).tier, parsePlanKey(plan).interval, SUBSCRIBER_STATUSES]
   );
   return rows;
 };
@@ -43,7 +45,8 @@ const readPlan = async (plan) => {
 // GET /api/admin/pricing
 export const getPricing = async (req, res) => {
   try {
-    const [monthly, yearly] = await Promise.all(PLANS.map(readPlan));
+    const read = await Promise.all(PLANS.map(readPlan));
+    const plans = Object.fromEntries(read.map((p) => [p.plan, p]));
     const [changes] = await pool.query('SELECT * FROM price_changes WHERE applied_at IS NULL ORDER BY id DESC');
     const pending = [];
     for (const c of changes) {
@@ -57,22 +60,24 @@ export const getPricing = async (req, res) => {
         subscribers: (await subscribersOf(c.plan)).length
       });
     }
-    res.json({ plans: { monthly, yearly }, pending_changes: pending, notice_days: NOTICE_DAYS });
+    res.json({ plans, labels: PLAN_LABELS, pending_changes: pending, notice_days: NOTICE_DAYS });
   } catch (err) {
     logger.error('Get pricing error', { error: err.message });
     res.status(500).json({ error: 'Erreur lors de la lecture des tarifs' });
   }
 };
 
+// Un produit Stripe par offre : le mensuel et l'annuel d'une même offre partagent le leur.
 const resolveProductId = async (plan) => {
-  for (const p of [plan, ...PLANS.filter((x) => x !== plan)]) {
+  const { tier } = parsePlanKey(plan);
+  for (const p of PLANS.filter((x) => parsePlanKey(x).tier === tier)) {
     const id = await getPriceId(p);
     if (id) return (await stripe.prices.retrieve(id)).product;
   }
-  return (await stripe.products.create({ name: 'Fidelyz Pro' })).id;
+  return (await stripe.products.create({ name: PRODUCT_NAMES[tier] })).id;
 };
 
-// PUT /api/admin/pricing  { monthly?: euros, yearly?: euros }
+// PUT /api/admin/pricing  { monthly?, yearly?, business_monthly?, business_yearly? } en euros
 export const updatePricing = async (req, res) => {
   const requested = PLANS.filter((p) => req.body?.[p] !== undefined && req.body[p] !== '');
   if (requested.length === 0) return res.status(400).json({ error: 'Indiquez au moins un tarif' });
@@ -110,10 +115,10 @@ export const updatePricing = async (req, res) => {
         product: productId,
         currency: current?.currency || 'eur',
         unit_amount: amounts[plan],
-        recurring: { interval: INTERVALS[plan] },
-        lookup_key: `fidelyz_pro_${plan}`,
+        recurring: { interval: INTERVALS[parsePlanKey(plan).interval] },
+        lookup_key: `fidelyz_${parsePlanKey(plan).tier}_${parsePlanKey(plan).interval}`,
         transfer_lookup_key: true,
-        metadata: { source: 'admin', plan }
+        metadata: { source: 'admin', plan, tier: parsePlanKey(plan).tier }
       });
 
       await pool.query(
@@ -193,13 +198,13 @@ export const notifyPriceChange = async (req, res) => {
 
     const [recipients] = await pool.query(
       `SELECT e.id, e.nom, e.email FROM entreprises e
-       WHERE e.subscription_plan = ? AND e.stripe_subscription_id IS NOT NULL
+       WHERE e.tier = ? AND e.subscription_plan = ? AND e.stripe_subscription_id IS NOT NULL
          AND e.subscription_status IN (?) AND e.statut = 'actif'
          AND NOT EXISTS (
            SELECT 1 FROM email_logs l WHERE l.entreprise_id = e.id AND l.type = 'price_change'
              AND l.status = 'sent' AND JSON_EXTRACT(l.metadata, '$.change_id') = ?
          )`,
-      [change.plan, SUBSCRIBER_STATUSES, changeId]
+      [parsePlanKey(change.plan).tier, parsePlanKey(change.plan).interval, SUBSCRIBER_STATUSES, changeId]
     );
 
     const fmt = (cents) => (cents / 100).toLocaleString('fr-FR', { style: 'currency', currency: change.currency.toUpperCase() });

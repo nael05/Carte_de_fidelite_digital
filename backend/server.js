@@ -28,7 +28,7 @@ if (missingEnv.length > 0) {
 
 const app = express();
 app.set('trust proxy', 1);
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 app.use(helmet({
   hsts: process.env.NODE_ENV === 'production' ? { maxAge: 31536000 } : false,
   contentSecurityPolicy: false, // Laisser CORS gérer
@@ -70,7 +70,7 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Device-Id'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Device-Id', 'X-Establishment-Id'],
   maxAge: 86400,
 }));
 app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), (req, res, next) => { req.rawBody = req.body; next(); }, stripeWebhook);

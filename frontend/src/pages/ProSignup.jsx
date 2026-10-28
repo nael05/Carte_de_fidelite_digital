@@ -55,7 +55,7 @@ function ProSignup() {
 
   const promoSummary = () => {
     if (!promo?.valid) return null
-    if (promo.free_month) return 'Code valide : 1 mois offert (30 jours d\u2019essai, 0 € prélevé aujourd\u2019hui)'
+    if (promo.free_month) return 'Code valide : 1 mois offert (0 € prélevé aujourd’hui)'
     if (promo.percent_off) return `Code valide : -${promo.percent_off} %`
     if (promo.amount_off) return `Code valide : -${promo.amount_off} €`
     return 'Code valide'

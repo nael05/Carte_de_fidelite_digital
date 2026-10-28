@@ -467,3 +467,13 @@
 .ux-alert.success { background: rgba(16, 185, 129, 0.95); color: #FFFFFF; backdrop-filter: blur(8px); }
 
 .ux-loading-center, .ux-empty-state { padding: 80px 0; text-align: center; color: var(--text-tertiary); font-weight: 600; }
+
+/* Barre de navigation à 8 onglets : reste dans la largeur de l'écran */
+.ux-navbar { padding: 0 24px; gap: 12px; }
+.ux-nav-center { min-width: 0; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.ux-nav-center::-webkit-scrollbar { display: none; }
+.ux-tab-btn { padding: 10px 14px; white-space: nowrap; flex-shrink: 0; }
+@media (max-width: 1360px) {
+  .ux-nav-left h1 { display: none; }
+  .ux-tab-btn { padding: 10px 11px; gap: 6px; }
+}

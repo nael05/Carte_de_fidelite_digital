@@ -697,6 +697,109 @@ class EmailService {
       throw new Error('Erreur lors de l\'envoi de la confirmation');
     }
   }
+  async sendAdminMessageEmail({ email, nom, subject, message }) {
+    if (!this.apiKey) throw new Error('Service d\'email non configuré');
+    const safeName = escHtml(nom);
+    const body = escHtml(message).replace(/\r?\n/g, '<br>');
+    try {
+      await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: this.sender,
+        to: [{ email }],
+        subject,
+        htmlContent: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:32px 16px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e2e4e9;">
+      <tr><td style="background:#6366F1;padding:28px 40px;text-align:center;">
+        <p style="margin:0;font-size:24px;font-weight:700;color:#ffffff;">Fidelyz</p>
+      </td></tr>
+      <tr><td style="padding:32px 40px 8px;">
+        <p style="margin:0 0 16px;font-size:16px;font-weight:600;color:#111827;">Bonjour ${safeName},</p>
+        <p style="margin:0;font-size:14px;color:#374151;line-height:1.7;">${body}</p>
+      </td></tr>
+      <tr><td style="padding:24px 40px 32px;">
+        <p style="margin:0;font-size:14px;color:#374151;">L'équipe Fidelyz</p>
+      </td></tr>
+      <tr><td style="background:#f9fafb;padding:16px 40px;border-top:1px solid #e2e4e9;text-align:center;">
+        <p style="margin:0;font-size:11px;color:#9ca3af;">Message envoyé par l'équipe Fidelyz à votre adresse professionnelle.</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`
+      }, { headers: { 'api-key': this.apiKey, 'Content-Type': 'application/json' } });
+      logger.info(`✅ Message admin envoyé à ${email}`);
+    } catch (err) {
+      logger.error(`❌ Échec envoi message admin à ${email}:`, err.response?.data || err.message);
+      throw new Error('Erreur lors de l\'envoi de l\'e-mail');
+    }
+  }
+
+  async sendPriceChangeNoticeEmail({ email, nom, plan_label, old_price, new_price, effective_date, account_url }) {
+    if (!this.apiKey) throw new Error('Service d\'email non configuré');
+    const safeName = escHtml(nom);
+    try {
+      await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: this.sender,
+        to: [{ email }],
+        subject: `Évolution du tarif de votre abonnement Fidelyz au ${effective_date}`,
+        htmlContent: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:'Segoe UI',Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:32px 16px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e2e4e9;">
+      <tr><td style="background:#6366F1;padding:28px 40px;text-align:center;">
+        <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;">Modification de votre tarif</p>
+      </td></tr>
+      <tr><td style="padding:32px 40px 0;">
+        <p style="margin:0 0 12px;font-size:16px;font-weight:600;color:#111827;">Bonjour ${safeName},</p>
+        <p style="margin:0;font-size:14px;color:#374151;line-height:1.7;">
+          Nous vous informons que le tarif de votre abonnement Fidelyz (formule <strong>${plan_label}</strong>) évolue.
+        </p>
+      </td></tr>
+      <tr><td style="padding:20px 40px 0;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;border:1px solid #e2e4e9;border-radius:8px;">
+          <tr><td style="padding:16px 20px;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr><td style="padding:5px 0;font-size:13px;color:#6b7280;">Tarif actuel</td><td style="padding:5px 0;font-size:14px;color:#111827;text-align:right;">${old_price}</td></tr>
+              <tr><td style="padding:5px 0;font-size:13px;color:#6b7280;">Nouveau tarif</td><td style="padding:5px 0;font-size:16px;font-weight:700;color:#111827;text-align:right;">${new_price}</td></tr>
+              <tr><td style="padding:5px 0;font-size:13px;color:#6b7280;">Applicable à partir du</td><td style="padding:5px 0;font-size:14px;font-weight:600;color:#111827;text-align:right;">${effective_date}</td></tr>
+            </table>
+          </td></tr>
+        </table>
+      </td></tr>
+      <tr><td style="padding:20px 40px 0;">
+        <p style="margin:0;font-size:14px;color:#374151;line-height:1.7;">
+          Le nouveau tarif s'appliquera à votre première échéance de facturation suivant cette date. Jusque-là, votre abonnement reste inchangé.
+        </p>
+        <p style="margin:12px 0 0;font-size:14px;color:#374151;line-height:1.7;">
+          <strong>Vous pouvez résilier votre abonnement sans frais avant le ${effective_date}</strong>, en quelques clics depuis votre espace (onglet Abonnement) : vous conservez alors l'accès jusqu'à la fin de la période déjà payée. Sans action de votre part, l'abonnement se poursuit au nouveau tarif.
+        </p>
+      </td></tr>
+      <tr><td style="padding:24px 40px 32px;text-align:center;">
+        <a href="${account_url}" style="display:inline-block;background:#6366F1;color:#ffffff;padding:12px 30px;text-decoration:none;border-radius:7px;font-size:14px;font-weight:600;">Gérer mon abonnement</a>
+      </td></tr>
+      <tr><td style="background:#f9fafb;padding:16px 40px;border-top:1px solid #e2e4e9;text-align:center;">
+        <p style="margin:0;font-size:11px;color:#9ca3af;">Email automatique envoyé en application de l'obligation d'information préalable de 30 jours.</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`
+      }, { headers: { 'api-key': this.apiKey, 'Content-Type': 'application/json' } });
+      logger.info(`✅ Préavis tarifaire envoyé à ${email}`);
+    } catch (err) {
+      logger.error(`❌ Échec envoi préavis tarifaire à ${email}:`, err.response?.data || err.message);
+      throw new Error('Erreur lors de l\'envoi du préavis');
+    }
+  }
 }
 
 export default new EmailService();

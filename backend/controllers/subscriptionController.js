@@ -1,5 +1,6 @@
 import pool from '../db.js';
 import { stripe, STRIPE_PUBLISHABLE_KEY } from '../utils/stripeConfig.js';
+import { getPriceId, getPromoTarget } from '../utils/pricing.js';
 import logger from '../utils/logger.js';
 import emailService from '../utils/emailService.js';
 
@@ -81,9 +82,7 @@ export const switchPlan = async (req, res) => {
     }
 
     // Get new price ID based on plan
-    const priceId = new_plan === 'yearly'
-      ? process.env.STRIPE_PRICE_PRO_YEARLY
-      : process.env.STRIPE_PRICE_PRO_MONTHLY;
+    const priceId = await getPriceId(new_plan);
 
     if (!priceId) {
       return res.status(500).json({ error: 'Prix non configuré' });
@@ -151,6 +150,9 @@ export const applyPromoCode = async (req, res) => {
     }
 
     const promo = promoCode.data[0];
+    if ((await getPromoTarget(promo.id)) === 'signup') {
+      return res.status(400).json({ error: 'Ce code est réservé aux nouvelles inscriptions' });
+    }
 
     const [rows] = await pool.query(
       'SELECT stripe_subscription_id FROM entreprises WHERE id = ?',

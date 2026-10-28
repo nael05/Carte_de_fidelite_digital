@@ -16,6 +16,9 @@ import * as proSignupController from '../controllers/proSignupController.js';
 import * as accountController from '../controllers/accountController.js';
 import * as subscriptionController from '../controllers/subscriptionController.js';
 import * as billingController from '../controllers/billingController.js';
+import * as adminPricingController from '../controllers/adminPricingController.js';
+import * as adminPromoController from '../controllers/adminPromoController.js';
+import * as adminMailController from '../controllers/adminMailController.js';
 import walletRoutes from './walletRoutes.js';
 import { verifyToken, isAdmin, isPro } from '../middlewares/auth.js';
 import { requireActiveSubscription, checkSubscriptionStatus, allowReadOnlyForCanceled } from '../middlewares/subscriptionStatus.js';
@@ -57,6 +60,17 @@ router.put('/admin/suspend-company/:companyId', verifyToken, isAdmin, apiControl
 router.put('/admin/reactivate-company/:companyId', verifyToken, isAdmin, apiController.reactivateCompany);
 router.delete('/admin/delete-company/:companyId', verifyToken, isAdmin, apiController.deleteCompany);
 router.put('/admin/update-company/:companyId', verifyToken, isAdmin, apiController.updateCompany);
+
+// Admin : tarifs Stripe, codes promo, e-mails, préavis de changement de tarif
+router.get('/admin/pricing', verifyToken, isAdmin, adminPricingController.getPricing);
+router.put('/admin/pricing', verifyToken, isAdmin, adminPricingController.updatePricing);
+router.post('/admin/pricing/notify', verifyToken, isAdmin, adminPricingController.notifyPriceChange);
+router.get('/admin/promos', verifyToken, isAdmin, adminPromoController.listPromos);
+router.post('/admin/promos', verifyToken, isAdmin, adminPromoController.createPromo);
+router.delete('/admin/promos/:id', verifyToken, isAdmin, adminPromoController.deactivatePromo);
+router.get('/admin/email/recipients', verifyToken, isAdmin, adminMailController.listRecipients);
+router.post('/admin/email/single', verifyToken, isAdmin, adminMailController.sendSingle);
+router.post('/admin/email/broadcast', verifyToken, isAdmin, adminMailController.sendBroadcast);
 router.post('/pro/login', loginLimiter, apiController.proLogin);
 router.get('/pro/status', verifyToken, isPro, checkSubscriptionStatus, apiController.getProStatus);
 

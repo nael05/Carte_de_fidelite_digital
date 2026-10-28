@@ -3,15 +3,13 @@ import bcrypt from 'bcryptjs';
 import { randomUUID } from 'crypto';
 import { stripe, STRIPE_PUBLISHABLE_KEY } from '../utils/stripeConfig.js';
 import { validatePassword } from '../utils/passwordValidator.js';
+import { getPriceId, getPromoTarget } from '../utils/pricing.js';
 import logger from '../utils/logger.js';
 
 const frontendUrl = () => process.env.FRONTEND_URL || 'http://localhost:3000';
 
-const priceIdFor = (plan) =>
-  plan === 'yearly' ? process.env.STRIPE_PRICE_PRO_YEARLY : process.env.STRIPE_PRICE_PRO_MONTHLY;
-
-// Un code « 1 mois offert » = coupon 100 % sur un mois unique : converti en essai de 30 jours
-// (carte enregistrée, 0 € prélevé) au lieu d'être appliqué comme remise, pour ne pas offrir deux mois.
+// Un code « 1 mois offert » = coupon 100 % sur un mois : appliqué comme remise (carte enregistrée, 0 € prélevé
+// à l'inscription) pour que Stripe comptabilise les utilisations et respecte les limites du code.
 const isFreeMonth = (coupon) =>
   coupon?.percent_off === 100 && coupon.duration === 'once'
   || (coupon?.percent_off === 100 && coupon.duration === 'repeating' && coupon.duration_in_months === 1);
@@ -39,7 +37,7 @@ export const proSignup = async (req, res) => {
   if (!pwd.isValid) {
     return res.status(400).json({ error: pwd.errors.join(', ') });
   }
-  const priceId = priceIdFor(plan);
+  const priceId = await getPriceId(plan);
   if (!priceId) {
     logger.error('Prix Stripe non configuré', { plan });
     return res.status(500).json({ error: 'Offre indisponible' });
@@ -57,12 +55,13 @@ export const proSignup = async (req, res) => {
     }
 
     let discounts;
-    let trialDays;
     if (code_promo) {
       const promo = await validatePromo(code_promo);
       if (!promo) return res.status(400).json({ error: 'Code promo invalide ou expiré' });
-      if (isFreeMonth(promo.coupon)) trialDays = 30;
-      else discounts = [{ promotion_code: promo.id }];
+      if ((await getPromoTarget(promo.id)) === 'renewal') {
+        return res.status(400).json({ error: 'Ce code est réservé aux renouvellements' });
+      }
+      discounts = [{ promotion_code: promo.id }];
     }
 
     const entrepriseId = randomUUID();
@@ -79,10 +78,7 @@ export const proSignup = async (req, res) => {
       client_reference_id: entrepriseId,
       line_items: [{ price: priceId, quantity: 1 }],
       payment_method_collection: 'always',
-      subscription_data: {
-        metadata: { entreprise_id: entrepriseId },
-        ...(trialDays && { trial_period_days: trialDays })
-      },
+      subscription_data: { metadata: { entreprise_id: entrepriseId } },
       ...(discounts && { discounts }),
       metadata: { entreprise_id: entrepriseId },
       success_url: `${frontendUrl()}/pro/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -134,6 +130,9 @@ export const validatePromoCode = async (req, res) => {
   try {
     const promo = await validatePromo(code_promo);
     if (!promo) return res.status(404).json({ valid: false, error: 'Code promo invalide ou expiré' });
+    if ((await getPromoTarget(promo.id)) === 'renewal') {
+      return res.status(404).json({ valid: false, error: 'Ce code est réservé aux renouvellements' });
+    }
     res.json({
       valid: true,
       free_month: isFreeMonth(promo.coupon),

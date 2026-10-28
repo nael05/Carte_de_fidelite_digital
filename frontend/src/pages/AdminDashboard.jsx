@@ -7,13 +7,15 @@ import {
   Lock, Unlock, Trash2, Key, Star, Stamp, LogOut,
   ShieldAlert, LayoutDashboard, Copy, ExternalLink, Users,
   Sun, Moon, PieChart, PlusCircle, Filter, Edit2, TrendingUp, Activity, Building2, Store, AlertTriangle,
-  FileText, Save
+  FileText, Save, Mail, Tag, Euro
 } from 'lucide-react'
 import AdminStatsPanel from '../components/AdminStatsPanel'
+import { AdminPricingPanel, AdminPromosPanel, AdminMailPanel } from '../components/AdminBillingPanels'
 import './AdminDashboard.css'
 
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview')
+  const [contactTarget, setContactTarget] = useState('')
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark')
   const [enterprises, setEnterprises] = useState([])
   const [loading, setLoading] = useState(false)
@@ -368,6 +370,15 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
           <button className={`ux-tab-btn ${activeTab === 'stats' ? 'active' : ''}`} onClick={() => setActiveTab('stats')}>
             <TrendingUp size={18} /> Statistiques
           </button>
+          <button className={`ux-tab-btn ${activeTab === 'pricing' ? 'active' : ''}`} onClick={() => setActiveTab('pricing')}>
+            <Euro size={18} /> Tarifs
+          </button>
+          <button className={`ux-tab-btn ${activeTab === 'promos' ? 'active' : ''}`} onClick={() => setActiveTab('promos')}>
+            <Tag size={18} /> Promos
+          </button>
+          <button className={`ux-tab-btn ${activeTab === 'email' ? 'active' : ''}`} onClick={() => setActiveTab('email')}>
+            <Mail size={18} /> E-mails
+          </button>
           <button className={`ux-tab-btn ${activeTab === 'legal' ? 'active' : ''}`} onClick={() => setActiveTab('legal')}>
             <FileText size={18} /> Légal
           </button>
@@ -389,6 +400,9 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
         <button className={activeTab === 'list' ? 'active' : ''} onClick={() => setActiveTab('list')}><LayoutDashboard size={20} /></button>
         <button className={activeTab === 'create' ? 'active' : ''} onClick={() => setActiveTab('create')}><PlusCircle size={20} /></button>
         <button className={activeTab === 'stats' ? 'active' : ''} onClick={() => setActiveTab('stats')}><TrendingUp size={20} /></button>
+        <button className={activeTab === 'pricing' ? 'active' : ''} onClick={() => setActiveTab('pricing')}><Euro size={20} /></button>
+        <button className={activeTab === 'promos' ? 'active' : ''} onClick={() => setActiveTab('promos')}><Tag size={20} /></button>
+        <button className={activeTab === 'email' ? 'active' : ''} onClick={() => setActiveTab('email')}><Mail size={20} /></button>
         <button className={activeTab === 'legal' ? 'active' : ''} onClick={() => setActiveTab('legal')}><FileText size={20} /></button>
       </div>
 
@@ -536,6 +550,7 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
                         <button onClick={() => setEditingCompany({...ent})} className="ux-btn-icon blue" title="Modifier infos"><Edit2 size={16} /></button>
                         <button onClick={() => setDeleteConfirmModal(ent)} className="ux-btn-icon red" title="Supprimer (Attention)"><Trash2 size={16} /></button>
                         <button onClick={() => copyAllInfo(ent)} className="ux-btn-icon gray" title="Tout copier"><Copy size={16} /></button>
+                        <button onClick={() => { setContactTarget(ent.id); setActiveTab('email') }} className="ux-btn-icon blue" title="Contacter l'entreprise"><Mail size={16} /></button>
                       </div>
                     </div>
                   </div>
@@ -604,6 +619,14 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
         )}
         {/* VIEW: STATS */}
         {activeTab === 'stats' && <AdminStatsPanel />}
+
+        {activeTab === 'pricing' && <div className="ux-view-fade"><AdminPricingPanel /></div>}
+        {activeTab === 'promos' && <div className="ux-view-fade"><AdminPromosPanel /></div>}
+        {activeTab === 'email' && (
+          <div className="ux-view-fade">
+            <AdminMailPanel enterprises={enterprises} initialCompanyId={contactTarget} />
+          </div>
+        )}
 
         {/* VIEW: LEGAL */}
         {activeTab === 'legal' && (

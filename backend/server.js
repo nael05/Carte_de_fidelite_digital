@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 import cron from 'node-cron';
 import apiRoutes from './routes/apiRoutes.js';
 import { stripeWebhook } from './controllers/webhookController.js';
+import { applyDuePriceChanges } from './controllers/adminPricingController.js';
 import { computeClientExpiration, runExpirationForEnterprise } from './controllers/loyaltyController.js';
 import walletSyncService from './utils/walletSyncService.js';
 
@@ -198,6 +199,14 @@ if (process.env.NODE_APP_INSTANCE === '0') {
       logger.info('[CRON] Points expiration job completed');
     } catch (err) {
       logger.error('[CRON] Points expiration job failed', { error: err.message });
+    }
+  });
+  cron.schedule('0 4 * * *', async () => {
+    try {
+      const count = await applyDuePriceChanges();
+      if (count > 0) logger.info(`[CRON] Changements de tarif traités : ${count}`);
+    } catch (err) {
+      logger.error('[CRON] Application des changements de tarif échouée', { error: err.message });
     }
   });
   cron.schedule('0 3 * * *', async () => {

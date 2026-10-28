@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { validatePassword } from '../utils/passwordValidator'
 import api from '../api'
 import { AlertCircle, Eye, EyeOff, Loader2, CheckCircle2, Circle } from 'lucide-react'
+import AuthShell from '../components/AuthShell'
 import './Auth.css'
 
 function ProResetPassword() {
@@ -14,7 +15,7 @@ function ProResetPassword() {
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
-  
+
   const navigate = useNavigate()
   const location = useLocation()
   const { token, updateMustChangePassword } = useAuth()
@@ -28,7 +29,7 @@ function ProResetPassword() {
   }, [])
   useEffect(() => {
     const fromProLogin = location.state?.fromLogin
-    
+
     if (!token && !fromProLogin) {
       navigate('/pro/login')
     }
@@ -56,7 +57,7 @@ function ProResetPassword() {
       await api.put('/pro/change-password', { newPassword })
       updateMustChangePassword(false)
       setSuccess(true)
-      
+
       setTimeout(() => {
         navigate('/pro/dashboard')
       }, 2000)
@@ -74,33 +75,26 @@ function ProResetPassword() {
 
   if (success) {
     return (
-      <div className="luxe-auth-container">
-        <div className="luxe-auth-card">
+      <AuthShell variant="pro">
+        <div className="auth-state">
+          <div className="auth-state-icon"><CheckCircle2 size={30} /></div>
           <div className="luxe-auth-header">
-            <div className="luxe-icon-success" style={{ margin: '0 auto 24px' }}>
-              <CheckCircle2 size={48} color="#10B981" />
-            </div>
             <h1>Mot de passe mis à jour</h1>
-            <p>Sécurisation terminée avec succès.</p>
+            <p>Votre compte est sécurisé.</p>
           </div>
-          <p style={{ textAlign: 'center', color: '#10B981', fontWeight: '600' }}>
-            Redirection vers votre espace...
-          </p>
+          <span className="auth-note"><Loader2 size={14} className="spin" /> Redirection vers votre espace…</span>
         </div>
-      </div>
+      </AuthShell>
     )
   }
 
   return (
-    <div className="luxe-auth-container">
-      <div className="luxe-auth-bg"></div>
-      
-      <div className="luxe-auth-card">
+    <AuthShell variant="pro">
         <div className="luxe-auth-header">
-          <h1>Sécritisé votre compte</h1>
-          <p>Choisissez un nouveau mot de passe robuste</p>
+          <h1>Sécurisez votre compte</h1>
+          <p>Choisissez votre mot de passe personnel pour remplacer le mot de passe temporaire.</p>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="luxe-auth-form">
           <div className="luxe-form-group">
             <label htmlFor="newPassword">Nouveau mot de passe</label>
@@ -148,7 +142,7 @@ function ProResetPassword() {
 
           {newPassword && (
             <div className="luxe-criteria-box">
-              <span style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', color: 'var(--text-tertiary)' }}>Sécurité Requise</span>
+              <span className="luxe-criteria-title">Votre mot de passe doit contenir</span>
               <ul className="luxe-criteria-list">
                 <li className={`luxe-criteria-item ${newPassword.length >= 6 ? 'valid' : ''}`}>
                   {newPassword.length >= 6 ? <CheckCircle2 size={14} /> : <Circle size={14} />} 6 caractères min.
@@ -168,7 +162,7 @@ function ProResetPassword() {
               <AlertCircle size={18} /> <span>{error}</span>
             </div>
           )}
-          
+
           <button type="submit" className="btn-luxe-submit" disabled={loading || !newPassword || !confirmPassword}>
             {loading ? (
               <Loader2 className="spin" size={20} />
@@ -177,8 +171,7 @@ function ProResetPassword() {
             )}
           </button>
         </form>
-      </div>
-    </div>
+    </AuthShell>
   )
 }
 

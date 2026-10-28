@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../api'
 import {
-  AlertCircle, CheckCircle2, Loader2, X, Plus, Search,
-  Lock, Unlock, Trash2, Key, Star, Stamp, LogOut,
-  ShieldAlert, LayoutDashboard, Copy, ExternalLink, Users,
-  Sun, Moon, PieChart, PlusCircle, Filter, Edit2, TrendingUp, Activity, Building2, Store, AlertTriangle,
-  FileText, Save, Mail, Tag, Euro
+  AlertCircle, CheckCircle2, Loader2, X, Search,
+  Lock, Unlock, Trash2, LogOut, Copy, Users,
+  Sun, Moon, PieChart, Edit2, TrendingUp, Building2, Store, AlertTriangle,
+  FileText, Save, Mail, Tag, Euro, KeyRound, ChevronRight, ExternalLink, ShieldCheck
 } from 'lucide-react'
+import AppShell, { PageHead } from '../components/AppShell'
 import AdminStatsPanel from '../components/AdminStatsPanel'
 import { AdminPricingPanel, AdminPromosPanel, AdminMailPanel } from '../components/AdminBillingPanels'
 import './AdminDashboard.css'
@@ -16,7 +16,7 @@ import './AdminDashboard.css'
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview')
   const [contactTarget, setContactTarget] = useState('')
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('theme') === 'dark')
+  const [darkMode, setDarkMode] = useState(() => (localStorage.getItem('theme') || 'dark') === 'dark')
   const [enterprises, setEnterprises] = useState([])
   const [loading, setLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -27,7 +27,7 @@ function AdminDashboard() {
   const [newCompanyCredentials, setNewCompanyCredentials] = useState(null)
   const [editingCompany, setEditingCompany] = useState(null)
   const [deleteConfirmModal, setDeleteConfirmModal] = useState(null)
-  
+
   const [formData, setFormData] = useState({
     nom: '',
     email: '',
@@ -60,7 +60,7 @@ EMAIL : ${ent.email}
 PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
 -----------------------`.trim()
     copyToClipboard(text, 'Toutes les infos ont été copiées !')
-  }
+  }
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark-mode')
@@ -84,7 +84,7 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
     try {
       const res = await api.get('/settings/mentions-legales')
       setLegalContent(res.data.content || '')
-    } catch {
+    } catch {
     }
   }
 
@@ -130,12 +130,12 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
     e.preventDefault()
     setError('')
     setSuccess('')
-    
+
     if (!formData.nom || !formData.email) {
       setError('Tous les champs sont requis')
       return
     }
-    
+
     setSubmitting(true)
     try {
       const response = await api.post('/admin/create-company', {
@@ -145,7 +145,7 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
         telephone: formData.telephone,
         loyalty_type: formData.loyalty_type
       })
-      
+
       setNewCompanyCredentials({
         ...response.data,
         nom: formData.nom
@@ -153,7 +153,7 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
 
       setSuccess('Entreprise créée avec succès!')
       setFormData({ nom: '', email: '', prenom: '', telephone: '', loyalty_type: 'points' })
-      
+
       setTimeout(() => {
         loadEnterprises()
         setSuccess('')
@@ -229,394 +229,392 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
     return matchesSearch && matchesFilter
   })
 
-  return (
-    <div className={`admin-ux-v3 ${darkMode ? 'theme-dark' : 'theme-light'}`}>
-      <div className="ux-bg-glass"></div>
-      
-      {/* MODAL CREDENTIALS */}
-      {newCompanyCredentials && (
-        <div className="ux-modal-overlay" onClick={() => setNewCompanyCredentials(null)}>
-          <div className="ux-modal-card" onClick={e => e.stopPropagation()}>
-            <div className="ux-modal-header">
-              <div className="ux-icon-success"><CheckCircle2 size={32} /></div>
-              <h2>Commerce Créé !</h2>
-              <p>Voici les accès pour <strong>{newCompanyCredentials.nom}</strong></p>
-            </div>
-            
-            <div className="ux-cred-box">
-              <div className="ux-cred-row">
-                <label>Email Identifiant</label>
-                <div className="ux-copy-group">
-                  <code>{newCompanyCredentials.email}</code>
-                  <button onClick={() => navigator.clipboard.writeText(newCompanyCredentials.email)}><Copy size={16} /></button>
-                </div>
-              </div>
-              <div className="ux-cred-row">
-                <label>Mot de passe temporaire</label>
-                <div className="ux-copy-group">
-                  <code>{newCompanyCredentials.temporaryPassword}</code>
-                  <button onClick={() => navigator.clipboard.writeText(newCompanyCredentials.temporaryPassword)}><Copy size={16} /></button>
-                </div>
-              </div>
-            </div>
+  const goTab = (id) => { setActiveTab(id); window.scrollTo({ top: 0 }) }
+  const openList = (status) => { setFilterStatus(status); setSearchTerm(''); goTab('list') }
 
-            <button onClick={() => setNewCompanyCredentials(null)} className="ux-btn-primary full">
-              Fermer et continuer
+  const pendingActivation = enterprises.filter(e => e.temporary_password)
+  const suspendedList = enterprises.filter(e => e.statut === 'suspendu')
+  const activeRate = stats.total ? Math.round((stats.active / stats.total) * 100) : 0
+
+  const sections = [
+    {
+      items: [
+        { id: 'overview', icon: PieChart, label: "Vue d'ensemble" },
+        { id: 'list', icon: Store, label: 'Commerces', badge: stats.total || null },
+        { id: 'stats', icon: TrendingUp, label: 'Statistiques' },
+      ]
+    },
+    {
+      label: 'Facturation',
+      items: [
+        { id: 'pricing', icon: Euro, label: 'Tarifs' },
+        { id: 'promos', icon: Tag, label: 'Codes promo' },
+      ]
+    },
+    {
+      label: 'Communication',
+      items: [
+        { id: 'email', icon: Mail, label: 'E-mails' },
+        { id: 'legal', icon: FileText, label: 'Mentions légales' },
+      ]
+    }
+  ]
+
+  const footItems = [
+    { id: 'theme', icon: darkMode ? Sun : Moon, label: darkMode ? 'Thème clair' : 'Thème sombre', onClick: () => setDarkMode(!darkMode) },
+    { id: 'logout', icon: LogOut, label: 'Déconnexion', onClick: () => logout(), danger: true },
+  ]
+
+  const topbarActions = (
+    <>
+      <button className="icon-btn" onClick={() => setDarkMode(!darkMode)} aria-label="Changer de thème">
+        {darkMode ? <Sun size={17} /> : <Moon size={17} />}
+      </button>
+      <button className="icon-btn danger" onClick={() => logout()} aria-label="Déconnexion">
+        <LogOut size={17} />
+      </button>
+    </>
+  )
+
+  const CopyField = ({ label, value, mono }) => (
+    <button className="ad-field" onClick={() => value && copyToClipboard(value)} title="Copier" disabled={!value}>
+      <span className="ad-field-label">{label}</span>
+      <span className={`ad-field-value${mono ? ' mono' : ''}`}>{value || '—'}</span>
+      {value && <Copy size={13} className="ad-field-copy" />}
+    </button>
+  )
+
+  return (
+    <AppShell
+      brandTitle="Fidelyz Control"
+      brandSub="Administration"
+      sections={sections}
+      active={activeTab}
+      onSelect={goTab}
+      footItems={footItems}
+      topbarActions={topbarActions}
+    >
+      {/* Confirmations */}
+      {success && (
+        <div className="ui-toasts">
+          <div className="ui-toast"><CheckCircle2 size={18} /><span>{success}</span></div>
+        </div>
+      )}
+
+      {error && (
+        <div className="ui-alert error">
+          <AlertCircle size={18} /> <span>{error}</span>
+          <button className="icon-btn" onClick={() => setError('')} aria-label="Fermer"><X size={14} /></button>
+        </div>
+      )}
+
+      {/* ===== VUE D'ENSEMBLE ===== */}
+      {activeTab === 'overview' && (
+        <>
+          <PageHead
+            eyebrow={<><ShieldCheck size={14} /> Administration</>}
+            title={<>Réseau <span className="ad-grad">Fidelyz</span></>}
+            sub="L'état de votre réseau de commerçants, en temps réel."
+          />
+
+          <div className="ui-grid ui-grid-3">
+            <button className="kpi ad-kpi" onClick={() => openList('tous')}>
+              <span className="kpi-label"><Building2 size={15} /> Commerces inscrits</span>
+              <span className="kpi-value">{stats.total}</span>
+              <span className="kpi-sub ad-kpi-link">Voir tous les commerces <ChevronRight size={12} /></span>
+            </button>
+            <button className="kpi ad-kpi" onClick={() => openList('actif')}>
+              <span className="kpi-label"><CheckCircle2 size={15} /> Abonnements actifs</span>
+              <span className="kpi-value">{stats.active}</span>
+              <span className="ad-meter"><span style={{ width: `${activeRate}%` }} /></span>
+              <span className="kpi-sub">{activeRate} % du réseau</span>
+            </button>
+            <button className="kpi ad-kpi" onClick={() => openList('suspendu')}>
+              <span className="kpi-label"><Lock size={15} /> Comptes suspendus</span>
+              <span className="kpi-value">{stats.suspended}</span>
+              <span className="kpi-sub ad-kpi-link">Gérer <ChevronRight size={12} /></span>
             </button>
           </div>
-        </div>
+
+          <div className="ad-overview">
+            <section className="ui-card">
+              <div className="ui-card-head">
+                <h2 className="ui-card-title"><span className="ui-icon sm gold"><KeyRound size={15} /></span> En attente d'activation</h2>
+                <span className="ui-badge">{pendingActivation.length}</span>
+              </div>
+              {pendingActivation.length === 0 ? (
+                <p className="ui-hint">Tous les commerçants ont personnalisé leur mot de passe.</p>
+              ) : (
+                <div className="ad-mini-list">
+                  {pendingActivation.slice(0, 5).map(ent => (
+                    <div key={ent.id} className="ad-mini-row">
+                      <div className="ui-avatar sm">{ent.nom?.[0] || '?'}</div>
+                      <div className="ui-row-main">
+                        <span className="ui-row-title">{ent.nom}</span>
+                        <span className="ui-row-sub">{ent.email}</span>
+                      </div>
+                      <button className="ui-btn secondary sm" onClick={() => copyAllInfo(ent)}><Copy size={14} /> Accès</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            <section className="ui-card">
+              <div className="ui-card-head">
+                <h2 className="ui-card-title"><span className="ui-icon sm danger"><Lock size={15} /></span> Comptes suspendus</h2>
+                <span className="ui-badge">{suspendedList.length}</span>
+              </div>
+              {suspendedList.length === 0 ? (
+                <p className="ui-hint">Aucun compte suspendu.</p>
+              ) : (
+                <div className="ad-mini-list">
+                  {suspendedList.slice(0, 5).map(ent => (
+                    <div key={ent.id} className="ad-mini-row">
+                      <div className="ui-avatar sm">{ent.nom?.[0] || '?'}</div>
+                      <div className="ui-row-main">
+                        <span className="ui-row-title">{ent.nom}</span>
+                        <span className="ui-row-sub">{ent.email}</span>
+                      </div>
+                      <button className="ui-btn secondary sm" onClick={() => handleReactivate(ent.id)}><Unlock size={14} /> Réactiver</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          </div>
+
+          <div className="section-title">Raccourcis</div>
+          <div className="ui-hub">
+            {[
+              { id: 'stats', icon: TrendingUp, tone: '', title: 'Statistiques', desc: 'Clients, transactions et croissance du réseau' },
+              { id: 'pricing', icon: Euro, tone: 'gold', title: 'Tarifs', desc: 'Prix des abonnements et préavis aux abonnés' },
+              { id: 'promos', icon: Tag, tone: 'neutral', title: 'Codes promo', desc: 'Créer et désactiver des remises Stripe' },
+              { id: 'email', icon: Mail, tone: '', title: 'E-mails', desc: 'Écrire à un commerçant ou à tout le réseau' },
+            ].map(item => (
+              <button key={item.id} className="ui-hub-item" onClick={() => goTab(item.id)}>
+                <span className={`ui-icon ${item.tone}`}><item.icon size={19} /></span>
+                <span className="ui-hub-text">
+                  <span className="ui-hub-title">{item.title}</span>
+                  <span className="ui-hub-desc">{item.desc}</span>
+                </span>
+                <ChevronRight size={18} className="chev" />
+              </button>
+            ))}
+          </div>
+        </>
       )}
 
-      {/* MODAL CONFIRM DELETE */}
-      {deleteConfirmModal && (
-        <div className="ux-modal-overlay" onClick={() => setDeleteConfirmModal(null)}>
-          <div className="ux-modal-card danger" onClick={e => e.stopPropagation()} style={{ maxWidth: '450px' }}>
-            <div className="ux-modal-header" style={{ marginBottom: '1.5rem', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <h2 style={{ fontSize: '1.4rem', margin: 0, color: '#ef4444', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <AlertTriangle size={24} /> ❗️ ATTENTION ❗️
-                </h2>
-              </div>
-              <button onClick={() => setDeleteConfirmModal(null)} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}><X size={24} /></button>
+      {/* ===== COMMERCES ===== */}
+      {activeTab === 'list' && (
+        <>
+          <PageHead
+            eyebrow={<><Store size={14} /> Partenaires</>}
+            title="Commerces"
+            sub="Accès, statut et coordonnées de vos commerçants. Cliquez sur une information pour la copier."
+          />
+
+          <div className="ad-toolbar">
+            <div className="ui-search">
+              <Search size={17} />
+              <input
+                className="ui-input"
+                type="text"
+                placeholder="Nom, email ou identifiant…"
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+              />
+              {searchTerm && <button className="icon-btn plain" onClick={() => setSearchTerm('')} aria-label="Effacer"><X size={14} /></button>}
             </div>
-            <div style={{ textAlign: 'left', marginBottom: '2rem', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
-              <p style={{ margin: '0 0 10px', color: 'var(--text-primary)', fontWeight: '600' }}>Suppression définitive !</p>
-              <p style={{ margin: '0 0 15px' }}>Cette action va détruire l'entreprise <strong>{deleteConfirmModal.nom}</strong>, TOUTES ses cartes configurées, et TOUS les clients associés de façon irréversible.</p>
-              <p style={{ margin: 0, fontWeight: '500' }}>Êtes-vous absolument sûr ?</p>
-            </div>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button onClick={() => setDeleteConfirmModal(null)} className="ux-btn-secondary" style={{ flex: 1, padding: '12px' }}>Annuler</button>
-              <button onClick={handleConfirmDelete} style={{ flex: 1, padding: '12px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', transition: 'all 0.2s', boxShadow: '0 4px 12px rgba(239, 68, 68, 0.2)' }} onMouseOver={e => e.currentTarget.style.transform = 'translateY(-1px)'} onMouseOut={e => e.currentTarget.style.transform = 'none'}>Oui, supprimer</button>
+            <div className="ui-seg">
+              {[['tous', `Tous · ${stats.total}`], ['actif', `Actifs · ${stats.active}`], ['suspendu', `Suspendus · ${stats.suspended}`]].map(([v, l]) => (
+                <button key={v} className={filterStatus === v ? 'on' : ''} onClick={() => setFilterStatus(v)}>{l}</button>
+              ))}
             </div>
           </div>
-        </div>
-      )}
 
-      {/* MODAL EDIT COMPANY */}
-      {editingCompany && (
-        <div className="ux-modal-overlay" onClick={() => setEditingCompany(null)}>
-          <div className="ux-modal-card" onClick={e => e.stopPropagation()}>
-            <div className="ux-modal-header" style={{ marginBottom: '1.5rem', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <h2 style={{ fontSize: '1.5rem', margin: 0 }}>Modifier {editingCompany.nom}</h2>
-                <p style={{ margin: '4px 0 0', opacity: 0.7, fontSize: '0.9rem' }}>Modifiez les informations du commerce</p>
-              </div>
-              <button onClick={() => setEditingCompany(null)} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}><X size={24} /></button>
-            </div>
-            
-            <form onSubmit={handleUpdateCompany} className="ux-form-premium" style={{ textAlign: 'left' }}>
-              <div className="ux-form-group">
-                <label>Nom du commerce</label>
-                <input 
-                  type="text" value={editingCompany.nom} 
-                  onChange={e => setEditingCompany({...editingCompany, nom: e.target.value})}
-                  required
-                />
-              </div>
-              <div className="ux-form-group">
-                <label>Email (Identifiant de connexion)</label>
-                <input 
-                  type="email" value={editingCompany.email} 
-                  onChange={e => setEditingCompany({...editingCompany, email: e.target.value})}
-                  required
-                />
-              </div>
-              <div className="ux-form-row-compact">
-                <div className="ux-form-group">
-                  <label>Gérant</label>
-                  <input 
-                    type="text" value={editingCompany.prenom || ''} 
-                    onChange={e => setEditingCompany({...editingCompany, prenom: e.target.value})}
-                  />
-                </div>
-                <div className="ux-form-group">
-                  <label>Téléphone</label>
-                  <input 
-                    type="tel" value={editingCompany.telephone || ''} 
-                    onChange={e => setEditingCompany({...editingCompany, telephone: e.target.value})}
-                  />
-                </div>
-              </div>
-              <div className="ux-form-footer" style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem' }}>
-                <button type="button" onClick={() => setEditingCompany(null)} style={{ flex: 1, padding: '12px', background: 'transparent', border: '1px solid var(--border-medium)', borderRadius: '8px', color: 'var(--text-secondary)', cursor: 'pointer', fontWeight: '500', fontSize: '1rem', transition: 'all 0.2s' }} onMouseOver={e => e.currentTarget.style.background = 'var(--bg-surface)'} onMouseOut={e => e.currentTarget.style.background = 'transparent'}>
-                  Annuler
-                </button>
-                <button type="submit" disabled={submitting} style={{ flex: 2, padding: '12px', background: 'var(--accent-color, #3b82f6)', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '1rem', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', boxShadow: '0 4px 12px rgba(59, 130, 246, 0.2)', transition: 'all 0.2s' }} onMouseOver={e => e.currentTarget.style.transform = 'translateY(-1px)'} onMouseOut={e => e.currentTarget.style.transform = 'none'}>
-                  {submitting ? <Loader2 className="spin" size={20} /> : 'Enregistrer'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* TOP NAVBAR */}
-      <nav className="ux-navbar">
-        <div className="ux-nav-left">
-          <img src="/logo-fidelyz.png" alt="Fidelyz" style={{ height: '36px', objectFit: 'contain' }} />
-          <h1>Fidelyz Control</h1>
-        </div>
-
-        <div className="ux-nav-center desktop-only">
-          <button className={`ux-tab-btn ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>
-            <PieChart size={18} /> Vue d'ensemble
-          </button>
-          <button className={`ux-tab-btn ${activeTab === 'list' ? 'active' : ''}`} onClick={() => setActiveTab('list')}>
-            <LayoutDashboard size={18} /> Gestion
-          </button>
-          <button className={`ux-tab-btn ${activeTab === 'stats' ? 'active' : ''}`} onClick={() => setActiveTab('stats')}>
-            <TrendingUp size={18} /> Statistiques
-          </button>
-          <button className={`ux-tab-btn ${activeTab === 'pricing' ? 'active' : ''}`} onClick={() => setActiveTab('pricing')}>
-            <Euro size={18} /> Tarifs
-          </button>
-          <button className={`ux-tab-btn ${activeTab === 'promos' ? 'active' : ''}`} onClick={() => setActiveTab('promos')}>
-            <Tag size={18} /> Promos
-          </button>
-          <button className={`ux-tab-btn ${activeTab === 'email' ? 'active' : ''}`} onClick={() => setActiveTab('email')}>
-            <Mail size={18} /> E-mails
-          </button>
-          <button className={`ux-tab-btn ${activeTab === 'legal' ? 'active' : ''}`} onClick={() => setActiveTab('legal')}>
-            <FileText size={18} /> Légal
-          </button>
-        </div>
-
-        <div className="ux-nav-right">
-          <button className="ux-theme-toggle" onClick={() => setDarkMode(!darkMode)}>
-            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-          <button className="ux-btn-logout" onClick={() => logout()}>
-            <LogOut size={18} /> <span className="desktop-only">Quitter</span>
-          </button>
-        </div>
-      </nav>
-
-      {/* MOBILE NAV (TABS REPLACEMENT) */}
-      <div className="ux-mobile-tabs mobile-only">
-        <button className={activeTab === 'overview' ? 'active' : ''} onClick={() => setActiveTab('overview')}><PieChart size={20} /></button>
-        <button className={activeTab === 'list' ? 'active' : ''} onClick={() => setActiveTab('list')}><LayoutDashboard size={20} /></button>
-        <button className={activeTab === 'stats' ? 'active' : ''} onClick={() => setActiveTab('stats')}><TrendingUp size={20} /></button>
-        <button className={activeTab === 'pricing' ? 'active' : ''} onClick={() => setActiveTab('pricing')}><Euro size={20} /></button>
-        <button className={activeTab === 'promos' ? 'active' : ''} onClick={() => setActiveTab('promos')}><Tag size={20} /></button>
-        <button className={activeTab === 'email' ? 'active' : ''} onClick={() => setActiveTab('email')}><Mail size={20} /></button>
-        <button className={activeTab === 'legal' ? 'active' : ''} onClick={() => setActiveTab('legal')}><FileText size={20} /></button>
-      </div>
-
-      <main className="ux-content">
-        {error && <div className="ux-alert error"><AlertCircle size={18} /> {error}</div>}
-        {success && <div className="ux-alert success"><CheckCircle2 size={18} /> {success}</div>}
-
-        {/* VIEW: OVERVIEW */}
-        {activeTab === 'overview' && (
-          <div className="ux-view-fade">
-            <header className="ux-view-header" style={{ marginBottom: '2rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ padding: '10px', background: 'var(--accent-alpha)', borderRadius: '12px', color: 'var(--accent-color)' }}>
-                  <Activity size={28} />
-                </div>
-                <div>
-                  <h2 style={{ fontSize: '1.8rem', fontWeight: '700', letterSpacing: '-0.5px', margin: 0 }}>Réseau Global Fideliz</h2>
-                  <p style={{ margin: '4px 0 0', opacity: 0.7, fontSize: '0.95rem' }}>Aperçu en temps réel de votre écosystème de partenaires.</p>
-                </div>
-              </div>
-            </header>
-
-            <div className="ux-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
-              <div className="ux-stat-card" style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(59,130,246,0.02) 100%)', border: '1px solid rgba(59,130,246,0.2)' }}>
-                <div className="ux-stat-icon" style={{ background: '#3b82f6', color: '#fff' }}><Building2 size={22} /></div>
-                <div className="ux-stat-data">
-                  <span className="ux-stat-label">Commerces Inscrits</span>
-                  <span className="ux-stat-value" style={{ fontSize: '2.5rem', color: 'var(--text-primary)' }}>{stats.total}</span>
-                </div>
-              </div>
-              <div className="ux-stat-card" style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(16,185,129,0.02) 100%)', border: '1px solid rgba(16,185,129,0.2)' }}>
-                <div className="ux-stat-icon" style={{ background: '#10b981', color: '#fff' }}><CheckCircle2 size={22} /></div>
-                <div className="ux-stat-data">
-                  <span className="ux-stat-label">Abonnements Actifs</span>
-                  <span className="ux-stat-value" style={{ fontSize: '2.5rem', color: 'var(--text-primary)' }}>{stats.active}</span>
-                </div>
-              </div>
-              <div className="ux-stat-card" style={{ background: 'linear-gradient(135deg, rgba(239,68,68,0.1) 0%, rgba(239,68,68,0.02) 100%)', border: '1px solid rgba(239,68,68,0.2)' }}>
-                <div className="ux-stat-icon" style={{ background: '#ef4444', color: '#fff' }}><ShieldAlert size={22} /></div>
-                <div className="ux-stat-data">
-                  <span className="ux-stat-label">Comptes Suspendus</span>
-                  <span className="ux-stat-value" style={{ fontSize: '2.5rem', color: 'var(--text-primary)' }}>{stats.suspended}</span>
-                </div>
+          {loading ? (
+            <div className="ui-loading"><Loader2 size={24} className="spin" /> Chargement…</div>
+          ) : filteredEnterprises.length === 0 ? (
+            <div className="ui-card">
+              <div className="ui-empty">
+                <span className="ui-icon lg neutral"><Store size={24} /></span>
+                <p className="ui-empty-title">{enterprises.length === 0 ? 'Aucun commerce disponible' : 'Aucun résultat'}</p>
+                <p>{enterprises.length === 0 ? 'Les commerçants apparaîtront ici après leur inscription.' : 'Modifiez la recherche ou le filtre.'}</p>
               </div>
             </div>
-
-          </div>
-        )}
-
-        {/* VIEW: LIST */}
-        {activeTab === 'list' && (
-          <div className="ux-view-fade">
-            <header className="ux-view-header">
-              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px'}}>
-                <div>
-                  <h2>Gestion des Commerces</h2>
-                  <p>Administrez les accès et le statut des partenaires.</p>
-                </div>
-                <div className="ux-search-box">
-                  <Search size={18} />
-                  <input 
-                    type="text" placeholder="Rechercher..." 
-                    value={searchTerm} onChange={e => setSearchTerm(e.target.value)} 
-                  />
-                  <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
-                    <option value="tous">Tous</option>
-                    <option value="actif">Actifs</option>
-                    <option value="suspendu">Suspendus</option>
-                  </select>
-                </div>
-              </div>
-            </header>
-
-            {loading ? (
-              <div className="ux-loading-center"><Loader2 size={40} className="spin" /></div>
-            ) : enterprises.length === 0 ? (
-              <div className="ux-empty-state">Aucun commerce disponible.</div>
-            ) : (
-              <div className="ux-grid-commerces">
-                {filteredEnterprises.map(ent => (
-                  <div key={ent.id} className={`ux-ent-card ${ent.statut}`}>
-                    <div className="ux-card-top">
-                      <h3 onClick={() => copyToClipboard(ent.nom)} title="Copier le nom">{ent.nom}</h3>
-                      <span className={`ux-badge ${ent.statut}`}>{ent.statut === 'actif' ? 'Actif' : 'Suspendu'}</span>
+          ) : (
+            <div className="ad-grid">
+              {filteredEnterprises.map(ent => (
+                <article key={ent.id} className={`ui-card ad-ent${ent.statut === 'suspendu' ? ' off' : ''}`}>
+                  <header className="ad-ent-head">
+                    <div className="ui-avatar">{ent.nom?.[0] || '?'}</div>
+                    <div className="ui-row-main">
+                      <button className="ad-ent-name" onClick={() => copyToClipboard(ent.nom)} title="Copier le nom">{ent.nom}</button>
+                      <span className="ad-ent-id" onClick={() => copyToClipboard(ent.id)} title="Copier l'identifiant">#{ent.id}</span>
                     </div>
-                    
-                    <div className="ux-card-details">
-                      <div className="ux-detail">
-                        <span>Gérant</span>
-                        <div className="ux-copy-row">
-                          <strong onClick={() => copyToClipboard(ent.prenom)}>{ent.prenom || 'N/A'}</strong>
-                          <button onClick={() => copyToClipboard(ent.prenom)} className="ux-mini-copy"><Copy size={12} /></button>
-                        </div>
-                      </div>
-                      <div className="ux-detail">
-                        <span>Téléphone</span>
-                        <div className="ux-copy-row">
-                          <strong onClick={() => copyToClipboard(ent.telephone)}>{ent.telephone || 'N/A'}</strong>
-                          <button onClick={() => copyToClipboard(ent.telephone)} className="ux-mini-copy"><Copy size={12} /></button>
-                        </div>
-                      </div>
-                      <div className="ux-detail">
-                        <span>Email de connexion</span>
-                        <div className="ux-copy-row">
-                          <strong onClick={() => copyToClipboard(ent.email)}>{ent.email}</strong>
-                          <button onClick={() => copyToClipboard(ent.email)} className="ux-mini-copy"><Copy size={12} /></button>
-                        </div>
-                      </div>
-                      <div className="ux-detail">
-                        <span>ID Unique</span>
-                        <code className="ux-id-code" onClick={() => copyToClipboard(ent.id)}>#{ent.id}</code>
-                      </div>
-                      {ent.temporary_password && (
-                        <div className="ux-detail full-width">
-                          <span>Pass Temporaire</span>
-                          <div className="ux-copy-row-highlight">
-                            <code onClick={() => copyToClipboard(ent.temporary_password)}>{ent.temporary_password}</code>
-                            <button onClick={() => copyToClipboard(ent.temporary_password)} className="ux-mini-copy"><Copy size={14} /></button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                    <span className={`ui-badge ${ent.statut === 'actif' ? 'accent' : 'danger'}`}>
+                      <span className="dot" />{ent.statut === 'actif' ? 'Actif' : 'Suspendu'}
+                    </span>
+                  </header>
 
-                    <div className="ux-card-footer">
-                      <div className="ux-actions-cluster">
-                        {ent.statut === 'actif' ? (
-                          <button onClick={() => handleSuspend(ent.id)} className="ux-btn-icon" title="Suspendre"><Lock size={16} /></button>
-                        ) : (
-                          <button onClick={() => handleReactivate(ent.id)} className="ux-btn-icon green" title="Réactiver"><Unlock size={16} /></button>
-                        )}
-                        <button onClick={() => setEditingCompany({...ent})} className="ux-btn-icon blue" title="Modifier infos"><Edit2 size={16} /></button>
-                        <button onClick={() => setDeleteConfirmModal(ent)} className="ux-btn-icon red" title="Supprimer (Attention)"><Trash2 size={16} /></button>
-                        <button onClick={() => copyAllInfo(ent)} className="ux-btn-icon gray" title="Tout copier"><Copy size={16} /></button>
-                        <button onClick={() => { setContactTarget(ent.id); setActiveTab('email') }} className="ux-btn-icon blue" title="Contacter l'entreprise"><Mail size={16} /></button>
-                      </div>
-                    </div>
+                  <div className="ad-fields">
+                    <CopyField label="Gérant" value={ent.prenom} />
+                    <CopyField label="Téléphone" value={ent.telephone} />
+                    <CopyField label="Email de connexion" value={ent.email} />
+                    {ent.temporary_password && <CopyField label="Mot de passe temporaire" value={ent.temporary_password} mono />}
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
 
-        {/* VIEW: STATS */}
-        {activeTab === 'stats' && <AdminStatsPanel />}
+                  <footer className="ad-ent-foot">
+                    <button onClick={() => { setContactTarget(ent.id); goTab('email') }} className="ui-btn secondary sm"><Mail size={14} /> Écrire</button>
+                    <div className="ad-ent-actions">
+                      <button onClick={() => copyAllInfo(ent)} className="icon-btn" title="Copier toutes les infos"><Copy size={15} /></button>
+                      <button onClick={() => setEditingCompany({ ...ent })} className="icon-btn" title="Modifier"><Edit2 size={15} /></button>
+                      {ent.statut === 'actif' ? (
+                        <button onClick={() => handleSuspend(ent.id)} className="icon-btn" title="Suspendre"><Lock size={15} /></button>
+                      ) : (
+                        <button onClick={() => handleReactivate(ent.id)} className="icon-btn accent" title="Réactiver"><Unlock size={15} /></button>
+                      )}
+                      <button onClick={() => setDeleteConfirmModal(ent)} className="icon-btn danger" title="Supprimer"><Trash2 size={15} /></button>
+                    </div>
+                  </footer>
+                </article>
+              ))}
+            </div>
+          )}
+        </>
+      )}
 
-        {activeTab === 'pricing' && <div className="ux-view-fade"><AdminPricingPanel /></div>}
-        {activeTab === 'promos' && <div className="ux-view-fade"><AdminPromosPanel /></div>}
-        {activeTab === 'email' && (
-          <div className="ux-view-fade">
-            <AdminMailPanel enterprises={enterprises} initialCompanyId={contactTarget} />
-          </div>
-        )}
+      {/* ===== STATISTIQUES ===== */}
+      {activeTab === 'stats' && <AdminStatsPanel />}
 
-        {/* VIEW: LEGAL */}
-        {activeTab === 'legal' && (
-          <div className="ux-view-fade">
-            <header className="ux-view-header">
-              <h2>Mentions Légales</h2>
-              <p>Éditez le contenu affiché sur la page publique <code>/mentions-legales</code>. Le contenu supporte les balises HTML.</p>
-            </header>
+      {activeTab === 'pricing' && <AdminPricingPanel />}
+      {activeTab === 'promos' && <AdminPromosPanel />}
+      {activeTab === 'email' && <AdminMailPanel enterprises={enterprises} initialCompanyId={contactTarget} />}
 
-            <div className="ux-form-container">
-              <div className="ux-form-group">
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-                  <FileText size={16} /> Contenu HTML des mentions légales
-                </label>
-                <textarea
-                  value={legalContent}
-                  onChange={e => setLegalContent(e.target.value)}
-                  rows={28}
-                  spellCheck={false}
-                  style={{
-                    width: '100%',
-                    padding: '16px',
-                    borderRadius: '12px',
-                    border: '1px solid var(--border-light)',
-                    background: 'var(--bg-subtle)',
-                    color: 'var(--text-primary)',
-                    fontSize: '13px',
-                    fontFamily: 'monospace',
-                    lineHeight: '1.6',
-                    resize: 'vertical',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                  }}
-                  placeholder="<h1>Mentions Légales</h1>&#10;<p>Contenu…</p>"
-                />
-                <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '8px' }}>
-                  Utilisez les balises HTML standard : &lt;h1&gt;, &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;strong&gt;, &lt;a&gt;, etc.
-                </p>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '16px' }}>
-                <a
-                  href="/mentions-legales"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="ux-btn-secondary"
-                  style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}
-                >
-                  Prévisualiser
+      {/* ===== MENTIONS LÉGALES ===== */}
+      {activeTab === 'legal' && (
+        <>
+          <PageHead
+            eyebrow={<><FileText size={14} /> Contenu public</>}
+            title="Mentions légales"
+            sub={<>Le contenu affiché sur la page publique <code>/mentions-legales</code>. Les balises HTML sont acceptées.</>}
+            actions={
+              <>
+                <a href="/mentions-legales" target="_blank" rel="noopener noreferrer" className="ui-btn secondary">
+                  <ExternalLink size={16} /> Prévisualiser
                 </a>
-                <button
-                  onClick={saveLegalContent}
-                  disabled={legalSaving}
-                  className="ux-btn-primary"
-                  style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
-                >
-                  {legalSaving ? <Loader2 size={18} className="spin" /> : <Save size={18} />}
+                <button onClick={saveLegalContent} disabled={legalSaving} className="ui-btn">
+                  {legalSaving ? <Loader2 size={16} className="spin" /> : <Save size={16} />}
                   {legalSaving ? 'Sauvegarde…' : 'Sauvegarder'}
                 </button>
+              </>
+            }
+          />
+          <section className="ui-card flush ad-editor">
+            <div className="ad-editor-bar">
+              <span className="ad-editor-dots" aria-hidden><i /><i /><i /></span>
+              <span>mentions-legales.html</span>
+            </div>
+            <textarea
+              value={legalContent}
+              onChange={e => setLegalContent(e.target.value)}
+              rows={26}
+              spellCheck={false}
+              placeholder="<h1>Mentions Légales</h1>&#10;<p>Contenu…</p>"
+            />
+          </section>
+          <p className="ui-hint ad-editor-hint">
+            Balises utiles : &lt;h1&gt;, &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;strong&gt;, &lt;a&gt;.
+          </p>
+        </>
+      )}
+
+      {/* ===== MODALE : ACCÈS CRÉÉS ===== */}
+      {newCompanyCredentials && (
+        <div className="ui-overlay" onClick={() => setNewCompanyCredentials(null)}>
+          <div className="ui-modal" onClick={e => e.stopPropagation()}>
+            <div className="ui-modal-center">
+              <span className="ui-icon lg"><CheckCircle2 size={26} /></span>
+              <h3 className="ui-modal-title">Commerce créé</h3>
+              <p>Voici les accès pour <strong>{newCompanyCredentials.nom}</strong></p>
+            </div>
+            <div className="ui-modal-body">
+              <div className="ad-fields">
+                <CopyField label="Email identifiant" value={newCompanyCredentials.email} />
+                <CopyField label="Mot de passe temporaire" value={newCompanyCredentials.temporaryPassword} mono />
               </div>
             </div>
+            <div className="ui-modal-foot">
+              <button onClick={() => setNewCompanyCredentials(null)} className="ui-btn">Fermer et continuer</button>
+            </div>
           </div>
-        )}
-      </main>
-    </div>
+        </div>
+      )}
+
+      {/* ===== MODALE : SUPPRESSION ===== */}
+      {deleteConfirmModal && (
+        <div className="ui-overlay" onClick={() => setDeleteConfirmModal(null)}>
+          <div className="ui-modal" onClick={e => e.stopPropagation()}>
+            <div className="ui-modal-center">
+              <span className="ui-icon lg danger"><AlertTriangle size={26} /></span>
+              <h3 className="ui-modal-title">Supprimer {deleteConfirmModal.nom} ?</h3>
+              <p>Le commerce, toutes ses cartes configurées et tous ses clients seront supprimés <strong>de façon irréversible</strong>.</p>
+            </div>
+            <div className="ui-modal-foot ad-foot-plain">
+              <button onClick={() => setDeleteConfirmModal(null)} className="ui-btn secondary">Annuler</button>
+              <button onClick={handleConfirmDelete} className="ui-btn danger-solid">Supprimer définitivement</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== MODALE : MODIFIER ===== */}
+      {editingCompany && (
+        <div className="ui-overlay" onClick={() => setEditingCompany(null)}>
+          <form className="ui-modal" onClick={e => e.stopPropagation()} onSubmit={handleUpdateCompany}>
+            <div className="ui-modal-head">
+              <span className="ui-icon"><Edit2 size={17} /></span>
+              <div className="ui-modal-head-text">
+                <h3 className="ui-modal-title">Modifier {editingCompany.nom}</h3>
+                <p className="ui-modal-sub">Informations du commerce</p>
+              </div>
+              <button type="button" className="icon-btn" onClick={() => setEditingCompany(null)} aria-label="Fermer"><X size={18} /></button>
+            </div>
+            <div className="ui-modal-body">
+              <div className="ui-field">
+                <label className="ui-label">Nom du commerce</label>
+                <input className="ui-input" type="text" value={editingCompany.nom}
+                  onChange={e => setEditingCompany({ ...editingCompany, nom: e.target.value })} required />
+              </div>
+              <div className="ui-field">
+                <label className="ui-label">Email (identifiant de connexion)</label>
+                <input className="ui-input" type="email" value={editingCompany.email}
+                  onChange={e => setEditingCompany({ ...editingCompany, email: e.target.value })} required />
+              </div>
+              <div className="ui-grid ui-grid-2 ad-form-row">
+                <div className="ui-field">
+                  <label className="ui-label">Gérant</label>
+                  <input className="ui-input" type="text" value={editingCompany.prenom || ''}
+                    onChange={e => setEditingCompany({ ...editingCompany, prenom: e.target.value })} />
+                </div>
+                <div className="ui-field">
+                  <label className="ui-label">Téléphone</label>
+                  <input className="ui-input" type="tel" value={editingCompany.telephone || ''}
+                    onChange={e => setEditingCompany({ ...editingCompany, telephone: e.target.value })} />
+                </div>
+              </div>
+            </div>
+            <div className="ui-modal-foot">
+              <button type="button" onClick={() => setEditingCompany(null)} className="ui-btn secondary">Annuler</button>
+              <button type="submit" disabled={submitting} className="ui-btn">
+                {submitting ? <Loader2 className="spin" size={18} /> : 'Enregistrer'}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </AppShell>
   )
 }
 

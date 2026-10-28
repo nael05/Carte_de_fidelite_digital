@@ -4,14 +4,14 @@ import { TrendingUp, Users, Zap, Gift, ChevronRight, ArrowLeft, Loader2, Award }
 import api from '../api'
 import './StatsPanel.css'
 
-const COLORS = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444']
+const COLORS = ['#0a84ff', '#c9a57c', '#64d2ff', '#e3c9a4', '#ff9f0a', '#ff6961']
 
 const DOW_LABELS = ['', 'Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']
 
-function StatCard({ label, value, sub, color = '#6366f1' }) {
+function StatCard({ label, value, sub, color = '#0a84ff' }) {
   return (
-    <div className="st-card">
-      <div className="st-card-value" style={{ color }}>{value}</div>
+    <div className="st-card" style={{ '--c': color }}>
+      <div className="st-card-value">{value}</div>
       <div className="st-card-label">{label}</div>
       {sub && <div className="st-card-sub">{sub}</div>}
     </div>
@@ -29,7 +29,7 @@ function LoadingState() {
       <span>Chargement…</span>
     </div>
   )
-}
+}
 function OverviewTab() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -60,19 +60,19 @@ function OverviewTab() {
       <div className="st-grid-2">
         <StatCard label="Scans" value={data.scansThisMonth}
           sub={scanTrend !== null ? `${scanTrend > 0 ? '+' : ''}${scanTrend}% vs mois dernier` : null}
-          color="#6366f1" />
+          color="#0a84ff" />
         <StatCard label="Clients actifs" value={data.activeClientsThisMonth}
-          sub={`sur ${data.totalClients} total`} color="#8b5cf6" />
-        <StatCard label="Points distribués" value={data.pointsDistributedThisMonth} color="#06b6d4" />
+          sub={`sur ${data.totalClients} total`} color="#c9a57c" />
+        <StatCard label="Points distribués" value={data.pointsDistributedThisMonth} color="#64d2ff" />
         <StatCard label="Points utilisés" value={data.pointsRedeemedThisMonth}
-          sub={`${redemptionRate}% de rachat`} color="#10b981" />
+          sub={`${redemptionRate}% de rachat`} color="#e3c9a4" />
       </div>
 
       <SectionTitle>Portefeuille total</SectionTitle>
       <div className="st-grid-2">
         <StatCard label="Clients total" value={data.totalClients}
-          sub={`+${data.newClientsThisMonth} ce mois`} color="#6366f1" />
-        <StatCard label="Points en circulation" value={data.totalPointsInCirculation} color="#f59e0b" />
+          sub={`+${data.newClientsThisMonth} ce mois`} color="#0a84ff" />
+        <StatCard label="Points en circulation" value={data.totalPointsInCirculation} color="#ff9f0a" />
       </div>
 
       {walletData.length > 0 && (
@@ -97,7 +97,7 @@ function OverviewTab() {
       )}
     </div>
   )
-}
+}
 function ActivityTab() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -143,7 +143,7 @@ function ActivityTab() {
               <YAxis tick={{ fontSize: 10 }} />
               <Tooltip formatter={(v, n) => [v, n === 'scans' ? 'Scans' : 'Points']}
                 labelFormatter={l => `Date : ${l}`} />
-              <Bar dataKey="scans" fill="#6366f1" radius={[3, 3, 0, 0]} />
+              <Bar dataKey="scans" fill="#0a84ff" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -156,7 +156,7 @@ function ActivityTab() {
             <XAxis dataKey="name" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 10 }} />
             <Tooltip />
-            <Bar dataKey="scans" fill="#8b5cf6" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="scans" fill="#c9a57c" radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -168,13 +168,13 @@ function ActivityTab() {
             <XAxis dataKey="name" tick={{ fontSize: 10 }} />
             <YAxis tick={{ fontSize: 10 }} />
             <Tooltip />
-            <Bar dataKey="scans" fill="#06b6d4" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="scans" fill="#64d2ff" radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
     </div>
   )
-}
+}
 function ClientsTab() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -188,10 +188,10 @@ function ClientsTab() {
 
   const { retention } = data
   const retentionItems = [
-    { label: '7 derniers jours', value: retention.last7days, color: '#10b981' },
-    { label: '30 derniers jours', value: retention.last30days, color: '#6366f1' },
-    { label: '90 derniers jours', value: retention.last90days, color: '#8b5cf6' },
-    { label: 'Inactifs (+90j)', value: retention.inactive, color: '#9ca3af' },
+    { label: '7 derniers jours', value: retention.last7days, color: '#e3c9a4' },
+    { label: '30 derniers jours', value: retention.last30days, color: '#0a84ff' },
+    { label: '90 derniers jours', value: retention.last90days, color: '#c9a57c' },
+    { label: 'Inactifs (+90j)', value: retention.inactive, color: '#8e8e93' },
   ]
 
   const monthLabels = { '01': 'Jan', '02': 'Fév', '03': 'Mar', '04': 'Avr', '05': 'Mai', '06': 'Jui', '07': 'Jul', '08': 'Aoû', '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Déc' }
@@ -225,7 +225,7 @@ function ClientsTab() {
             <XAxis dataKey="range_label" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 10 }} />
             <Tooltip formatter={v => [v, 'Clients']} />
-            <Bar dataKey="count" fill="#f59e0b" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="count" fill="#ff9f0a" radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -240,7 +240,7 @@ function ClientsTab() {
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 10 }} />
                 <Tooltip formatter={v => [v, 'Nouveaux clients']} />
-                <Line type="monotone" dataKey="clients" stroke="#6366f1" strokeWidth={2} dot={{ r: 3 }} />
+                <Line type="monotone" dataKey="clients" stroke="#0a84ff" strokeWidth={2} dot={{ r: 3 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -248,7 +248,7 @@ function ClientsTab() {
       )}
     </div>
   )
-}
+}
 function RewardsTab() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -269,8 +269,8 @@ function RewardsTab() {
   return (
     <div className="st-content">
       <div className="st-grid-2" style={{ marginBottom: 20 }}>
-        <StatCard label="Rachats total" value={data.totals.totalRedemptions || 0} color="#10b981" />
-        <StatCard label="Points dépensés" value={data.totals.totalPointsSpent || 0} color="#ef4444" />
+        <StatCard label="Rachats total" value={data.totals.totalRedemptions || 0} color="#e3c9a4" />
+        <StatCard label="Points dépensés" value={data.totals.totalPointsSpent || 0} color="#ff6961" />
       </div>
 
       {data.tiers.length === 0 ? (
@@ -304,7 +304,7 @@ function RewardsTab() {
                 <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 10 }} />
                 <Tooltip formatter={v => [v, 'Rachats']} />
-                <Bar dataKey="rachats" fill="#10b981" radius={[3, 3, 0, 0]} />
+                <Bar dataKey="rachats" fill="#e3c9a4" radius={[3, 3, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -312,7 +312,7 @@ function RewardsTab() {
       )}
     </div>
   )
-}
+}
 const TABS = [
   { id: 'overview', label: 'Vue d\'ensemble', icon: TrendingUp },
   { id: 'activity', label: 'Activité', icon: Zap },
@@ -332,18 +332,11 @@ export default function StatsPanel({ onBack }) {
 
   return (
     <div className="st-panel">
-      <div className="stg-subpage-head">
-        <button className="stg-back" onClick={onBack}>
-          <ChevronRight size={15} className="stg-back-arrow" /> Paramètres
+      {onBack && (
+        <button className="page-back" onClick={onBack}>
+          <ArrowLeft size={15} /> Réglages
         </button>
-        <div className="stg-subpage-title-row">
-          <span className="stg-hub-icon stg-hub-icon--blue"><TrendingUp size={18} /></span>
-          <div>
-            <h2>Statistiques</h2>
-            <p>Analyse de votre programme de fidélité</p>
-          </div>
-        </div>
-      </div>
+      )}
 
       <div className="st-tabs">
         {TABS.map(t => (

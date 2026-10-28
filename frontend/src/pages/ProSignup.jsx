@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import api from '../api'
 import { AlertCircle, CheckCircle2, Loader2, Eye, EyeOff } from 'lucide-react'
+import AuthShell from '../components/AuthShell'
 import './Auth.css'
 import './ProSignup.css'
 
@@ -81,10 +82,7 @@ function ProSignup() {
   }
 
   return (
-    <div className="luxe-auth-container">
-      <div className="luxe-auth-bg"></div>
-
-      <div className="luxe-auth-card signup-card">
+    <AuthShell variant="pro" wide>
         <div className="luxe-auth-header">
           <h1>Créer mon espace Pro</h1>
           <p>Paiement sécurisé par Stripe. Résiliable à tout moment.</p>
@@ -200,8 +198,7 @@ function ProSignup() {
         <div className="luxe-auth-footer">
           <p>Déjà inscrit ? <Link to="/pro/login">Se connecter</Link></p>
         </div>
-      </div>
-    </div>
+    </AuthShell>
   )
 }
 

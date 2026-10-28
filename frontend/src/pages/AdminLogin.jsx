@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../api'
 import { AlertCircle, Loader2, Eye, EyeOff, ShieldCheck } from 'lucide-react'
+import AuthShell from '../components/AuthShell'
 import './Auth.css'
 
 function AdminLogin() {
@@ -47,13 +48,10 @@ function AdminLogin() {
   }
 
   return (
-    <div className="luxe-auth-container">
-      <div className="luxe-auth-bg"></div>
-      
-      <div className="luxe-auth-card">
+    <AuthShell variant="admin">
         <div className="luxe-auth-header">
-          <h1>Accès Admin</h1>
-          <p>Gestion sécurisée du SaaS</p>
+          <h1>Accès administrateur</h1>
+          <p>Espace sécurisé de gestion de Fidelyz.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="luxe-auth-form">
@@ -100,8 +98,8 @@ function AdminLogin() {
             </div>
           )}
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="btn-luxe-submit"
             disabled={loading}
           >
@@ -114,10 +112,9 @@ function AdminLogin() {
         </form>
 
         <div className="luxe-auth-footer">
-          <p>Connecté avec Shield v2.0</p>
+          <p className="muted">Connexion chiffrée · accès réservé</p>
         </div>
-      </div>
-    </div>
+    </AuthShell>
   )
 }
 

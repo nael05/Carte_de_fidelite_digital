@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import {
+  ScanLine, Users, TrendingUp, QrCode, Palette, Settings, CircleUser, LogOut, Sun, Moon,
+  CreditCard, FileText, UserRound, Trash2, Download, ExternalLink, AlertCircle, CheckCircle2
+} from 'lucide-react'
 import api from '../api'
 import { useAuth } from '../context/AuthContext'
+import AppShell, { PageHead } from '../components/AppShell'
+import useTheme from '../utils/useTheme'
 import './ProAccount.css'
 
 const STATUS_LABELS = {
@@ -17,7 +23,8 @@ const errMsg = (e) => e.response?.data?.error || 'Une erreur est survenue'
 
 function Feedback({ fb }) {
   if (!fb) return null
-  return <div className={`acc-feedback ${fb.type}`}>{fb.text}</div>
+  const Icon = fb.type === 'ok' ? CheckCircle2 : AlertCircle
+  return <div className={`acc-feedback ${fb.type}`}><Icon size={16} /><span>{fb.text}</span></div>
 }
 
 function ProfileTab() {
@@ -63,31 +70,39 @@ function ProfileTab() {
 
   return (
     <div className="acc-grid">
-      <section className="acc-card">
-        <h3>Adresse email</h3>
-        <p className="acc-muted">Actuelle : <strong>{account?.email || '…'}</strong></p>
-        <form onSubmit={submitEmail}>
-          <label>Nouvelle adresse email</label>
-          <input type="email" required value={newEmail} onChange={e => setNewEmail(e.target.value)} />
-          <p className="acc-muted">Un lien de confirmation sera envoyé à la nouvelle adresse (valable 24 h).</p>
-          <button className="acc-btn primary" type="submit">Envoyer le lien de confirmation</button>
+      <section className="ui-card">
+        <h2 className="ui-card-title">Adresse email</h2>
+        <p className="ui-card-sub">Actuelle : <strong className="acc-strong">{account?.email || '…'}</strong></p>
+        <form onSubmit={submitEmail} className="acc-form">
+          <div className="ui-field">
+            <label className="ui-label">Nouvelle adresse email</label>
+            <input className="ui-input" type="email" required value={newEmail} onChange={e => setNewEmail(e.target.value)} />
+            <p className="ui-hint">Un lien de confirmation sera envoyé à la nouvelle adresse (valable 24 h).</p>
+          </div>
+          <button className="ui-btn" type="submit">Envoyer le lien de confirmation</button>
         </form>
         <Feedback fb={emailFb} />
       </section>
 
-      <section className="acc-card">
-        <h3>Mot de passe</h3>
-        <form onSubmit={submitPwd}>
-          <label>Ancien mot de passe</label>
-          <input type="password" required autoComplete="current-password" value={pwd.old_password}
-            onChange={e => setPwd({ ...pwd, old_password: e.target.value })} />
-          <label>Nouveau mot de passe (8 caractères min.)</label>
-          <input type="password" required minLength={8} autoComplete="new-password" value={pwd.new_password}
-            onChange={e => setPwd({ ...pwd, new_password: e.target.value })} />
-          <label>Confirmer le nouveau mot de passe</label>
-          <input type="password" required minLength={8} autoComplete="new-password" value={pwd.confirm}
-            onChange={e => setPwd({ ...pwd, confirm: e.target.value })} />
-          <button className="acc-btn primary" type="submit">Modifier le mot de passe</button>
+      <section className="ui-card">
+        <h2 className="ui-card-title">Mot de passe</h2>
+        <form onSubmit={submitPwd} className="acc-form">
+          <div className="ui-field">
+            <label className="ui-label">Ancien mot de passe</label>
+            <input className="ui-input" type="password" required autoComplete="current-password" value={pwd.old_password}
+              onChange={e => setPwd({ ...pwd, old_password: e.target.value })} />
+          </div>
+          <div className="ui-field">
+            <label className="ui-label">Nouveau mot de passe <span className="ui-hint">8 caractères min.</span></label>
+            <input className="ui-input" type="password" required minLength={8} autoComplete="new-password" value={pwd.new_password}
+              onChange={e => setPwd({ ...pwd, new_password: e.target.value })} />
+          </div>
+          <div className="ui-field">
+            <label className="ui-label">Confirmer le nouveau mot de passe</label>
+            <input className="ui-input" type="password" required minLength={8} autoComplete="new-password" value={pwd.confirm}
+              onChange={e => setPwd({ ...pwd, confirm: e.target.value })} />
+          </div>
+          <button className="ui-btn" type="submit">Modifier le mot de passe</button>
         </form>
         <Feedback fb={pwdFb} />
       </section>
@@ -121,71 +136,83 @@ function SubscriptionTab() {
     }
   }
 
-  if (!sub) return <div className="acc-card">Chargement…</div>
+  if (!sub) return (
+    <div className="ui-card">
+      <div className="ui-loading">Chargement…</div>
+      <Feedback fb={fb} />
+    </div>
+  )
 
   const item = sub.stripe_subscription?.items?.[0]
   const otherPlan = sub.plan === 'yearly' ? 'monthly' : 'yearly'
+  const statusTone = ['active', 'trialing'].includes(sub.status) ? 'accent' : ['past_due', 'unpaid'].includes(sub.status) ? 'danger' : ''
 
   return (
     <div className="acc-grid">
-      <section className="acc-card">
-        <h3>Mon abonnement</h3>
-        <dl className="acc-dl">
-          <dt>Plan</dt><dd>{sub.plan === 'yearly' ? 'Annuel' : 'Mensuel'}</dd>
-          <dt>Tarif</dt><dd>{item ? `${item.amount.toFixed(2)} ${item.currency.toUpperCase()}` : '—'}</dd>
-          <dt>Statut</dt><dd><span className={`acc-badge ${sub.status}`}>{STATUS_LABELS[sub.status] || sub.status}</span></dd>
-          <dt>{sub.cancel_at_period_end ? 'Fin de l\'abonnement' : 'Prochain renouvellement'}</dt>
-          <dd>{fmtDate(sub.current_period_end)}</dd>
-        </dl>
+      <section className="ui-card acc-plan">
+        <div className="acc-plan-top">
+          <span className="page-eyebrow">Mon abonnement</span>
+          <span className={`ui-badge ${statusTone}`}><span className="dot" />{STATUS_LABELS[sub.status] || sub.status}</span>
+        </div>
+        <div className="acc-plan-name">Fidelyz Pro · {sub.plan === 'yearly' ? 'Annuel' : 'Mensuel'}</div>
+        <div className="acc-plan-price">
+          {item ? <>{item.amount.toFixed(2)} <span>{item.currency.toUpperCase()} / {sub.plan === 'yearly' ? 'an' : 'mois'}</span></> : '—'}
+        </div>
+        <div className="acc-plan-meta">
+          {sub.cancel_at_period_end ? "Fin de l'abonnement" : 'Prochain renouvellement'} : <strong>{fmtDate(sub.current_period_end)}</strong>
+        </div>
 
         {sub.cancel_at_period_end && (
-          <div className="acc-feedback warn">
-            Résiliation programmée : vous conservez 100 % des accès jusqu'au {fmtDate(sub.current_period_end)}.
+          <div className="ui-note warning acc-gap">
+            <AlertCircle size={15} />
+            <span>Résiliation programmée : vous conservez 100 % des accès jusqu'au {fmtDate(sub.current_period_end)}.</span>
           </div>
         )}
         <Feedback fb={fb} />
       </section>
 
-      <section className="acc-card">
-        <h3>Changer de formule</h3>
-        <p className="acc-muted">Le changement est facturé au prorata par Stripe.</p>
-        <button className="acc-btn" disabled={busy}
+      <section className="ui-card">
+        <h2 className="ui-card-title">Changer de formule</h2>
+        <p className="ui-card-sub">Le changement est facturé au prorata par Stripe.</p>
+        <button className="ui-btn secondary acc-gap" disabled={busy}
           onClick={() => run(() => api.post('/pro/subscription/switch-plan', { new_plan: otherPlan }))}>
           Passer au plan {otherPlan === 'yearly' ? 'annuel' : 'mensuel'}
         </button>
 
-        <h3 style={{ marginTop: 24 }}>Code promo</h3>
-        <p className="acc-muted">Appliqué au prochain renouvellement.</p>
-        <form className="acc-inline" onSubmit={e => { e.preventDefault(); run(() => api.post('/pro/subscription/apply-promo', { code_promo: promo })) }}>
-          <input value={promo} onChange={e => setPromo(e.target.value)} placeholder="CODE" required />
-          <button className="acc-btn" type="submit" disabled={busy}>Appliquer</button>
+        <div className="acc-divider" />
+
+        <h2 className="ui-card-title">Code promo</h2>
+        <p className="ui-card-sub">Appliqué au prochain renouvellement.</p>
+        <form className="acc-inline acc-gap" onSubmit={e => { e.preventDefault(); run(() => api.post('/pro/subscription/apply-promo', { code_promo: promo })) }}>
+          <input className="ui-input" value={promo} onChange={e => setPromo(e.target.value)} placeholder="CODE" required />
+          <button className="ui-btn secondary" type="submit" disabled={busy}>Appliquer</button>
         </form>
       </section>
 
-      <section className="acc-card">
-        <h3>Résiliation</h3>
+      <section className="ui-card acc-wide">
+        <h2 className="ui-card-title">Résiliation</h2>
         {sub.cancel_at_period_end ? (
           <>
-            <p className="acc-muted">Vous pouvez réactiver votre abonnement avant son échéance.</p>
-            <button className="acc-btn primary" disabled={busy}
+            <p className="ui-card-sub">Vous pouvez réactiver votre abonnement avant son échéance.</p>
+            <button className="ui-btn acc-gap" disabled={busy}
               onClick={() => run(() => api.post('/pro/subscription/reactivate'))}>
               Réactiver mon abonnement
             </button>
           </>
         ) : !confirmCancel ? (
           <>
-            <p className="acc-muted">Sans engagement : vos accès restent complets jusqu'à la fin de la période payée.</p>
-            <button className="acc-btn danger" onClick={() => setConfirmCancel(true)}>Résilier mon abonnement</button>
+            <p className="ui-card-sub">Sans engagement : vos accès restent complets jusqu'à la fin de la période payée.</p>
+            <button className="ui-btn danger acc-gap" onClick={() => setConfirmCancel(true)}>Résilier mon abonnement</button>
           </>
         ) : (
           <>
-            <p>Confirmer la résiliation à l'échéance du {fmtDate(sub.current_period_end)} ?</p>
-            <div className="acc-inline">
-              <button className="acc-btn danger" disabled={busy}
+            <p className="ui-card-sub">Confirmer la résiliation à l'échéance du {fmtDate(sub.current_period_end)} ?</p>
+            <div className="acc-inline acc-gap">
+              <button className="ui-btn danger-solid" disabled={busy}
                 onClick={() => run(() => api.post('/pro/subscription/cancel')).then(() => setConfirmCancel(false))}>
                 Confirmer la résiliation
               </button>
-              <button className="acc-btn" onClick={() => setConfirmCancel(false)}>Annuler</button>
+              <button className="ui-btn secondary" onClick={() => setConfirmCancel(false)}>Annuler</button>
             </div>
           </>
         )}
@@ -222,31 +249,41 @@ function BillingTab() {
 
   return (
     <div className="acc-grid">
-      <section className="acc-card">
-        <h3>Moyen de paiement et coordonnées</h3>
-        <p className="acc-muted">Mettez à jour votre carte bancaire et vos coordonnées de facturation sur le portail sécurisé Stripe.</p>
-        <button className="acc-btn primary" onClick={openPortal}>Ouvrir le portail Stripe</button>
+      <section className="ui-card acc-wide acc-portal">
+        <span className="ui-icon lg"><CreditCard size={22} /></span>
+        <div className="acc-portal-text">
+          <h2 className="ui-card-title">Moyen de paiement et coordonnées</h2>
+          <p className="ui-card-sub">Mettez à jour votre carte bancaire et vos coordonnées de facturation sur le portail sécurisé Stripe.</p>
+        </div>
+        <button className="ui-btn" onClick={openPortal}><ExternalLink size={16} /> Ouvrir le portail Stripe</button>
         <Feedback fb={fb} />
       </section>
 
-      <section className="acc-card acc-wide">
-        <h3>Historique des factures</h3>
+      <section className="ui-card flush acc-wide">
+        <div className="acc-table-head">
+          <h2 className="ui-card-title">Historique des factures</h2>
+        </div>
         {data.invoices.length === 0 ? (
-          <p className="acc-muted">Aucune facture pour le moment.</p>
+          <div className="ui-empty">
+            <span className="ui-icon lg neutral"><FileText size={22} /></span>
+            <p>Aucune facture pour le moment.</p>
+          </div>
         ) : (
-          <table className="acc-table">
-            <thead><tr><th>Date</th><th>Montant</th><th>Statut</th><th /></tr></thead>
-            <tbody>
-              {data.invoices.map(inv => (
-                <tr key={inv.id}>
-                  <td>{fmtDate(inv.date)}</td>
-                  <td>{inv.amount.toFixed(2)} {inv.currency}</td>
-                  <td>{inv.status}</td>
-                  <td><button className="acc-btn small" onClick={() => downloadPdf(inv.id)}>Télécharger le PDF</button></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="ui-table-wrap">
+            <table className="ui-table">
+              <thead><tr><th>Date</th><th>Montant</th><th>Statut</th><th /></tr></thead>
+              <tbody>
+                {data.invoices.map(inv => (
+                  <tr key={inv.id}>
+                    <td>{fmtDate(inv.date)}</td>
+                    <td><strong>{inv.amount.toFixed(2)} {inv.currency}</strong></td>
+                    <td><span className={`ui-badge ${inv.status === 'paid' ? 'accent' : ''}`}>{inv.status === 'paid' ? 'Payée' : inv.status}</span></td>
+                    <td className="acc-td-right"><button className="ui-btn secondary sm" onClick={() => downloadPdf(inv.id)}><Download size={14} /> PDF</button></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </section>
     </div>
@@ -273,16 +310,19 @@ function DeleteTab() {
   }
 
   return (
-    <section className="acc-card">
-      <h3>Supprimer mon compte</h3>
-      <p className="acc-muted">
+    <section className="ui-card acc-danger">
+      <span className="ui-icon lg danger"><Trash2 size={22} /></span>
+      <h2 className="ui-card-title">Supprimer mon compte</h2>
+      <p className="ui-card-sub">
         Votre abonnement Stripe est résilié immédiatement et vos données personnelles ainsi que celles de vos clients
         sont supprimées ou anonymisées conformément au RGPD. Cette action est définitive.
       </p>
-      <form onSubmit={submit}>
-        <label>Confirmez avec votre mot de passe</label>
-        <input type="password" required value={password} onChange={e => setPassword(e.target.value)} autoComplete="current-password" />
-        <button className="acc-btn danger" type="submit">Supprimer définitivement mon compte</button>
+      <form onSubmit={submit} className="acc-form">
+        <div className="ui-field">
+          <label className="ui-label">Confirmez avec votre mot de passe</label>
+          <input className="ui-input" type="password" required value={password} onChange={e => setPassword(e.target.value)} autoComplete="current-password" />
+        </div>
+        <button className="ui-btn danger-solid" type="submit">Supprimer définitivement mon compte</button>
       </form>
       <Feedback fb={fb} />
     </section>
@@ -290,28 +330,82 @@ function DeleteTab() {
 }
 
 const TABS = [
-  { id: 'profil', label: 'Profil', Component: ProfileTab },
-  { id: 'abonnement', label: 'Abonnement', Component: SubscriptionTab },
-  { id: 'facturation', label: 'Facturation', Component: BillingTab },
-  { id: 'suppression', label: 'Supprimer le compte', Component: DeleteTab }
+  { id: 'abonnement', label: 'Abonnement', icon: CreditCard, Component: SubscriptionTab },
+  { id: 'facturation', label: 'Facturation', icon: FileText, Component: BillingTab },
+  { id: 'profil', label: 'Profil', icon: UserRound, Component: ProfileTab },
+  { id: 'suppression', label: 'Suppression', icon: Trash2, Component: DeleteTab }
 ]
 
 export default function ProAccount() {
   const [tab, setTab] = useState('abonnement')
+  const [darkMode, setDarkMode] = useTheme()
+  const navigate = useNavigate()
+  const { logout } = useAuth()
   const Active = TABS.find(t => t.id === tab).Component
+  const companyName = localStorage.getItem('companyName') || 'Mon commerce'
+
+  const goDashboard = (id) => navigate(`/pro/dashboard?tab=${id}`)
+  const handleLogout = () => { logout(); navigate('/pro/login') }
+
+  const sections = [
+    {
+      items: [
+        { id: 'scanner', icon: ScanLine, label: 'Caisse' },
+        { id: 'clients', icon: Users, label: 'Clients' },
+        { id: 'stats', icon: TrendingUp, label: 'Statistiques' },
+      ]
+    },
+    {
+      label: 'Mon programme',
+      items: [
+        { id: 'register', icon: QrCode, label: 'Recruter' },
+        { id: 'design', icon: Palette, label: 'Ma carte' },
+        { id: 'settings', icon: Settings, label: 'Réglages' },
+      ]
+    }
+  ]
+
+  const footItems = [
+    { id: 'account', icon: CircleUser, label: 'Mon compte', onClick: () => {} },
+    { id: 'theme', icon: darkMode ? Sun : Moon, label: darkMode ? 'Thème clair' : 'Thème sombre', onClick: () => setDarkMode(!darkMode) },
+    { id: 'logout', icon: LogOut, label: 'Déconnexion', onClick: handleLogout, danger: true },
+  ]
 
   return (
-    <div className="acc-page">
-      <header className="acc-header">
-        <h1>Mon compte</h1>
-        <Link to="/pro/dashboard" className="acc-link">← Retour au tableau de bord</Link>
-      </header>
-      <nav className="acc-tabs">
+    <AppShell
+      brandTitle={companyName}
+      brandSub="Espace Pro · Fidelyz"
+      sections={sections}
+      active="account"
+      onSelect={goDashboard}
+      footItems={footItems}
+      tabbarIds={['scanner', 'clients', 'register', 'design', 'settings']}
+      topbarActions={
+        <>
+          <button className="icon-btn" onClick={() => setDarkMode(!darkMode)} aria-label="Changer de thème">
+            {darkMode ? <Sun size={17} /> : <Moon size={17} />}
+          </button>
+          <button className="icon-btn danger" onClick={handleLogout} aria-label="Déconnexion"><LogOut size={17} /></button>
+        </>
+      }
+    >
+      <PageHead
+        onBack={() => navigate('/pro/dashboard')}
+        backLabel="Tableau de bord"
+        eyebrow={<><CircleUser size={14} /> {companyName}</>}
+        title="Mon compte"
+        sub="Abonnement, factures et informations de connexion."
+      />
+      <div className="ui-seg acc-tabs" role="tablist">
         {TABS.map(t => (
-          <button key={t.id} className={tab === t.id ? 'active' : ''} onClick={() => setTab(t.id)}>{t.label}</button>
+          <button key={t.id} role="tab" aria-selected={tab === t.id} className={tab === t.id ? 'on' : ''} onClick={() => setTab(t.id)}>
+            <t.icon size={15} /> <span>{t.label}</span>
+          </button>
         ))}
-      </nav>
-      <Active />
-    </div>
+      </div>
+      <div className="acc-body" key={tab}>
+        <Active />
+      </div>
+    </AppShell>
   )
 }

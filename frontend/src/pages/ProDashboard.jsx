@@ -6,15 +6,25 @@ import api from '../api'
 import { useAuth } from '../context/AuthContext'
 
 import CardCustomizer from '../components/CardCustomizer'
+import AppShell, { PageHead } from '../components/AppShell'
 import appleLogo from '../assets/apple.svg'
 import googleLogo from '../assets/google.svg'
 import HistoryModal from '../components/HistoryModal'
 import StatsPanel from '../components/StatsPanel'
-import { LogOut, ScanLine, Users, Link as LinkIcon, Palette, Smartphone, X, Copy, Plus, Minus, AlertCircle, Loader2, Phone, Mail, Award, Check, Settings, Save, Trash2, Sun, Moon, Gift, Lock, ChevronRight, PlusCircle, History, Globe, RotateCw, Bell, MapPin, Navigation, UserPlus, Send, TrendingUp } from 'lucide-react'
+import {
+  LogOut, ScanLine, Users, Palette, X, Copy, Plus, Minus, AlertCircle, Loader2, Phone, Mail, Award, Check,
+  Settings, Save, Trash2, Sun, Moon, Gift, Lock, ChevronRight, History, Globe, Bell, MapPin, Navigation,
+  UserPlus, Send, TrendingUp, Search, Download, QrCode, CircleUser, Coins, Sparkles, Hourglass, Info, Zap
+} from 'lucide-react'
 import './ProDashboard.css'
 
+const TAB_IDS = ['scanner', 'clients', 'stats', 'register', 'design', 'settings']
+
 function ProDashboard() {
-  const [activeTab, setActiveTab] = useState('scanner')
+  const [activeTab, setActiveTab] = useState(() => {
+    const t = new URLSearchParams(window.location.search).get('tab')
+    return TAB_IDS.includes(t) ? t : 'scanner'
+  })
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('theme');
     return saved === null ? true : saved === 'dark';
@@ -23,7 +33,7 @@ function ProDashboard() {
   const [clients, setClients] = useState([])
   const [scannerActive, setScannerActive] = useState(false)
   const [lastScan, setLastScan] = useState(null)
-  
+
   const [proInfo, setProInfo] = useState(null)
   const [loading, setLoading] = useState(true)
   const [pageError, setPageError] = useState('')
@@ -32,6 +42,7 @@ function ProDashboard() {
 
   const [copied, setCopied] = useState(false)
   const [clientSearch, setClientSearch] = useState('')
+  const [cashSearch, setCashSearch] = useState('')
 
   const [redeemModal, setRedeemModal] = useState(null); // { clientId, clientName, rewards }
   const [deleteModal, setDeleteModal] = useState(null); // { clientId, clientName }
@@ -49,7 +60,7 @@ function ProDashboard() {
   })
   const [shortcutInput, setShortcutInput] = useState('')
   const [newTier, setNewTier] = useState({ points_required: '', title: '' })
-  
+
   const [savingSettings, setSavingSettings] = useState(false)
   const [proxConfig, setProxConfig] = useState({ relevant_text: '', locations: [] })
   const [proxSaving, setProxSaving] = useState(false)
@@ -227,8 +238,8 @@ function ProDashboard() {
       const html5QrCode = new Html5Qrcode('qr-scanner');
       scannerInstance.current = html5QrCode;
 
-      const config = { 
-        fps: 15, 
+      const config = {
+        fps: 15,
         qrbox: { width: 250, height: 250 },
         aspectRatio: 1.0
       };
@@ -285,15 +296,15 @@ function ProDashboard() {
     if (rewardToClaim) {
       try {
         setIsProcessing(true);
-        const response = await api.post('/pro/redeem-reward', { 
-          clientId: activeTransaction.clientId, 
-          rewardTierId: rewardToClaim.id 
+        const response = await api.post('/pro/redeem-reward', {
+          clientId: activeTransaction.clientId,
+          rewardTierId: rewardToClaim.id
         });
         setActiveTransaction(prev => ({
           ...prev,
           currentPoints: prev.currentPoints - rewardToClaim.points_required
         }));
-        
+
         addToast(`Cadeau "${rewardToClaim.title}" utilisé !`);
       } catch (err) {
         addToast(err.response?.data?.error || 'Erreur lors de l\'utilisation du cadeau', 'error');
@@ -308,25 +319,25 @@ function ProDashboard() {
 
   const handleFinalizePointsStep = async () => {
     if (!activeTransaction) return;
-    
+
     try {
       setIsProcessing(true);
       const pts = Number(pointsToAdd) || 0;
-      
+
       const response = await api.post('/pro/scan', {
         clientId: activeTransaction.clientId,
         points_to_add: pts
       });
 
       addToast(response.data.message || 'Points ajoutés !');
-      
+
       setLastScan({
         success: true,
         clientName: activeTransaction.clientName,
         newPoints: response.data.newPoints,
         message: response.data.message
       });
-      
+
       setScanStep(null);
       setActiveTransaction(null);
       loadClients();
@@ -356,9 +367,9 @@ function ProDashboard() {
   const handleRedeem = async (rewardTierId) => {
     try {
       setLoading(true)
-      const response = await api.post('/pro/redeem-reward', { 
-        clientId: redeemModal.clientId, 
-        rewardTierId 
+      const response = await api.post('/pro/redeem-reward', {
+        clientId: redeemModal.clientId,
+        rewardTierId
       })
       setRedeemModal(null)
       setLastScan(null)
@@ -547,51 +558,732 @@ function ProDashboard() {
     }
   }
 
+  const addShortcut = () => {
+    const v = parseInt(shortcutInput);
+    if (v > 0 && !(loyaltyConfig.points_shortcuts || []).includes(v)) {
+      setLoyaltyConfig(prev => ({ ...prev, points_shortcuts: [...(prev.points_shortcuts || []), v].sort((a, b) => a - b) }));
+      setShortcutInput('');
+    }
+  }
+
   const filteredClients = clients.filter(c => {
     if (!clientSearch) return true
     const s = clientSearch.toLowerCase()
     return `${c.prenom} ${c.nom}`.toLowerCase().includes(s) || c.telephone?.includes(s)
   })
 
-  const tabs = [
-    { id: 'scanner', icon: ScanLine, label: 'Scanner' },
-    { id: 'clients', icon: Users, label: 'Clients' },
-    { id: 'register', icon: LinkIcon, label: 'Recruter' },
-    { id: 'design', icon: Palette, label: 'Design' },
-    { id: 'settings', icon: Settings, label: 'Réglages' }
+  const cashResults = cashSearch.trim()
+    ? clients.filter(c => {
+        const s = cashSearch.toLowerCase()
+        return `${c.prenom} ${c.nom}`.toLowerCase().includes(s) || c.telephone?.includes(s) || c.email?.toLowerCase().includes(s)
+      }).slice(0, 6)
+    : []
+
+  const totalPoints = clients.reduce((sum, c) => sum + (Number(c.points) || 0), 0)
+  const joinUrl = proInfo ? `${window.location.origin}/join/${proInfo.id}` : ''
+  const companyName = proInfo?.nom || localStorage.getItem('companyName') || 'Mon commerce'
+  const todayLabel = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
+  const selectedClient = selectedClientCard ? (clients.find(c => c.id === selectedClientCard.id) || selectedClientCard) : null
+
+  const goTab = (id) => {
+    setActiveTab(id)
+    setSettingsPage(null)
+    window.scrollTo({ top: 0 })
+  }
+
+  const sections = [
+    {
+      items: [
+        { id: 'scanner', icon: ScanLine, label: 'Caisse' },
+        { id: 'clients', icon: Users, label: 'Clients', badge: clients.length || null },
+        { id: 'stats', icon: TrendingUp, label: 'Statistiques' },
+      ]
+    },
+    {
+      label: 'Mon programme',
+      items: [
+        { id: 'register', icon: QrCode, label: 'Recruter' },
+        { id: 'design', icon: Palette, label: 'Ma carte' },
+        { id: 'settings', icon: Settings, label: 'Réglages' },
+      ]
+    }
   ]
 
-  return (
-    <div className="pro-dash">
-      {/* ===== TOP BAR ===== */}
-      <header className="pro-topbar">
-        <div className="pro-topbar-left" style={{ gap: '15px' }}>
-          <img src="/logo-fidelyz.png" alt="Fidelyz Logo" style={{ height: '36px', objectFit: 'contain' }} />
-          <div>
-            <h1 className="pro-company-name">{proInfo?.nom || localStorage.getItem('companyName')}</h1>
-            <span className="pro-badge">Points · {clients.length} client(s)</span>
+  const footItems = [
+    { id: 'account', icon: CircleUser, label: 'Mon compte', onClick: () => navigate('/pro/account') },
+    { id: 'theme', icon: darkMode ? Sun : Moon, label: darkMode ? 'Thème clair' : 'Thème sombre', onClick: () => setDarkMode(!darkMode) },
+    { id: 'logout', icon: LogOut, label: 'Déconnexion', onClick: handleLogout, danger: true },
+  ]
+
+  const topbarActions = (
+    <>
+      <button className="icon-btn" onClick={() => setDarkMode(!darkMode)} aria-label="Changer de thème">
+        {darkMode ? <Sun size={17} /> : <Moon size={17} />}
+      </button>
+      <button className="icon-btn" onClick={() => navigate('/pro/account')} aria-label="Mon compte">
+        <CircleUser size={18} />
+      </button>
+      <button className="icon-btn danger" onClick={handleLogout} aria-label="Déconnexion">
+        <LogOut size={17} />
+      </button>
+    </>
+  )
+
+  const SaveButton = ({ saving, onClick, type = 'button', label = 'Enregistrer' }) => (
+    <button type={type} className="ui-btn" onClick={onClick} disabled={saving}>
+      {saving ? <Loader2 size={16} className="pro-spin" /> : <Save size={16} />}
+      {saving ? 'Enregistrement…' : label}
+    </button>
+  )
+
+  /* ───────── Pages ───────── */
+
+  const renderCaisse = () => (
+    <>
+      <PageHead
+        eyebrow={<><Sparkles size={14} /> {todayLabel.charAt(0).toUpperCase() + todayLabel.slice(1)}</>}
+        title={<>Bonjour, <span className="pd-company">{companyName}</span></>}
+        sub="Scannez la carte d'un client pour lui ajouter des points ou lui offrir une récompense."
+      />
+
+      {lastScan && lastScan.success && !lastScan.nextTier && !lastScan.availableRewards && (
+        <div className="pd-last">
+          <span className="ui-icon success sm"><Check size={16} strokeWidth={2.6} /></span>
+          <div className="pd-last-text">
+            <strong>{lastScan.clientName}</strong>
+            <span>{lastScan.message}</span>
+          </div>
+          {lastScan.newPoints != null && <span className="ui-badge accent">{lastScan.newPoints} pts</span>}
+          <button className="icon-btn plain" onClick={() => setLastScan(null)} aria-label="Fermer"><X size={16} /></button>
+        </div>
+      )}
+
+      <div className="pd-cash">
+        <button className="pd-scan" onClick={() => setScannerActive(true)}>
+          <span className="pd-scan-glow" aria-hidden />
+          <span className="pd-scan-frame" aria-hidden>
+            <i /><i /><i /><i />
+            <span className="pd-scan-line" />
+            <ScanLine size={44} strokeWidth={1.6} />
+          </span>
+          <span className="pd-scan-title">Scanner une carte</span>
+          <span className="pd-scan-sub">Ouvrez la caméra et visez le QR code du pass de votre client.</span>
+          <span className="pd-scan-cta">Lancer le scan <ChevronRight size={16} /></span>
+        </button>
+
+        <section className="ui-card pd-manual">
+          <div className="ui-card-head">
+            <div>
+              <h2 className="ui-card-title">Sans scanner</h2>
+              <p className="ui-card-sub">Retrouvez un client et créditez-le en un clic.</p>
+            </div>
+          </div>
+          <div className="ui-search">
+            <Search size={17} />
+            <input
+              className="ui-input"
+              type="text"
+              placeholder="Nom, téléphone ou email…"
+              value={cashSearch}
+              onChange={e => setCashSearch(e.target.value)}
+            />
+            {cashSearch && <button className="icon-btn plain" onClick={() => setCashSearch('')} aria-label="Effacer"><X size={14} /></button>}
+          </div>
+
+          <div className="pd-manual-list">
+            {!cashSearch.trim() ? (
+              <div className="pd-manual-hint">
+                <Search size={20} />
+                <span>Tapez quelques lettres pour retrouver un client.</span>
+              </div>
+            ) : cashResults.length === 0 ? (
+              <div className="pd-manual-hint">
+                <Users size={20} />
+                <span>Aucun client trouvé.</span>
+              </div>
+            ) : cashResults.map(c => (
+              <div key={c.id} className="pd-manual-row">
+                <div className="ui-avatar sm">{c.prenom?.[0] || '?'}</div>
+                <div className="ui-row-main">
+                  <span className="ui-row-title">{c.prenom} {c.nom}</span>
+                  <span className="ui-row-sub">{c.points || 0} pts</span>
+                </div>
+                <button className="ui-btn sm" onClick={() => handleManualClientScan(c.id)}>
+                  <Plus size={15} /> Créditer
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <div className="ui-grid ui-grid-3 pd-kpis">
+        <button className="kpi pd-kpi-link" onClick={() => goTab('clients')}>
+          <span className="kpi-label"><Users size={15} /> Clients</span>
+          <span className="kpi-value">{clients.length.toLocaleString('fr-FR')}</span>
+          <span className="kpi-sub">Voir la liste <ChevronRight size={12} /></span>
+        </button>
+        <div className="kpi">
+          <span className="kpi-label"><Coins size={15} /> Points en circulation</span>
+          <span className="kpi-value">{totalPoints.toLocaleString('fr-FR')}</span>
+          <span className="kpi-sub">Sur l'ensemble de vos clients</span>
+        </div>
+        <button className="kpi pd-kpi-link" onClick={() => { goTab('settings'); setSettingsPage('programme') }}>
+          <span className="kpi-label"><Zap size={15} /> Attribution</span>
+          <span className="kpi-value">
+            {loyaltyConfig.points_adding_mode === 'automatic' ? `+${loyaltyConfig.points_per_purchase}` : 'Libre'}
+          </span>
+          <span className="kpi-sub">
+            {loyaltyConfig.points_adding_mode === 'automatic' ? 'Points par passage' : 'Montant saisi à chaque scan'} <ChevronRight size={12} />
+          </span>
+        </button>
+      </div>
+    </>
+  )
+
+  const renderClients = () => (
+    <>
+      <PageHead
+        eyebrow={<><Users size={14} /> Fichier clients</>}
+        title="Clients"
+        sub={`${clients.length} client${clients.length > 1 ? 's' : ''} inscrit${clients.length > 1 ? 's' : ''} à votre programme.`}
+        actions={
+          <>
+            {clients.length > 0 && (
+              <button className="ui-btn secondary" onClick={handleExportCSV}>
+                <Download size={16} /> Exporter
+              </button>
+            )}
+            <button className="ui-btn" onClick={() => setShowCreateClientModal(true)}>
+              <UserPlus size={16} /> Nouveau client
+            </button>
+          </>
+        }
+      />
+
+      <div className="pd-toolbar">
+        <div className="ui-search">
+          <Search size={17} />
+          <input
+            className="ui-input"
+            type="text"
+            placeholder="Rechercher par nom ou téléphone…"
+            value={clientSearch}
+            onChange={e => setClientSearch(e.target.value)}
+          />
+          {clientSearch && <button className="icon-btn plain" onClick={() => setClientSearch('')} aria-label="Effacer"><X size={14} /></button>}
+        </div>
+      </div>
+
+      {filteredClients.length === 0 ? (
+        <div className="ui-card">
+          <div className="ui-empty">
+            <span className="ui-icon lg neutral"><Users size={24} /></span>
+            <p className="ui-empty-title">{clientSearch ? 'Aucun résultat' : 'Aucun client pour le moment'}</p>
+            <p>{clientSearch ? 'Essayez un autre nom ou numéro.' : 'Partagez votre QR code ou créez un client pour démarrer.'}</p>
+            {!clientSearch && (
+              <button className="ui-btn sm" onClick={() => goTab('register')}><QrCode size={15} /> Recruter des clients</button>
+            )}
           </div>
         </div>
-        <div className="pro-topbar-right">
-          <button className="pro-topbar-btn theme-toggle" onClick={() => setDarkMode(!darkMode)} title="Changer de thème">
-            {darkMode ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-          <button className="pro-topbar-btn" onClick={() => navigate('/pro/account')} title="Mon compte">
-            Mon compte
-          </button>
-          <button className="pro-topbar-btn logout-btn" onClick={handleLogout} title="Déconnexion">
-            <LogOut size={18} />
-          </button>
+      ) : (
+        <div className="ui-card flush">
+          <div className="ui-list">
+            {filteredClients.map(client => (
+              <div className="ui-row clickable pd-client" key={client.id} onClick={() => setSelectedClientCard(client)}>
+                <div className="ui-avatar">{client.prenom?.[0] || '?'}</div>
+                <div className="ui-row-main">
+                  <span className="ui-row-title">
+                    {client.prenom} {client.nom}
+                    {!client.marketing_optin && (
+                      <span className="ui-badge danger" title="Ce client n'a pas consenti aux communications marketing">Opt-in refusé</span>
+                    )}
+                  </span>
+                  <span className="ui-row-sub">
+                    {client.telephone && <span><Phone size={12} /> {client.telephone}</span>}
+                    {client.email && <span className="pd-hide-sm"><Mail size={12} /> {client.email}</span>}
+                  </span>
+                </div>
+                <span className="ui-points"><strong>{client.points || 0}</strong><span>pts</span></span>
+                <div className="ui-row-actions" onClick={e => e.stopPropagation()}>
+                  <button className="icon-btn pd-hide-sm" onClick={() => adjustPoints(client.id, -1)} title="Retirer 1 point"><Minus size={15} /></button>
+                  <button className="icon-btn pd-hide-sm" onClick={() => adjustPoints(client.id, 1)} title="Ajouter 1 point"><Plus size={15} /></button>
+                  <button className="icon-btn accent" onClick={() => handleManualClientScan(client.id)} title="Créditer des points"><Coins size={15} /></button>
+                  <button className="icon-btn danger pd-hide-sm" onClick={() => handleDeleteClient(client.id, `${client.prenom} ${client.nom}`)} title="Supprimer le client"><Trash2 size={15} /></button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </header>
+      )}
+    </>
+  )
 
-      {/* ===== TOAST CONTAINER ===== */}
-      <div className="pro-toast-container">
+  const renderRecruter = () => (
+    <>
+      <PageHead
+        eyebrow={<><QrCode size={14} /> Recrutement</>}
+        title="Recruter des clients"
+        sub="Affichez ce QR code en caisse ou partagez le lien : vos clients ajoutent leur carte en quelques secondes, sans application."
+      />
+
+      <div className="pd-recruit">
+        <section className="ui-card pad-lg pd-qr-card">
+          <div className="pd-qr" ref={qrRef}>
+            {proInfo ? (
+              <QRCodeSVG value={joinUrl} size={220} level="H" includeMargin={false} />
+            ) : (
+              <div className="pd-qr-placeholder"><Loader2 size={24} className="pro-spin" /></div>
+            )}
+          </div>
+          <div className="pd-qr-name">{companyName}</div>
+          <p className="pd-qr-caption">Scannez pour obtenir votre carte de fidélité</p>
+          {proInfo && (
+            <button className="ui-btn secondary" onClick={handleDownloadQR}>
+              <Download size={16} /> Télécharger en PNG
+            </button>
+          )}
+        </section>
+
+        <div className="pd-recruit-side">
+          <section className="ui-card">
+            <div className="ui-card-head">
+              <div>
+                <h2 className="ui-card-title">Lien d'inscription</h2>
+                <p className="ui-card-sub">À partager par SMS, email ou sur vos réseaux.</p>
+              </div>
+            </div>
+            <div className="pd-link">
+              <input className="ui-input" type="text" readOnly value={joinUrl} onFocus={e => e.target.select()} />
+              <button className={`ui-btn${copied ? ' secondary' : ''}`} onClick={handleCopyLink} disabled={!proInfo}>
+                {copied ? <><Check size={16} /> Copié</> : <><Copy size={16} /> Copier</>}
+              </button>
+            </div>
+          </section>
+
+          <div className="section-title">Actions directes</div>
+          <div className="pd-actions">
+            <button className="ui-hub-item" onClick={() => setShowCreateClientModal(true)}>
+              <span className="ui-icon"><UserPlus size={19} /></span>
+              <span className="ui-hub-text">
+                <span className="ui-hub-title">Créer un client</span>
+                <span className="ui-hub-desc">Enregistrez un client et envoyez-lui sa carte par email.</span>
+              </span>
+              <ChevronRight size={18} className="chev" />
+            </button>
+            <button className="ui-hub-item" onClick={() => { setShowResendModal(true); setResendSearch(''); setResendSelected(new Set()) }}>
+              <span className="ui-icon gold"><Send size={18} /></span>
+              <span className="ui-hub-text">
+                <span className="ui-hub-title">Renvoyer un lien</span>
+                <span className="ui-hub-desc">Renvoyez le lien de la carte à un ou plusieurs clients.</span>
+              </span>
+              <ChevronRight size={18} className="chev" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+
+  const settingsHub = [
+    { id: 'programme', icon: Award, tone: '', title: 'Programme de fidélité', desc: 'Points par passage, paliers de récompenses, solde maximum' },
+    { id: 'notifications', icon: Bell, tone: 'gold', title: 'Notifications push', desc: "Message promotionnel affiché sur l'écran verrouillé" },
+    { id: 'expiration', icon: Hourglass, tone: 'neutral', title: 'Expiration des points', desc: 'Durée de validité des points de vos clients' },
+    { id: 'geolocalisation', icon: MapPin, tone: '', title: 'Géolocalisation', desc: 'La carte apparaît quand le client passe devant chez vous' },
+    { id: 'historique', icon: History, tone: 'gold', title: 'Historique', desc: 'Points ajoutés, cadeaux utilisés, retraits', onClick: () => setShowHistory(true) },
+    { id: 'statistiques', icon: TrendingUp, tone: 'neutral', title: 'Statistiques', desc: 'Activité, clients, récompenses et tendances', onClick: () => goTab('stats') },
+  ]
+
+  const backToSettings = () => { setSettingsPage(null); window.scrollTo({ top: 0 }) }
+
+  const renderSettings = () => {
+    if (!settingsPage) {
+      return (
+        <>
+          <PageHead
+            eyebrow={<><Settings size={14} /> Configuration</>}
+            title="Réglages"
+            sub="Tout ce qui fait fonctionner votre programme de fidélité."
+          />
+          <nav className="ui-hub">
+            {settingsHub.map(item => (
+              <button key={item.id} className="ui-hub-item" onClick={item.onClick || (() => { setSettingsPage(item.id); window.scrollTo({ top: 0 }) })}>
+                <span className={`ui-icon ${item.tone}`}><item.icon size={19} /></span>
+                <span className="ui-hub-text">
+                  <span className="ui-hub-title">{item.title}</span>
+                  <span className="ui-hub-desc">{item.desc}</span>
+                </span>
+                <ChevronRight size={18} className="chev" />
+              </button>
+            ))}
+          </nav>
+        </>
+      )
+    }
+
+    if (settingsPage === 'programme') {
+      const shortcuts = loyaltyConfig.points_shortcuts || []
+      return (
+        <>
+          <PageHead onBack={backToSettings} backLabel="Réglages" title="Programme de fidélité" sub="Comment vos clients gagnent des points et ce qu'ils peuvent obtenir." />
+          <div className="pd-settings-grid">
+            <form onSubmit={handleSaveLoyaltyConfig} className="ui-card">
+              <div className="ui-card-head">
+                <h2 className="ui-card-title"><span className="ui-icon sm"><Coins size={16} /></span> Attribution des points</h2>
+              </div>
+
+              <div className="ui-choice-grid">
+                <button type="button"
+                  className={`ui-choice${loyaltyConfig.points_adding_mode === 'automatic' ? ' on' : ''}`}
+                  onClick={() => setLoyaltyConfig({ ...loyaltyConfig, points_adding_mode: 'automatic' })}>
+                  <span className="ui-choice-title"><Zap size={16} /> Automatique</span>
+                  <span className="ui-choice-desc">Le même nombre de points à chaque passage.</span>
+                </button>
+                <button type="button"
+                  className={`ui-choice${loyaltyConfig.points_adding_mode === 'manual' ? ' on' : ''}`}
+                  onClick={() => setLoyaltyConfig({ ...loyaltyConfig, points_adding_mode: 'manual' })}>
+                  <span className="ui-choice-title"><Coins size={16} /> Manuel</span>
+                  <span className="ui-choice-desc">Vous saisissez le montant à chaque scan.</span>
+                </button>
+              </div>
+
+              {loyaltyConfig.points_adding_mode === 'automatic' && (
+                <div className="ui-field pd-field">
+                  <label className="ui-label">Points par passage</label>
+                  <div className="ui-input-row">
+                    <input className="ui-input num" type="number" min="1"
+                      value={loyaltyConfig.points_per_purchase}
+                      onChange={e => setLoyaltyConfig({ ...loyaltyConfig, points_per_purchase: parseInt(e.target.value) })} />
+                    <span className="ui-unit">points à chaque scan</span>
+                  </div>
+                </div>
+              )}
+
+              {loyaltyConfig.points_adding_mode === 'manual' && (
+                <div className="ui-field pd-field">
+                  <label className="ui-label">Boutons rapides au moment du scan</label>
+                  <div className="ui-chips">
+                    {shortcuts.map((v, i) => (
+                      <span key={i} className="ui-chip">
+                        +{v}
+                        <button type="button" aria-label={`Retirer ${v}`}
+                          onClick={() => setLoyaltyConfig(prev => ({ ...prev, points_shortcuts: prev.points_shortcuts.filter((_, j) => j !== i) }))}>
+                          <X size={12} />
+                        </button>
+                      </span>
+                    ))}
+                    {!shortcuts.length && <span className="ui-hint">Par défaut : +5, +10, +20, +50</span>}
+                  </div>
+                  <div className="ui-input-row">
+                    <input className="ui-input num" type="number" min="1" placeholder="25"
+                      value={shortcutInput} onChange={e => setShortcutInput(e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addShortcut() } }} />
+                    <button type="button" className="ui-btn secondary sm" onClick={addShortcut}><Plus size={14} /> Ajouter</button>
+                    {shortcuts.length > 0 && (
+                      <button type="button" className="ui-btn ghost sm"
+                        onClick={() => setLoyaltyConfig(prev => ({ ...prev, points_shortcuts: [] }))}>Réinitialiser</button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="ui-field pd-field pd-sep">
+                <label className="ui-label">
+                  Solde maximum par client
+                  {loyaltyConfig.max_points_balance
+                    ? <span className="ui-badge accent">{loyaltyConfig.max_points_balance} pts max</span>
+                    : <span className="ui-badge">Illimité</span>}
+                </label>
+                <div className="ui-input-row">
+                  <input className="ui-input num" type="number" min="1" placeholder="Illimité"
+                    value={loyaltyConfig.max_points_balance ?? ''}
+                    onChange={e => setLoyaltyConfig({
+                      ...loyaltyConfig,
+                      max_points_balance: e.target.value === '' ? null : Math.max(1, parseInt(e.target.value) || 1)
+                    })} />
+                  <span className="ui-unit">pts</span>
+                  {loyaltyConfig.max_points_balance != null && (
+                    <button type="button" className="ui-btn ghost sm"
+                      onClick={() => setLoyaltyConfig({ ...loyaltyConfig, max_points_balance: null })}>Désactiver</button>
+                  )}
+                </div>
+                <p className="ui-hint">Laissez vide pour ne fixer aucune limite.</p>
+              </div>
+
+              <div className="pd-form-foot">
+                <SaveButton type="submit" saving={savingSettings} />
+              </div>
+            </form>
+
+            <section className="ui-card">
+              <div className="ui-card-head">
+                <h2 className="ui-card-title"><span className="ui-icon sm gold"><Gift size={16} /></span> Paliers de récompenses</h2>
+                <span className="ui-badge">{loyaltyConfig.reward_tiers.length}</span>
+              </div>
+
+              {loyaltyConfig.reward_tiers.length === 0 ? (
+                <div className="pd-tier-empty">
+                  <Gift size={22} />
+                  <span>Ajoutez votre première récompense, par exemple « Café offert » à 100 points.</span>
+                </div>
+              ) : (
+                <div className="pd-tiers">
+                  {[...loyaltyConfig.reward_tiers].sort((a, b) => a.points_required - b.points_required).map(tier => (
+                    <div key={tier.id} className="pd-tier">
+                      <div className="pd-tier-pts">{tier.points_required}<span>pts</span></div>
+                      <span className="pd-tier-title">{tier.title}</span>
+                      <button className="icon-btn plain danger" onClick={() => handleDeleteTier(tier.id)} aria-label="Supprimer le palier"><Trash2 size={15} /></button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="pd-tier-add">
+                <input className="ui-input num" type="number" placeholder="Points"
+                  value={newTier.points_required} onChange={e => setNewTier({ ...newTier, points_required: e.target.value })} />
+                <input className="ui-input" type="text" placeholder="Récompense (ex : Café offert)"
+                  value={newTier.title} onChange={e => setNewTier({ ...newTier, title: e.target.value })}
+                  onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAddTier() } }} />
+                <button className="ui-btn" onClick={handleAddTier} disabled={savingSettings || !newTier.points_required || !newTier.title}>
+                  <Plus size={16} /> Ajouter
+                </button>
+              </div>
+            </section>
+          </div>
+        </>
+      )
+    }
+
+    if (settingsPage === 'notifications') {
+      return (
+        <>
+          <PageHead onBack={backToSettings} backLabel="Réglages" title="Notifications push" sub="Le message qui s'affiche sur l'écran verrouillé de vos clients lors d'une promotion." />
+          <div className="pd-settings-grid">
+            <section className="ui-card">
+              <div className="ui-field">
+                <label className="ui-label">
+                  Texte de la promotion
+                  <span className="ui-count">{(proxConfig.relevant_text || '').length}/100</span>
+                </label>
+                <textarea className="ui-textarea" name="relevant_text"
+                  value={proxConfig.relevant_text} onChange={handleProxChange}
+                  placeholder="Ex : -20 % sur tout le magasin ce week-end !"
+                  rows={4} maxLength={100} />
+              </div>
+              <div className="ui-note pd-field">
+                <Info size={15} />
+                <span><strong>Apple Wallet</strong> : notification directe sur l'écran verrouillé. <strong>Google Wallet</strong> : notification de mise à jour sur Android.</span>
+              </div>
+              <div className="pd-form-foot">
+                <SaveButton saving={proxSaving} onClick={handleSaveProx} />
+              </div>
+            </section>
+
+            <section className="pd-lock">
+              <div className="pd-lock-time">9:41</div>
+              <div className="pd-lock-date">{todayLabel}</div>
+              <div className="pd-notif">
+                <span className="pd-notif-app" aria-hidden><i /><i /><i /></span>
+                <div className="pd-notif-body">
+                  <div className="pd-notif-top"><strong>{companyName}</strong><span>maintenant</span></div>
+                  <p>{proxConfig.relevant_text || 'Votre message apparaîtra ici.'}</p>
+                </div>
+              </div>
+              <span className="pd-lock-caption">Aperçu sur iPhone</span>
+            </section>
+          </div>
+        </>
+      )
+    }
+
+    if (settingsPage === 'expiration') {
+      return (
+        <>
+          <PageHead onBack={backToSettings} backLabel="Réglages" title="Expiration des points" sub="Définissez combien de temps les points de vos clients restent valables." />
+          <section className="ui-card pd-narrow">
+            <div className="ui-switch-row" onClick={() => setExpirationIndeterminate(v => !v)}>
+              <span className="ui-switch-text">
+                <span className="ui-switch-title">Points sans expiration</span>
+                <span className="ui-switch-desc">Les points restent valables indéfiniment.</span>
+              </span>
+              <button type="button" className={`ui-switch${expirationIndeterminate ? ' on' : ''}`} aria-pressed={expirationIndeterminate} aria-label="Points sans expiration" />
+            </div>
+
+            {!expirationIndeterminate ? (
+              <div className="pd-expire">
+                <div className="pd-expire-value">
+                  <strong>{expirationSlider}</strong>
+                  <span>mois</span>
+                </div>
+                <input
+                  type="range"
+                  className="pd-range"
+                  min={1}
+                  max={36}
+                  value={expirationSlider}
+                  onChange={e => setExpirationSlider(Number(e.target.value))}
+                  style={{ '--fill': `${((expirationSlider - 1) / 35) * 100}%` }}
+                />
+                <div className="pd-range-scale"><span>1 mois</span><span>18 mois</span><span>36 mois</span></div>
+                <div className="ui-note">
+                  <Hourglass size={15} />
+                  <span>Les points expirés sont retirés automatiquement chaque nuit. Vos clients reçoivent une notification 7 jours avant.</span>
+                </div>
+              </div>
+            ) : (
+              <div className="ui-note pd-field">
+                <Info size={15} />
+                <span>Les points de vos clients n'expirent jamais.</span>
+              </div>
+            )}
+
+            <div className="pd-form-foot">
+              <SaveButton saving={expirationSaving} onClick={handleSaveExpiration} />
+            </div>
+          </section>
+        </>
+      )
+    }
+
+    if (settingsPage === 'geolocalisation') {
+      const locations = proxConfig.locations || []
+      return (
+        <>
+          <PageHead
+            onBack={backToSettings}
+            backLabel="Réglages"
+            title="Géolocalisation"
+            sub="Quand un client passe près d'un de vos lieux, sa carte s'affiche sur l'écran verrouillé avec votre message."
+            actions={
+              <button type="button" className="ui-btn secondary" onClick={addProxLocation} disabled={locations.length >= 10}>
+                <Plus size={16} /> Ajouter un lieu
+              </button>
+            }
+          />
+
+          <div className="pd-locs-head">
+            <span className="ui-badge">{locations.length}/10 lieux</span>
+          </div>
+
+          {locations.length === 0 ? (
+            <div className="ui-card">
+              <div className="ui-empty">
+                <span className="ui-icon lg"><Navigation size={24} /></span>
+                <p className="ui-empty-title">Aucun lieu configuré</p>
+                <p>Ajoutez l'adresse de votre boutique pour rappeler votre carte à vos clients de passage.</p>
+                <button className="ui-btn sm" onClick={addProxLocation}><Plus size={15} /> Ajouter un lieu</button>
+              </div>
+            </div>
+          ) : (
+            <div className="pd-locs">
+              {locations.map((loc, index) => (
+                <section key={index} className="ui-card pd-loc">
+                  <div className="pd-loc-head">
+                    <span className="ui-icon sm"><MapPin size={16} /></span>
+                    <strong>Lieu {index + 1}</strong>
+                    <button className="icon-btn plain danger" onClick={() => removeProxLocation(index)} aria-label="Supprimer le lieu"><Trash2 size={15} /></button>
+                  </div>
+                  <div className="ui-grid ui-grid-2">
+                    <div className="ui-field">
+                      <label className="ui-label">Latitude</label>
+                      <input className="ui-input" type="number" step="any"
+                        value={loc.latitude ?? ''}
+                        onChange={e => handleProxLocationChange(index, 'latitude', e.target.value)}
+                        placeholder="48.8566" />
+                    </div>
+                    <div className="ui-field">
+                      <label className="ui-label">Longitude</label>
+                      <input className="ui-input" type="number" step="any"
+                        value={loc.longitude ?? ''}
+                        onChange={e => handleProxLocationChange(index, 'longitude', e.target.value)}
+                        placeholder="2.3522" />
+                    </div>
+                  </div>
+                  <div className="ui-field pd-field">
+                    <label className="ui-label">Message sur l'écran verrouillé</label>
+                    <input className="ui-input" type="text"
+                      value={loc.relevantText || ''}
+                      onChange={e => handleProxLocationChange(index, 'relevantText', e.target.value)}
+                      placeholder="Ex : Bienvenue ! N'oubliez pas votre carte." />
+                  </div>
+                </section>
+              ))}
+            </div>
+          )}
+
+          <div className="ui-note pd-field">
+            <Globe size={15} />
+            <span>Trouvez les coordonnées sur <strong>Google Maps</strong> : clic droit sur votre boutique, puis cliquez sur les chiffres affichés pour les copier.</span>
+          </div>
+
+          <div className="pd-form-foot">
+            <SaveButton saving={proxSaving} onClick={handleSaveProx} />
+          </div>
+        </>
+      )
+    }
+
+    return null
+  }
+
+  const renderStats = () => (
+    <>
+      <PageHead
+        eyebrow={<><TrendingUp size={14} /> Analyse</>}
+        title="Statistiques"
+        sub="L'activité de votre programme de fidélité, en un coup d'œil."
+      />
+      <StatsPanel />
+    </>
+  )
+
+  const renderDesign = () => (
+    <>
+      <PageHead
+        eyebrow={<><Palette size={14} /> Personnalisation</>}
+        title="Ma carte"
+        sub="Couleurs, logo, bannière et textes : votre carte Apple Wallet et Google Wallet, à l'image de votre commerce."
+      />
+      <CardCustomizer proInfo={proInfo} />
+    </>
+  )
+
+  const pages = {
+    scanner: renderCaisse,
+    clients: renderClients,
+    stats: renderStats,
+    register: renderRecruter,
+    design: renderDesign,
+    settings: renderSettings,
+  }
+
+  /* ───────── Rendu ───────── */
+
+  const resendFiltered = clients.filter(c => {
+    if (!c.email) return false
+    const q = resendSearch.toLowerCase()
+    return !q || `${c.prenom} ${c.nom}`.toLowerCase().includes(q) || c.email.includes(q)
+  })
+  const resendAllSelected = resendFiltered.length > 0 && resendFiltered.every(c => resendSelected.has(c.id))
+
+  return (
+    <AppShell
+      brandTitle={companyName}
+      brandSub="Espace Pro · Fidelyz"
+      sections={sections}
+      active={activeTab}
+      onSelect={goTab}
+      footItems={footItems}
+      tabbarIds={['scanner', 'clients', 'register', 'design', 'settings']}
+      topbarActions={topbarActions}
+    >
+      {/* Notifications */}
+      <div className="ui-toasts">
         {toasts.map(t => (
-          <div key={t.id} className={`pro-toast ${t.type}`}>
-            {t.type === 'success' ? <Check size={18} /> : <AlertCircle size={18} />}
+          <div key={t.id} className={`ui-toast ${t.type}`}>
+            {t.type === 'success' ? <Check size={18} strokeWidth={2.6} /> : <AlertCircle size={18} />}
             <span>{t.message}</span>
-            <button onClick={() => setToasts(prev => prev.filter(toast => toast.id !== t.id))}>
+            <button className="icon-btn" onClick={() => setToasts(prev => prev.filter(toast => toast.id !== t.id))} aria-label="Fermer">
               <X size={14} />
             </button>
           </div>
@@ -599,783 +1291,134 @@ function ProDashboard() {
       </div>
 
       {isSuspended && (
-        <div className="pro-suspended-banner">
-          <AlertCircle size={20} />
+        <div className="ui-banner">
+          <AlertCircle size={22} />
           <div>
-            <strong>Compte Suspendu</strong>
+            <strong>Compte suspendu</strong>
             <p>Contactez l'administrateur pour plus d'informations.</p>
           </div>
         </div>
       )}
 
-      {loading && (
-        <div className="pro-loading">
-          <Loader2 size={28} className="pro-spin" />
-          <p>Chargement...</p>
-        </div>
-      )}
-
       {pageError && (
-        <div className="pro-alert pro-alert-error">
+        <div className="ui-alert error">
           <AlertCircle size={18} /> <span>{pageError}</span>
+          <button className="icon-btn" onClick={() => setPageError('')} aria-label="Fermer"><X size={14} /></button>
         </div>
       )}
 
-      {!loading && (
-        <main className="pro-main" style={{ opacity: isSuspended ? 0.4 : 1, pointerEvents: isSuspended ? 'none' : 'auto' }}>
+      {loading ? (
+        <div className="pro-loading">
+          <Loader2 size={26} className="pro-spin" />
+          <p>Chargement…</p>
+        </div>
+      ) : (
+        <div className="pd-page" style={{ opacity: isSuspended ? 0.4 : 1, pointerEvents: isSuspended ? 'none' : 'auto' }}>
+          {pages[activeTab]()}
+        </div>
+      )}
 
-          {/* Flash Messages (Legacy, to keep) */}
-          {lastScan && !lastScan.nextTier && !lastScan.availableRewards && (
-            <div className={`pro-alert ${lastScan.success ? 'pro-alert-success' : 'pro-alert-error'}`}>
-              {lastScan.success ? (
-                <div><strong>{lastScan.clientName}</strong><p>{lastScan.message}</p></div>
-              ) : (
-                <span>{lastScan.error}</span>
-              )}
-              <button className="pro-alert-close" onClick={() => setLastScan(null)}><X size={16} /></button>
-            </div>
-          )}
-
-          {/* Desktop Tabs */}
-          <div className="pro-tabs-desktop">
-            {tabs.map(t => (
-              <button key={t.id} className={`pro-tab ${activeTab === t.id ? 'active' : ''}`} onClick={() => setActiveTab(t.id)}>
-                <t.icon size={16} />
-                {t.label}
-              </button>
-            ))}
+      {/* ===== SCANNER PLEIN ÉCRAN ===== */}
+      {scannerActive && activeTab === 'scanner' && (
+        <div className="pd-scanner">
+          <div className="pd-scanner-head">
+            <button onClick={() => setScannerActive(false)} className="icon-btn" aria-label="Fermer le scanner">
+              <X size={20} />
+            </button>
+            <span>Scan en cours</span>
+            <span style={{ width: 36 }} />
           </div>
-
-          {/* ====== SCANNER ====== */}
-          {activeTab === 'scanner' && (
-            <div className="pro-section">
-              <div className="pro-section-header">
-                <ScanLine size={22} />
-                <div>
-                  <h2>Scanner QR Code</h2>
-                  <p>Attribution de points</p>
-                </div>
-              </div>
-
-              {!activeTransaction && (
-                <div className="pro-scanner-area">
-                  {!scannerActive ? (
-                    <button className="pro-scan-btn-premium" onClick={() => setScannerActive(true)}>
-                      <div className="scan-icon-container">
-                         <ScanLine size={48} />
-                         <div className="scan-pulse"></div>
-                      </div>
-                      <div className="scan-text">
-                        <span>Lancer le scan</span>
-                        <p>Visez le code QR du client</p>
-                      </div>
-                    </button>
-                  ) : (
-                    <div className="scanner-full-overlay">
-                       <div className="scanner-header">
-                          <button onClick={() => setScannerActive(false)} className="scanner-close">
-                            <X size={24} />
-                          </button>
-                          <span>Scan en cours...</span>
-                       </div>
-                       <div className="scanner-view-container">
-                          <div id="qr-scanner" ref={scannerRef} className="pro-qr-reader-premium"></div>
-                          <div className="scanner-frame"></div>
-                       </div>
-                       <div className="scanner-footer">
-                          Positionnez le QR code dans le cadre
-                       </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-            </div>
-          )}
-
-          {/* ====== CLIENTS ====== */}
-          {activeTab === 'clients' && (
-            <div className="pro-section">
-              <div className="pro-section-header">
-                <Users size={22} />
-                <div>
-                  <h2>Clients ({clients.length})</h2>
-                  <p>Gérez vos clients et leur cagnotte</p>
-                </div>
-                {clients.length > 0 && (
-                  <button className="pro-export-btn" onClick={handleExportCSV} title="Exporter en Excel">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Exporter
-                  </button>
-                )}
-              </div>
-
-              <div className="pro-search-bar">
-                <div className="pro-search-wrapper">
-                  <input
-                    type="text"
-                    placeholder="Rechercher un client..."
-                    value={clientSearch}
-                    onChange={e => setClientSearch(e.target.value)}
-                  />
-                  {clientSearch && (
-                    <button className="pro-search-clear" onClick={() => setClientSearch('')}>
-                      <X size={14} />
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {loading ? (
-                <div className="pro-client-list">
-                  {[1, 2, 3, 4, 5, 6].map(i => <div key={i} className="skeleton-card" />)}
-                </div>
-              ) : filteredClients.length === 0 ? (
-                <div className="pro-empty">
-                  <Users size={40} />
-                  <p>{clientSearch ? 'Aucun résultat' : 'Aucun client pour le moment'}</p>
-                </div>
-              ) : (
-                <div className="pro-client-list">
-                  {filteredClients.map(client => (
-                    <div className="pro-client-card" key={client.id}>
-                      <div className="pro-client-info" onClick={() => setSelectedClientCard(client)}>
-                        <div className="pro-client-avatar">{client.prenom?.[0] || '?'}</div>
-                        <div className="pro-client-details">
-                          <span className="pro-client-name" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            {client.prenom} {client.nom}
-                            {!client.marketing_optin && (
-                              <span title="Ce client n'a pas consenti aux communications marketing" style={{
-                                fontSize: '10px', fontWeight: '700', padding: '2px 6px', borderRadius: '6px',
-                                background: 'rgba(239,68,68,0.15)', color: '#ef4444', lineHeight: '1.4',
-                                whiteSpace: 'nowrap'
-                              }}>
-                                Opt-in refusé
-                              </span>
-                            )}
-                          </span>
-                          <span className="pro-client-phone"><Phone size={12} /> {client.telephone}</span>
-                          {client.email && <span className="pro-client-email"><Mail size={12} /> {client.email}</span>}
-                        </div>
-                        <div className="pro-client-points">
-                          <span className="pro-points-value">{client.points || 0}</span>
-                          <span className="pro-points-label">pts</span>
-                        </div>
-                      </div>
-                      <div className="pro-client-actions">
-                        <button className="pro-action-btn" onClick={() => adjustPoints(client.id, -1)} title="-1"><Minus size={16} /></button>
-                        <button className="pro-action-btn pro-action-add" onClick={() => adjustPoints(client.id, 1)} title="+1"><Plus size={16} /></button>
-                        <button className="pro-action-btn pro-action-manual" onClick={(e) => { e.stopPropagation(); handleManualClientScan(client.id); }} title="Ajouter des points manuellement"><ScanLine size={16} /></button>
-                        <button className="pro-action-btn pro-action-delete" onClick={(e) => { e.stopPropagation(); handleDeleteClient(client.id, `${client.prenom} ${client.nom}`); }} title="Supprimer client"><Trash2 size={16} /></button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* ====== RECRUTER ====== */}
-          {activeTab === 'register' && (
-            <div className="pro-section">
-              <div className="pro-section-header">
-                <LinkIcon size={22} />
-                <div>
-                  <h2>Recruter des clients</h2>
-                  <p>Partagez ce QR ou lien</p>
-                </div>
-              </div>
-              <div className="pro-recruit-content">
-                <div className="pro-qr-display" ref={qrRef}>
-                  {proInfo ? (
-                    <QRCodeSVG value={`${window.location.origin}/join/${proInfo.id}`} size={200} level="H" includeMargin={false} />
-                  ) : (
-                    <div className="pro-qr-placeholder"><Loader2 size={24} className="pro-spin" /></div>
-                  )}
-                </div>
-                {proInfo && (
-                  <button className="pro-qr-download-btn" onClick={handleDownloadQR}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Télécharger PNG
-                  </button>
-                )}
-                <p className="pro-recruit-hint">Lien d'inscription client</p>
-                <div className="pro-link-copy">
-                  <input type="text" readOnly value={proInfo ? `${window.location.origin}/join/${proInfo.id}` : ''} />
-                  <button className="pro-copy-btn" onClick={handleCopyLink}>
-                    {copied ? <><Check size={16} /> Copié</> : <><Copy size={16} /> Copier</>}
-                  </button>
-                </div>
-              </div>
-
-              {/* Actions directes — style hub comme Réglages */}
-              <div style={{ marginTop: '24px' }}>
-                <p style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '10px' }}>
-                  Actions directes
-                </p>
-                <nav className="stg-hub">
-                  <button className="stg-hub-item" onClick={() => setShowCreateClientModal(true)}>
-                    <span className="stg-hub-icon stg-hub-icon--blue"><UserPlus size={18} /></span>
-                    <span className="stg-hub-text">
-                      <span className="stg-hub-title">Créer un client</span>
-                      <span className="stg-hub-desc">Enregistrez un client et envoyez-lui sa carte par email</span>
-                    </span>
-                    <ChevronRight size={16} className="stg-hub-chevron" />
-                  </button>
-                  <button className="stg-hub-item" onClick={() => { setShowResendModal(true); setResendSearch(''); setResendSelected(new Set()) }}>
-                    <span className="stg-hub-icon stg-hub-icon--purple"><Send size={18} /></span>
-                    <span className="stg-hub-text">
-                      <span className="stg-hub-title">Renvoyer un lien</span>
-                      <span className="stg-hub-desc">Envoyez le lien de téléchargement à un ou plusieurs clients</span>
-                    </span>
-                    <ChevronRight size={16} className="stg-hub-chevron" />
-                  </button>
-                </nav>
-              </div>
-            </div>
-          )}
-
-          {/* ====== DESIGN ====== */}
-          {activeTab === 'design' && (
-            <div className="pro-section">
-              <div className="pro-section-header">
-                <Palette size={22} />
-                <div>
-                  <h2>Design de la carte</h2>
-                  <p>Wallet Customizer</p>
-                </div>
-              </div>
-              <CardCustomizer proInfo={proInfo} />
-            </div>
-          )}
-
-          {/* ====== RÉGLAGES ====== */}
-          {activeTab === 'settings' && (
-            <div className="pro-section">
-
-              {/* ── HUB ── */}
-              {!settingsPage && (
-                <>
-                  <div className="pro-section-header">
-                    <Settings size={22} />
-                    <div>
-                      <h2>Paramètres</h2>
-                      <p>Configuration de votre programme</p>
-                    </div>
-                  </div>
-                  <nav className="stg-hub">
-                    <button className="stg-hub-item" onClick={() => setSettingsPage('programme')}>
-                      <span className="stg-hub-icon stg-hub-icon--blue"><Award size={18} /></span>
-                      <span className="stg-hub-text">
-                        <span className="stg-hub-title">Programme de fidélité</span>
-                        <span className="stg-hub-desc">Points par scan, paliers, solde maximum</span>
-                      </span>
-                      <ChevronRight size={16} className="stg-hub-chevron" />
-                    </button>
-                    <button className="stg-hub-item" onClick={() => setSettingsPage('notifications')}>
-                      <span className="stg-hub-icon stg-hub-icon--purple"><Bell size={18} /></span>
-                      <span className="stg-hub-text">
-                        <span className="stg-hub-title">Notifications Push</span>
-                        <span className="stg-hub-desc">Texte promotionnel et alertes instantanées</span>
-                      </span>
-                      <ChevronRight size={16} className="stg-hub-chevron" />
-                    </button>
-                    <button className="stg-hub-item" onClick={() => setSettingsPage('expiration')}>
-                      <span className="stg-hub-icon stg-hub-icon--orange"><History size={18} /></span>
-                      <span className="stg-hub-text">
-                        <span className="stg-hub-title">Expiration des points</span>
-                        <span className="stg-hub-desc">Durée de validité des points de vos clients</span>
-                      </span>
-                      <ChevronRight size={16} className="stg-hub-chevron" />
-                    </button>
-                    <button className="stg-hub-item" onClick={() => setSettingsPage('geolocalisation')}>
-                      <span className="stg-hub-icon stg-hub-icon--green"><MapPin size={18} /></span>
-                      <span className="stg-hub-text">
-                        <span className="stg-hub-title">Géolocalisation</span>
-                        <span className="stg-hub-desc">Lieux de proximité et notifications locales</span>
-                      </span>
-                      <ChevronRight size={16} className="stg-hub-chevron" />
-                    </button>
-                    <button className="stg-hub-item" onClick={() => setShowHistory(true)}>
-                      <span className="stg-hub-icon stg-hub-icon--orange"><History size={18} /></span>
-                      <span className="stg-hub-text">
-                        <span className="stg-hub-title">Historique</span>
-                        <span className="stg-hub-desc">Points ajoutés, cadeaux utilisés, retraits</span>
-                      </span>
-                      <ChevronRight size={16} className="stg-hub-chevron" />
-                    </button>
-                    <button className="stg-hub-item" onClick={() => setSettingsPage('statistiques')}>
-                      <span className="stg-hub-icon stg-hub-icon--blue"><TrendingUp size={18} /></span>
-                      <span className="stg-hub-text">
-                        <span className="stg-hub-title">Statistiques</span>
-                        <span className="stg-hub-desc">Activité, clients, récompenses et tendances</span>
-                      </span>
-                      <ChevronRight size={16} className="stg-hub-chevron" />
-                    </button>
-                  </nav>
-                </>
-              )}
-
-              {/* ── SOUS-PAGE : Programme de fidélité ── */}
-              {settingsPage === 'programme' && (
-                <>
-                  <div className="stg-subpage-head">
-                    <button className="stg-back" onClick={() => setSettingsPage(null)}>
-                      <ChevronRight size={15} className="stg-back-arrow" /> Paramètres
-                    </button>
-                    <div className="stg-subpage-title-row">
-                      <span className="stg-hub-icon stg-hub-icon--blue"><Award size={18} /></span>
-                      <div>
-                        <h2>Programme de fidélité</h2>
-                        <p>Attribution des points et paliers de récompenses</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="cfg-wrap">
-                    <form onSubmit={handleSaveLoyaltyConfig} className="cfg-section">
-                      <div className="cfg-section-label"><Award size={13} /> Attribution des points</div>
-
-                      <div className="cfg-mode-toggle">
-                        <button type="button"
-                          className={`cfg-mode-btn ${loyaltyConfig.points_adding_mode === 'automatic' ? 'cfg-mode-btn--on' : ''}`}
-                          onClick={() => setLoyaltyConfig({...loyaltyConfig, points_adding_mode: 'automatic'})}>
-                          <span className="cfg-mode-title">Automatique</span>
-                          <span className="cfg-mode-desc">Points fixes à chaque scan</span>
-                        </button>
-                        <button type="button"
-                          className={`cfg-mode-btn ${loyaltyConfig.points_adding_mode === 'manual' ? 'cfg-mode-btn--on' : ''}`}
-                          onClick={() => setLoyaltyConfig({...loyaltyConfig, points_adding_mode: 'manual'})}>
-                          <span className="cfg-mode-title">Manuel</span>
-                          <span className="cfg-mode-desc">Saisie libre à chaque scan</span>
-                        </button>
-                      </div>
-
-                      {loyaltyConfig.points_adding_mode === 'automatic' && (
-                        <div className="cfg-field">
-                          <label className="cfg-label">Points par passage</label>
-                          <div className="cfg-input-row">
-                            <input className="cfg-input cfg-input-num" type="number" min="1"
-                              value={loyaltyConfig.points_per_purchase}
-                              onChange={e => setLoyaltyConfig({...loyaltyConfig, points_per_purchase: parseInt(e.target.value)})} />
-                            <span className="cfg-unit">pts / scan</span>
-                          </div>
-                        </div>
-                      )}
-
-                      {loyaltyConfig.points_adding_mode === 'manual' && (
-                        <div className="cfg-field">
-                          <label className="cfg-label">Raccourcis de points <span className="cfg-label-hint">— boutons rapides au scan</span></label>
-                          <div className="cfg-chips">
-                            {(loyaltyConfig.points_shortcuts?.length > 0 ? loyaltyConfig.points_shortcuts : []).map((v, i) => (
-                              <span key={i} className="cfg-chip">
-                                +{v}
-                                <button type="button" className="cfg-chip-x"
-                                  onClick={() => setLoyaltyConfig(prev => ({ ...prev, points_shortcuts: prev.points_shortcuts.filter((_, j) => j !== i) }))}>×</button>
-                              </span>
-                            ))}
-                            {!loyaltyConfig.points_shortcuts?.length && (
-                              <span className="cfg-chips-default">Par défaut : +5, +10, +20, +50</span>
-                            )}
-                          </div>
-                          <div className="cfg-input-row">
-                            <input className="cfg-input cfg-input-num" type="number" min="1" placeholder="25"
-                              value={shortcutInput} onChange={e => setShortcutInput(e.target.value)}
-                              onKeyDown={e => {
-                                if (e.key === 'Enter') {
-                                  e.preventDefault();
-                                  const v = parseInt(shortcutInput);
-                                  if (v > 0 && !(loyaltyConfig.points_shortcuts || []).includes(v)) {
-                                    setLoyaltyConfig(prev => ({ ...prev, points_shortcuts: [...(prev.points_shortcuts || []), v].sort((a,b) => a-b) }));
-                                    setShortcutInput('');
-                                  }
-                                }
-                              }} />
-                            <button type="button" className="cfg-btn-add"
-                              onClick={() => {
-                                const v = parseInt(shortcutInput);
-                                if (v > 0 && !(loyaltyConfig.points_shortcuts || []).includes(v)) {
-                                  setLoyaltyConfig(prev => ({ ...prev, points_shortcuts: [...(prev.points_shortcuts || []), v].sort((a,b) => a-b) }));
-                                  setShortcutInput('');
-                                }
-                              }}><Plus size={14} /> Ajouter</button>
-                            {loyaltyConfig.points_shortcuts?.length > 0 && (
-                              <button type="button" className="cfg-btn-ghost"
-                                onClick={() => setLoyaltyConfig(prev => ({ ...prev, points_shortcuts: [] }))}>Réinitialiser</button>
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="cfg-field cfg-field--sep">
-                        <div className="cfg-field-header">
-                          <label className="cfg-label">Solde maximum par client</label>
-                          {loyaltyConfig.max_points_balance
-                            ? <span className="cfg-pill cfg-pill--blue">{loyaltyConfig.max_points_balance} pts max</span>
-                            : <span className="cfg-pill cfg-pill--gray">Illimité</span>}
-                        </div>
-                        <div className="cfg-input-row">
-                          <input className="cfg-input cfg-input-num" type="number" min="1" placeholder="500"
-                            value={loyaltyConfig.max_points_balance ?? ''}
-                            onChange={e => setLoyaltyConfig({
-                              ...loyaltyConfig,
-                              max_points_balance: e.target.value === '' ? null : Math.max(1, parseInt(e.target.value) || 1)
-                            })} />
-                          <span className="cfg-unit">pts</span>
-                          {loyaltyConfig.max_points_balance != null && (
-                            <button type="button" className="cfg-btn-ghost"
-                              onClick={() => setLoyaltyConfig({ ...loyaltyConfig, max_points_balance: null })}>Désactiver</button>
-                          )}
-                        </div>
-                        <p className="cfg-hint">Laissez vide pour aucune limite.</p>
-                      </div>
-
-                      <button type="submit" className="cfg-save-btn" disabled={savingSettings}>
-                        {savingSettings ? <Loader2 size={14} className="pro-spin" /> : <Save size={14} />}
-                        Enregistrer
-                      </button>
-                    </form>
-
-                    <div className="cfg-section">
-                      <div className="cfg-section-label"><Gift size={13} /> Paliers de récompenses</div>
-                      {loyaltyConfig.reward_tiers.length === 0 ? (
-                        <div className="cfg-empty"><Gift size={20} /><span>Aucun palier défini</span></div>
-                      ) : (
-                        <div className="cfg-tiers">
-                          {loyaltyConfig.reward_tiers.map(tier => (
-                            <div key={tier.id} className="cfg-tier-row">
-                              <div className="cfg-tier-pts">{tier.points_required}<span>pts</span></div>
-                              <span className="cfg-tier-title">{tier.title}</span>
-                              <button className="cfg-tier-del" onClick={() => handleDeleteTier(tier.id)}><Trash2 size={15} /></button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      <div className="cfg-tier-add">
-                        <input className="cfg-input cfg-input-num" type="number" placeholder="pts"
-                          value={newTier.points_required} onChange={e => setNewTier({...newTier, points_required: e.target.value})} />
-                        <input className="cfg-input cfg-input-flex" type="text" placeholder="Nom de l'offre (ex : Café offert)"
-                          value={newTier.title} onChange={e => setNewTier({...newTier, title: e.target.value})} />
-                        <button className="cfg-btn-add" onClick={handleAddTier} disabled={savingSettings}>
-                          <Plus size={14} /> Ajouter
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {/* ── SOUS-PAGE : Notifications Push ── */}
-              {settingsPage === 'notifications' && (
-                <>
-                  <div className="stg-subpage-head">
-                    <button className="stg-back" onClick={() => setSettingsPage(null)}>
-                      <ChevronRight size={15} className="stg-back-arrow" /> Paramètres
-                    </button>
-                    <div className="stg-subpage-title-row">
-                      <span className="stg-hub-icon stg-hub-icon--purple"><Bell size={18} /></span>
-                      <div>
-                        <h2>Notifications Push</h2>
-                        <p>Texte affiché sur l'écran verrouillé lors d'une promo</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="stg-content">
-                    <div className="gn-field">
-                      <label className="gn-label">Texte de la promotion</label>
-                      <textarea className="gn-textarea" name="relevant_text"
-                        value={proxConfig.relevant_text} onChange={handleProxChange}
-                        placeholder="Ex : -20% sur tout le magasin ce week-end !"
-                        rows={3} maxLength={100} />
-                      <div className="gn-char-count">{(proxConfig.relevant_text || '').length}/100</div>
-                    </div>
-
-                    {proxConfig.relevant_text && (
-                      <div className="gn-preview">
-                        <div className="gn-preview-label">Aperçu</div>
-                        <div className="gn-preview-notif">
-                          <div className="gn-preview-icon"><Bell size={12} /></div>
-                          <div className="gn-preview-body">
-                            <div className="gn-preview-app">Carte de fidélité</div>
-                            <div className="gn-preview-text">{proxConfig.relevant_text}</div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    <p className="stg-platform-note">
-                      <strong>Apple Wallet</strong> — push direct sur l'écran verrouillé &nbsp;·&nbsp;
-                      <strong>Google Wallet</strong> — notification de mise à jour Android
-                    </p>
-
-                    <button type="button" className="gn-save-btn" onClick={handleSaveProx} disabled={proxSaving}>
-                      {proxSaving ? <Loader2 size={15} className="pro-spin" /> : <Save size={15} />}
-                      {proxSaving ? 'Enregistrement…' : 'Enregistrer'}
-                    </button>
-                  </div>
-                </>
-              )}
-
-              {/* ── SOUS-PAGE : Expiration des points ── */}
-              {settingsPage === 'expiration' && (
-                <>
-                  <div className="stg-subpage-head">
-                    <button className="stg-back" onClick={() => setSettingsPage(null)}>
-                      <ChevronRight size={15} className="stg-back-arrow" /> Paramètres
-                    </button>
-                    <div className="stg-subpage-title-row">
-                      <span className="stg-hub-icon stg-hub-icon--orange"><History size={18} /></span>
-                      <div>
-                        <h2>Expiration des points</h2>
-                        <p>Définissez la durée de validité des points de fidélité</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="stg-content">
-                    <div className="gn-card-header" style={{ marginBottom: 16 }}>
-                      <div className="gn-card-label"><History size={13} /> Durée de validité</div>
-                    </div>
-
-                    <label style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20, cursor: 'pointer' }}>
-                      <div
-                        onClick={() => setExpirationIndeterminate(v => !v)}
-                        style={{
-                          width: 44, height: 24, borderRadius: 12, position: 'relative', cursor: 'pointer',
-                          background: expirationIndeterminate ? 'var(--accent)' : 'var(--border-light)',
-                          transition: 'background 0.2s',
-                          flexShrink: 0
-                        }}
-                      >
-                        <div style={{
-                          position: 'absolute', top: 3, left: expirationIndeterminate ? 23 : 3,
-                          width: 18, height: 18, borderRadius: '50%', background: '#fff',
-                          transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
-                        }} />
-                      </div>
-                      <span style={{ fontSize: 14, fontWeight: 500 }}>Points sans expiration (indéterminé)</span>
-                    </label>
-
-                    {!expirationIndeterminate && (
-                      <div style={{ marginBottom: 24 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                          <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Durée de validité des points</span>
-                          <span style={{ fontSize: 20, fontWeight: 700, color: 'var(--accent)' }}>{expirationSlider} mois</span>
-                        </div>
-                        <input
-                          type="range"
-                          min={1}
-                          max={36}
-                          value={expirationSlider}
-                          onChange={e => setExpirationSlider(Number(e.target.value))}
-                          style={{ width: '100%', accentColor: 'var(--accent)', cursor: 'pointer' }}
-                        />
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--text-secondary)', marginTop: 4 }}>
-                          <span>1 mois</span>
-                          <span>18 mois</span>
-                          <span>36 mois</span>
-                        </div>
-                        <div className="gn-tip" style={{ marginTop: 16 }}>
-                          <History size={13} />
-                          <span>Les points expirés seront supprimés automatiquement chaque nuit. Les clients recevront une notification 7 jours avant l'expiration.</span>
-                        </div>
-                      </div>
-                    )}
-
-                    {expirationIndeterminate && (
-                      <div className="gn-tip" style={{ marginBottom: 20 }}>
-                        <History size={13} />
-                        <span>Les points de vos clients n'expirent jamais.</span>
-                      </div>
-                    )}
-
-                    <button type="button" className="gn-save-btn" onClick={handleSaveExpiration} disabled={expirationSaving}>
-                      {expirationSaving ? <Loader2 size={15} className="pro-spin" /> : <Save size={15} />}
-                      {expirationSaving ? 'Enregistrement…' : 'Enregistrer'}
-                    </button>
-                  </div>
-                </>
-              )}
-
-              {/* ── SOUS-PAGE : Statistiques ── */}
-              {settingsPage === 'statistiques' && (
-                <StatsPanel onBack={() => setSettingsPage(null)} />
-              )}
-
-              {/* ── SOUS-PAGE : Géolocalisation ── */}
-              {settingsPage === 'geolocalisation' && (
-                <>
-                  <div className="stg-subpage-head">
-                    <button className="stg-back" onClick={() => setSettingsPage(null)}>
-                      <ChevronRight size={15} className="stg-back-arrow" /> Paramètres
-                    </button>
-                    <div className="stg-subpage-title-row">
-                      <span className="stg-hub-icon stg-hub-icon--green"><MapPin size={18} /></span>
-                      <div>
-                        <h2>Géolocalisation</h2>
-                        <p>Notifications déclenchées à proximité de vos lieux</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="stg-content">
-                    <div className="gn-card-header" style={{ marginBottom: 12 }}>
-                      <div className="gn-card-label"><MapPin size={13} /> Lieux configurés</div>
-                      <div className="gn-card-header-right">
-                        <span className="gn-loc-count">{(proxConfig.locations || []).length}/10</span>
-                        <button type="button" className="gn-add-btn" onClick={addProxLocation}
-                          disabled={(proxConfig.locations || []).length >= 10}>
-                          <Plus size={13} /> Ajouter
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="gn-locs">
-                      {(proxConfig.locations || []).length === 0 ? (
-                        <div className="gn-empty">
-                          <Navigation size={28} />
-                          <div>Aucun lieu configuré</div>
-                          <div className="gn-empty-sub">Cliquez sur « Ajouter » pour configurer un lieu</div>
-                        </div>
-                      ) : (
-                        (proxConfig.locations || []).map((loc, index) => (
-                          <div key={index} className="gn-loc">
-                            <div className="gn-loc-top">
-                              <div className="gn-loc-badge">{index + 1}</div>
-                              <div className="gn-loc-coords">
-                                <div className="gn-loc-coord-field">
-                                  <label className="gn-label">Latitude</label>
-                                  <input className="gn-input" type="number" step="any"
-                                    value={loc.latitude ?? ''}
-                                    onChange={e => handleProxLocationChange(index, 'latitude', e.target.value)}
-                                    placeholder="48.8566" />
-                                </div>
-                                <div className="gn-loc-coord-field">
-                                  <label className="gn-label">Longitude</label>
-                                  <input className="gn-input" type="number" step="any"
-                                    value={loc.longitude ?? ''}
-                                    onChange={e => handleProxLocationChange(index, 'longitude', e.target.value)}
-                                    placeholder="2.3522" />
-                                </div>
-                              </div>
-                              <button className="gn-del-btn" onClick={() => removeProxLocation(index)} title="Supprimer">
-                                <X size={14} />
-                              </button>
-                            </div>
-                            <div className="gn-loc-text-field">
-                              <label className="gn-label">Message sur l'écran verrouillé</label>
-                              <input className="gn-input" type="text"
-                                value={loc.relevantText || ''}
-                                onChange={e => handleProxLocationChange(index, 'relevantText', e.target.value)}
-                                placeholder="Ex : Bienvenue ! N'oubliez pas votre carte." />
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-
-                    <div className="gn-tip">
-                      <Globe size={13} />
-                      <span>Coordonnées sur <strong>Google Maps</strong> — clic droit → « Plus d'infos sur cet endroit ».</span>
-                    </div>
-
-                    <button type="button" className="gn-save-btn" onClick={handleSaveProx} disabled={proxSaving}>
-                      {proxSaving ? <Loader2 size={15} className="pro-spin" /> : <Save size={15} />}
-                      {proxSaving ? 'Enregistrement…' : 'Enregistrer'}
-                    </button>
-                  </div>
-                </>
-              )}
-
-            </div>
-          )}
-        </main>
+          <div className="pd-scanner-view">
+            <div id="qr-scanner" ref={scannerRef} className="pd-scanner-reader"></div>
+            <div className="pd-scanner-frame"><i /><i /><i /><i /><span className="pd-scan-line" /></div>
+          </div>
+          <div className="pd-scanner-foot">Placez le QR code du pass dans le cadre</div>
+        </div>
       )}
 
       {showHistory && <HistoryModal onClose={() => setShowHistory(false)} />}
 
-      {/* Mobile NavBar */}
-      <nav className="pro-bottom-nav">
-        {tabs.map(t => (
-          <button key={t.id} className={`pro-bnav-item ${activeTab === t.id ? 'active' : ''}`} onClick={() => setActiveTab(t.id)}>
-            <t.icon size={20} />
-            <span>{t.label}</span>
-          </button>
-        ))}
-      </nav>
-
-      {/* Modal Client (Ajustement) */}
-      {selectedClientCard && (
-        <div className="modal-backdrop" style={{ zIndex: 1000 }} onClick={() => setSelectedClientCard(null)}>
-          <div className="pro-modal" onClick={e => e.stopPropagation()}>
-            <button className="pro-modal-close" onClick={() => setSelectedClientCard(null)}><X size={20} /></button>
-            <div className="pro-modal-avatar">{selectedClientCard.prenom?.[0] || '?'}</div>
-            <h3>{selectedClientCard.prenom} {selectedClientCard.nom}</h3>
-            <div className="pro-modal-info">
-              <div className="pro-modal-row"><Phone size={14} /><span>{selectedClientCard.telephone}</span></div>
-              <div className="pro-modal-row"><Award size={14} /><span>{selectedClientCard.points || 0} pts</span></div>
+      {/* ===== FICHE CLIENT ===== */}
+      {selectedClient && (
+        <div className="ui-overlay" onClick={() => setSelectedClientCard(null)}>
+          <div className="ui-modal" onClick={e => e.stopPropagation()}>
+            <div className="ui-modal-head">
+              <span className="ui-modal-head-text" />
+              <button className="icon-btn" onClick={() => setSelectedClientCard(null)} aria-label="Fermer"><X size={18} /></button>
             </div>
-            <div className="pro-modal-actions">
-              <button className="pro-action-btn" onClick={() => adjustPoints(selectedClientCard.id, -1)}><Minus size={16} /></button>
-              <button className="pro-action-btn pro-action-add" onClick={() => adjustPoints(selectedClientCard.id, 1)}><Plus size={16} /></button>
+            <div className="ui-modal-center pd-client-sheet">
+              <div className="ui-avatar lg">{selectedClient.prenom?.[0] || '?'}</div>
+              <h3 className="ui-modal-title">{selectedClient.prenom} {selectedClient.nom}</h3>
+              <div className="pd-client-points">
+                <button className="icon-btn" onClick={() => adjustPoints(selectedClient.id, -1)} aria-label="Retirer 1 point"><Minus size={18} /></button>
+                <div className="pd-client-points-value">
+                  <strong>{selectedClient.points || 0}</strong>
+                  <span>points</span>
+                </div>
+                <button className="icon-btn accent" onClick={() => adjustPoints(selectedClient.id, 1)} aria-label="Ajouter 1 point"><Plus size={18} /></button>
+              </div>
+              <div className="pd-client-info">
+                {selectedClient.telephone && <div><Phone size={14} /><span>{selectedClient.telephone}</span></div>}
+                {selectedClient.email && <div><Mail size={14} /><span>{selectedClient.email}</span></div>}
+                {!selectedClient.marketing_optin && <div><AlertCircle size={14} /><span>N'a pas consenti aux communications marketing</span></div>}
+              </div>
+            </div>
+            <div className="ui-modal-foot">
+              <button className="ui-btn danger" onClick={() => { const c = selectedClient; setSelectedClientCard(null); handleDeleteClient(c.id, `${c.prenom} ${c.nom}`) }}>
+                <Trash2 size={16} /> Supprimer
+              </button>
+              <button className="ui-btn" onClick={() => { const id = selectedClient.id; setSelectedClientCard(null); handleManualClientScan(id) }}>
+                <Coins size={16} /> Créditer
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Modal Confirmation Suppression Client */}
+      {/* ===== CONFIRMATION SUPPRESSION ===== */}
       {deleteModal && (
-        <div className="modal-backdrop" style={{ zIndex: 1100 }} onClick={() => setDeleteModal(null)}>
-          <div className="pro-modal delete-confirm-modal" onClick={e => e.stopPropagation()}>
-            <div className="delete-confirm-icon"><Trash2 size={28} /></div>
-            <h3>Supprimer le client</h3>
-            <p className="delete-confirm-text">
-              Êtes-vous sûr de vouloir supprimer <strong>{deleteModal.clientName}</strong> ?<br />
-              Sa carte de fidélité et son historique seront définitivement supprimés.
-            </p>
-            <div className="delete-confirm-actions">
-              <button className="delete-confirm-cancel" onClick={() => setDeleteModal(null)}>Annuler</button>
-              <button className="delete-confirm-ok" onClick={handleConfirmDelete}>Supprimer</button>
+        <div className="ui-overlay" style={{ zIndex: 1100 }} onClick={() => setDeleteModal(null)}>
+          <div className="ui-modal" onClick={e => e.stopPropagation()}>
+            <div className="ui-modal-center">
+              <span className="ui-icon lg danger"><Trash2 size={24} /></span>
+              <h3 className="ui-modal-title">Supprimer {deleteModal.clientName} ?</h3>
+              <p>Sa carte de fidélité et son historique seront définitivement supprimés.</p>
+            </div>
+            <div className="ui-modal-foot pd-foot-plain">
+              <button className="ui-btn secondary" onClick={() => setDeleteModal(null)}>Annuler</button>
+              <button className="ui-btn danger-solid" onClick={handleConfirmDelete}>Supprimer</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ===== MODAL : CRÉER UN CLIENT ===== */}
+      {/* ===== CRÉER UN CLIENT ===== */}
       {showCreateClientModal && (
-        <div className="modal-backdrop" style={{ zIndex: 1100 }} onClick={() => setShowCreateClientModal(false)}>
-          <div className="pro-modal" style={{ maxWidth: '480px', width: '100%', padding: '0', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
-            {/* Header */}
-            <div style={{ padding: '20px 24px 16px', borderBottom: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <UserPlus size={17} style={{ color: 'var(--accent)' }} />
-                </div>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', lineHeight: 1.2 }}>Créer un client</h3>
-                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.3 }}>Un email lui sera envoyé avec sa carte</p>
-                </div>
+        <div className="ui-overlay" style={{ zIndex: 1100 }} onClick={() => setShowCreateClientModal(false)}>
+          <form className="ui-modal" onClick={e => e.stopPropagation()} onSubmit={handleCreateClientSubmit}>
+            <div className="ui-modal-head">
+              <span className="ui-icon"><UserPlus size={19} /></span>
+              <div className="ui-modal-head-text">
+                <h3 className="ui-modal-title">Nouveau client</h3>
+                <p className="ui-modal-sub">Il recevra sa carte par email.</p>
               </div>
-              <button onClick={() => setShowCreateClientModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: '4px', borderRadius: '6px', display: 'flex' }}><X size={18} /></button>
+              <button type="button" className="icon-btn" onClick={() => setShowCreateClientModal(false)} aria-label="Fermer"><X size={18} /></button>
             </div>
-
-            {/* Body */}
-            <form onSubmit={handleCreateClientSubmit} style={{ padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                <div>
-                  <label style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '6px' }}>Prénom *</label>
-                  <input className="gn-input" type="text" required maxLength={50} value={createClientForm.prenom} onChange={e => setCreateClientForm(f => ({ ...f, prenom: e.target.value }))} placeholder="Jean" />
+            <div className="ui-modal-body">
+              <div className="ui-grid ui-grid-2">
+                <div className="ui-field">
+                  <label className="ui-label">Prénom</label>
+                  <input className="ui-input" type="text" required maxLength={50} value={createClientForm.prenom} onChange={e => setCreateClientForm(f => ({ ...f, prenom: e.target.value }))} placeholder="Jean" autoFocus />
                 </div>
-                <div>
-                  <label style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '6px' }}>Nom *</label>
-                  <input className="gn-input" type="text" required maxLength={50} value={createClientForm.nom} onChange={e => setCreateClientForm(f => ({ ...f, nom: e.target.value }))} placeholder="Dupont" />
+                <div className="ui-field">
+                  <label className="ui-label">Nom</label>
+                  <input className="ui-input" type="text" required maxLength={50} value={createClientForm.nom} onChange={e => setCreateClientForm(f => ({ ...f, nom: e.target.value }))} placeholder="Dupont" />
                 </div>
               </div>
-              <div>
-                <label style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '6px' }}>Téléphone *</label>
+              <div className="ui-field pd-field">
+                <label className="ui-label">Téléphone</label>
                 <input
-                  className="gn-input"
+                  className="ui-input"
                   type="tel"
                   required
                   minLength={10}
@@ -1383,272 +1426,220 @@ function ProDashboard() {
                   inputMode="numeric"
                   value={createClientForm.telephone}
                   onChange={e => setCreateClientForm(f => ({ ...f, telephone: e.target.value }))}
-                  placeholder="01 23 45 67 89"
+                  placeholder="06 12 34 56 78"
                 />
               </div>
-              <div>
-                <label style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '6px' }}>Email *</label>
-                <input className="gn-input" type="email" required maxLength={100} value={createClientForm.email} onChange={e => setCreateClientForm(f => ({ ...f, email: e.target.value }))} placeholder="jean.dupont@email.com" />
+              <div className="ui-field pd-field">
+                <label className="ui-label">Email</label>
+                <input className="ui-input" type="email" required maxLength={100} value={createClientForm.email} onChange={e => setCreateClientForm(f => ({ ...f, email: e.target.value }))} placeholder="jean.dupont@email.com" />
               </div>
-
-              <div>
-                <label style={{ fontSize: '11px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '8px' }}>Type de wallet *</label>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <div className="ui-field pd-field">
+                <label className="ui-label">Téléphone du client</label>
+                <div className="ui-choice-grid">
                   {[
-                    { key: 'apple', logo: appleLogo, label: 'Apple Wallet' },
-                    { key: 'google', logo: googleLogo, label: 'Google Wallet' },
-                  ].map(({ key, logo, label }) => (
+                    { key: 'apple', logo: appleLogo, label: 'iPhone', sub: 'Apple Wallet' },
+                    { key: 'google', logo: googleLogo, label: 'Android', sub: 'Google Wallet' },
+                  ].map(({ key, logo, label, sub }) => (
                     <button
                       key={key}
                       type="button"
+                      className={`ui-choice${createClientForm.type_wallet === key ? ' on' : ''}`}
                       onClick={() => setCreateClientForm(f => ({ ...f, type_wallet: key }))}
-                      style={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                        padding: '10px 14px', borderRadius: '10px', cursor: 'pointer', transition: 'all 0.15s',
-                        border: `2px solid ${createClientForm.type_wallet === key ? 'var(--accent)' : 'var(--border-light)'}`,
-                        background: createClientForm.type_wallet === key ? 'var(--accent-light)' : 'var(--bg-subtle)',
-                        fontWeight: '600', fontSize: '13px',
-                        color: createClientForm.type_wallet === key ? 'var(--accent)' : 'var(--text-secondary)',
-                      }}
                     >
-                      <img src={logo} alt={label} style={{ width: '18px', height: '18px', objectFit: 'contain', flexShrink: 0, filter: darkMode ? 'invert(1)' : 'none' }} />
-                      {label}
+                      <span className="ui-choice-title">
+                        <img src={logo} alt="" className={darkMode && key === 'apple' ? 'pd-invert' : ''} /> {label}
+                      </span>
+                      <span className="ui-choice-desc">{sub}</span>
                     </button>
                   ))}
                 </div>
               </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '4px' }}>
-                <button type="button" className="delete-confirm-cancel" onClick={() => setShowCreateClientModal(false)}>Annuler</button>
-                <button type="submit" className="delete-confirm-ok" disabled={createClientLoading} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-                  {createClientLoading ? <><Loader2 size={14} className="pro-spin" /> Création...</> : 'Créer et envoyer'}
-                </button>
-              </div>
-            </form>
-          </div>
+            </div>
+            <div className="ui-modal-foot">
+              <button type="button" className="ui-btn secondary" onClick={() => setShowCreateClientModal(false)}>Annuler</button>
+              <button type="submit" className="ui-btn" disabled={createClientLoading}>
+                {createClientLoading ? <><Loader2 size={15} className="pro-spin" /> Création…</> : <><Send size={15} /> Créer et envoyer</>}
+              </button>
+            </div>
+          </form>
         </div>
       )}
 
-      {/* ===== MODAL : RENVOYER UN LIEN ===== */}
+      {/* ===== RENVOYER UN LIEN ===== */}
       {showResendModal && (
-        <div className="modal-backdrop" style={{ zIndex: 1100 }} onClick={() => setShowResendModal(false)}>
-          <div className="pro-modal" style={{ maxWidth: '520px', width: '100%', maxHeight: '80vh', display: 'flex', flexDirection: 'column', padding: '0', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
-
-            {/* Header */}
-            <div style={{ padding: '20px 24px 16px', borderBottom: '1px solid var(--border-light)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(168,85,247,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Send size={16} style={{ color: '#a855f7' }} />
-                </div>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '700', color: 'var(--text-primary)', lineHeight: 1.2 }}>Renvoyer un lien</h3>
-                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.3 }}>Points et tampons conservés</p>
-                </div>
+        <div className="ui-overlay" style={{ zIndex: 1100 }} onClick={() => setShowResendModal(false)}>
+          <div className="ui-modal wide" onClick={e => e.stopPropagation()}>
+            <div className="ui-modal-head">
+              <span className="ui-icon gold"><Send size={18} /></span>
+              <div className="ui-modal-head-text">
+                <h3 className="ui-modal-title">Renvoyer un lien</h3>
+                <p className="ui-modal-sub">Les points de vos clients sont conservés.</p>
               </div>
-              <button onClick={() => setShowResendModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: '4px', borderRadius: '6px', display: 'flex' }}><X size={18} /></button>
+              <button className="icon-btn" onClick={() => setShowResendModal(false)} aria-label="Fermer"><X size={18} /></button>
             </div>
 
-            {/* Search */}
-            <div style={{ padding: '14px 24px 0', flexShrink: 0 }}>
-              <div className="pro-search-wrapper">
-                <input type="text" placeholder="Rechercher un client..." value={resendSearch} onChange={e => setResendSearch(e.target.value)} />
-                {resendSearch && <button className="pro-search-clear" onClick={() => setResendSearch('')}><X size={14} /></button>}
+            <div className="pd-resend-tools">
+              <div className="ui-search">
+                <Search size={17} />
+                <input className="ui-input" type="text" placeholder="Rechercher un client…" value={resendSearch} onChange={e => setResendSearch(e.target.value)} />
+                {resendSearch && <button className="icon-btn plain" onClick={() => setResendSearch('')} aria-label="Effacer"><X size={14} /></button>}
+              </div>
+              <div className="pd-resend-bar">
+                <label className="pd-check">
+                  <input type="checkbox" checked={resendAllSelected} onChange={() => {
+                    if (resendAllSelected) {
+                      setResendSelected(prev => { const s = new Set(prev); resendFiltered.forEach(c => s.delete(c.id)); return s })
+                    } else {
+                      setResendSelected(prev => { const s = new Set(prev); resendFiltered.forEach(c => s.add(c.id)); return s })
+                    }
+                  }} />
+                  Tout sélectionner <span>({resendFiltered.length} avec email)</span>
+                </label>
+                {resendSelected.size > 0 && (
+                  <span className="ui-badge accent">{resendSelected.size} sélectionné{resendSelected.size > 1 ? 's' : ''}</span>
+                )}
               </div>
             </div>
 
-            {(() => {
-              const filtered = clients.filter(c => {
-                if (!c.email) return false
-                const q = resendSearch.toLowerCase()
-                return !q || `${c.prenom} ${c.nom}`.toLowerCase().includes(q) || c.email.includes(q)
-              })
-              const allSelected = filtered.length > 0 && filtered.every(c => resendSelected.has(c.id))
-              return (
-                <>
-                  {/* Select all bar */}
-                  <div style={{ padding: '10px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
-                    <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', userSelect: 'none' }}>
-                      <input type="checkbox" checked={allSelected} onChange={() => {
-                        if (allSelected) {
-                          setResendSelected(prev => { const s = new Set(prev); filtered.forEach(c => s.delete(c.id)); return s })
-                        } else {
-                          setResendSelected(prev => { const s = new Set(prev); filtered.forEach(c => s.add(c.id)); return s })
-                        }
-                      }} />
-                      Tout sélectionner
-                      <span style={{ color: 'var(--text-tertiary)' }}>({filtered.length} avec email)</span>
-                    </label>
-                    {resendSelected.size > 0 && (
-                      <span style={{ fontSize: '12px', fontWeight: '700', color: '#a855f7', background: 'rgba(168,85,247,0.1)', padding: '2px 8px', borderRadius: '20px' }}>
-                        {resendSelected.size} sélectionné{resendSelected.size > 1 ? 's' : ''}
-                      </span>
-                    )}
+            <div className="ui-modal-body pd-resend-list">
+              {resendFiltered.length === 0 ? (
+                <div className="ui-empty">
+                  <span className="ui-icon lg neutral"><Mail size={22} /></span>
+                  <p>{resendSearch ? 'Aucun résultat' : 'Aucun client avec une adresse email'}</p>
+                </div>
+              ) : resendFiltered.map(client => (
+                <label key={client.id} className={`pd-pick${resendSelected.has(client.id) ? ' on' : ''}`}>
+                  <input type="checkbox" checked={resendSelected.has(client.id)} onChange={() => setResendSelected(prev => {
+                    const s = new Set(prev); s.has(client.id) ? s.delete(client.id) : s.add(client.id); return s
+                  })} />
+                  <div className="ui-avatar sm">{client.prenom?.[0]?.toUpperCase() || '?'}</div>
+                  <div className="ui-row-main">
+                    <span className="ui-row-title">{client.prenom} {client.nom}</span>
+                    <span className="ui-row-sub"><span><Mail size={11} /> {client.email}</span></span>
                   </div>
+                  <span className="ui-badge">{client.points || 0} pts</span>
+                </label>
+              ))}
+            </div>
 
-                  {/* Client list */}
-                  <div style={{ overflowY: 'auto', flex: 1, minHeight: 0, padding: '0 24px', display: 'flex', flexDirection: 'column', gap: '6px', paddingBottom: '4px' }}>
-                    {filtered.length === 0 ? (
-                      <div className="pro-empty" style={{ padding: '32px 0' }}>
-                        <Users size={32} />
-                        <p>{resendSearch ? 'Aucun résultat' : 'Aucun client avec une adresse email'}</p>
-                      </div>
-                    ) : filtered.map(client => (
-                      <label key={client.id} style={{
-                        display: 'flex', alignItems: 'center', gap: '12px', padding: '11px 14px',
-                        borderRadius: '10px', border: '1px solid',
-                        borderColor: resendSelected.has(client.id) ? '#a855f7' : 'var(--border-light)',
-                        background: resendSelected.has(client.id) ? 'rgba(168,85,247,0.06)' : 'var(--bg-surface)',
-                        cursor: 'pointer', transition: 'border-color 0.15s, background 0.15s',
-                      }}>
-                        <input type="checkbox" checked={resendSelected.has(client.id)} onChange={() => setResendSelected(prev => {
-                          const s = new Set(prev); s.has(client.id) ? s.delete(client.id) : s.add(client.id); return s
-                        })} style={{ accentColor: '#a855f7', width: '15px', height: '15px', flexShrink: 0 }} />
-                        <div className="pro-client-avatar" style={{ width: '34px', height: '34px', fontSize: '13px', flexShrink: 0 }}>
-                          {client.prenom?.[0]?.toUpperCase() || '?'}
-                        </div>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            {client.prenom} {client.nom}
-                          </div>
-                          <div style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                            <Mail size={10} /> {client.email}
-                          </div>
-                        </div>
-                        <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-secondary)', flexShrink: 0, background: 'var(--bg-elevated)', padding: '2px 8px', borderRadius: '20px' }}>
-                          {client.points || 0} pts
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </>
-              )
-            })()}
-
-            {/* Footer */}
-            <div style={{ padding: '14px 24px', borderTop: '1px solid var(--border-light)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', flexShrink: 0 }}>
-              <button className="delete-confirm-cancel" onClick={() => setShowResendModal(false)}>Annuler</button>
-              <button
-                className="delete-confirm-ok"
-                disabled={resendSelected.size === 0 || resendLoading}
-                onClick={handleResendLinks}
-                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-              >
+            <div className="ui-modal-foot">
+              <button className="ui-btn secondary" onClick={() => setShowResendModal(false)}>Annuler</button>
+              <button className="ui-btn" disabled={resendSelected.size === 0 || resendLoading} onClick={handleResendLinks}>
                 {resendLoading
-                  ? <><Loader2 size={14} className="pro-spin" /> Envoi...</>
-                  : `Envoyer à ${resendSelected.size || 0} client${resendSelected.size > 1 ? 's' : ''}`
-                }
+                  ? <><Loader2 size={15} className="pro-spin" /> Envoi…</>
+                  : `Envoyer à ${resendSelected.size || 0} client${resendSelected.size > 1 ? 's' : ''}`}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ===== ÉTAPE 1 : CHOIX DU CADEAU ===== */}
+      {/* ===== ÉTAPE 1 : RÉCOMPENSE ===== */}
       {scanStep === 'reward' && activeTransaction && (
-        <div className="scan-action-modal centered-modal">
-           <div className="pro-modal-box-premium floating-card">
-              <div className="modal-header-mini">
-                <Award size={24} className="icon-accent" />
-                <div className="client-info-mini">
-                   <h3>{activeTransaction.clientName}</h3>
-                   <span>{activeTransaction.currentPoints} pts disponibles</span>
+        <div className="ui-overlay" style={{ zIndex: 1200 }}>
+          <div className="ui-modal">
+            <div className="ui-modal-head">
+              <div className="ui-avatar">{activeTransaction.clientName?.[0] || '?'}</div>
+              <div className="ui-modal-head-text">
+                <h3 className="ui-modal-title">{activeTransaction.clientName}</h3>
+                <p className="ui-modal-sub"><strong className="pd-strong">{activeTransaction.currentPoints} pts</strong> disponibles</p>
+              </div>
+              <button className="icon-btn" onClick={() => { setScanStep(null); setActiveTransaction(null); }} aria-label="Annuler"><X size={18} /></button>
+            </div>
+
+            <div className="pd-steps" aria-hidden><span className="on" /><span /></div>
+
+            <div className="ui-modal-body">
+              <p className="pd-step-q">Utiliser une récompense aujourd'hui ?</p>
+              {activeTransaction.allRewards.length === 0 ? (
+                <div className="pd-tier-empty"><Gift size={20} /><span>Aucune récompense configurée.</span></div>
+              ) : (
+                <div className="pd-rewards">
+                  {activeTransaction.allRewards.map(reward => {
+                    const canAfford = activeTransaction.currentPoints >= reward.points_required;
+                    return (
+                      <button
+                        key={reward.id}
+                        className={`pd-reward${canAfford ? '' : ' locked'}`}
+                        disabled={!canAfford || isProcessing}
+                        onClick={() => handleRewardStepChoice(reward)}
+                      >
+                        <span className={`ui-icon sm ${canAfford ? 'gold' : 'neutral'}`}>
+                          {canAfford ? <Gift size={16} /> : <Lock size={15} />}
+                        </span>
+                        <span className="pd-reward-text">
+                          <strong>{reward.title}</strong>
+                          <span>{canAfford ? `${reward.points_required} pts` : `Encore ${reward.points_required - activeTransaction.currentPoints} pts`}</span>
+                        </span>
+                        {canAfford && <ChevronRight size={16} className="pd-reward-chev" />}
+                      </button>
+                    );
+                  })}
                 </div>
-                <button className="close-btn-mini" onClick={() => { setScanStep(null); setActiveTransaction(null); }}><X size={18} /></button>
-              </div>
+              )}
+            </div>
 
-              <div className="modal-content-scrollable">
-                 <p className="step-instruction">Choisir un cadeau à déduire maintenant :</p>
-                 <div className="rewards-selection-grid">
-                    {activeTransaction.allRewards.length === 0 ? (
-                       <div className="empty-rewards">Aucun cadeau configuré</div>
-                    ) : (
-                       activeTransaction.allRewards.map(reward => {
-                          const canAfford = activeTransaction.currentPoints >= reward.points_required;
-                          return (
-                            <button
-                              key={reward.id}
-                              className={`reward-tile ${!canAfford ? 'locked' : ''}`}
-                              disabled={!canAfford || isProcessing}
-                              onClick={() => handleRewardStepChoice(reward)}
-                            >
-                               <div className="reward-tile-icon">
-                                  {canAfford ? <Gift size={18} /> : <Lock size={16} />}
-                               </div>
-                               <div className="reward-tile-text">
-                                  <strong>{reward.title}</strong>
-                                  <span>{reward.points_required} pts</span>
-                               </div>
-                            </button>
-                          );
-                       })
-                    )}
-                 </div>
-              </div>
-
-              <div className="modal-footer-sticky">
-                 <button className="pro-btn-skip" onClick={() => handleRewardStepChoice(null)} disabled={isProcessing}>
-                    Pas de cadeau / Continuer <ChevronRight size={18} />
-                 </button>
-              </div>
-           </div>
+            <div className="ui-modal-foot">
+              <button className="ui-btn secondary" onClick={() => handleRewardStepChoice(null)} disabled={isProcessing}>
+                {isProcessing ? <Loader2 size={16} className="pro-spin" /> : <>Continuer sans récompense <ChevronRight size={16} /></>}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* ===== ÉTAPE 2 : ATTRIBUTION DES POINTS ===== */}
+      {/* ===== ÉTAPE 2 : POINTS ===== */}
       {scanStep === 'points' && activeTransaction && (
-        <div className="scan-action-modal centered-modal">
-           <div className="pro-modal-box-premium floating-card points-card">
-              <div className="modal-header-mini">
-                <PlusCircle size={24} className="icon-success" />
-                <div className="client-info-mini">
-                   <h3>{activeTransaction.clientName}</h3>
-                   <span>Nouveau solde : <strong>{activeTransaction.currentPoints} pts</strong></span>
+        <div className="ui-overlay" style={{ zIndex: 1200 }}>
+          <div className="ui-modal">
+            <div className="ui-modal-head">
+              <div className="ui-avatar">{activeTransaction.clientName?.[0] || '?'}</div>
+              <div className="ui-modal-head-text">
+                <h3 className="ui-modal-title">{activeTransaction.clientName}</h3>
+                <p className="ui-modal-sub">Solde actuel : <strong className="pd-strong">{activeTransaction.currentPoints} pts</strong></p>
+              </div>
+              <button className="icon-btn" onClick={() => { setScanStep(null); setActiveTransaction(null); }} aria-label="Annuler"><X size={18} /></button>
+            </div>
+
+            <div className="pd-steps" aria-hidden><span className="on" /><span className="on" /></div>
+
+            <div className="ui-modal-body">
+              {loyaltyConfig.points_adding_mode === 'automatic' ? (
+                <div className="pd-points-auto">
+                  <div className="pd-points-big">+{loyaltyConfig.points_per_purchase}</div>
+                  <p>points pour ce passage</p>
                 </div>
-                <button className="close-btn-mini" onClick={() => { setScanStep(null); setActiveTransaction(null); }}><X size={18} /></button>
-              </div>
+              ) : (
+                <div className="pd-points-manual">
+                  <p className="pd-step-q">Combien de points ajouter ?</p>
+                  <div className="pd-points-input">
+                    <input
+                      type="number"
+                      autoFocus
+                      placeholder="0"
+                      value={pointsToAdd}
+                      onChange={(e) => setPointsToAdd(e.target.value)}
+                    />
+                    <span>pts</span>
+                  </div>
+                  <div className="pd-shortcuts">
+                    {(loyaltyConfig.points_shortcuts?.length > 0 ? loyaltyConfig.points_shortcuts : [5, 10, 20, 50]).map(v => (
+                      <button key={v} className={Number(pointsToAdd) === v ? 'on' : ''} onClick={() => setPointsToAdd(v.toString())}>+{v}</button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
-              <div className="modal-content-centered">
-                 {loyaltyConfig.points_adding_mode === 'automatic' ? (
-                    <div className="auto-points-view">
-                       <div className="points-pills large">+{loyaltyConfig.points_per_purchase}</div>
-                       <p>Points automatiques pour le passage de ce jour.</p>
-                    </div>
-                 ) : (
-                    <div className="manual-points-view">
-                       <p className="step-instruction">Attribuer les points du jour :</p>
-                       <div className="points-input-container">
-                          <input
-                            type="number"
-                            autoFocus
-                            className="points-entry"
-                            placeholder="Montant..."
-                            value={pointsToAdd}
-                            onChange={(e) => setPointsToAdd(e.target.value)}
-                          />
-                          <span className="entry-unit">pts</span>
-                       </div>
-                       <div className="entry-shortcuts">
-                          {(loyaltyConfig.points_shortcuts?.length > 0 ? loyaltyConfig.points_shortcuts : [5, 10, 20, 50]).map(v => (
-                            <button key={v} onClick={() => setPointsToAdd(v.toString())}>+{v}</button>
-                          ))}
-                       </div>
-                    </div>
-                 )}
-              </div>
-
-              <div className="modal-footer-sticky">
-                 <button
-                   className="pro-btn-primary-premium full-width"
-                   onClick={handleFinalizePointsStep}
-                   disabled={isProcessing}
-                 >
-                    {isProcessing ? <Loader2 className="pro-spin" size={20} /> : 'Finaliser la transaction'}
-                 </button>
-              </div>
-           </div>
+            <div className="ui-modal-foot">
+              <button className="ui-btn lg" onClick={handleFinalizePointsStep} disabled={isProcessing}>
+                {isProcessing ? <Loader2 className="pro-spin" size={20} /> : <><Check size={18} strokeWidth={2.6} /> Valider{Number(pointsToAdd) > 0 ? ` +${Number(pointsToAdd)} pts` : ''}</>}
+              </button>
+            </div>
+          </div>
         </div>
       )}
-    </div>
+    </AppShell>
   )
 }
 

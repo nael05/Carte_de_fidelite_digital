@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../api'
 import { AlertCircle, Loader2, Eye, EyeOff, Building2, HelpCircle } from 'lucide-react'
+import AuthShell from '../components/AuthShell'
 import './Auth.css'
 
 function ProLogin() {
@@ -54,7 +55,7 @@ function ProLogin() {
 
       if (response.data.token) {
         login(response.data.token, 'pro', response.data.mustChangePassword)
-        
+
         if (response.data.companyId) {
           localStorage.setItem('companyId', response.data.companyId)
           localStorage.setItem('companyName', response.data.nom)
@@ -63,7 +64,7 @@ function ProLogin() {
         if (response.data.deviceId) {
           localStorage.setItem('deviceId', response.data.deviceId)
         }
-        
+
         if (rememberMe) {
           localStorage.setItem('rememberedEmail', email)
         } else {
@@ -71,10 +72,10 @@ function ProLogin() {
         }
 
         const mustChange = response.data.mustChangePassword === true
-        
+
         if (mustChange) {
-          navigate('/pro/secure-password', { 
-            state: { email, firstTime: true, fromLogin: true } 
+          navigate('/pro/secure-password', {
+            state: { email, firstTime: true, fromLogin: true }
           })
         } else {
           navigate('/pro/dashboard')
@@ -94,13 +95,10 @@ function ProLogin() {
   }
 
   return (
-    <div className="luxe-auth-container">
-      <div className="luxe-auth-bg"></div>
-      
-      <div className="luxe-auth-card">
+    <AuthShell variant="pro">
         <div className="luxe-auth-header">
-          <h1>Espace Pro</h1>
-          <p>Gérez votre programme de fidélité</p>
+          <h1>Bon retour.</h1>
+          <p>Connectez-vous à votre espace Pro.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="luxe-auth-form">
@@ -141,23 +139,19 @@ function ProLogin() {
             </button>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '-15px', marginBottom: '15px' }}>
-            <Link to="/pro/forgot-password" style={{ fontSize: '13px', color: '#6366F1', textDecoration: 'none', fontWeight: '500' }}>
-              Mot de passe oublié ?
-            </Link>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '-12px' }}>
-            <input
-              id="remember"
-              type="checkbox"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-              style={{ cursor: 'pointer', width: '16px', height: '16px', accentColor: '#007AFF' }}
-            />
-            <label htmlFor="remember" style={{ fontSize: '13px', color: '#94A3B8', cursor: 'pointer', marginBottom: 0 }}>
+          <div className="auth-row">
+            <label className="auth-check" htmlFor="remember">
+              <input
+                id="remember"
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+              />
               Se souvenir de moi
             </label>
+            <Link to="/pro/forgot-password" className="auth-link">
+              Mot de passe oublié ?
+            </Link>
           </div>
 
           {error && (
@@ -166,8 +160,8 @@ function ProLogin() {
             </div>
           )}
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="btn-luxe-submit"
             disabled={loading}
           >
@@ -180,11 +174,9 @@ function ProLogin() {
         </form>
 
         <div className="luxe-auth-footer">
-          <p>Pas encore de compte ? <Link to="/pro/signup" style={{ color: '#6366F1', textDecoration: 'none', fontWeight: 500 }}>Créer mon espace Pro</Link></p>
-          <p>© 2026 Fidelyz • Business Portal</p>
+          <p>Pas encore de compte ? <Link to="/pro/signup">Créer mon espace Pro</Link></p>
         </div>
-      </div>
-    </div>
+    </AuthShell>
   )
 }
 

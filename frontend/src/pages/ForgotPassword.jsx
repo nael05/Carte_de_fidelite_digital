@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import api from '../api'
 import { AlertCircle, Loader2, CheckCircle2, ArrowLeft } from 'lucide-react'
+import AuthShell from '../components/AuthShell'
 import './Auth.css'
 
 function ForgotPassword() {
@@ -37,35 +38,29 @@ function ForgotPassword() {
 
   if (success) {
     return (
-      <div className="luxe-auth-container">
-        <div className="luxe-auth-bg"></div>
-        <div className="luxe-auth-card">
+      <AuthShell variant="pro">
+        <div className="auth-state">
+          <div className="auth-state-icon"><CheckCircle2 size={30} /></div>
           <div className="luxe-auth-header">
-            <div className="luxe-icon-success" style={{ margin: '0 auto 24px', display: 'flex', justifyContent: 'center' }}>
-              <CheckCircle2 size={48} color="#10B981" />
-            </div>
             <h1>Vérifiez vos emails</h1>
             <p>Si un compte existe pour <strong>{email}</strong>, vous allez recevoir un lien de réinitialisation.</p>
           </div>
-          <Link to="/pro/login" className="btn-luxe-submit" style={{ textDecoration: 'none', textAlign: 'center', display: 'block' }}>
+          <Link to="/pro/login" className="btn-luxe-submit">
             Retour à la connexion
           </Link>
         </div>
-      </div>
+      </AuthShell>
     )
   }
 
   return (
-    <div className="luxe-auth-container">
-      <div className="luxe-auth-bg"></div>
-      
-      <div className="luxe-auth-card">
+    <AuthShell variant="pro">
+        <Link to="/pro/login" className="back-link">
+          <ArrowLeft size={15} /> Connexion
+        </Link>
         <div className="luxe-auth-header">
-          <Link to="/pro/login" className="back-link">
-            <ArrowLeft size={16} /> Retour
-          </Link>
-          <h1>Récupération</h1>
-          <p>Entrez votre email pour recevoir un lien de réinitialisation</p>
+          <h1>Mot de passe oublié ?</h1>
+          <p>Entrez votre email : nous vous envoyons un lien pour en choisir un nouveau.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="luxe-auth-form">
@@ -90,8 +85,8 @@ function ForgotPassword() {
             </div>
           )}
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="btn-luxe-submit"
             disabled={loading || !email}
           >
@@ -102,8 +97,7 @@ function ForgotPassword() {
             )}
           </button>
         </form>
-      </div>
-    </div>
+    </AuthShell>
   )
 }
 

@@ -1,34 +1,73 @@
-.acc-page { max-width: 960px; margin: 0 auto; padding: 24px 16px 64px; font-family: inherit; }
-.acc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
-.acc-header h1 { margin: 0; font-size: 1.6rem; }
-.acc-link { color: #6366f1; text-decoration: none; font-size: 0.9rem; }
-.acc-tabs { display: flex; gap: 4px; border-bottom: 1px solid #e2e4e9; margin-bottom: 20px; overflow-x: auto; }
-.acc-tabs button { background: none; border: none; padding: 10px 16px; cursor: pointer; font-size: 0.95rem; color: #6b7280; border-bottom: 2px solid transparent; white-space: nowrap; }
-.acc-tabs button.active { color: #6366f1; border-bottom-color: #6366f1; font-weight: 600; }
-.acc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+/* Mon compte (Pro) — s'appuie sur styles/app.css */
+.ui-seg.acc-tabs { margin-bottom: 22px; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.ui-seg.acc-tabs::-webkit-scrollbar { display: none; }
+.acc-body { animation: fadeSlideUp 0.4s var(--ease); }
+
+.acc-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
 .acc-wide { grid-column: 1 / -1; }
-.acc-card { background: #fff; border: 1px solid #e2e4e9; border-radius: 10px; padding: 20px; color: #111827; }
-.acc-card h3 { margin: 0 0 12px; font-size: 1.05rem; }
-.acc-card label { display: block; font-size: 0.85rem; margin: 12px 0 4px; color: #374151; }
-.acc-card input { width: 100%; box-sizing: border-box; padding: 9px 11px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.95rem; }
-.acc-muted { color: #6b7280; font-size: 0.85rem; line-height: 1.5; }
-.acc-btn { margin-top: 14px; padding: 9px 16px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; cursor: pointer; font-size: 0.9rem; }
-.acc-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-.acc-btn.primary { background: #6366f1; border-color: #6366f1; color: #fff; }
-.acc-btn.danger { background: #ef4444; border-color: #ef4444; color: #fff; }
-.acc-btn.small { margin: 0; padding: 5px 10px; font-size: 0.8rem; }
-.acc-inline { display: flex; gap: 8px; align-items: flex-start; }
-.acc-inline input { flex: 1; }
-.acc-inline .acc-btn { margin-top: 0; }
-.acc-dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 0; }
-.acc-dl dt { color: #6b7280; font-size: 0.9rem; }
-.acc-dl dd { margin: 0; font-weight: 600; }
-.acc-badge { padding: 2px 10px; border-radius: 999px; font-size: 0.8rem; background: #e5e7eb; }
-.acc-badge.active, .acc-badge.trialing { background: #d1fae5; color: #065f46; }
-.acc-badge.past_due, .acc-badge.unpaid { background: #fee2e2; color: #991b1b; }
-.acc-feedback { margin-top: 14px; padding: 10px 12px; border-radius: 6px; font-size: 0.88rem; }
-.acc-feedback.ok { background: #d1fae5; color: #065f46; }
-.acc-feedback.err { background: #fee2e2; color: #991b1b; }
-.acc-feedback.warn { background: #fef3c7; color: #92400e; }
-.acc-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-.acc-table th, .acc-table td { text-align: left; padding: 10px 8px; border-bottom: 1px solid #eef0f3; }
+.acc-strong { color: var(--text-primary); font-weight: 600; }
+.acc-gap { margin-top: 16px; }
+.acc-form { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; margin-top: 18px; }
+.acc-form .ui-field { width: 100%; }
+.acc-form .ui-field + .ui-field { margin-top: 0; }
+.acc-inline { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.acc-inline .ui-input { flex: 1; min-width: 140px; }
+.acc-divider { height: 1px; background: var(--border-light); margin: 24px 0; }
+
+.acc-feedback {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: fadeSlideUp 0.3s var(--ease);
+}
+.acc-feedback svg { flex-shrink: 0; margin-top: 1px; }
+.acc-feedback.ok { background: var(--success-bg); color: var(--success-text); }
+.acc-feedback.err { background: var(--error-bg); color: var(--error-text); }
+.acc-feedback.warn { background: var(--warning-bg); color: var(--warning-text); }
+
+/* Carte abonnement */
+.ui-card.acc-plan {
+  background:
+    radial-gradient(90% 80% at 100% 0%, var(--accent-light), transparent 60%),
+    radial-gradient(70% 60% at 0% 100%, var(--gold-light), transparent 60%),
+    var(--bg-surface);
+}
+.acc-plan-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.acc-plan-top .page-eyebrow { margin: 0; }
+.acc-plan-name { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; margin-top: 18px; color: var(--text-primary); }
+.acc-plan-price {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.acc-plan-price span { font-size: 16px; font-weight: 500; letter-spacing: -0.01em; color: var(--text-secondary); }
+.acc-plan-meta { margin-top: 8px; font-size: 14px; color: var(--text-secondary); }
+.acc-plan-meta strong { color: var(--text-primary); }
+
+/* Portail Stripe */
+.ui-card.acc-portal { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.acc-portal-text { flex: 1; min-width: 220px; }
+.acc-portal .acc-feedback { flex-basis: 100%; }
+.acc-table-head { padding: 20px 22px 6px; }
+.acc-td-right { text-align: right; }
+
+/* Suppression */
+.ui-card.acc-danger { max-width: 620px; border-color: var(--error-border); }
+.ui-card.acc-danger .ui-icon { margin-bottom: 16px; }
+
+@media (max-width: 900px) {
+  .acc-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) {
+  .ui-seg.acc-tabs button { padding: 8px 12px; font-size: 13.5px; }
+  .acc-plan-price { font-size: 40px; }
+  .acc-form .ui-btn { width: 100%; }
+}

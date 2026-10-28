@@ -4,14 +4,14 @@ import { Loader2, TrendingUp, Users, Building2, Zap } from 'lucide-react'
 import api from '../api'
 import './StatsPanel.css'
 
-const COLORS = ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#14b8a6', '#f97316', '#84cc16']
+const COLORS = ['#0a84ff', '#c9a57c', '#64d2ff', '#e3c9a4', '#ff9f0a', '#ff6961', '#bf8f5f', '#5ac8fa', '#ffb340', '#a1a1a6']
 
 const MONTH_LABELS = { '01': 'Jan', '02': 'Fév', '03': 'Mar', '04': 'Avr', '05': 'Mai', '06': 'Jui', '07': 'Jul', '08': 'Aoû', '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Déc' }
 
-function StatCard({ label, value, sub, color = '#6366f1' }) {
+function StatCard({ label, value, sub, color = '#0a84ff' }) {
   return (
-    <div className="st-card">
-      <div className="st-card-value" style={{ color }}>{value}</div>
+    <div className="st-card" style={{ '--c': color }}>
+      <div className="st-card-value">{value}</div>
       <div className="st-card-label">{label}</div>
       {sub && <div className="st-card-sub">{sub}</div>}
     </div>
@@ -70,17 +70,17 @@ export default function AdminStatsPanel() {
         <SectionTitle>Plateforme</SectionTitle>
         <div className="st-grid-2" style={{ padding: '0 0 4px' }}>
           <StatCard label="Entreprises actives" value={platform.activeEnterprises}
-            sub={`${platform.suspendedEnterprises} suspendue(s)`} color="#6366f1" />
-          <StatCard label="Clients total" value={clients.totalClients} color="#8b5cf6" />
-          <StatCard label="Transactions (30j)" value={activity.totalTransactions} color="#06b6d4" />
+            sub={`${platform.suspendedEnterprises} suspendue(s)`} color="#0a84ff" />
+          <StatCard label="Clients total" value={clients.totalClients} color="#c9a57c" />
+          <StatCard label="Transactions (30j)" value={activity.totalTransactions} color="#64d2ff" />
           <StatCard label="Taux de rachat" value={`${redemptionRate}%`}
-            sub="points utilisés / distribués" color="#10b981" />
+            sub="points utilisés / distribués" color="#e3c9a4" />
         </div>
 
         <SectionTitle>Ce mois-ci</SectionTitle>
         <div className="st-grid-2" style={{ padding: '0 0 4px' }}>
-          <StatCard label="Points distribués" value={activity.totalPointsDistributed} color="#f59e0b" />
-          <StatCard label="Points utilisés" value={activity.totalPointsRedeemed} color="#ef4444" />
+          <StatCard label="Points distribués" value={activity.totalPointsDistributed} color="#ff9f0a" />
+          <StatCard label="Points utilisés" value={activity.totalPointsRedeemed} color="#ff6961" />
         </div>
 
         {walletData.length > 0 && (
@@ -114,7 +114,7 @@ export default function AdminStatsPanel() {
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                   <YAxis tick={{ fontSize: 10 }} />
                   <Tooltip formatter={v => [v, 'Nouveaux clients']} />
-                  <Line type="monotone" dataKey="clients" stroke="#6366f1" strokeWidth={2} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="clients" stroke="#0a84ff" strokeWidth={2} dot={{ r: 3 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -130,7 +130,7 @@ export default function AdminStatsPanel() {
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                   <YAxis tick={{ fontSize: 10 }} />
                   <Tooltip formatter={v => [v, 'Entreprises']} />
-                  <Bar dataKey="entreprises" fill="#8b5cf6" radius={[3, 3, 0, 0]} />
+                  <Bar dataKey="entreprises" fill="#c9a57c" radius={[3, 3, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

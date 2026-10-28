@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
+import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
 import api from '../api'
+import AuthShell from '../components/AuthShell'
+import './Auth.css'
 
 export default function ProConfirmEmail() {
   const [params] = useSearchParams()
@@ -15,12 +18,17 @@ export default function ProConfirmEmail() {
   }, [params])
 
   return (
-    <div style={{ maxWidth: 480, margin: '80px auto', textAlign: 'center', padding: 16 }}>
-      <h2>Confirmation de l'email</h2>
-      <p style={{ color: state.loading ? '#6b7280' : state.ok ? '#065f46' : '#991b1b' }}>
-        {state.loading ? 'Vérification en cours…' : state.text}
-      </p>
-      <Link to="/pro/account">Retour à mon compte</Link>
-    </div>
+    <AuthShell variant="pro">
+      <div className="auth-state">
+        <div className={`auth-state-icon${!state.loading && !state.ok ? ' danger' : ''}`}>
+          {state.loading ? <Loader2 className="spin" size={30} /> : state.ok ? <CheckCircle2 size={30} /> : <XCircle size={30} />}
+        </div>
+        <div className="luxe-auth-header">
+          <h1>Confirmation de l'email</h1>
+        </div>
+        <p>{state.loading ? 'Vérification en cours…' : state.text}</p>
+        <Link to="/pro/account" className="btn-luxe-submit">Retour à mon compte</Link>
+      </div>
+    </AuthShell>
   )
 }

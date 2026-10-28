@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import api from '../api'
 import { CheckCircle2, XCircle, Loader2 } from 'lucide-react'
+import AuthShell from '../components/AuthShell'
 import './Auth.css'
 import './ProSignup.css'
 
@@ -27,18 +28,20 @@ export function ProCheckoutSuccess() {
   }, [sessionId])
 
   return (
-    <div className="luxe-auth-container">
-      <div className="luxe-auth-bg"></div>
-      <div className="luxe-auth-card signup-result">
+    <AuthShell variant="pro">
+      <div className="auth-state">
         {state === 'loading' && (
           <>
-            <Loader2 className="spin signup-icon" size={48} />
-            <p>Vérification de votre paiement…</p>
+            <div className="auth-state-icon"><Loader2 className="spin" size={30} /></div>
+            <div className="luxe-auth-header">
+              <h1>Un instant…</h1>
+              <p>Vérification de votre paiement.</p>
+            </div>
           </>
         )}
         {state === 'ok' && (
           <>
-            <CheckCircle2 className="signup-icon" size={56} color="#22c55e" />
+            <div className="auth-state-icon"><CheckCircle2 size={30} /></div>
             <div className="luxe-auth-header"><h1>Bienvenue sur Fidelyz</h1></div>
             <p>
               Votre inscription est confirmée. L’activation de votre espace prend quelques secondes :
@@ -49,7 +52,7 @@ export function ProCheckoutSuccess() {
         )}
         {state === 'error' && (
           <>
-            <XCircle className="signup-icon" size={56} color="#ef4444" />
+            <div className="auth-state-icon danger"><XCircle size={30} /></div>
             <div className="luxe-auth-header"><h1>Paiement non confirmé</h1></div>
             <p>
               Nous n’avons pas pu confirmer votre paiement. Si vous avez été débité, votre compte sera activé automatiquement ;
@@ -59,21 +62,20 @@ export function ProCheckoutSuccess() {
           </>
         )}
       </div>
-    </div>
+    </AuthShell>
   )
 }
 
 export function ProCheckoutCancel() {
   useDarkTheme()
   return (
-    <div className="luxe-auth-container">
-      <div className="luxe-auth-bg"></div>
-      <div className="luxe-auth-card signup-result">
-        <XCircle className="signup-icon" size={56} color="#f59e0b" />
+    <AuthShell variant="pro">
+      <div className="auth-state">
+        <div className="auth-state-icon warning"><XCircle size={30} /></div>
         <div className="luxe-auth-header"><h1>Inscription interrompue</h1></div>
         <p>Vous avez quitté la page de paiement : aucun montant n’a été prélevé. Vous pouvez reprendre quand vous voulez.</p>
         <Link to="/pro/signup" className="btn-luxe-submit">Reprendre l’inscription</Link>
       </div>
-    </div>
+    </AuthShell>
   )
 }

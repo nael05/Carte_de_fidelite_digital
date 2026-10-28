@@ -617,7 +617,7 @@ const PLANS = [
     tier: 'business',
     name: 'Business',
     tagline: 'Pour aller plus loin',
-    feats: ['Tout Pro, et :', 'Campagnes de notifications (8 par mois)', 'Statistiques avancées et export CSV', 'Liste des clients à relancer', 'Plusieurs établissements (bientôt)', 'Comptes équipe (bientôt)'],
+    feats: ['Tout Pro, et :', 'Campagnes de notifications (8 par mois)', 'Statistiques avancées et export CSV', 'Liste des clients à relancer', "Plusieurs établissements (jusqu'à 10)", 'Comptes équipe : caissiers et managers'],
     cta: 'Choisir Business',
   },
 ]

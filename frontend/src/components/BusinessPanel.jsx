@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AlertCircle, Download, Loader2, Lock, UserCheck } from 'lucide-react'
+import { AlertCircle, Download, Loader2, Lock, UserCheck, BarChart3, MapPin, Users } from 'lucide-react'
 import api from '../api'
+import EstablishmentsPanel from './EstablishmentsPanel'
+import TeamPanel from './TeamPanel'
 import './ProPanels.css'
 
 const errMsg = (e) => e.response?.data?.error || 'Une erreur est survenue'
@@ -9,7 +11,7 @@ const day = (d) => (d ? new Date(d).toLocaleDateString('fr-FR') : 'Jamais')
 const MONTHS = (m) => new Date(`${m}-01`).toLocaleDateString('fr-FR', { month: 'short', year: '2-digit' })
 
 // Espace de l'offre Business : indicateurs avancés, clients à relancer, exports CSV.
-export default function BusinessPanel({ tier }) {
+function Indicators({ tier }) {
   const navigate = useNavigate()
   const [insights, setInsights] = useState(null)
   const [relaunch, setRelaunch] = useState(null)
@@ -145,6 +147,35 @@ export default function BusinessPanel({ tier }) {
           </button>
         </div>
       </section>
+    </div>
+  )
+}
+
+const SECTIONS = [
+  { id: 'indicators', label: 'Indicateurs', icon: BarChart3 },
+  { id: 'establishments', label: 'Établissements', icon: MapPin },
+  { id: 'team', label: 'Équipe', icon: Users }
+]
+
+// Espace de l'offre Business : indicateurs, établissements, comptes équipe.
+export default function BusinessPanel({ tier, staffRole = null }) {
+  const [section, setSection] = useState('indicators')
+
+  // Établissements et équipe : réservés au propriétaire (un manager ne voit que les indicateurs).
+  if (tier !== 'business' || staffRole) return <Indicators tier={tier} />
+
+  return (
+    <div className="pp2-stack">
+      <div className="ui-seg pp2-subtabs" role="tablist">
+        {SECTIONS.map((s) => (
+          <button key={s.id} role="tab" aria-selected={section === s.id} className={section === s.id ? 'on' : ''} onClick={() => setSection(s.id)}>
+            <s.icon size={15} /> <span>{s.label}</span>
+          </button>
+        ))}
+      </div>
+      {section === 'indicators' && <Indicators tier={tier} />}
+      {section === 'establishments' && <EstablishmentsPanel />}
+      {section === 'team' && <TeamPanel />}
     </div>
   )
 }

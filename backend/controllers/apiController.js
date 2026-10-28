@@ -15,6 +15,8 @@ import { sendLoyaltyUpdateNotification } from '../utils/notificationService.js';
 import walletSyncService from '../utils/walletSyncService.js';
 import emailService from '../utils/emailService.js';
 import { withClientQuota, FreeLimitError, FREE_CLIENT_LIMIT, getAccess } from '../utils/plans.js';
+import { staffLogin } from './teamController.js';
+import { resolveEstablishmentId, findEstablishment } from '../utils/establishments.js';
 import crypto from 'crypto';
 const maskPhone = (phone) => {
   if (!phone) return null;
@@ -271,6 +273,7 @@ export const proLogin = async (req, res) => {
     );
 
     if (rows.length === 0) {
+      if (await staffLogin(req, res)) return;
       return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
     }
 
@@ -431,7 +434,10 @@ export const getProStatus = async (req, res) => {
       client_count: access.client_count,
       client_limit: access.limit,
       locked: access.locked,
-      blocked: access.blocked
+      blocked: access.blocked,
+      staff_role: req.user.staffRole || null,
+      staff_name: req.user.staffName || null,
+      establishment_id: req.user.establishmentId || null
     });
   } catch (err) {
     logger.error('Get pro status error', { error: err.message });
@@ -636,6 +642,7 @@ export const handleScan = async (req, res) => {
   const { clientId, points_to_add } = req.body;
   const bodyPoints = typeof points_to_add === 'number' ? points_to_add : Number(points_to_add);
   const empresaId = req.user.id;
+  const establishmentId = await resolveEstablishmentId(req);
 
   if (!clientId) {
     return res.status(400).json({ error: 'clientId requis' });
@@ -688,8 +695,8 @@ export const handleScan = async (req, res) => {
         [newPoints, clientId, empresaId]
       );
       await scanConn.query(
-        "INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, description) VALUES (?, ?, ?, 'add_points', ?, ?)",
-        [randomUUID(), clientId, empresaId, pointsToAdd, pointsToAdd + ' point(s) ajouté(s)']
+        "INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, description, establishment_id) VALUES (?, ?, ?, 'add_points', ?, ?, ?)",
+        [randomUUID(), clientId, empresaId, pointsToAdd, pointsToAdd + ' point(s) ajouté(s)', establishmentId]
       );
       await scanConn.commit();
     } catch (txErr) {
@@ -762,6 +769,7 @@ export const getScanInfo = async (req, res) => {
 export const finalizeFullTransaction = async (req, res) => {
   const { clientId, pointsToAdd, rewardTierId } = req.body;
   const empresaId = req.user.id;
+  const establishmentId = await resolveEstablishmentId(req);
 
   try {
     const [clientCheck] = await pool.query(
@@ -806,8 +814,8 @@ export const finalizeFullTransaction = async (req, res) => {
           totalChange -= tier.points_required;
           descriptionParts.push(`Cadeau "${tier.title}" utilisé (-${tier.points_required} pts)`);
           pendingWrites.push([
-            "INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, description) VALUES (?, ?, ?, 'redeem_reward', ?, ?)",
-            [randomUUID(), clientId, empresaId, -tier.points_required, `Utilisation : ${tier.title}`]
+            "INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, description, establishment_id) VALUES (?, ?, ?, 'redeem_reward', ?, ?, ?)",
+            [randomUUID(), clientId, empresaId, -tier.points_required, `Utilisation : ${tier.title}`, establishmentId]
           ]);
         } else {
           await ftConn.rollback();
@@ -825,8 +833,8 @@ export const finalizeFullTransaction = async (req, res) => {
         totalChange += ptsToAdd;
         descriptionParts.push(`${ptsToAdd} points ajoutés pour l'achat`);
         pendingWrites.push([
-          "INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, description) VALUES (?, ?, ?, 'add_points', ?, ?)",
-          [randomUUID(), clientId, empresaId, ptsToAdd, `${ptsToAdd} points ajoutés`]
+          "INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, description, establishment_id) VALUES (?, ?, ?, 'add_points', ?, ?, ?)",
+          [randomUUID(), clientId, empresaId, ptsToAdd, `${ptsToAdd} points ajoutés`, establishmentId]
         ]);
       }
 
@@ -867,6 +875,7 @@ export const adjustPoints = async (req, res) => {
   const { clientId } = req.params;
   const { adjustment } = req.body;
   const empresaId = req.user.id;
+  const establishmentId = await resolveEstablishmentId(req);
 
   if (isNaN(Number(adjustment))) {
     return res.status(400).json({ error: 'Ajustement numérique requis' });
@@ -897,11 +906,11 @@ export const adjustPoints = async (req, res) => {
         [newPoints, clientId, empresaId]
       );
       await adjConn.query(
-        "INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, description) VALUES (?, ?, ?, ?, ?, ?)",
+        "INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, description, establishment_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
         [randomUUID(), clientId, empresaId,
          adj >= 0 ? 'add_points' : 'remove_points',
          adj,
-         adj >= 0 ? `${adj} point(s) ajouté(s) manuellement` : `${Math.abs(adj)} point(s) retiré(s)`
+         adj >= 0 ? `${adj} point(s) ajouté(s) manuellement` : `${Math.abs(adj)} point(s) retiré(s)`, establishmentId
         ]
       );
       await adjConn.commit();
@@ -980,10 +989,11 @@ export const registerClientAndGeneratePass = async (req, res) => {
     }
 
     const clientId = randomUUID();
+    const clientEstablishment = await findEstablishment(entrepriseId, req.body.establishment_id);
     const marketingOptinValue = marketing_optin === true || marketing_optin === 'true' ? 1 : 0;
     await withClientQuota(entrepriseId, (conn) => conn.query(
-      'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?)',
-      [clientId, entrepriseId, nom, prenom, telephone, email, type_wallet, marketingOptinValue]
+      'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin, establishment_id) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?)',
+      [clientId, entrepriseId, nom, prenom, telephone, email, type_wallet, marketingOptinValue, clientEstablishment]
     ));
 
     logger.info(`✅ Client créé avec succès: ${clientId} (${prenom} ${nom}), marketing_optin=${marketingOptinValue}`);
@@ -1047,9 +1057,9 @@ export const createClientAndInvite = async (req, res) => {
     }
 
     const clientId = randomUUID();
-    await withClientQuota(entrepriseId, (conn) => conn.query(
-      'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin) VALUES (?, ?, ?, ?, ?, ?, 0, ?, 1)',
-      [clientId, entrepriseId, nom, prenom, telephone, email, type_wallet]
+    await withClientQuota(entrepriseId, async (conn) => conn.query(
+      'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin, establishment_id) VALUES (?, ?, ?, ?, ?, ?, 0, ?, 1, ?)',
+      [clientId, entrepriseId, nom, prenom, telephone, email, type_wallet, await resolveEstablishmentId(req)]
     ));
 
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
@@ -1517,6 +1527,7 @@ export const uploadLogo = async (req, res) => {
 export const redeemReward = async (req, res) => {
   const { clientId, rewardTierId } = req.body;
   const empresaId = req.user.id;
+  const establishmentId = await resolveEstablishmentId(req);
   try {
     const [tiers] = await pool.query('SELECT * FROM reward_tiers WHERE id = ? AND entreprise_id = ?', [rewardTierId, empresaId]);
     if (tiers.length === 0) return res.status(404).json({ error: 'Récompense invalide' });
@@ -1541,8 +1552,8 @@ export const redeemReward = async (req, res) => {
       newPoints = currentPoints - tier.points_required;
       await conn.query('UPDATE clients SET points = ? WHERE id = ? AND entreprise_id = ?', [newPoints, clientId, empresaId]);
       await conn.query(
-        "INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, description) VALUES (?, ?, ?, 'redeem_reward', ?, ?)",
-        [randomUUID(), clientId, empresaId, -tier.points_required, `Utilisation : ${tier.title}`]
+        "INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, description, establishment_id) VALUES (?, ?, ?, 'redeem_reward', ?, ?, ?)",
+        [randomUUID(), clientId, empresaId, -tier.points_required, `Utilisation : ${tier.title}`, establishmentId]
       );
       await conn.commit();
     } catch (txErr) {

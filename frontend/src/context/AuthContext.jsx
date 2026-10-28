@@ -85,6 +85,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('deviceId')
     localStorage.removeItem('companyId')
     localStorage.removeItem('companyName')
+    localStorage.removeItem('establishmentId')
   }
 
   const isAdmin = () => role === 'admin'

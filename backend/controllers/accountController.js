@@ -255,6 +255,9 @@ export const deleteAccount = async (req, res) => {
       [anonymizedData.nom, anonymizedData.raison_sociale, anonymizedData.email, anonymizedData.mot_de_passe, anonymizedData.siret_tva, anonymizedData.adresse, entrepriseId]
     );
 
+    await connection.query('DELETE FROM staff_accounts WHERE entreprise_id = ?', [entrepriseId]);
+    await connection.query('DELETE FROM establishments WHERE entreprise_id = ?', [entrepriseId]);
+
     // Soft-delete clients (anonymize)
     await connection.query(
       `UPDATE clients SET

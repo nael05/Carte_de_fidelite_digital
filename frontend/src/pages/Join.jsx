@@ -120,7 +120,8 @@ function Join() {
         email: formData.email,
         telephone: formData.phone,
         type_wallet: selectedWallet,
-        marketing_optin: marketingOptIn
+        marketing_optin: marketingOptIn,
+        establishment_id: new URLSearchParams(window.location.search).get('etab') || undefined
       })
 
       console.log('Registration answer raw:', registrationResponse.data);

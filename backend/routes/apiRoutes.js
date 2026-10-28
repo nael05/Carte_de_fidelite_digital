@@ -16,6 +16,7 @@ import * as proSignupController from '../controllers/proSignupController.js';
 import * as accountController from '../controllers/accountController.js';
 import * as subscriptionController from '../controllers/subscriptionController.js';
 import * as businessController from '../controllers/businessController.js';
+import * as teamController from '../controllers/teamController.js';
 import * as plansController from '../controllers/plansController.js';
 import * as billingController from '../controllers/billingController.js';
 import * as adminPricingController from '../controllers/adminPricingController.js';
@@ -150,6 +151,14 @@ router.post('/pro/clients/resend-links', verifyToken, isPro, requireActiveSubscr
 router.post('/pro/push/send', verifyToken, isPro, requireActiveSubscription, pushController.sendNotification);
 router.get('/pro/push/history', verifyToken, isPro, pushController.getHistory);
 // Offre Business
+router.get('/pro/establishments', verifyToken, isPro, requireActiveSubscription, requireTier('business'), teamController.listEstablishments);
+router.post('/pro/establishments', verifyToken, isPro, requireActiveSubscription, requireTier('business'), teamController.createEstablishment);
+router.put('/pro/establishments/:id', verifyToken, isPro, requireActiveSubscription, requireTier('business'), teamController.updateEstablishment);
+router.delete('/pro/establishments/:id', verifyToken, isPro, requireActiveSubscription, requireTier('business'), teamController.deleteEstablishment);
+router.get('/pro/staff', verifyToken, isPro, requireActiveSubscription, requireTier('business'), teamController.listStaff);
+router.post('/pro/staff', verifyToken, isPro, requireActiveSubscription, requireTier('business'), teamController.createStaff);
+router.put('/pro/staff/:id', verifyToken, isPro, requireActiveSubscription, requireTier('business'), teamController.updateStaff);
+router.delete('/pro/staff/:id', verifyToken, isPro, requireActiveSubscription, requireTier('business'), teamController.deleteStaff);
 const business = [verifyToken, isPro, requireActiveSubscription, requireTier('business')];
 router.get('/pro/business/relaunch', ...business, businessController.getRelaunchList);
 router.get('/pro/business/insights', ...business, businessController.getInsights);

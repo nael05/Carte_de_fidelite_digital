@@ -14,6 +14,7 @@ import HistoryModal from '../components/HistoryModal'
 import StatsPanel from '../components/StatsPanel'
 import CampaignsPanel from '../components/CampaignsPanel'
 import BusinessPanel from '../components/BusinessPanel'
+import EstablishmentPicker from '../components/EstablishmentPicker'
 import {
   LogOut, ScanLine, Users, Palette, X, Copy, Plus, Minus, AlertCircle, Loader2, Phone, Mail, Award, Check,
   Settings, Save, Trash2, Sun, Moon, Gift, Lock, ChevronRight, History, Globe, Bell, MapPin, Navigation,
@@ -594,7 +595,7 @@ function ProDashboard() {
     window.scrollTo({ top: 0 })
   }
 
-  const sections = [
+  const allSections = [
     {
       items: [
         { id: 'scanner', icon: ScanLine, label: 'Caisse' },
@@ -614,20 +615,30 @@ function ProDashboard() {
     }
   ]
 
-  const footItems = [
+  // Comptes équipe : un caissier n'a que la caisse et les clients ; aucun accès au compte du propriétaire.
+  const staffRole = user?.staff_role || null
+  const sections = staffRole === 'cashier'
+    ? allSections.map(s => ({ ...s, items: s.items.filter(i => ['scanner', 'clients'].includes(i.id)) })).filter(s => s.items.length)
+    : allSections
+
+  const allFootItems = [
     { id: 'account', icon: CircleUser, label: 'Mon compte', onClick: () => navigate('/pro/account') },
     { id: 'theme', icon: darkMode ? Sun : Moon, label: darkMode ? 'Thème clair' : 'Thème sombre', onClick: () => setDarkMode(!darkMode) },
     { id: 'logout', icon: LogOut, label: 'Déconnexion', onClick: handleLogout, danger: true },
   ]
+
+  const footItems = staffRole ? allFootItems.filter(i => i.id !== 'account') : allFootItems
 
   const topbarActions = (
     <>
       <button className="icon-btn" onClick={() => setDarkMode(!darkMode)} aria-label="Changer de thème">
         {darkMode ? <Sun size={17} /> : <Moon size={17} />}
       </button>
-      <button className="icon-btn" onClick={() => navigate('/pro/account')} aria-label="Mon compte">
-        <CircleUser size={18} />
-      </button>
+      {!staffRole && (
+        <button className="icon-btn" onClick={() => navigate('/pro/account')} aria-label="Mon compte">
+          <CircleUser size={18} />
+        </button>
+      )}
       <button className="icon-btn danger" onClick={handleLogout} aria-label="Déconnexion">
         <LogOut size={17} />
       </button>
@@ -650,6 +661,7 @@ function ProDashboard() {
         title={<>Bonjour, <span className="pd-company">{companyName}</span></>}
         sub="Scannez la carte d'un client pour lui ajouter des points ou lui offrir une récompense."
       />
+      <EstablishmentPicker user={user} />
 
       {lastScan && lastScan.success && !lastScan.nextTier && !lastScan.availableRewards && (
         <div className="pd-last">
@@ -1273,7 +1285,7 @@ function ProDashboard() {
         title="Espace Business"
         sub="Pilotez la fidélité de vos clients avec des indicateurs avancés."
       />
-      {user ? <BusinessPanel tier={user.tier} /> : <div className="ui-card"><div className="ui-loading">Chargement…</div></div>}
+      {user ? <BusinessPanel tier={user.tier} staffRole={staffRole} /> : <div className="ui-card"><div className="ui-loading">Chargement…</div></div>}
     </>
   )
 
@@ -1331,7 +1343,7 @@ function ProDashboard() {
         </div>
       )}
 
-      <PlanBanner refreshKey={clients.length} />
+      {!staffRole && <PlanBanner refreshKey={clients.length} />}
 
       {pageError && (
         <div className="ui-alert error">

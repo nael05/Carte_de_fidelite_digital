@@ -34,8 +34,8 @@ export const TIER_FEATURES = {
     `Campagnes de notifications (${plans.push_monthly_quota.business} par mois)`,
     'Statistiques avancées et export CSV',
     'Liste des clients à relancer',
-    'Plusieurs établissements (bientôt)',
-    'Comptes équipe (bientôt)'
+    "Plusieurs établissements (jusqu'à 10)",
+    'Comptes équipe : caissiers et managers'
   ]
 }
 

@@ -12,24 +12,29 @@ axiosInstance.interceptors.request.use((config) => {
   
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
-  }
+  }
+  const establishmentId = localStorage.getItem('establishmentId')
+  if (establishmentId) {
+    config.headers['X-Establishment-Id'] = establishmentId
+  }
   if (deviceId) {
     config.headers['X-Device-Id'] = deviceId
   }
   
   return config
-})
+})
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401) {
       const userRole = localStorage.getItem('userRole')
       
       localStorage.removeItem('token')
       localStorage.removeItem('userRole')
       localStorage.removeItem('deviceId')
       localStorage.removeItem('companyId')
-      localStorage.removeItem('companyName')
+      localStorage.removeItem('companyName')
+      localStorage.removeItem('establishmentId')
       const isLoginRequest = error.config.url.includes('login')
       
       if (!isLoginRequest) {

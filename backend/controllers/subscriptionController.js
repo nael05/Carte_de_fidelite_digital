@@ -1,7 +1,7 @@
 import pool from '../db.js';
 import { stripe, STRIPE_PUBLISHABLE_KEY } from '../utils/stripeConfig.js';
 import { getTierPriceId, getPromoTarget } from '../utils/pricing.js';
-import { getAccess } from '../utils/plans.js';
+import { getAccess, countClients } from '../utils/plans.js';
 import { validatePromo } from './proSignupController.js';
 import logger from '../utils/logger.js';
 import emailService from '../utils/emailService.js';
@@ -36,6 +36,7 @@ export const getSubscription = async (req, res) => {
       tier: access.tier,
       client_count: access.client_count,
       client_limit: access.limit,
+      total_clients: await countClients(entrepriseId),
       locked: access.locked,
       plan: entreprise.subscription_plan,
       current_period_end: entreprise.current_period_end,

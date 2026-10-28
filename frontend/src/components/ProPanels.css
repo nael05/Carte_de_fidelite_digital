@@ -34,3 +34,22 @@
   .pp2-near { padding: 14px 20px 18px; }
   .pp2-select { width: 100%; }
 }
+
+/* Établissements et équipe */
+.pp2-row { display: grid; grid-template-columns: 1.2fr 1.5fr auto; gap: 10px; align-items: center; }
+.pp2-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.pp2-est { display: flex; flex-direction: column; gap: 14px; }
+.pp2-est-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.pp2-est-head strong { display: block; font-size: 16px; letter-spacing: -0.02em; }
+.pp2-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0; }
+.pp2-stats div { padding: 10px 12px; border-radius: 12px; background: var(--bg-subtle); }
+.pp2-stats dt { font-size: 12px; color: var(--text-tertiary); }
+.pp2-stats dd { margin: 2px 0 0; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pp2-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; align-items: center; }
+.pp2-inline { display: flex; gap: 8px; }
+.pp2-inline .ui-input { flex: 1; min-width: 0; }
+.pp2-select-sm { min-height: 36px; padding: 6px 10px; font-size: 14px; width: auto; }
+.pp2-toggle { border: 0; cursor: pointer; font-family: inherit; }
+.pp2-subtabs { margin-bottom: 4px; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.pp2-subtabs::-webkit-scrollbar { display: none; }
+@media (max-width: 700px) { .pp2-row { grid-template-columns: 1fr; } }

@@ -146,7 +146,8 @@ export const exportClientsCsv = async (req, res) => {
               IF(c.marketing_optin = 1, c.telephone, NULL) AS telephone,
               IF(c.marketing_optin = 1, c.email, NULL) AS email,
               c.points, c.type_wallet, c.marketing_optin, c.created_at,
-              COUNT(th.id) AS visites, MAX(th.created_at) AS derniere_visite
+              COUNT(th.id) AS visites, MAX(th.created_at) AS derniere_visite,
+              (SELECT nom FROM establishments WHERE id = c.establishment_id) AS etablissement
        FROM clients c
        LEFT JOIN transaction_history th ON th.client_id = c.id AND th.type = 'add_points'
        WHERE c.entreprise_id = ?
@@ -156,8 +157,8 @@ export const exportClientsCsv = async (req, res) => {
       [req.user.id]
     );
     sendCsv(res, `clients-${today()}.csv`,
-      ['Prénom', 'Nom', 'Téléphone', 'E-mail', 'Points', 'Wallet', 'Accord marketing', 'Inscrit le', 'Visites', 'Dernière visite'],
-      rows.map((r) => [r.prenom, r.nom, r.telephone, r.email, r.points, r.type_wallet, r.marketing_optin ? 'oui' : 'non', r.created_at, r.visites, r.derniere_visite])
+      ['Prénom', 'Nom', 'Téléphone', 'E-mail', 'Points', 'Wallet', 'Accord marketing', 'Inscrit le', 'Visites', 'Dernière visite', 'Établissement'],
+      rows.map((r) => [r.prenom, r.nom, r.telephone, r.email, r.points, r.type_wallet, r.marketing_optin ? 'oui' : 'non', r.created_at, r.visites, r.derniere_visite, r.etablissement])
     );
   } catch (err) {
     logger.error('Export clients CSV error', { error: err.message });
@@ -169,7 +170,8 @@ export const exportClientsCsv = async (req, res) => {
 export const exportTransactionsCsv = async (req, res) => {
   try {
     const [rows] = await pool.query(
-      `SELECT th.created_at, c.prenom, c.nom, th.type, th.points_change, th.description
+      `SELECT th.created_at, c.prenom, c.nom, th.type, th.points_change, th.description,
+              (SELECT nom FROM establishments WHERE id = th.establishment_id) AS etablissement
        FROM transaction_history th
        LEFT JOIN clients c ON c.id = th.client_id
        WHERE th.entreprise_id = ?
@@ -178,8 +180,8 @@ export const exportTransactionsCsv = async (req, res) => {
       [req.user.id]
     );
     sendCsv(res, `transactions-${today()}.csv`,
-      ['Date', 'Prénom', 'Nom', 'Type', 'Variation de points', 'Description'],
-      rows.map((r) => [r.created_at, r.prenom, r.nom, r.type, r.points_change, r.description])
+      ['Date', 'Prénom', 'Nom', 'Type', 'Variation de points', 'Description', 'Établissement'],
+      rows.map((r) => [r.created_at, r.prenom, r.nom, r.type, r.points_change, r.description, r.etablissement])
     );
   } catch (err) {
     logger.error('Export transactions CSV error', { error: err.message });

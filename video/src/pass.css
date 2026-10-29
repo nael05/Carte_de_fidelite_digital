@@ -1,0 +1,269 @@
+﻿/* Pass Apple Wallet — repris de frontend/src/pages/Home.css (.c3 / .wp-*).
+   Seules différences : police Inter (rendu identique sur toutes les machines)
+   et ligne de scan pilotée par la timeline au lieu d'une animation CSS. */
+*, *::before, *::after { box-sizing: border-box; }
+.c3 {
+  --cw: var(--card-w, 300px);
+  position: relative;
+  width: var(--cw);
+  aspect-ratio: 1 / 1.58;
+  border-radius: calc(var(--cw) * 0.05);
+  font-size: calc(var(--cw) * 0.0533);
+  transform-style: preserve-3d;
+  font-family: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: 0;
+}
+.c3-edge {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform-style: preserve-3d;
+}
+.c3-edge span {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--edge);
+  transform: translateZ(calc((var(--z) - 3) * 0.7px));
+}
+.c3-face {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  padding: 1em 1.25em;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 40px 80px -30px rgba(0, 0, 0, 0.9);
+}
+.c3-front {
+  transform: translateZ(2.5px);
+  background: var(--pass-bg);
+  color: var(--ink);
+}
+.c3-back {
+  transform: rotateY(180deg) translateZ(2.5px);
+  background: #1c1c1e;
+  color: #fff;
+  padding: 1.4em 1.25em;
+  gap: 0;
+}
+.c3-foil {
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  z-index: 3;
+  background:
+    radial-gradient(30% 22% at calc(var(--mx, 0.35) * 100%) calc(var(--my, 0.3) * 100%), rgba(255, 255, 255, 0.22), transparent 70%),
+    linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.07) 48%, transparent 58%);
+  transform: translateX(calc((var(--mx, 0.5) - 0.5) * 40%));
+  mix-blend-mode: soft-light;
+}
+
+.wp-head {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 2.5em;
+  margin-bottom: 0.75em;
+  flex-shrink: 0;
+}
+.wp-logo { display: flex; align-items: center; gap: 0.5em; min-width: 0; }
+.wp-mark {
+  width: 2em;
+  height: 2em;
+  flex-shrink: 0;
+  border-radius: 0.45em;
+  display: grid;
+  place-items: center;
+  background: var(--mark-bg);
+  color: var(--mark-ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 1em;
+}
+.wp-org {
+  font-weight: 700;
+  font-size: 1.05em;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wp-hfield { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
+.wp-hval {
+  font-size: 1.5em;
+  font-weight: 400;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.wp-label {
+  display: block;
+  font-size: 0.625em;
+  font-weight: 700;
+  color: var(--label);
+  margin-bottom: 0.3em;
+  white-space: nowrap;
+}
+.wp-strip {
+  position: relative;
+  margin: 0 -1.25em;
+  height: 7.5em;
+  flex-shrink: 0;
+  background: #2a1a0f;
+  overflow: hidden;
+}
+.wp-photo { display: block; width: 100%; height: 100%; }
+.wp-fields {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 1.25em 0 0.6em;
+  flex-shrink: 0;
+}
+.wp-col { display: flex; flex-direction: column; min-width: 0; }
+.wp-right { align-items: flex-end; text-align: right; max-width: 48%; }
+.wp-right .wp-label { white-space: normal; line-height: 1.25; }
+.wp-val-lg { font-size: 1.75em; font-weight: 300; line-height: 1; }
+.wp-val { font-size: 0.8125em; font-weight: 500; line-height: 1.2; }
+.wp-barcode {
+  margin-top: auto;
+  align-self: center;
+  width: 10em;
+  padding: 0.625em;
+  border-radius: 0.5em;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.375em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.wp-qr {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  color: #000;
+}
+.wp-qr svg { display: block; width: 100%; height: 100%; }
+.wp-id {
+  font-size: 0.625em;
+  font-family: "SF Mono", Consolas, "Courier New", monospace;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #333;
+}
+.c3-scan {
+  position: absolute;
+  left: -4%; right: -4%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #2997ff 20%, #2997ff 80%, transparent);
+  box-shadow: 0 0 14px 2px rgba(41, 151, 255, 0.7);
+}
+.wp-back-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+  padding: 0.7em 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.8em;
+}
+.wp-back-label { font-size: 0.8em; color: #8e8e93; }
+.wp-toggle {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.wp-toggle i {
+  position: relative;
+  width: 2.6em;
+  height: 1.55em;
+  border-radius: 1em;
+  background: #0a84ff;
+  flex-shrink: 0;
+}
+.wp-toggle i::after {
+  content: '';
+  position: absolute;
+  top: 0.12em; right: 0.12em;
+  width: 1.31em; height: 1.31em;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.c3-graphite {
+  --pass-bg: #1c1c1e;
+  --ink: #ffffff;
+  --label: #e3c9a4;
+  --edge: #0e0e10;
+  --mark-bg: linear-gradient(135deg, #f6e4c8, #b8926a);
+  --mark-ink: #1d1d1f;
+}
+.c3-azur {
+  --pass-bg: #0b3a8f;
+  --ink: #ffffff;
+  --label: #9fd0ff;
+  --edge: #072a66;
+  --mark-bg: #ffffff;
+  --mark-ink: #0b3a8f;
+}
+.c3-champagne {
+  --pass-bg: #dcc39d;
+  --ink: #2b1f12;
+  --label: #7a5530;
+  --edge: #b8986c;
+  --mark-bg: #2b1f12;
+  --mark-ink: #f1dcc0;
+}
+.c3-ivory {
+  --pass-bg: #f5f5f7;
+  --ink: #1d1d1f;
+  --label: #0071e3;
+  --edge: #c7c7cc;
+  --mark-bg: #1d1d1f;
+  --mark-ink: #ffffff;
+}
+
+/* Notification iOS â€” reprise de .notif (Home.css) */
+.notif {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  padding: 11px 13px;
+  border-radius: 20px;
+  background: rgba(44, 44, 48, 0.78);
+  backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.7);
+  text-align: left;
+  font-family: "Inter Variable", "Inter", sans-serif;
+  color: #f5f5f7;
+}
+.notif-app {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  padding: 0 6px;
+  flex-shrink: 0;
+}
+.notif-app span { height: 5px; border-radius: 2px; }
+.notif-app span:nth-child(1) { background: #2997ff; }
+.notif-app span:nth-child(2) { background: #e3c9a4; }
+.notif-app span:nth-child(3) { background: #f5f5f7; }
+.notif-txt { flex: 1; min-width: 0; }
+.notif-top { display: flex; justify-content: space-between; gap: 8px; }
+.notif-top strong { font-size: 14px; font-weight: 600; }
+.notif-top span { font-size: 12px; color: rgba(245, 245, 247, 0.5); white-space: nowrap; }
+.notif p { margin: 2px 0 0; font-size: 14px; line-height: 1.3; color: rgba(245, 245, 247, 0.85); }
+

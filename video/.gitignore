@@ -1,0 +1,5 @@
+node_modules/
+out/
+# Audio généré par scripts/music.mjs et scripts/voice.mjs (régénérable)
+public/*.wav
+public/voix/

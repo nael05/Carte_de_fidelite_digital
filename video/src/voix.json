@@ -1,0 +1,134 @@
+[
+  {
+    "id": "v01",
+    "at": 1.85,
+    "text": "Un scan.",
+    "dur": 1.87
+  },
+  {
+    "id": "v02",
+    "at": 3.85,
+    "text": "Un point.",
+    "dur": 1.87
+  },
+  {
+    "id": "v03",
+    "at": 6.2,
+    "text": "Des cartes en papier qui s'abîment.",
+    "dur": 2.81
+  },
+  {
+    "id": "v04",
+    "at": 8.95,
+    "text": "Des tampons oubliés.",
+    "dur": 2.23
+  },
+  {
+    "id": "v05",
+    "at": 11.4,
+    "text": "Des clients qui ne reviennent pas.",
+    "dur": 2.66
+  },
+  {
+    "id": "v06",
+    "at": 16.6,
+    "text": "Fidelyz.",
+    "dur": 1.87
+  },
+  {
+    "id": "v07",
+    "at": 19.4,
+    "text": "Directement dans le Wallet de vos clients : Apple Wallet, comme Google Wallet.",
+    "dur": 5.45
+  },
+  {
+    "id": "v08",
+    "at": 25.5,
+    "text": "Votre logo.",
+    "dur": 1.94
+  },
+  {
+    "id": "v09",
+    "at": 27.3,
+    "text": "Vos couleurs.",
+    "dur": 1.92
+  },
+  {
+    "id": "v10",
+    "at": 31.1,
+    "text": "Votre photo.",
+    "dur": 1.97
+  },
+  {
+    "id": "v11",
+    "at": 35.6,
+    "text": "En quelques gestes, la carte prend votre identité.",
+    "dur": 3.98
+  },
+  {
+    "id": "v12",
+    "at": 40.9,
+    "text": "Le client s'inscrit en un instant.",
+    "dur": 2.88
+  },
+  {
+    "id": "v13",
+    "at": 44.6,
+    "text": "Il ajoute sa carte, sans rien télécharger.",
+    "dur": 3.53
+  },
+  {
+    "id": "v14",
+    "at": 48.8,
+    "text": "Et la retrouve sur son écran verrouillé.",
+    "dur": 3.05
+  },
+  {
+    "id": "v15",
+    "at": 55,
+    "text": "Vous encaissez, vous scannez.",
+    "dur": 2.76
+  },
+  {
+    "id": "v16",
+    "at": 59.2,
+    "text": "Vous suivez vos clients et vos chiffres.",
+    "dur": 2.86
+  },
+  {
+    "id": "v17",
+    "at": 66.3,
+    "text": "Et au bon moment, une notification part, près de votre boutique.",
+    "dur": 4.85
+  },
+  {
+    "id": "v18",
+    "at": 71.6,
+    "text": "Les données de vos clients restent maîtrisées.",
+    "dur": 3.19
+  },
+  {
+    "id": "v19",
+    "at": 75.6,
+    "text": "Rien de compliqué.",
+    "dur": 2.18
+  },
+  {
+    "id": "v20",
+    "at": 83.1,
+    "text": "Votre fidélité, sans tampon.",
+    "dur": 3.07
+  },
+  {
+    "id": "v21",
+    "at": 86,
+    "text": "Commencez aujourd'hui.",
+    "dur": 2.18
+  },
+  {
+    "id": "v22",
+    "at": 88.3,
+    "text": "Fidelyz.",
+    "dur": 1.87
+  }
+]

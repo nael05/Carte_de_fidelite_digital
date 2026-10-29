@@ -592,7 +592,7 @@ const FAQS = [
   },
   {
     q: "Mes données clients sont-elles sécurisées ?",
-    a: "Hébergement en France, chiffrement des données, authentification sécurisée. Conformité RGPD complète avec export et suppression à la demande.",
+    a: "Chiffrement des données, authentification sécurisée. Conformité RGPD complète avec export et suppression à la demande.",
   },
 ]
 
@@ -801,7 +801,7 @@ export default function Home() {
             <span className="tile-k">Confidentialité</span>
             <h3>Vos données restent les vôtres.</h3>
             <div className="chips">
-              <span>RGPD</span><span>Hébergé en France</span><span>Chiffré</span>
+              <span>RGPD</span><span>Chiffré</span><span>Export et suppression</span>
             </div>
           </article>
         </div>
@@ -901,7 +901,7 @@ export default function Home() {
         <p className="pricing-trust rv">
           <span><Lock size={13} /> Paiement sécurisé par Stripe</span>
           <span><Repeat size={13} /> Résiliable à tout moment</span>
-          <span><ShieldCheck size={13} /> Données hébergées en France</span>
+          <span><ShieldCheck size={13} /> Conforme au RGPD</span>
         </p>
       </section>
 

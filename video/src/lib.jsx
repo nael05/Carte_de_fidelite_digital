@@ -1,5 +1,10 @@
 import { AbsoluteFill, Easing, Img, continueRender, delayRender, interpolate, staticFile, useCurrentFrame } from 'remotion'
 import '@fontsource-variable/inter'
+import VOIX_MAIN from './voix.json'
+import VOIX_TIKTOK from './voix-tiktok.json'
+
+// Répliques des deux versions (identifiants distincts : vNN en 16:9, tNN en vertical)
+const VOIX = [...VOIX_MAIN, ...VOIX_TIKTOK]
 
 // Inter embarquée dans le bundle (aucun appel réseau pendant le rendu)
 export const fontFamily = '"Inter Variable", "Inter", sans-serif'
@@ -43,6 +48,107 @@ export const camera = (cx, cy, s, move = 1) => ({
   transformOrigin: `${cx}px ${cy}px`,
   transform: `translate(${(960 - cx) * move}px, ${(540 - cy) * move}px) scale(${s})`,
 })
+
+// ─── Temps absolu, en secondes (toutes les scènes sont posées sur la même timeline) ───
+export const useT = () => useCurrentFrame() / FPS
+export const ts = (t, a, b, from = 0, to = 1, easing = outE) =>
+  interpolate(t, [a, b], [from, to], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing })
+export const lin = x => x
+export const clamp01 = x => Math.max(0, Math.min(1, x))
+// Ressort amorti (dépassement puis retour) pour les arrivées « physiques »
+export const springy = (t, a, freq = 2, damp = 8) =>
+  t <= a ? 0 : 1 - Math.exp(-damp * (t - a)) * Math.cos(2 * Math.PI * freq * (t - a))
+
+// Instant (s) où la voix prononce le n-ième mot d'une réplique, d'après src/voix.json
+export const W = (id, n = 0) => {
+  const c = VOIX.find(v => v.id === id)
+  return c.at + Math.max(0, c.words[n].t)
+}
+export const cueEnd = id => {
+  const c = VOIX.find(v => v.id === id)
+  return c.at + c.dur
+}
+
+// Mots affichés : le texte écrit (`text`), découpé comme les mots prononcés
+export const getCue = id => VOIX.find(v => v.id === id)
+export const displayTokens = cue => {
+  const raw = cue.text.split(/\s+/).filter(Boolean)
+  const tokens = []
+  for (const r of raw) {
+    if (/^[:;!?…]+$/.test(r) && tokens.length) tokens[tokens.length - 1] += ' ' + r
+    else tokens.push(r)
+  }
+  return tokens.length === cue.words.length ? tokens : cue.words.map(w => w.w)
+}
+
+/* Typographie cinétique calée sur la voix : chaque mot monte de derrière un cache
+   à l'instant où il est prononcé. `accent` : { indice: couleur }. `only` : [premier, dernier] mot affiché. */
+export const Words = ({ id, size = 76, weight = 650, color = C.text, accent = {}, out, only, lead = 0.08, style, lineHeight = 1.06, maxWidth }) => {
+  const t = useT()
+  const cue = VOIX.find(v => v.id === id)
+  const tokens = displayTokens(cue)
+  const [a, b] = only ?? [0, tokens.length - 1]
+  const o = out == null ? 0 : ts(t, out, out + 0.3, 0, 1, inE)
+  return (
+    <div
+      style={{
+        fontFamily,
+        fontSize: size,
+        fontWeight: weight,
+        letterSpacing: '-0.04em',
+        lineHeight,
+        color,
+        maxWidth,
+        opacity: 1 - o,
+        transform: `translateY(${-o * 40}px)`,
+        filter: o > 0 ? `blur(${o * 10}px)` : undefined,
+        ...style,
+      }}
+    >
+      {tokens.slice(a, b + 1).map((tok, k) => {
+        const i = a + k
+        const at = cue.at + Math.max(0, cue.words[i].t) - lead
+        const p = ts(t, at, at + 0.32, 0, 1, outE)
+        return (
+          <span key={i} style={{ display: 'inline-block', overflow: 'hidden', verticalAlign: 'top', paddingBottom: '0.08em', marginBottom: '-0.08em' }}>
+            <span
+              style={{
+                display: 'inline-block',
+                transform: `translateY(${(1 - p) * 105}%) rotate(${(1 - p) * 4}deg)`,
+                transformOrigin: 'left bottom',
+                color: accent[i] ?? color,
+                whiteSpace: 'pre',
+              }}
+            >
+              {tok}
+              {k < b - a ? ' ' : ''}
+            </span>
+          </span>
+        )
+      })}
+    </div>
+  )
+}
+
+/* Flou de mouvement directionnel (filtre SVG) : <MBlur id x y /> puis style filter: url(#id) */
+export const MBlur = ({ id, x = 0, y = 0 }) => (
+  <svg width="0" height="0" style={{ position: 'absolute' }}>
+    <filter id={id} x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation={`${Math.max(0, x)} ${Math.max(0, y)}`} />
+    </filter>
+  </svg>
+)
+
+/* Fond : noir profond, deux lueurs (bleu, champagne) qui dérivent lentement */
+export const Aurora = ({ t, intensity = 1, hue = 0 }) => {
+  const a = t * 0.35 + hue
+  return (
+    <AbsoluteFill style={{ background: '#000', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', left: 960 + Math.cos(a) * 380 - 700, top: 420 + Math.sin(a * 1.3) * 160 - 700, width: 1400, height: 1400, borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(41,151,255,0.22), transparent)', opacity: intensity }} />
+      <div style={{ position: 'absolute', left: 960 - Math.cos(a * 0.8) * 420 - 600, top: 660 - Math.sin(a) * 140 - 600, width: 1200, height: 1200, borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(227,201,164,0.16), transparent)', opacity: intensity }} />
+    </AbsoluteFill>
+  )
+}
 
 /* Texte qui entre par un flou qui se règle, sort par un flou */
 export const Type = ({ children, at, out, size = 64, weight = 600, color = C.text, style }) => {

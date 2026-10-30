@@ -3,3 +3,5 @@ out/
 # Audio généré par scripts/music.mjs et scripts/voice.mjs (régénérable)
 public/*.wav
 public/voix/
+# Voix ElevenLabs téléchargées à la main (source des public/voix/brut/tNN.mp3)
+public/voix_video_tiktok/

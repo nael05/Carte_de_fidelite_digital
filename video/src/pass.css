@@ -221,6 +221,17 @@
   --mark-bg: #2b1f12;
   --mark-ink: #f1dcc0;
 }
+/* Gabarit vierge (studio, avant personnalisation) */
+.c3-blank {
+  --pass-bg: #131315;
+  --ink: rgba(255, 255, 255, 0.3);
+  --label: rgba(255, 255, 255, 0.25);
+  --edge: #0a0a0b;
+  --mark-bg: transparent;
+  --mark-ink: transparent;
+}
+.c3-blank .wp-mark { outline: 1.5px dashed rgba(255, 255, 255, 0.35); outline-offset: -1.5px; }
+.c3-blank .wp-strip { background: repeating-linear-gradient(135deg, #18181b 0 10px, #1d1d21 10px 20px); }
 .c3-ivory {
   --pass-bg: #f5f5f7;
   --ink: #1d1d1f;

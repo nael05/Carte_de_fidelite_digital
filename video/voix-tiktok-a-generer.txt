@@ -1,0 +1,44 @@
+Voix off TikTok Fidelyz — à générer avec « Paul K - Deep Engaging Storyteller » sur elevenlabs.io
+Réglages conseillés : modèle Multilingual v2, Stability ~40 %, Speed ~1.12 (voix plus énergique que la version longue), Style ~35 %.
+Une phrase = un fichier MP3, nommé comme indiqué (t01.mp3 … t13.mp3), à déposer dans video/public/voix/brut/
+(ne remplace pas les v01…v15 de la version horizontale).
+
+t01.mp3
+Ta carte de fidélité en papier ?
+
+t02.mp3
+Tes clients l'ont déjà perdue.
+
+t03.mp3
+Avec Fidéliz, elle vit dans leur téléphone.
+
+t04.mp3
+Apple Wallet, Google Wallet. Zéro application.
+
+t05.mp3
+Ton logo. Tes couleurs. Prête en deux minutes.
+
+t06.mp3
+Ils scannent. Les points tombent.
+
+t07.mp3
+Et surtout : les notifications push.
+
+t08.mp3
+Tu envoies une offre. Elle s'affiche sur leur écran. Direct.
+
+t09.mp3
+Et s'ils passent près de chez toi, ta carte les rappelle.
+
+t10.mp3
+Ils reviennent. Encore, et encore.
+
+t11.mp3
+Fidéliz.
+
+t12.mp3
+Fais revenir tes clients.
+
+t13.mp3
+Lien en bio.
+

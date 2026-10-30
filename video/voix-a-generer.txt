@@ -1,0 +1,50 @@
+Voix off Fidelyz — à générer avec « Paul K - Deep Engaging Storyteller » sur elevenlabs.io
+Réglages conseillés : modèle Multilingual v2, Stability ~45 %, Speed ~1.08, Style ~30 %.
+Une phrase = un fichier. Télécharge chaque audio en MP3 et nomme-le comme indiqué (v01.mp3 … v15.mp3),
+puis dépose-les dans video/public/voix/brut/
+
+v01.mp3
+Les cartes de fidélité en papier ?
+
+v02.mp3
+Oubliées. Perdues. Jetées.
+
+v03.mp3
+Avec Fidéliz, votre carte vit dans le téléphone de vos clients.
+
+v04.mp3
+Sur Apple Wallet, comme sur Google Wallet.
+
+v05.mp3
+Votre logo, vos couleurs, votre photo : elle vous ressemble, en quelques clics.
+
+v06.mp3
+Vos clients l'ajoutent en dix secondes, sans application à télécharger.
+
+v07.mp3
+En caisse, un scan… et les points tombent.
+
+v08.mp3
+Et surtout : envoyez des notifications push.
+
+v09.mp3
+Une offre, une nouveauté, une récompense : elle s'affiche directement sur leur écran.
+
+v10.mp3
+Ils la voient. Ils reviennent.
+
+v11.mp3
+Et quand ils passent près de chez vous, votre carte se rappelle à eux.
+
+v12.mp3
+Suivez vos clients et vos résultats, en temps réel.
+
+v13.mp3
+Fidéliz.
+
+v14.mp3
+Faites revenir vos clients.
+
+v15.mp3
+Fidéliz app, point F R.
+

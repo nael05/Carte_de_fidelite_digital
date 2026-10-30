@@ -1,0 +1,499 @@
+[
+  {
+    "id": "t01",
+    "at": 0.1,
+    "text": "Ta carte de fidélité en papier ?",
+    "say": "Ta carte de fidélité en papier ?",
+    "dur": 1.76,
+    "words": [
+      {
+        "w": "Ta",
+        "t": 0,
+        "d": 0.169
+      },
+      {
+        "w": "carte",
+        "t": 0.169,
+        "d": 0.314
+      },
+      {
+        "w": "de",
+        "t": 0.482,
+        "d": 0.169
+      },
+      {
+        "w": "fidélité",
+        "t": 0.651,
+        "d": 0.458
+      },
+      {
+        "w": "en",
+        "t": 1.11,
+        "d": 0.169
+      },
+      {
+        "w": "papier",
+        "t": 1.279,
+        "d": 0.362
+      }
+    ]
+  },
+  {
+    "id": "t02",
+    "at": 1.95,
+    "text": "Tes clients l'ont déjà perdue.",
+    "say": "Tes clients l'ont déjà perdue.",
+    "dur": 1.47,
+    "words": [
+      {
+        "w": "Tes",
+        "t": 0,
+        "d": 0.184
+      },
+      {
+        "w": "clients",
+        "t": 0.184,
+        "d": 0.347
+      },
+      {
+        "w": "l'ont",
+        "t": 0.531,
+        "d": 0.224
+      },
+      {
+        "w": "déjà",
+        "t": 0.755,
+        "d": 0.224
+      },
+      {
+        "w": "perdue",
+        "t": 0.98,
+        "d": 0.367
+      }
+    ]
+  },
+  {
+    "id": "t03",
+    "at": 3.95,
+    "text": "Avec Fidelyz, elle vit dans leur téléphone.",
+    "say": "Avec Fidéliz, elle vit dans leur téléphone.",
+    "dur": 2.24,
+    "words": [
+      {
+        "w": "Avec",
+        "t": 0,
+        "d": 0.24
+      },
+      {
+        "w": "Fidéliz",
+        "t": 0.24,
+        "d": 0.437
+      },
+      {
+        "w": "elle",
+        "t": 0.677,
+        "d": 0.24
+      },
+      {
+        "w": "vit",
+        "t": 0.917,
+        "d": 0.197
+      },
+      {
+        "w": "dans",
+        "t": 1.114,
+        "d": 0.24
+      },
+      {
+        "w": "leur",
+        "t": 1.354,
+        "d": 0.24
+      },
+      {
+        "w": "téléphone",
+        "t": 1.594,
+        "d": 0.524
+      }
+    ]
+  },
+  {
+    "id": "t04",
+    "at": 6.35,
+    "text": "Apple Wallet, Google Wallet. Zéro application.",
+    "say": "Apple Wallet, Google Wallet. Zéro application.",
+    "dur": 3.45,
+    "words": [
+      {
+        "w": "Apple",
+        "t": 0,
+        "d": 0.42
+      },
+      {
+        "w": "Wallet",
+        "t": 0.42,
+        "d": 0.582
+      },
+      {
+        "w": "Google",
+        "t": 1.002,
+        "d": 0.485
+      },
+      {
+        "w": "Wallet",
+        "t": 1.487,
+        "d": 0.582
+      },
+      {
+        "w": "Zéro",
+        "t": 2.069,
+        "d": 0.356
+      },
+      {
+        "w": "application",
+        "t": 2.425,
+        "d": 0.905
+      }
+    ]
+  },
+  {
+    "id": "t05",
+    "at": 9.95,
+    "text": "Ton logo. Tes couleurs. Prête en deux minutes.",
+    "say": "Ton logo. Tes couleurs. Prête en deux minutes.",
+    "dur": 2.78,
+    "words": [
+      {
+        "w": "Ton",
+        "t": 0,
+        "d": 0.228
+      },
+      {
+        "w": "logo",
+        "t": 0.228,
+        "d": 0.355
+      },
+      {
+        "w": "Tes",
+        "t": 0.583,
+        "d": 0.228
+      },
+      {
+        "w": "couleurs",
+        "t": 0.811,
+        "d": 0.557
+      },
+      {
+        "w": "Prête",
+        "t": 1.368,
+        "d": 0.329
+      },
+      {
+        "w": "en",
+        "t": 1.698,
+        "d": 0.177
+      },
+      {
+        "w": "deux",
+        "t": 1.875,
+        "d": 0.279
+      },
+      {
+        "w": "minutes",
+        "t": 2.154,
+        "d": 0.507
+      }
+    ]
+  },
+  {
+    "id": "t06",
+    "at": 13.05,
+    "text": "Ils scannent. Les points tombent.",
+    "say": "Ils scannent. Les points tombent.",
+    "dur": 1.98,
+    "words": [
+      {
+        "w": "Ils",
+        "t": 0,
+        "d": 0.223
+      },
+      {
+        "w": "scannent",
+        "t": 0.223,
+        "d": 0.544
+      },
+      {
+        "w": "Les",
+        "t": 0.767,
+        "d": 0.223
+      },
+      {
+        "w": "points",
+        "t": 0.99,
+        "d": 0.371
+      },
+      {
+        "w": "tombent",
+        "t": 1.361,
+        "d": 0.495
+      }
+    ]
+  },
+  {
+    "id": "t07",
+    "at": 15.12,
+    "text": "Et surtout : les notifications push.",
+    "say": "Et surtout : les notifications push.",
+    "dur": 2.27,
+    "words": [
+      {
+        "w": "Et",
+        "t": 0,
+        "d": 0.198
+      },
+      {
+        "w": "surtout",
+        "t": 0.198,
+        "d": 0.482
+      },
+      {
+        "w": "les",
+        "t": 0.68,
+        "d": 0.255
+      },
+      {
+        "w": "notifications",
+        "t": 0.935,
+        "d": 0.822
+      },
+      {
+        "w": "push",
+        "t": 1.757,
+        "d": 0.397
+      }
+    ]
+  },
+  {
+    "id": "t08",
+    "at": 17.8,
+    "text": "Tu envoies une offre. Elle s'affiche sur leur écran. Direct.",
+    "say": "Tu envoies une offre. Elle s'affiche sur leur écran. Direct.",
+    "dur": 3.43,
+    "words": [
+      {
+        "w": "Tu",
+        "t": 0,
+        "d": 0.174
+      },
+      {
+        "w": "envoies",
+        "t": 0.174,
+        "d": 0.423
+      },
+      {
+        "w": "une",
+        "t": 0.597,
+        "d": 0.224
+      },
+      {
+        "w": "offre",
+        "t": 0.82,
+        "d": 0.398
+      },
+      {
+        "w": "Elle",
+        "t": 1.218,
+        "d": 0.273
+      },
+      {
+        "w": "s'affiche",
+        "t": 1.492,
+        "d": 0.472
+      },
+      {
+        "w": "sur",
+        "t": 1.964,
+        "d": 0.224
+      },
+      {
+        "w": "leur",
+        "t": 2.188,
+        "d": 0.273
+      },
+      {
+        "w": "écran",
+        "t": 2.461,
+        "d": 0.398
+      },
+      {
+        "w": "Direct",
+        "t": 2.859,
+        "d": 0.447
+      }
+    ]
+  },
+  {
+    "id": "t09",
+    "at": 21.65,
+    "text": "Et s'ils passent près de chez toi, ta carte les rappelle.",
+    "say": "Et s'ils passent près de chez toi, ta carte les rappelle.",
+    "dur": 2.77,
+    "words": [
+      {
+        "w": "Et",
+        "t": 0,
+        "d": 0.146
+      },
+      {
+        "w": "s'ils",
+        "t": 0.146,
+        "d": 0.23
+      },
+      {
+        "w": "passent",
+        "t": 0.376,
+        "d": 0.355
+      },
+      {
+        "w": "près",
+        "t": 0.731,
+        "d": 0.23
+      },
+      {
+        "w": "de",
+        "t": 0.961,
+        "d": 0.146
+      },
+      {
+        "w": "chez",
+        "t": 1.107,
+        "d": 0.23
+      },
+      {
+        "w": "toi",
+        "t": 1.337,
+        "d": 0.251
+      },
+      {
+        "w": "ta",
+        "t": 1.588,
+        "d": 0.146
+      },
+      {
+        "w": "carte",
+        "t": 1.734,
+        "d": 0.272
+      },
+      {
+        "w": "les",
+        "t": 2.005,
+        "d": 0.188
+      },
+      {
+        "w": "rappelle",
+        "t": 2.193,
+        "d": 0.46
+      }
+    ]
+  },
+  {
+    "id": "t10",
+    "at": 24.5,
+    "text": "Ils reviennent. Encore, et encore.",
+    "say": "Ils reviennent. Encore, et encore.",
+    "dur": 2.67,
+    "words": [
+      {
+        "w": "Ils",
+        "t": 0,
+        "d": 0.294
+      },
+      {
+        "w": "reviennent",
+        "t": 0.294,
+        "d": 0.849
+      },
+      {
+        "w": "Encore",
+        "t": 1.143,
+        "d": 0.588
+      },
+      {
+        "w": "et",
+        "t": 1.731,
+        "d": 0.229
+      },
+      {
+        "w": "encore",
+        "t": 1.959,
+        "d": 0.588
+      }
+    ]
+  },
+  {
+    "id": "t11",
+    "at": 28.15,
+    "text": "Fidelyz.",
+    "say": "Fidéliz.",
+    "dur": 0.8,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0,
+        "d": 0.684
+      }
+    ]
+  },
+  {
+    "id": "t12",
+    "at": 29.3,
+    "text": "Fais revenir tes clients.",
+    "say": "Fais revenir tes clients.",
+    "dur": 1.2,
+    "words": [
+      {
+        "w": "Fais",
+        "t": 0,
+        "d": 0.209
+      },
+      {
+        "w": "revenir",
+        "t": 0.209,
+        "d": 0.322
+      },
+      {
+        "w": "tes",
+        "t": 0.531,
+        "d": 0.171
+      },
+      {
+        "w": "clients",
+        "t": 0.702,
+        "d": 0.379
+      }
+    ]
+  },
+  {
+    "id": "t13",
+    "at": 30.8,
+    "text": "Lien en bio.",
+    "say": "Lien en bio.",
+    "dur": 0.91,
+    "words": [
+      {
+        "w": "Lien",
+        "t": 0,
+        "d": 0.289
+      },
+      {
+        "w": "en",
+        "t": 0.289,
+        "d": 0.184
+      },
+      {
+        "w": "bio",
+        "t": 0.473,
+        "d": 0.315
+      }
+    ]
+  }
+]

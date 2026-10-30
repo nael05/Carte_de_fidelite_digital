@@ -4,6 +4,7 @@
   "scripts": {
     "studio": "remotion studio",
     "render": "remotion render Fidelyz out/fidelyz-promo.mp4",
+    "render:tiktok": "remotion render Tiktok out/fidelyz-tiktok.mp4",
     "stills": "node scripts/stills.mjs"
   },
   "dependencies": {

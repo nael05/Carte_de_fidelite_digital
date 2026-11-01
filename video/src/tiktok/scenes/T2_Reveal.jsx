@@ -16,11 +16,11 @@ const AN = { x: 700, y: 1060, s: 1.12 }
 
 export const T2_Reveal = () => {
   const t = useT()
-  if (t < 3.3 || t > 9.5) return null
+  if (t < 3.6 || t > 9.5) return null
 
-  const enter = ts(t, 3.35, 3.9, 0, 1, outE)
-  const drop = springy(t, 3.78, 1.9, 7)
-  const sh = shake(t, 3.78, 22)
+  const enter = ts(t, 3.68, 4.2, 0, 1, outE)
+  const drop = springy(t, 4.1, 1.9, 7)
+  const sh = shake(t, 4.08, 22)
 
   const split = ts(t, 7.0, 7.45, 0, 1, ioE)
   const iphone = {
@@ -47,7 +47,7 @@ export const T2_Reveal = () => {
 
   return (
     <AbsoluteFill>
-      <AuroraV t={t} intensity={ts(t, 3.6, 4.1) * (1 - out * 0.4)} hue={1} bare />
+      <AuroraV t={t} intensity={ts(t, 3.9, 4.4) * (1 - out * 0.4)} hue={1} bare />
       <AbsoluteFill style={shakeStyle(sh)}>
         <AbsoluteFill style={{ transform: `translateY(${fall * 1700}px)`, opacity: 1 - 0.0 }}>
           {/* iPhone */}
@@ -74,7 +74,7 @@ export const T2_Reveal = () => {
         </div>
       )}
 
-      <Flash t={t} at={3.75} strength={0.5} />
+      <Flash t={t} at={4.08} strength={0.5} />
       <div style={{ opacity: 1 - ts(t, 8.85, 8.95, 0, 1, inE) }}>
         <Sticker t={t} at={stickerAt} x={540} y={640} rot={-5} size={54} bg="#fff" fg="#000">
           0 application à installer

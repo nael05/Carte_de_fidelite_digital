@@ -13,10 +13,10 @@ import { CARD_C } from './T2_Reveal'
 export const CARD_D = { x: 540, y: 1190, w: 520 } // la carte pendant le scan
 
 const FLIPS = [
-  { skin: 'azur', at: 10.78, from: [1080, 300] },
-  { skin: 'champagne', at: 11.25, from: [0, 1100] },
-  { skin: 'ivory', at: 11.72, from: [1080, 1300] },
-  { skin: 'graphite', at: 12.19, from: [0, 500] },
+  { skin: 'azur', at: 10.88, from: [1080, 300] },
+  { skin: 'champagne', at: 11.28, from: [0, 1100] },
+  { skin: 'ivory', at: 11.68, from: [1080, 1300] },
+  { skin: 'graphite', at: 12.08, from: [0, 500] },
 ]
 
 export const T3_Design = () => {
@@ -82,7 +82,7 @@ export const T3_Design = () => {
       )}
 
       <div style={{ position: 'absolute', top: 150, width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <Pop id="t05" only={[0, 3]} size={116} out={11.22} accent={{ 1: C.champagne, 3: C.blue }} />
+        <Pop id="t05" only={[0, 3]} size={116} out={11.12} accent={{ 1: C.champagne, 3: C.blue }} />
       </div>
       <div style={{ position: 'absolute', top: 150, width: '100%', display: 'flex', justifyContent: 'center' }}>
         <Pop id="t05" only={[4, 7]} size={116} out={13.0} accent={{ 6: C.champagne, 7: C.champagne }} />

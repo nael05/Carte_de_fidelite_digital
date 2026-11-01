@@ -5,3 +5,6 @@ public/*.wav
 public/voix/
 # Voix ElevenLabs téléchargées à la main (source des public/voix/brut/tNN.mp3)
 public/voix_video_tiktok/
+# Sons Pixabay (voir public/sons_tiktok/SOURCES.md)
+public/sons_tiktok/*.mp3
+public/sons_tiktok/*.wav

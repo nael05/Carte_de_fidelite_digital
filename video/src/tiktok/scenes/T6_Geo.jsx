@@ -97,10 +97,10 @@ export const T6_Geo = () => {
       )}
 
       <div style={{ position: 'absolute', top: 150, width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <Pop id="t09" only={[0, 6]} size={108} out={23.15} accent={{ 3: C.blue, 4: C.blue, 5: C.blue, 6: C.blue }} />
+        <Pop id="t09" only={[0, 6]} size={108} out={23.1} accent={{ 3: C.blue, 4: C.blue, 5: C.blue, 6: C.blue }} />
       </div>
       <div style={{ position: 'absolute', top: 150, width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <Pop id="t09" only={[7, 10]} size={118} out={24.35} accent={{ 10: C.champagne }} />
+        <Pop id="t09" only={[7, 10]} size={118} lead={-0.05} out={24.35} accent={{ 10: C.champagne }} />
       </div>
     </AbsoluteFill>
   )

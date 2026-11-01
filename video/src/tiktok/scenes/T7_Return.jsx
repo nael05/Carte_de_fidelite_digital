@@ -18,7 +18,7 @@ const CHART = Array.from({ length: TRAIL_N }, (_, i) => {
 export const DOT = { x: CHART[TRAIL_N - 1][0], y: CHART[TRAIL_N - 1][1], d: 22 }
 export const DOT_END = 12
 
-const BEAT = 60 / 128
+const BEAT = 0.4 // 150 BPM
 
 export const T7_Return = () => {
   const t = useT()
@@ -31,14 +31,14 @@ export const T7_Return = () => {
   const grid = ts(t, 24.8, 25.3)
 
   // Compteur : un client de plus à chaque temps, puis le grand saut sur « encore »
-  const tEncore = 26.25
-  const beats = Math.max(0, Math.floor((Math.min(t, tEncore) - 24.45) / BEAT) + 1)
+  const tEncore = 26.48
+  const beats = Math.max(0, Math.floor((Math.min(t, tEncore) - 24.48) / BEAT) + 1)
   const clients = 248 + beats * 3 + (t >= tEncore ? 14 : 0)
   const kpi = springy(t, 24.55, 1.8, 8)
-  const bump = Math.exp(-((t - 24.45) % BEAT) * 9) * (t >= 24.45 && t < tEncore ? 1 : 0)
+  const bump = Math.exp(-((t - 24.48) % BEAT) * 9) * (t >= 24.48 && t < tEncore ? 1 : 0)
 
   // Plongée dans le dernier point
-  const dive = ts(t, 26.55, 28.1, 0, 1, x => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2))
+  const dive = ts(t, 26.6, 28.08, 0, 1, x => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2))
   const cam = camera(DOT.x, DOT.y, geo(dive, 1, DOT_END), Math.min(1, dive * 1.5))
   const rest = 1 - ts(dive, 0, 0.55)
 
@@ -84,7 +84,7 @@ export const T7_Return = () => {
       </AbsoluteFill>
 
       <Flash t={t} at={tEncore} color={C.champagne} strength={0.3} />
-      <div style={{ opacity: rest }}><Sticker t={t} at={tEncore} x={810} y={800} rot={8} size={62} bg={C.champagne} fg="#2b1f12">+14 d’un coup</Sticker></div>
+      <div style={{ opacity: rest }}><Sticker t={t} at={tEncore} x={790} y={905} rot={6} size={62} bg={C.champagne} fg="#2b1f12">+14 d’un coup</Sticker></div>
 
       <div style={{ position: 'absolute', top: 150, width: '100%', display: 'flex', justifyContent: 'center', opacity: rest }}>
         <Pop id="t10" only={[0, 1]} size={128} out={25.3} accent={{ 1: C.blue }} />

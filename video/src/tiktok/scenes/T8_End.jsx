@@ -59,7 +59,7 @@ export const T8_End = () => {
         </div>
       )}
       <Ring t={t} at={tBio} x={540} y={1290} size={1000} width={5} />
-      <Flash t={t} at={28.1} color={C.blue} strength={0.35} />
+      <Flash t={t} at={28.08} color={C.blue} strength={0.35} />
     </AbsoluteFill>
   )
 }

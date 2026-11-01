@@ -15,14 +15,14 @@ const RED = '#ff4a3d'
 
 export const T1_Hook = () => {
   const t = useT()
-  if (t > 3.95) return null
+  if (t > 4.3) return null
 
   const tPerdue = W('t02', 4)
   const sp = springy(t, 0, 2.2, 14) // claque de la carte : part de 1,35 et se pose
   const stamp = springy(t, tPerdue, 2.4, 11)
   const sh = shake(t, tPerdue, 26)
   const sh0 = shake(t, 0.05, 20, 0.3)
-  const exit = ts(t, 3.18, 3.72, 0, 1, inE)
+  const exit = ts(t, 3.5, 4.04, 0, 1, inE)
   const ink = ts(t, 1.95, 2.55, 0, 1, x => x)
 
   const scale = 1.45 * (1.35 - 0.35 * Math.min(1.15, sp))
@@ -85,7 +85,7 @@ export const T1_Hook = () => {
         <Pop id="t01" size={118} out={1.82} accent={{ 3: '#e3c9a4' }} />
       </div>
       <div style={{ position: 'absolute', top: 150, width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <Pop id="t02" size={124} out={3.2} accent={{ 4: RED }} />
+        <Pop id="t02" size={124} out={3.45} accent={{ 4: RED }} />
       </div>
     </AbsoluteFill>
   )

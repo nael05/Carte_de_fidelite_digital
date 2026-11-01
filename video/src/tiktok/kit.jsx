@@ -20,12 +20,12 @@ export const AuroraV = ({ t, intensity = 1, hue = 0, bare = false }) => {
 
 /* Légende cinétique : chaque mot jaillit (ressort avec dépassement) à l'instant où il est prononcé.
    Les mots non encore prononcés gardent leur place : la mise en page ne bouge pas. */
-export const Pop = ({ id, only, size = 100, weight = 800, color = C.text, accent = {}, out, lead = 0.05, maxWidth = 920, lineHeight = 1.0, style, upper = false }) => {
+export const Pop = ({ id, only, size = 100, weight = 800, color = C.text, accent = {}, out, lead = 0.05, maxWidth = 920, lineHeight = 1.0, style, upper = false, highlight = true, highlightRgb = '0,113,227', highlightInk = '#fff' }) => {
   const t = useT()
   const cue = getCue(id)
   const tokens = displayTokens(cue)
   const [a, b] = only ?? [0, tokens.length - 1]
-  const o = out == null ? 0 : ts(t, out, out + 0.2, 0, 1, inE)
+  const o = out == null ? 0 : ts(t, out, out + 0.15, 0, 1, inE)
   return (
     <div
       style={{
@@ -53,10 +53,28 @@ export const Pop = ({ id, only, size = 100, weight = 800, color = C.text, accent
       {tokens.slice(a, b + 1).map((tok, k) => {
         const i = a + k
         const at = cue.at + Math.max(0, cue.words[i].t) - lead
+        const next = i + 1 < cue.words.length ? cue.at + cue.words[i + 1].t - lead : cue.at + cue.dur
         const sp = springy(t, at, 2.6, 12)
         const show = ts(t, at, at + 0.07, 0, 1, x => x)
+        // Mot en cours de lecture : pastille de couleur derrière, comme les sous-titres TikTok
+        const hl = highlight ? ts(t, at, at + 0.06, 0, 1, x => x) * (1 - ts(t, next - 0.02, next + 0.08, 0, 1, x => x)) : 0
         return (
-          <span key={i} style={{ display: 'inline-block', whiteSpace: 'nowrap', opacity: show, transform: `translateY(${(1 - Math.min(1, sp)) * 46}px) scale(${0.45 + 0.55 * sp})`, transformOrigin: '50% 80%', color: accent[i] ?? color }}>
+          <span
+            key={i}
+            style={{
+              display: 'inline-block',
+              whiteSpace: 'nowrap',
+              opacity: show,
+              transform: `translateY(${(1 - Math.min(1, sp)) * 46}px) scale(${(0.45 + 0.55 * sp) * (1 + 0.06 * hl)})`,
+              transformOrigin: '50% 80%',
+              color: hl > 0.5 ? highlightInk : accent[i] ?? color,
+              padding: '0.02em 0.14em 0.08em',
+              margin: '-0.02em -0.14em -0.08em',
+              borderRadius: '0.18em',
+              background: hl > 0 ? `rgba(${highlightRgb}, ${0.95 * hl})` : 'transparent',
+              textShadow: hl > 0.5 ? 'none' : undefined,
+            }}
+          >
             {tok}
           </span>
         )

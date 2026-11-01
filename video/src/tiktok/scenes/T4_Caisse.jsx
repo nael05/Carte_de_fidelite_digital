@@ -82,7 +82,7 @@ export const T4_Caisse = () => {
       </div>
 
       <div style={{ position: 'absolute', top: 150, width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <Pop id="t06" only={[0, 1]} size={122} out={13.72} accent={{ 1: C.blue }} />
+        <Pop id="t06" only={[0, 1]} size={122} out={13.62} accent={{ 1: C.blue }} />
       </div>
       <div style={{ position: 'absolute', top: 150, width: '100%', display: 'flex', justifyContent: 'center' }}>
         <Pop id="t06" only={[2, 4]} size={122} out={15.0} accent={{ 3: C.champagne, 4: C.champagne }} />

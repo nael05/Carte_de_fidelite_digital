@@ -44,13 +44,13 @@ npm run stills -- --planche --vertical 0.5 3.2 ...   # idem pour la version vert
 
 ## Version verticale (TikTok, Reels, Shorts)
 
-34 s en 1080 × 1920, 128 BPM, tutoiement, accroche dès la première image. Tout est dans `src/tiktok/` (une scène par fichier, `kit.jsx` pour les légendes cinétiques et les effets d'impact).
+34 s en 1080 × 1920, calée sur une musique à 150 BPM, tutoiement, accroche dès la première image. Tout est dans `src/tiktok/` (une scène par fichier, `kit.jsx` pour les légendes cinétiques et les effets d'impact).
 Les légendes respectent les zones sûres de TikTok : rien d'important sous y = 1500 ni dans la colonne des boutons à droite.
 
 | Temps | Scène | Raccord |
 | --- | --- | --- |
-| 0 – 3,8 s | 1. Carte papier géante, tampon « PERDUE » | la carte est balayée vers le haut, le téléphone monte du bas |
-| 3,4 – 9,5 s | 2. Fidelyz, iPhone puis Android | les téléphones tombent, la carte jaillit |
+| 0 – 4 s | 1. Carte papier géante, tampon « PERDUE » | la carte est balayée vers le haut, le téléphone monte du bas |
+| 3,6 – 9,5 s | 2. Fidelyz, iPhone puis Android | les téléphones tombent, la carte jaillit |
 | 9,4 – 13,3 s | 3. Logo, couleurs sur chaque temps, chrono de 2 minutes | la carte descend vers le scanner |
 | 13 – 15,3 s | 4. Scan, les points montent dans le compteur | le tableau d'envoi monte du bas |
 | 15 – 21,9 s | 5. Notifications push : envoi, écran verrouillé, vague sur des centaines de téléphones | les téléphones deviennent des points qui rejoignent la boutique |
@@ -58,5 +58,5 @@ Les légendes respectent les zones sûres de TikTok : rien d'important sous y = 
 | 24,3 – 28,2 s | 7. Clients actifs, courbe | plongée dans le dernier point |
 | 28 – 34 s | 8. Logo, « Lien en bio » | |
 
-Son : `node scripts/music-tiktok.mjs` (musique et bruitages dans `public/musique-tiktok.wav` et `public/bruitages-tiktok.wav`).
+Son : musique et bruitages Pixabay dans `public/sons_tiktok/` (liste et liens dans `SOURCES.md` ; fichiers non versionnés). `node scripts/mix-tiktok.mjs` monte la musique sur ses premiers temps de mesure pour que ses drops tombent sur l'arrivée de la carte, sur « push » et sur le logo, place les bruitages, baisse la musique sous la voix (environ 10 dB) et amène l'ensemble à −14 LUFS dans `public/sons_tiktok/mix.wav`. `node scripts/analyse-musique.mjs <fichier>` donne le tempo et les drops d'un autre morceau ; la grille d'image correspondante est dans `src/tiktok/rythme.js`.
 Voix : répliques dans `src/voix-tiktok.json` (identifiants `t01` à `t13`). `node scripts/voice.mjs --set=tiktok` génère une voix témoin ; pour la vraie voix, générer les phrases de `voix-tiktok-a-generer.txt`, déposer `t01.mp3` … `t13.mp3` dans `public/voix/brut/`, puis `node scripts/voice.mjs --set=tiktok --traiter --estimer`. Les instants de départ de chaque réplique (`at`) sont à revoir si la durée des phrases change beaucoup.

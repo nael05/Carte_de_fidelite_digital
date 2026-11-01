@@ -1,0 +1,317 @@
+{
+ "routes": {
+  "GET /pro/status": {
+   "id": "e42",
+   "nom": "Maison Lumière",
+   "email": "contact@maisonlumiere.fr",
+   "statut": "actif",
+   "tier": "pro",
+   "client_count": 248,
+   "client_limit": null,
+   "locked": false,
+   "blocked": false,
+   "staff_role": null,
+   "establishment_id": null
+  },
+  "GET /pro/info": {
+   "id": "e42",
+   "nom": "Maison Lumière",
+   "email": "contact@maisonlumiere.fr",
+   "points_per_purchase": 10,
+   "points_for_reward": 100,
+   "reward_title": "Un café offert",
+   "push_notifications_enabled": true,
+   "loyalty_type": "points"
+  },
+  "GET /pro/clients": [
+   {
+    "id": "c1001",
+    "prenom": "Camille",
+    "nom": "Roux",
+    "type_wallet": "apple",
+    "points": 460,
+    "telephone": "0612345678",
+    "email": "camille.roux@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-10-01T10:00:00Z",
+    "last_activity": "2026-10-30T10:00:00Z"
+   },
+   {
+    "id": "c1002",
+    "prenom": "Lucas",
+    "nom": "Martin",
+    "type_wallet": "google",
+    "points": 120,
+    "telephone": "0612346789",
+    "email": "lucas.martin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-02T10:00:00Z",
+    "last_activity": "2026-10-30T10:00:00Z"
+   },
+   {
+    "id": "c1003",
+    "prenom": "Inès",
+    "nom": "Bernard",
+    "type_wallet": "apple",
+    "points": 80,
+    "telephone": "0612347900",
+    "email": "ines.bernard@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-03T10:00:00Z",
+    "last_activity": "2026-10-30T10:00:00Z"
+   },
+   {
+    "id": "c1004",
+    "prenom": "Hugo",
+    "nom": "Petit",
+    "type_wallet": "apple",
+    "points": 340,
+    "telephone": "0612349011",
+    "email": "hugo.petit@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-10-04T10:00:00Z",
+    "last_activity": "2026-10-30T10:00:00Z"
+   },
+   {
+    "id": "c1005",
+    "prenom": "Léa",
+    "nom": "Moreau",
+    "type_wallet": "google",
+    "points": 210,
+    "telephone": "0612350122",
+    "email": "lea.moreau@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-05T10:00:00Z",
+    "last_activity": "2026-10-30T10:00:00Z"
+   },
+   {
+    "id": "c1006",
+    "prenom": "Nathan",
+    "nom": "Laurent",
+    "type_wallet": "apple",
+    "points": 40,
+    "telephone": "0612351233",
+    "email": "nathan.laurent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-06T10:00:00Z",
+    "last_activity": "2026-10-30T10:00:00Z"
+   },
+   {
+    "id": "c1007",
+    "prenom": "Chloé",
+    "nom": "Simon",
+    "type_wallet": "apple",
+    "points": 500,
+    "telephone": "0612352344",
+    "email": "chloe.simon@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-10-07T10:00:00Z",
+    "last_activity": "2026-10-30T10:00:00Z"
+   },
+   {
+    "id": "c1008",
+    "prenom": "Adam",
+    "nom": "Michel",
+    "type_wallet": "google",
+    "points": 15,
+    "telephone": "0612353455",
+    "email": "adam.michel@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-08T10:00:00Z",
+    "last_activity": "2026-10-30T10:00:00Z"
+   },
+   {
+    "id": "c1009",
+    "prenom": "Jade",
+    "nom": "Lefebvre",
+    "type_wallet": "apple",
+    "points": 275,
+    "telephone": "0612354566",
+    "email": "jade.lefebvre@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-09T10:00:00Z",
+    "last_activity": "2026-10-30T10:00:00Z"
+   },
+   {
+    "id": "c1010",
+    "prenom": "Louis",
+    "nom": "Garcia",
+    "type_wallet": "apple",
+    "points": 190,
+    "telephone": "0612355677",
+    "email": "louis.garcia@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-10-10T10:00:00Z",
+    "last_activity": "2026-10-30T10:00:00Z"
+   },
+   {
+    "id": "c1011",
+    "prenom": "Emma",
+    "nom": "David",
+    "type_wallet": "google",
+    "points": 60,
+    "telephone": "0612356788",
+    "email": "emma.david@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-11T10:00:00Z",
+    "last_activity": "2026-10-30T10:00:00Z"
+   },
+   {
+    "id": "c1012",
+    "prenom": "Tom",
+    "nom": "Bertrand",
+    "type_wallet": "apple",
+    "points": 130,
+    "telephone": "0612357899",
+    "email": "tom.bertrand@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-12T10:00:00Z",
+    "last_activity": "2026-10-30T10:00:00Z"
+   }
+  ],
+  "GET /pro/card-customization/.*": {
+   "primary_color": "#1c1c1e",
+   "text_color": "#ffffff",
+   "accent_color": "#e3c9a4",
+   "logo_text": "Maison Lumière",
+   "logo_url": "http://localhost:5055/api/img/mark-graphite.svg",
+   "apple_logo_url": "http://localhost:5055/api/img/mark-graphite.svg",
+   "icon_url": "http://localhost:5055/api/img/icon.svg",
+   "apple_icon_url": "http://localhost:5055/api/img/icon.svg",
+   "strip_image_url": "http://localhost:5055/api/img/strip.svg",
+   "apple_strip_image_url": "http://localhost:5055/api/img/strip.svg",
+   "apple_organization_name": "Maison Lumière",
+   "apple_pass_description": "Carte de fidélité Maison Lumière",
+   "google_primary_color": "#1c1c1e",
+   "google_logo_url": "http://localhost:5055/api/img/icon.svg",
+   "google_hero_image_url": "http://localhost:5055/api/img/strip.svg",
+   "google_card_title": "Maison Lumière",
+   "google_card_subtitle": "Carte fidélité",
+   "back_fields_info": "500 points = 1 café offert",
+   "back_fields_website": "maisonlumiere.fr",
+   "back_fields_phone": "01 42 00 00 00",
+   "back_fields_address": "12 rue des Martyrs, Paris 9e",
+   "back_fields_instagram": "@maisonlumiere",
+   "relevant_text": "Ton café offert t’attend à deux pas",
+   "locations": "[{\"latitude\":48.8794,\"longitude\":2.3399,\"relevantText\":\"Ton café offert t’attend à deux pas\"}]"
+  },
+  "GET /pro/loyalty/config": {
+   "entreprise_id": "e42",
+   "points_adding_mode": "manual",
+   "points_per_purchase": 10,
+   "max_points_balance": 1000,
+   "push_notifications_enabled": 1,
+   "points_shortcuts": [
+    10,
+    20,
+    50
+   ],
+   "reward_tiers": [
+    {
+     "id": 1,
+     "points_required": 500,
+     "title": "Un café offert"
+    }
+   ]
+  },
+  "GET /pro/loyalty/expiration": {
+   "points_expiration_months": null
+  },
+  "GET /pro/establishments": [],
+  "GET /pro/scan-lookup/.*": {
+   "clientName": "Camille Roux",
+   "currentPoints": 460,
+   "allRewards": [
+    {
+     "id": 1,
+     "points_required": 500,
+     "title": "Un café offert"
+    }
+   ]
+  },
+  "GET /companies/.*/info": {
+   "id": "e42",
+   "nom": "Maison Lumière",
+   "logo_url": "http://localhost:5055/api/img/logo.svg",
+   "primary_color": "#1d1a17",
+   "text_color": "#f5ead8",
+   "accent_color": "#d9a75b",
+   "logo_text": "",
+   "apple_logo_url": "http://localhost:5055/api/img/logo.svg",
+   "icon_url": "http://localhost:5055/api/img/icon.svg",
+   "apple_icon_url": "http://localhost:5055/api/img/icon.svg",
+   "strip_image_url": "http://localhost:5055/api/img/strip.svg",
+   "apple_strip_image_url": "http://localhost:5055/api/img/strip.svg",
+   "apple_organization_name": "Maison Lumière",
+   "apple_pass_description": "Carte de fidélité Maison Lumière",
+   "google_primary_color": "#1d1a17",
+   "google_logo_url": "http://localhost:5055/api/img/icon.svg",
+   "google_hero_image_url": "http://localhost:5055/api/img/strip.svg",
+   "google_card_title": "Maison Lumière",
+   "google_card_subtitle": "Carte fidélité",
+   "back_fields_info": "1 € dépensé = 10 points. Ton café offert dès 100 points.",
+   "back_fields_website": "maisonlumiere.fr",
+   "back_fields_phone": "01 42 00 00 00",
+   "back_fields_address": "12 rue des Martyrs, Paris 9e",
+   "back_fields_instagram": "@maisonlumiere",
+   "relevant_text": "Ton café offert t’attend à deux pas",
+   "locations": "[{\"latitude\":48.8794,\"longitude\":2.3399,\"relevantText\":\"Ton café offert t’attend à deux pas\"}]"
+  },
+  "GET /pro/notifications/quota": {
+   "tier": "pro",
+   "limit": 4,
+   "used": 1,
+   "remaining": 3,
+   "suspended": false,
+   "min_hours_between": 48,
+   "client_cooldown_days": 7,
+   "next_allowed_at": null,
+   "quiet_hours": {
+    "from": 21,
+    "to": 8,
+    "timeZone": "Europe/Paris"
+   },
+   "quiet_now": false
+  },
+  "GET /pro/notifications/history": {
+   "notifications": [
+    {
+     "id": 1,
+     "created_at": "2026-10-24T10:30:00Z",
+     "title": "Le croissant du mois est là",
+     "recipients_count": 164
+    }
+   ],
+   "total": 1
+  },
+  "GET /pro/stats/overview": {
+   "totalClients": 248,
+   "appleClients": 171,
+   "googleClients": 77,
+   "totalPointsInCirculation": 41280,
+   "activeClientsThisMonth": 186,
+   "newClientsThisMonth": 42,
+   "pointsDistributedThisMonth": 12840,
+   "pointsRedeemedThisMonth": 3900,
+   "pointsExpiredThisMonth": 0,
+   "scansThisMonth": 1312,
+   "scansLastMonth": 1004
+  },
+  "GET /pro/subscription": {
+   "tier": "pro",
+   "status": "active"
+  },
+  "GET /plans": [],
+  "POST /pro/scan": {
+   "success": true,
+   "clientId": "c1001",
+   "clientName": "Camille Roux",
+   "pointsAdded": 20,
+   "newPoints": 480
+  },
+  "POST /pro/notifications/send": {
+   "success": true,
+   "message": "Notification envoyée à 164 client(s)"
+  }
+ }
+}

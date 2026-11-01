@@ -8,9 +8,11 @@ npm install
 npm run studio    # prévisualisation et réglages image par image
 npm run render    # encode out/fidelyz-promo.mp4 (version horizontale, 16:9)
 npm run render:tiktok   # encode out/fidelyz-tiktok.mp4 (version verticale, 9:16)
+npm run render:explication   # encode out/fidelyz-explication.mp4 (vidéo explicative verticale, sans musique)
 npm run stills -- 90 600 1500                 # images fixes (numéros d'image)
 npm run stills -- --planche 0.5 3.2 8.4 ...   # planches de 20 vignettes (temps en secondes)
 npm run stills -- --planche --vertical 0.5 3.2 ...   # idem pour la version verticale (24 vignettes)
+npm run stills -- --planche --explication 0.5 3.2 ...   # idem pour la vidéo explicative
 ```
 
 ## Déroulé
@@ -60,3 +62,34 @@ Les légendes respectent les zones sûres de TikTok : rien d'important sous y = 
 
 Son : musique et bruitages Pixabay dans `public/sons_tiktok/` (liste et liens dans `SOURCES.md` ; fichiers non versionnés). `node scripts/mix-tiktok.mjs` monte la musique sur ses premiers temps de mesure pour que ses drops tombent sur l'arrivée de la carte, sur « push » et sur le logo, place les bruitages, baisse la musique sous la voix (environ 10 dB) et amène l'ensemble à −14 LUFS dans `public/sons_tiktok/mix.wav`. `node scripts/analyse-musique.mjs <fichier>` donne le tempo et les drops d'un autre morceau ; la grille d'image correspondante est dans `src/tiktok/rythme.js`.
 Voix : répliques dans `src/voix-tiktok.json` (identifiants `t01` à `t13`). `node scripts/voice.mjs --set=tiktok` génère une voix témoin ; pour la vraie voix, générer les phrases de `voix-tiktok-a-generer.txt`, déposer `t01.mp3` … `t13.mp3` dans `public/voix/brut/`, puis `node scripts/voice.mjs --set=tiktok --traiter --estimer`. Les instants de départ de chaque réplique (`at`) sont à revoir si la durée des phrases change beaucoup.
+
+## Vidéo explicative (TikTok)
+
+53,5 s en 1080 × 1920 pour faire comprendre l'offre à un commerçant : problème, solution, trois étapes, puis les deux leviers pour faire revenir les clients. Tout est dans `src/explication/`.
+
+| Temps | Plan | Coupe vers le suivant |
+| --- | --- | --- |
+| 0 – 2,8 s | Accroche : la carte papier en 3D se déchire sur « perdre » | glitch |
+| 2,8 – 6,4 s | OUBLIÉE, PERDUE, JETÉE : trois plans sur les temps | zoom |
+| 6,4 – 11,2 s | Les clients s'effacent ; il en reste un, sans visage | — |
+| 11,2 – 12,8 s | Le « ? » aspire la lumière et éclate sur le drop : Fidelyz | plongée dans le logo |
+| 12,8 – 16,4 s | La carte arrive en tournoyant et se range dans le téléphone | fouet |
+| 16,4 – 20,8 s | Éventail des cartes Wallet, Apple et Google ; « 0 téléchargement » | glitch |
+| 20,8 – 22,8 s | 1, 2, 3 sur trois temps | ouverture depuis le « 1 » |
+| 22,8 – 27,2 s | 1. L'aperçu de la carte sort du téléphone, logo, quatre couleurs, 5 min | volet bleu |
+| 27,2 – 32,4 s | 2. Le QR code file vers le téléphone du client, inscription, carte ajoutée | volet bleu |
+| 32,4 – 38,6 s | 3. La fenêtre d'ajout de points sort du téléphone, +20, la carte passe à 480 | zoom |
+| 38,6 – 43,2 s | Campagne : le formulaire sort, s'écrit, part ; écran verrouillé | montée |
+| 43,2 – 46,8 s | Carte du quartier en 3D : « Maison Lumière est à 50 m » | éclair |
+| 46,8 – 53,5 s | Gratuit jusqu'à 15 clients, sans engagement, lien en bio | |
+
+**Montage** (`src/explication/fx.jsx`) : toutes les coupes tombent sur un temps de la musique (`beat(n)` = drop sur « Fidelyz » + n × 0,4 s), l'image pulse sur la grosse caisse, le décor (sol quadrillé, poussières, lueurs rouges puis bleues) défile en continu, et l'élément important de chaque écran sort du téléphone (`PageCrop`).
+
+**Son** : `node scripts/mix-explication.mjs` → `public/explication/mix.wav`. Voix Paul K, musique Pixabay recoupée pour que le drop tombe sur « Fidelyz », très en retrait (environ 15 dB sous la voix), six bruitages seulement, tous différents. Niveau final −14 LUFS.
+
+**Fidèle au vrai site** :
+- les écrans du tableau de bord et la page d'inscription sont des captures du frontend lancé en local avec des données de démonstration (`scripts/ecrans/` : faux serveur d'API, données, script de capture ; marche à suivre en tête de `capture.mjs`). Les images sont dans `public/explication/ecrans/`, la position des boutons et des champs dans `src/explication/rects.json` ;
+- la carte, la pile Wallet, l'écran verrouillé et la carte du quartier reprennent les composants et les styles de la page d'accueil (`Pass.jsx`, `src/explication/site.jsx` et `site.css`) ;
+- les textes affichés reprennent ceux du site et du serveur (« Points ajoutés ! », « Notification envoyée à 164 client(s) », « +20 points. Plus que 20 avant votre café. », offre gratuite jusqu'à 15 clients).
+
+**Voix** : répliques dans `src/voix-explication.json` (`e01` à `e13`). `node scripts/voice-elevenlabs.mjs --set=explication` régénère la voix ElevenLabs (vitesse réglable : `ELEVENLABS_SPEED=1.12`), avec l'instant de chaque mot ; les animations sont calées sur ces mots (`W('e10', 5)`). Si les durées changent, revoir les instants `at` des répliques puis relancer `mix-explication.mjs`.

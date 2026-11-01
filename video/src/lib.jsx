@@ -2,9 +2,10 @@ import { AbsoluteFill, Easing, Img, continueRender, delayRender, interpolate, st
 import '@fontsource-variable/inter'
 import VOIX_MAIN from './voix.json'
 import VOIX_TIKTOK from './voix-tiktok.json'
+import VOIX_EXPLICATION from './voix-explication.json'
 
-// Répliques des deux versions (identifiants distincts : vNN en 16:9, tNN en vertical)
-const VOIX = [...VOIX_MAIN, ...VOIX_TIKTOK]
+// Répliques des trois vidéos (identifiants distincts : vNN en 16:9, tNN en vertical, eNN pour l'explication)
+const VOIX = [...VOIX_MAIN, ...VOIX_TIKTOK, ...VOIX_EXPLICATION]
 
 // Inter embarquée dans le bundle (aucun appel réseau pendant le rendu)
 export const fontFamily = '"Inter Variable", "Inter", sans-serif'

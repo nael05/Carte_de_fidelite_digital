@@ -29,7 +29,7 @@ if (!KEY) {
 }
 const API = 'https://api.elevenlabs.io/v1'
 const headers = { 'xi-api-key': KEY, 'Content-Type': 'application/json' }
-const num = (k, d) => (env[k] != null ? Number(env[k]) : d)
+const num = (k, d) => (env[k] ?? process.env[k]) != null ? Number(env[k] ?? process.env[k]) : d
 
 const call = async (url, init) => {
   const r = await fetch(url, { ...init, headers: { ...headers, ...init?.headers } })
@@ -89,7 +89,8 @@ const wordsFrom = (text, al) => {
     const b = a + m[0].length - 1
     const t = al.character_start_times_seconds[a]
     const e = al.character_end_times_seconds[b]
-    out.push({ w: m[0].replace(/[.,:;!?…]+$/g, ''), t, d: e - t })
+    const w = m[0].replace(/[.,:;!?…]+$/g, '')
+    if (w) out.push({ w, t, d: e - t }) // ponctuation isolée (« : », « ? ») : pas un mot
   }
   return out
 }
@@ -119,6 +120,6 @@ for (const cue of cues) {
 fs.writeFileSync(cuesFile, JSON.stringify(cues, null, 2) + '\n')
 
 // Même traitement que la voix témoin (coupe-bas, chaleur, présence, compression, niveau commun)
-const r = spawnSync(process.execPath, [path.join(root, 'scripts/voice.mjs'), '--traiter', ...only], { stdio: 'inherit' })
+const r = spawnSync(process.execPath, [path.join(root, 'scripts/voice.mjs'), '--traiter', ...(SET ? [`--set=${SET}`] : []), ...only], { stdio: 'inherit' })
 await new Promise(r => setTimeout(r, 200))
 process.exit(r.status ?? 0)

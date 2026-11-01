@@ -1,0 +1,97 @@
+/* Visuels de la page d'accueil du site, repris de frontend/src/pages/Home.css
+   (écran verrouillé, géolocalisation, pile de cartes Wallet, « 0 »). Les animations CSS du site
+   sont remplacées par des valeurs calculées image par image (props des composants). */
+.fzx {
+  --t1: #f5f5f7;
+  --line2: rgba(255, 255, 255, 0.12);
+  --blue: #2997ff;
+  color: var(--t1);
+}
+
+.fzx .notif p { font-size: 13.5px; color: rgba(245, 245, 247, 0.82); line-height: 1.35; margin: 1px 0 0; }
+.fzx .notif-top strong { color: var(--t1); }
+.notif-app.sm { width: 24px; height: 24px; border-radius: 6px; padding: 0 4px; gap: 2px; }
+.notif-app.sm span { height: 3px; }
+
+/* Écran verrouillé (.tile-lock + .lv) */
+.lock-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 70% at 50% 0%, #1a3566 0%, #0b1426 45%, #050508 80%),
+    #050508;
+}
+.lock-bg::after {
+  content: '';
+  position: absolute;
+  inset: auto -20% -30% -20%;
+  height: 60%;
+  background: radial-gradient(closest-side, rgba(227, 201, 164, 0.22), transparent);
+}
+.lv { position: relative; z-index: 2; text-align: center; padding-top: 8px; }
+.lv-time {
+  font-size: 84px;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  background: linear-gradient(180deg, #ffffff, rgba(255, 255, 255, 0.6));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.lv-date { font-size: 16px; color: rgba(245, 245, 247, 0.75); margin: 6px 0 30px; font-weight: 500; }
+.lv-stack { display: flex; flex-direction: column; gap: 8px; }
+
+/* Géolocalisation (.gv) */
+.gv {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background:
+    radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1.6px) 0 0 / 16px 16px,
+    #0a0a0c;
+  -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, #000 55%, transparent 100%);
+}
+.gv-map { position: absolute; inset: 0; width: 100%; height: 100%; }
+.gv-map path { fill: none; stroke: rgba(255, 255, 255, 0.1); stroke-width: 12; stroke-linecap: round; }
+.gv-map path.thin { stroke-width: 4; stroke: rgba(255, 255, 255, 0.06); }
+.gv-pin { position: absolute; left: 50%; top: 46%; width: 38px; height: 38px; transform: translate(-50%, -50%); }
+.gv-dot {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.9), 0 8px 30px rgba(41, 151, 255, 0.8);
+}
+.gv-ring { position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(41, 151, 255, 0.7); }
+.gv-toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 6px;
+  border-radius: 980px;
+  background: rgba(38, 38, 42, 0.9);
+  border: 1px solid var(--line2);
+  font-size: 12.5px;
+  color: var(--t1);
+  white-space: nowrap;
+}
+
+/* Pile de cartes (.wv / .mp) */
+.mp .c3-face { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 -6px 22px rgba(0, 0, 0, 0.5); }
+
+/* « 0 » (.zero) */
+.zero {
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  line-height: 0.82;
+  background: linear-gradient(160deg, #ffffff 10%, #6e6e73 70%, #2c2c2e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

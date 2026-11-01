@@ -8,3 +8,5 @@ public/voix_video_tiktok/
 # Sons Pixabay (voir public/sons_tiktok/SOURCES.md)
 public/sons_tiktok/*.mp3
 public/sons_tiktok/*.wav
+# Bande-son générée par scripts/mix-explication.mjs (régénérable)
+public/explication/mix.wav

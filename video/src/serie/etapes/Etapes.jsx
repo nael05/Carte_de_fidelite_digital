@@ -137,7 +137,7 @@ export const Etapes = ({ son = true }) => {
       <Kicker t={t} at={C3() + 0.1} out={C4() - 0.3} text="Étape 3" top={170} color={ACCENT} />
       <Caption t={t} id="et01" top={250} size={64} accent={[5, 6]} />
       <Caption t={t} id="et02" top={250} size={60} from={1} accent={[4, 9]} />
-      <Caption t={t} id="et03" top={250} size={56} from={1} to={7} accent={[4, 5]} out={W('et03', 8) - 0.15} />
+      <Caption t={t} id="et03" top={250} size={56} from={1} to={7} accent={[4, 5]} out={W('et03', 8) - 0.5} />
       <Caption t={t} id="et03" top={250} size={56} from={8} accent={[12, 13, 14]} />
       <Caption t={t} id="et04" top={250} size={60} from={1} accent={[8, 9]} />
       <Caption t={t} id="et05" top={250} size={60} accent={[2, 3, 4]} out={FIN() - 0.2} />

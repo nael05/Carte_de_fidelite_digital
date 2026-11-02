@@ -20,14 +20,14 @@ Une vidéo par jour, entre 12 h et 13 h ou entre 18 h et 20 h (pauses des commer
 
 | Jour | Vidéo | Fichier | Rôle | Durée |
 | --- | --- | --- | --- | --- |
-| J1 | **1. La carte perdue** | `serie-1-carte-perdue.mp4` | Situation vécue, accroche émotionnelle | ~26 s |
-| J2 | **2. L'écran de verrouillage** | `serie-2-ecran.mp4` | L'effet « waouh » : la notification push | ~25 s |
-| J3 | **3. Fidelyz en 30 secondes** | `serie-3-film.mp4` | Film produit : tout comprendre d'un coup | ~31 s |
-| J4 | **4. Papier ou téléphone ?** | `serie-4-versus.mp4` | Comparaison, pousse au commentaire | ~24 s |
-| J5 | **5. Trois étapes** | `serie-5-etapes.mp4` | Démonstration sur les vrais écrans | ~32 s |
-| J6 | **6. Ils passent devant chez toi** | `serie-6-proximite.mp4` | La proximité (rappel à 50 m) | ~22 s |
-| J7 | **7. À ton image** | `serie-7-design.mp4` | Plan esthétique, le design de la carte | ~19 s |
-| J8 | **8. Combien ça coûte ?** | `serie-8-prix.mp4` | Le prix (gratuit jusqu'à 15 clients) et l'appel à l'action | ~20 s |
+| J1 | **1. La carte perdue** | `serie-1-carte-perdue.mp4` | Situation vécue, accroche émotionnelle | 23 s |
+| J2 | **2. L'écran de verrouillage** | `serie-2-ecran.mp4` | L'effet « waouh » : la notification push | 21,5 s |
+| J3 | **3. Fidelyz en 30 secondes** | `serie-3-film.mp4` | Film produit : tout comprendre d'un coup | 25,7 s |
+| J4 | **4. Papier ou téléphone ?** | `serie-4-versus.mp4` | Comparaison, pousse au commentaire | 21,7 s |
+| J5 | **5. Trois étapes** | `serie-5-etapes.mp4` | Démonstration sur les vrais écrans | 27 s |
+| J6 | **6. Ils passent devant chez toi** | `serie-6-proximite.mp4` | La proximité (rappel à 50 m) | 17,6 s |
+| J7 | **7. À ton image** | `serie-7-design.mp4` | Plan esthétique, le design de la carte | 14 s |
+| J8 | **8. Combien ça coûte ?** | `serie-8-prix.mp4` | Le prix (gratuit jusqu'à 15 clients) et l'appel à l'action | 15,9 s |
 
 Ensuite : republier la vidéo qui a le mieux marché avec une autre accroche, et décliner la 1 et la 2 par métier (boulangerie, coiffeur, café…).
 

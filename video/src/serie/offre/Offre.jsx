@@ -73,7 +73,7 @@ export const Offre = ({ son = true }) => {
   const t = useT()
   const ready = usePreload(TEX_OFFRE)
   const D = duree()
-  const blur = pr(t, W('of02', 0) - 0.4, W('of02', 0) + 0.4, easeInOut)
+  const blur = pr(t, W('of02', 0) - 1.0, W('of02', 0) - 0.15, easeInOut)
   return (
     <AbsoluteFill style={{ background: '#000' }}>
       <Shot t={t} a={0} b={FIN()}>

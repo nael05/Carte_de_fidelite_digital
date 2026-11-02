@@ -143,7 +143,7 @@ export const Ecran = ({ son = true }) => {
       <Caption t={t} id="ec01" top={250} size={66} accent={[5, 6, 7, 8]} />
       <Caption t={t} id="ec02" top={250} size={84} accent={[1, 2, 3]} out={B1() - 0.1} />
       <Caption t={t} id="ec03" top={230} size={64} accent={[1]} />
-      <Caption t={t} id="ec04" top={230} size={64} accent={[5, 6]} to={3} out={W('ec04', 4) - 0.1} />
+      <Caption t={t} id="ec04" top={230} size={64} accent={[5, 6]} to={3} out={W('ec04', 4) - 0.48} />
       <Caption t={t} id="ec04" top={230} size={64} accent={[5, 6]} from={4} />
       {t > W('ec04', 4) - 0.2 && t < END('ec04') + 0.6 && (
         <div style={{ position: 'absolute', left: 0, right: 0, top: 1480, textAlign: 'center', fontFamily, fontSize: 34, fontWeight: 500, color: MUTED, opacity: silk((t - W('ec04', 4)) / 0.6) * (1 - pr(t, END('ec04'), END('ec04') + 0.5)) }}>

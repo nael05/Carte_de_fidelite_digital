@@ -9,6 +9,8 @@ import { Keynote } from './tt/keynote/Keynote'
 import { DUREE_KN } from './tt/keynote/temps'
 import { Concurrent } from './tt/concurrent/Concurrent'
 import { DUREE_CC } from './tt/concurrent/temps'
+import { Formes } from './tt/formes/Formes'
+import { DUREE_LAQUE, Laque } from './tt/formes/Laque'
 import { FPS, fontFamily, sec } from './lib'
 
 /* Planche contact : 20 images de la vidéo sur une seule image, pour vérifier le montage */
@@ -62,5 +64,7 @@ export const Root = () => (
     <Composition id="BandeAnnonce" component={BandeAnnonce} durationInFrames={sec(DUREE_BA)} fps={FPS} width={1080} height={1920} defaultProps={{ son: true }} />
     <Composition id="Keynote" component={Keynote} durationInFrames={sec(DUREE_KN)} fps={FPS} width={1080} height={1920} defaultProps={{ son: true }} />
     <Composition id="Concurrent" component={Concurrent} durationInFrames={sec(DUREE_CC)} fps={FPS} width={1080} height={1920} defaultProps={{ son: true }} />
+    <Composition id="Formes" component={Formes} durationInFrames={1} fps={FPS} width={1080} height={1080} defaultProps={{ idee: 1, k: 0 }} />
+    <Composition id="Laque" component={Laque} durationInFrames={sec(DUREE_LAQUE)} fps={FPS} width={1080} height={1920} defaultProps={{ variante: 1 }} />
   </>
 )

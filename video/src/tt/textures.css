@@ -1,0 +1,74 @@
+@import '@fontsource/instrument-serif/400.css';
+@import '@fontsource/instrument-serif/400-italic.css';
+
+/* Pass à plat : sans tranche, sans ombre, sans reflet (la lumière vient de la scène 3D) */
+.tex { background: transparent; }
+.tex .c3-edge,
+.tex .c3-foil { display: none; }
+.tex .c3-face { box-shadow: none; }
+.tex-back .c3-front { display: none; }
+.tex-back .c3-back { transform: none; backface-visibility: visible; }
+
+/* Couches de la vue éclatée : chaque rendu ne garde qu'une partie du recto */
+.tex-body .wp-head, .tex-body .wp-fields, .tex-body .wp-barcode { opacity: 0; }
+.tex-logo .c3-front { background: transparent; }
+.tex-logo .wp-hfield, .tex-logo .wp-strip, .tex-logo .wp-fields, .tex-logo .wp-barcode { opacity: 0; }
+.tex-points .c3-front { background: transparent; }
+.tex-points .wp-logo, .tex-points .wp-strip, .tex-points .wp-fields, .tex-points .wp-barcode { opacity: 0; }
+.tex-details .c3-front { background: transparent; }
+.tex-details .wp-head, .tex-details .wp-strip { opacity: 0; }
+
+/* Carte papier */
+.paper {
+  background: #c9a57a;
+  font-family: 'Instrument Serif', serif;
+  color: #3a2414;
+  overflow: hidden;
+}
+.paper-head { position: absolute; left: 110px; top: 90px; }
+.paper-name { font-size: 150px; font-style: italic; line-height: 1; letter-spacing: -0.01em; }
+.paper-sub { font-family: 'Inter Variable', sans-serif; font-weight: 700; font-size: 38px; letter-spacing: 0.32em; margin-top: 22px; opacity: 0.75; }
+.paper-grid {
+  position: absolute;
+  left: 110px;
+  top: 470px;
+  display: grid;
+  grid-template-columns: repeat(5, 210px);
+  gap: 40px 46px;
+}
+.paper-slot {
+  position: relative;
+  width: 210px;
+  height: 210px;
+  border-radius: 50%;
+  border: 6px dashed rgba(58, 36, 20, 0.55);
+}
+.paper-stamp {
+  position: absolute;
+  inset: 14px;
+  border-radius: 50%;
+  border: 10px solid rgba(178, 34, 34, 0.82);
+  display: grid;
+  place-items: center;
+  color: rgba(178, 34, 34, 0.85);
+  font-size: 92px;
+  filter: url(#encre);
+  mix-blend-mode: multiply;
+}
+.paper-ten {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 110px;
+  font-style: italic;
+  opacity: 0.45;
+}
+.paper-foot {
+  position: absolute;
+  right: 110px;
+  top: 150px;
+  font-size: 54px;
+  font-style: italic;
+  opacity: 0.8;
+}

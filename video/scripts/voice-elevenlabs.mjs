@@ -66,13 +66,20 @@ if (args[0] === '--ajouter') {
 }
 
 // ─── Génération ──────────────────────────────────────────────
-const VOICE = env.ELEVENLABS_VOICE_ID ?? process.env.ELEVENLABS_VOICE_ID
+// --set=tiktok : répliques de la version verticale (src/voix-tiktok.json), mêmes dossiers audio
+const SET = process.argv.find(a => a.startsWith('--set='))?.slice(6)
+// Une voix et un jeu de réglages par vidéo (les autres jeux prennent ceux de .env)
+const PROFILS = {
+  bandeannonce: { voice: 'UBXZKOKbt62aLQHhc1Jm', speed: 0.92, stability: 0.38, style: 0.5 }, // François Louis, grave, bande-annonce
+  keynote: { voice: 'O31r762Gb3WFygrEOGh0', speed: 0.98, stability: 0.55, style: 0.18 }, // Victoria, posée
+  concurrent: { voice: 'IHngRooVccHyPqB4uQkG', speed: 1.12, stability: 0.32, style: 0.55 }, // Corentin, réseaux sociaux
+}
+const P = PROFILS[SET] ?? {}
+const VOICE = P.voice ?? env.ELEVENLABS_VOICE_ID ?? process.env.ELEVENLABS_VOICE_ID
 if (!VOICE) {
   console.error('ELEVENLABS_VOICE_ID manquant : trouve la voix avec --chercher puis ajoute-la dans video/.env')
   process.exit(1)
 }
-// --set=tiktok : répliques de la version verticale (src/voix-tiktok.json), mêmes dossiers audio
-const SET = process.argv.find(a => a.startsWith('--set='))?.slice(6)
 const cuesFile = path.join(root, SET ? `src/voix-${SET}.json` : 'src/voix.json')
 const cues = JSON.parse(fs.readFileSync(cuesFile, 'utf8'))
 const rawDir = path.join(root, 'public/voix/brut')
@@ -104,11 +111,11 @@ for (const cue of cues) {
       text,
       model_id: env.ELEVENLABS_MODEL ?? 'eleven_multilingual_v2',
       voice_settings: {
-        stability: num('ELEVENLABS_STABILITY', 0.45),
+        stability: P.stability ?? num('ELEVENLABS_STABILITY', 0.45),
         similarity_boost: 0.8,
-        style: num('ELEVENLABS_STYLE', 0.3),
+        style: P.style ?? num('ELEVENLABS_STYLE', 0.3),
         use_speaker_boost: true,
-        speed: num('ELEVENLABS_SPEED', 1.08),
+        speed: P.speed ?? num('ELEVENLABS_SPEED', 1.08),
       },
     }),
   })

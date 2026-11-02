@@ -3,9 +3,13 @@ import '@fontsource-variable/inter'
 import VOIX_MAIN from './voix.json'
 import VOIX_TIKTOK from './voix-tiktok.json'
 import VOIX_EXPLICATION from './voix-explication.json'
+import VOIX_BA from './voix-bandeannonce.json'
+import VOIX_KN from './voix-keynote.json'
+import VOIX_CC from './voix-concurrent.json'
 
-// Répliques des trois vidéos (identifiants distincts : vNN en 16:9, tNN en vertical, eNN pour l'explication)
-const VOIX = [...VOIX_MAIN, ...VOIX_TIKTOK, ...VOIX_EXPLICATION]
+// Répliques de toutes les vidéos (identifiants distincts : vNN en 16:9, tNN en vertical, eNN pour l'explication,
+// aNN bande-annonce, kNN keynote, cNN concurrent)
+const VOIX = [...VOIX_MAIN, ...VOIX_TIKTOK, ...VOIX_EXPLICATION, ...VOIX_BA, ...VOIX_KN, ...VOIX_CC]
 
 // Inter embarquée dans le bundle (aucun appel réseau pendant le rendu)
 export const fontFamily = '"Inter Variable", "Inter", sans-serif'

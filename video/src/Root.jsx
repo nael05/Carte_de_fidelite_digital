@@ -2,6 +2,13 @@ import { AbsoluteFill, Composition, Freeze } from 'remotion'
 import { Promo } from './Promo'
 import { Tiktok } from './tiktok/Tiktok'
 import { DUREE, Explication } from './explication/Explication'
+import { Tex, texMetadata } from './tt/Textures'
+import { BandeAnnonce } from './tt/bandeannonce/BandeAnnonce'
+import { DUREE_BA } from './tt/bandeannonce/temps'
+import { Keynote } from './tt/keynote/Keynote'
+import { DUREE_KN } from './tt/keynote/temps'
+import { Concurrent } from './tt/concurrent/Concurrent'
+import { DUREE_CC } from './tt/concurrent/temps'
 import { FPS, fontFamily, sec } from './lib'
 
 /* Planche contact : 20 images de la vidéo sur une seule image, pour vérifier le montage */
@@ -51,5 +58,9 @@ export const Root = () => (
     <Composition id="Tiktok" component={Tiktok} durationInFrames={sec(34)} fps={FPS} width={1080} height={1920} defaultProps={{ son: true }} />
     <Composition id="PlancheV" component={PlancheV} durationInFrames={sec(DUREE)} fps={FPS} width={1728} height={1152} defaultProps={{ times: [], video: 'tiktok' }} />
     <Composition id="Explication" component={Explication} durationInFrames={sec(DUREE)} fps={FPS} width={1080} height={1920} defaultProps={{ son: true }} />
+    <Composition id="Tex" component={Tex} durationInFrames={1} fps={FPS} width={1000} height={1000} defaultProps={{ kind: "pass" }} calculateMetadata={texMetadata} />
+    <Composition id="BandeAnnonce" component={BandeAnnonce} durationInFrames={sec(DUREE_BA)} fps={FPS} width={1080} height={1920} defaultProps={{ son: true }} />
+    <Composition id="Keynote" component={Keynote} durationInFrames={sec(DUREE_KN)} fps={FPS} width={1080} height={1920} defaultProps={{ son: true }} />
+    <Composition id="Concurrent" component={Concurrent} durationInFrames={sec(DUREE_CC)} fps={FPS} width={1080} height={1920} defaultProps={{ son: true }} />
   </>
 )

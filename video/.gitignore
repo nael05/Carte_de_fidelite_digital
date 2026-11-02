@@ -10,3 +10,9 @@ public/sons_tiktok/*.mp3
 public/sons_tiktok/*.wav
 # Bande-son générée par scripts/mix-explication.mjs (régénérable)
 public/explication/mix.wav
+# Sons Pixabay des TikToks 3D (voir public/sons_tt/SOURCES.md) et bandes-son générées par scripts/mix-tt.mjs
+public/sons_tt/*.mp3
+public/sons_tt/candidats/
+public/tt/*.wav
+# Textures des scènes 3D, régénérées par scripts/textures-tt.mjs
+public/tt/tex/

@@ -10,3 +10,7 @@ frontend/node_modules/
 .DS_Store
 *.local
 .env.test
+
+# Exports et fichiers temporaires
+pub_tiktok/
+*.timestamp-*.mjs

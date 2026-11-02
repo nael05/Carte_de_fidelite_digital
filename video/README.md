@@ -124,3 +124,21 @@ node scripts/stills-tt.mjs Keynote 2.5 9.2 17.6        # images de contrôle (ou
 - `src/tt/formes/` : planches de propositions de formes (`Formes`, `Laque`), `node scripts/formes-tt.mjs`.
 - `src/tt/kit3d.jsx` : carte Wallet et téléphone en 3D, texte extrudé (polices converties par `scripts/typeface-tt.mjs`), particules, matériau qui se consume, trajectoire de caméra continue.
 - Chaque vidéo : `temps.js` (instants clés), `Scene3D.jsx` (la 3D, plan par plan), le composant principal (légendes, transitions, étalonnage, son).
+
+### Dans le cloud (agent IA)
+
+Rien de secret ni de lourd n'est dans le dépôt : l'agent reconstruit tout.
+
+1. **Clé ElevenLabs** : variable d'environnement secrète `ELEVENLABS_API_KEY` dans les réglages de l'environnement cloud (jamais dans le dépôt, qui est public). Le script la lit quand il n'y a pas de `video/.env`. Les voix utilisées sont déjà ajoutées au compte ElevenLabs.
+2. Puis, dans `video/` :
+
+```bash
+npm install
+npm run sons:tt                                       # musiques et bruitages Pixabay → public/sons_tt/
+npm run textures:tt                                   # textures 3D → public/tt/tex/
+node scripts/voice-elevenlabs.mjs --set=noir          # voix d'une vidéo (bandeannonce, keynote, concurrent, noir, chrono)
+node scripts/mix-tt.mjs noir                          # sa bande-son
+npx remotion render Noir out/tt-4-noir.mp4 --gl=swangle --crf=16
+```
+
+Sans carte graphique (cas des serveurs cloud), rendre avec `--gl=swangle` (WebGL logiciel, plus lent) au lieu de `--gl=angle`.

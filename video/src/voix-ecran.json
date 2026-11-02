@@ -1,0 +1,292 @@
+[
+  {
+    "id": "ec01",
+    "at": 0.25,
+    "gap": 0,
+    "text": "L’endroit que tes clients regardent cent fois par jour ?",
+    "say": "L’endroit que tes clients regardent cent fois par jour ?",
+    "dur": 2.67,
+    "words": [
+      {
+        "w": "L’endroit",
+        "t": -0.039,
+        "d": 0.441
+      },
+      {
+        "w": "que",
+        "t": 0.449,
+        "d": 0.104
+      },
+      {
+        "w": "tes",
+        "t": 0.623,
+        "d": 0.139
+      },
+      {
+        "w": "clients",
+        "t": 0.785,
+        "d": 0.372
+      },
+      {
+        "w": "regardent",
+        "t": 1.18,
+        "d": 0.499
+      },
+      {
+        "w": "cent",
+        "t": 1.702,
+        "d": 0.163
+      },
+      {
+        "w": "fois",
+        "t": 1.9,
+        "d": 0.174
+      },
+      {
+        "w": "par",
+        "t": 2.109,
+        "d": 0.128
+      },
+      {
+        "w": "jour",
+        "t": 2.283,
+        "d": 0.221
+      }
+    ]
+  },
+  {
+    "id": "ec02",
+    "at": 3.37,
+    "gap": 0.45,
+    "text": "Leur écran de verrouillage.",
+    "say": "Leur écran de verrouillage.",
+    "dur": 1.37,
+    "words": [
+      {
+        "w": "Leur",
+        "t": -0.019,
+        "d": 0.244
+      },
+      {
+        "w": "écran",
+        "t": 0.283,
+        "d": 0.244
+      },
+      {
+        "w": "de",
+        "t": 0.561,
+        "d": 0.047
+      },
+      {
+        "w": "verrouillage",
+        "t": 0.631,
+        "d": 0.743
+      }
+    ]
+  },
+  {
+    "id": "ec03",
+    "at": 5.54,
+    "gap": 0.8,
+    "text": "Avec Fidelyz, tu écris ton offre…",
+    "say": "Avec Fidéliz, tu écris ton offre…",
+    "dur": 2.15,
+    "words": [
+      {
+        "w": "Avec",
+        "t": -0.005,
+        "d": 0.302
+      },
+      {
+        "w": "Fidéliz",
+        "t": 0.355,
+        "d": 0.604
+      },
+      {
+        "w": "tu",
+        "t": 0.993,
+        "d": 0.117
+      },
+      {
+        "w": "écris",
+        "t": 1.168,
+        "d": 0.255
+      },
+      {
+        "w": "ton",
+        "t": 1.446,
+        "d": 0.174
+      },
+      {
+        "w": "offre",
+        "t": 1.69,
+        "d": 0.627
+      }
+    ]
+  },
+  {
+    "id": "ec04",
+    "at": 8.59,
+    "gap": 0.9,
+    "text": "… et elle s’affiche ici. Chez tous tes clients. En une seconde.",
+    "say": "Et elle s’affiche ici. Chez tous tes clients. En une seconde.",
+    "dur": 3.47,
+    "words": [
+      {
+        "w": "Et",
+        "t": -0.051,
+        "d": 0.151
+      },
+      {
+        "w": "elle",
+        "t": 0.135,
+        "d": 0.139
+      },
+      {
+        "w": "s’affiche",
+        "t": 0.309,
+        "d": 0.453
+      },
+      {
+        "w": "ici",
+        "t": 0.785,
+        "d": 0.395
+      },
+      {
+        "w": "Chez",
+        "t": 1.354,
+        "d": 0.232
+      },
+      {
+        "w": "tous",
+        "t": 1.644,
+        "d": 0.163
+      },
+      {
+        "w": "tes",
+        "t": 1.83,
+        "d": 0.128
+      },
+      {
+        "w": "clients",
+        "t": 1.981,
+        "d": 0.453
+      },
+      {
+        "w": "En",
+        "t": 2.503,
+        "d": 0.163
+      },
+      {
+        "w": "une",
+        "t": 2.747,
+        "d": 0.104
+      },
+      {
+        "w": "seconde",
+        "t": 2.875,
+        "d": 0.743
+      }
+    ]
+  },
+  {
+    "id": "ec05",
+    "at": 12.66,
+    "gap": 0.6,
+    "text": "Pas de SMS à payer. Pas d’email perdu dans les spams.",
+    "say": "Pas de SMS à payer. Pas d’email perdu dans les spams.",
+    "dur": 3.59,
+    "words": [
+      {
+        "w": "Pas",
+        "t": -0.086,
+        "d": 0.221
+      },
+      {
+        "w": "de",
+        "t": 0.158,
+        "d": 0.069
+      },
+      {
+        "w": "SMS",
+        "t": 0.286,
+        "d": 0.336
+      },
+      {
+        "w": "à",
+        "t": 0.692,
+        "d": 0.023
+      },
+      {
+        "w": "payer",
+        "t": 0.773,
+        "d": 0.465
+      },
+      {
+        "w": "Pas",
+        "t": 1.748,
+        "d": 0.175
+      },
+      {
+        "w": "d’email",
+        "t": 1.946,
+        "d": 0.29
+      },
+      {
+        "w": "perdu",
+        "t": 2.306,
+        "d": 0.325
+      },
+      {
+        "w": "dans",
+        "t": 2.689,
+        "d": 0.127
+      },
+      {
+        "w": "les",
+        "t": 2.84,
+        "d": 0.104
+      },
+      {
+        "w": "spams",
+        "t": 2.967,
+        "d": 0.755
+      }
+    ]
+  },
+  {
+    "id": "ec06",
+    "at": 16.85,
+    "gap": 0.6,
+    "text": "Fidelyz. Fais revenir tes clients.",
+    "say": "Fidéliz. Fais revenir tes clients.",
+    "dur": 2.45,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0,
+        "d": 0.801
+      },
+      {
+        "w": "Fais",
+        "t": 1.184,
+        "d": 0.174
+      },
+      {
+        "w": "revenir",
+        "t": 1.382,
+        "d": 0.348
+      },
+      {
+        "w": "tes",
+        "t": 1.788,
+        "d": 0.128
+      },
+      {
+        "w": "clients",
+        "t": 1.939,
+        "d": 0.755
+      }
+    ]
+  }
+]

@@ -74,6 +74,8 @@ const PROFILS = {
   keynote: { voice: 'O31r762Gb3WFygrEOGh0', speed: 0.98, stability: 0.55, style: 0.18 }, // Victoria, posée
   concurrent: { voice: 'IHngRooVccHyPqB4uQkG', speed: 1.12, stability: 0.32, style: 0.55 }, // Corentin, réseaux sociaux
   noir: { voice: 'IbbR6Av0dWuQJS0b8JVT', speed: 0.92, stability: 0.5, style: 0.3 }, // Hugo, chaud et posé
+  // Série « Studio » (PLAN-TIKTOK.md) : une seule voix, Paul K, posée
+  ...Object.fromEntries(['perdue', 'ecran', 'film', 'versus', 'etapes', 'geo', 'design', 'offre'].map(k => [k, { voice: 'MBIQRZjHPU6xEjGuB3b8', speed: k === 'offre' ? 1.04 : 1.0, stability: 0.5, style: 0.28 }])),
   chrono: { voice: 'mvhJVdVoTWVUtL4keT7W', speed: 1.08, stability: 0.35, style: 0.5 }, // Simon, énergique et rapide
 }
 const P = PROFILS[SET] ?? {}

@@ -1,0 +1,342 @@
+[
+  {
+    "id": "et01",
+    "at": 0.25,
+    "gap": 0,
+    "text": "Une carte de fidélité digitale ? Trois étapes.",
+    "say": "Une carte de fidélité digitale ? Trois étapes.",
+    "dur": 3.22,
+    "words": [
+      {
+        "w": "Une",
+        "t": -0.026,
+        "d": 0.197
+      },
+      {
+        "w": "carte",
+        "t": 0.206,
+        "d": 0.29
+      },
+      {
+        "w": "de",
+        "t": 0.554,
+        "d": 0.082
+      },
+      {
+        "w": "fidélité",
+        "t": 0.694,
+        "d": 0.511
+      },
+      {
+        "w": "digitale",
+        "t": 1.251,
+        "d": 0.627
+      },
+      {
+        "w": "Trois",
+        "t": 2.226,
+        "d": 0.256
+      },
+      {
+        "w": "étapes",
+        "t": 2.575,
+        "d": 0.65
+      }
+    ]
+  },
+  {
+    "id": "et02",
+    "at": 4.07,
+    "gap": 0.6,
+    "text": "Un. Tu importes ton logo et tu choisis tes couleurs.",
+    "say": "Un. Tu importes ton logo et tu choisis tes couleurs.",
+    "dur": 3.3,
+    "words": [
+      {
+        "w": "Un",
+        "t": 0,
+        "d": 0.209
+      },
+      {
+        "w": "Tu",
+        "t": 0.418,
+        "d": 0.162
+      },
+      {
+        "w": "importes",
+        "t": 0.627,
+        "d": 0.43
+      },
+      {
+        "w": "ton",
+        "t": 1.08,
+        "d": 0.139
+      },
+      {
+        "w": "logo",
+        "t": 1.265,
+        "d": 0.372
+      },
+      {
+        "w": "et",
+        "t": 1.811,
+        "d": 0.163
+      },
+      {
+        "w": "tu",
+        "t": 2.009,
+        "d": 0.104
+      },
+      {
+        "w": "choisis",
+        "t": 2.159,
+        "d": 0.349
+      },
+      {
+        "w": "tes",
+        "t": 2.531,
+        "d": 0.128
+      },
+      {
+        "w": "couleurs",
+        "t": 2.682,
+        "d": 0.755
+      }
+    ]
+  },
+  {
+    "id": "et03",
+    "at": 8.07,
+    "gap": 0.7,
+    "text": "Deux. Tu poses ton QR code en caisse. Tes clients scannent, et ajoutent leur carte en un geste.",
+    "say": "Deux. Tu poses ton QR code en caisse. Tes clients scannent, et ajoutent leur carte en un geste.",
+    "dur": 6.77,
+    "words": [
+      {
+        "w": "Deux",
+        "t": -0.01,
+        "d": 0.476
+      },
+      {
+        "w": "Tu",
+        "t": 1.07,
+        "d": 0.151
+      },
+      {
+        "w": "poses",
+        "t": 1.279,
+        "d": 0.232
+      },
+      {
+        "w": "ton",
+        "t": 1.534,
+        "d": 0.116
+      },
+      {
+        "w": "QR",
+        "t": 1.708,
+        "d": 0.267
+      },
+      {
+        "w": "code",
+        "t": 2.057,
+        "d": 0.197
+      },
+      {
+        "w": "en",
+        "t": 2.277,
+        "d": 0.047
+      },
+      {
+        "w": "caisse",
+        "t": 2.382,
+        "d": 0.534
+      },
+      {
+        "w": "Tes",
+        "t": 3.519,
+        "d": 0.198
+      },
+      {
+        "w": "clients",
+        "t": 3.74,
+        "d": 0.418
+      },
+      {
+        "w": "scannent",
+        "t": 4.181,
+        "d": 0.557
+      },
+      {
+        "w": "et",
+        "t": 4.913,
+        "d": 0.127
+      },
+      {
+        "w": "ajoutent",
+        "t": 5.075,
+        "d": 0.395
+      },
+      {
+        "w": "leur",
+        "t": 5.493,
+        "d": 0.128
+      },
+      {
+        "w": "carte",
+        "t": 5.679,
+        "d": 0.279
+      },
+      {
+        "w": "en",
+        "t": 5.981,
+        "d": 0.069
+      },
+      {
+        "w": "un",
+        "t": 6.143,
+        "d": 0.047
+      },
+      {
+        "w": "geste",
+        "t": 6.236,
+        "d": 0.674
+      }
+    ]
+  },
+  {
+    "id": "et04",
+    "at": 15.54,
+    "gap": 0.7,
+    "text": "Trois. À chaque passage, un scan, et les points s’ajoutent.",
+    "say": "Trois. À chaque passage, un scan, et les points s’ajoutent.",
+    "dur": 4.07,
+    "words": [
+      {
+        "w": "Trois",
+        "t": -0.075,
+        "d": 0.464
+      },
+      {
+        "w": "À",
+        "t": 0.598,
+        "d": 0.082
+      },
+      {
+        "w": "chaque",
+        "t": 0.761,
+        "d": 0.232
+      },
+      {
+        "w": "passage",
+        "t": 1.028,
+        "d": 0.604
+      },
+      {
+        "w": "un",
+        "t": 1.748,
+        "d": 0.127
+      },
+      {
+        "w": "scan",
+        "t": 1.899,
+        "d": 0.592
+      },
+      {
+        "w": "et",
+        "t": 2.816,
+        "d": 0.128
+      },
+      {
+        "w": "les",
+        "t": 2.99,
+        "d": 0.105
+      },
+      {
+        "w": "points",
+        "t": 3.129,
+        "d": 0.267
+      },
+      {
+        "w": "s’ajoutent",
+        "t": 3.42,
+        "d": 0.824
+      }
+    ]
+  },
+  {
+    "id": "et05",
+    "at": 20.31,
+    "gap": 0.7,
+    "text": "Moins de cinq minutes. Gratuit jusqu’à quinze clients.",
+    "say": "Moins de cinq minutes. Gratuit jusqu’à quinze clients.",
+    "dur": 3,
+    "words": [
+      {
+        "w": "Moins",
+        "t": -0.014,
+        "d": 0.244
+      },
+      {
+        "w": "de",
+        "t": 0.265,
+        "d": 0.093
+      },
+      {
+        "w": "cinq",
+        "t": 0.404,
+        "d": 0.186
+      },
+      {
+        "w": "minutes",
+        "t": 0.648,
+        "d": 0.522
+      },
+      {
+        "w": "Gratuit",
+        "t": 1.379,
+        "d": 0.441
+      },
+      {
+        "w": "jusqu’à",
+        "t": 1.844,
+        "d": 0.36
+      },
+      {
+        "w": "quinze",
+        "t": 2.262,
+        "d": 0.243
+      },
+      {
+        "w": "clients",
+        "t": 2.529,
+        "d": 0.661
+      }
+    ]
+  },
+  {
+    "id": "et06",
+    "at": 23.81,
+    "gap": 0.5,
+    "text": "Lien en bio.",
+    "say": "Lien en bio.",
+    "dur": 0.94,
+    "words": [
+      {
+        "w": "Lien",
+        "t": -0.021,
+        "d": 0.302
+      },
+      {
+        "w": "en",
+        "t": 0.339,
+        "d": 0.058
+      },
+      {
+        "w": "bio",
+        "t": 0.455,
+        "d": 0.592
+      }
+    ]
+  }
+]

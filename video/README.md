@@ -142,3 +142,31 @@ npx remotion render Noir out/tt-4-noir.mp4 --gl=swangle --crf=16
 ```
 
 Sans carte graphique (cas des serveurs cloud), rendre avec `--gl=swangle` (WebGL logiciel, plus lent) au lieu de `--gl=angle`.
+
+## Série « Studio » : plan de lancement TikTok (`src/serie/`)
+
+Huit vidéos verticales au même style (studio sombre, un seul bleu d'accent, Inter serrée, 3D, transitions en fondu flouté et balayage de lumière), une seule voix ElevenLabs (Paul K). Stratégie, ordre de publication et scripts : **`PLAN-TIKTOK.md`**.
+
+| Ordre | Composition | Fichier | Durée |
+| --- | --- | --- | --- |
+| 1 | `SerieCartePerdue` | `out/serie-1-carte-perdue.mp4` | 23 s |
+| 2 | `SerieEcran` | `out/serie-2-ecran.mp4` | 21,5 s |
+| 3 | `SerieFilm` | `out/serie-3-film.mp4` | 25,7 s |
+| 4 | `SerieVersus` | `out/serie-4-versus.mp4` | 21,7 s |
+| 5 | `SerieEtapes` | `out/serie-5-etapes.mp4` | 27 s |
+| 6 | `SerieProximite` | `out/serie-6-proximite.mp4` | 17,6 s |
+| 7 | `SerieDesign` | `out/serie-7-design.mp4` | 14 s |
+| 8 | `SeriePrix` | `out/serie-8-prix.mp4` | 15,9 s |
+
+- `src/serie/kit.jsx` : kit commun (plans et transitions `Shot`, légendes calées sur la voix `Caption`, balayage `Sweep`, plan de fin `EndCard`, téléphone 3D iPhone/Android, pass, textures préchargées, captures d'écran longues vues dans un téléphone `screenTex`).
+- Les écrans du tableau de bord sont les vraies captures de `public/explication/ecrans/` ; le pass, l'écran verrouillé et le Wallet sont les textures de `scripts/textures-tt.mjs`.
+- Tous les instants sont calés sur les mots de la voix (`W('pa04', 2)` = 3ᵉ mot de la réplique pa04) : si une voix est régénérée, l'image suit.
+
+```bash
+node scripts/serie-scripts.mjs [set…]                 # (ré)écrit les répliques à partir des scripts (écrase src/voix-<set>.json)
+node scripts/voice-elevenlabs.mjs --set=perdue        # voix (sets : perdue ecran film versus etapes geo design offre)
+node scripts/serie-temps.mjs perdue                   # enchaîne les répliques
+node scripts/mix-tt.mjs perdue                        # bande-son → public/tt/mix-perdue.wav (−14 LUFS)
+node scripts/serie-planche.mjs SerieCartePerdue 0.5 3 6 9   # planche contact de contrôle
+sh scripts/serie-render.sh SerieCartePerdue:serie-1-carte-perdue   # rendu (GL=angle avec une carte graphique)
+```

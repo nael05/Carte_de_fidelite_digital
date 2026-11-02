@@ -12,6 +12,6 @@ const inputProps = { son: false }
 const composition = await selectComposition({ serveUrl, id, inputProps })
 for (const s of times.map(Number)) {
   const output = path.join(root, 'out/stills', `${id}-${s.toFixed(2)}.jpg`)
-  await renderStill({ composition, serveUrl, frame: Math.round(s * 30), output, inputProps, imageFormat: 'jpeg', jpegQuality: 85, scale: 0.5, chromiumOptions: { gl: 'angle' }, timeoutInMilliseconds: 120000, onBrowserLog: process.env.LOGS ? l => console.log('[navigateur]', l.type, l.text, JSON.stringify(l.stackTrace?.[0] ?? '')) : undefined })
+  await renderStill({ composition, serveUrl, frame: Math.round(s * 30), output, inputProps, imageFormat: 'jpeg', jpegQuality: 85, scale: 0.5, chromiumOptions: { gl: process.env.GL ?? 'angle' }, timeoutInMilliseconds: 120000, onBrowserLog: process.env.LOGS ? l => console.log('[navigateur]', l.type, l.text, JSON.stringify(l.stackTrace?.[0] ?? '')) : undefined })
   console.log(output)
 }

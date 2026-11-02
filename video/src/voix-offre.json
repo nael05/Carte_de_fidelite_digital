@@ -1,0 +1,192 @@
+[
+  {
+    "id": "of01",
+    "at": 0.25,
+    "gap": 0,
+    "text": "Combien coûte une carte de fidélité digitale ?",
+    "say": "Combien coûte une carte de fidélité digitale ?",
+    "dur": 2.61,
+    "words": [
+      {
+        "w": "Combien",
+        "t": -0.067,
+        "d": 0.36
+      },
+      {
+        "w": "coûte",
+        "t": 0.351,
+        "d": 0.209
+      },
+      {
+        "w": "une",
+        "t": 0.583,
+        "d": 0.105
+      },
+      {
+        "w": "carte",
+        "t": 0.711,
+        "d": 0.29
+      },
+      {
+        "w": "de",
+        "t": 1.059,
+        "d": 0.081
+      },
+      {
+        "w": "fidélité",
+        "t": 1.198,
+        "d": 0.535
+      },
+      {
+        "w": "digitale",
+        "t": 1.791,
+        "d": 0.627
+      }
+    ]
+  },
+  {
+    "id": "of02",
+    "at": 3.36,
+    "gap": 0.5,
+    "text": "Zéro euro.",
+    "say": "Zéro euro.",
+    "dur": 0.83,
+    "words": [
+      {
+        "w": "Zéro",
+        "t": -0.001,
+        "d": 0.36
+      },
+      {
+        "w": "euro",
+        "t": 0.405,
+        "d": 0.43
+      }
+    ]
+  },
+  {
+    "id": "of03",
+    "at": 4.79,
+    "gap": 0.6,
+    "text": "Gratuit jusqu’à quinze clients, Apple et Google Wallet compris.",
+    "say": "Gratuit jusqu’à quinze clients, Apple et Google Wallet compris.",
+    "dur": 3.49,
+    "words": [
+      {
+        "w": "Gratuit",
+        "t": -0.033,
+        "d": 0.476
+      },
+      {
+        "w": "jusqu’à",
+        "t": 0.489,
+        "d": 0.337
+      },
+      {
+        "w": "quinze",
+        "t": 0.873,
+        "d": 0.255
+      },
+      {
+        "w": "clients",
+        "t": 1.151,
+        "d": 0.441
+      },
+      {
+        "w": "Apple",
+        "t": 1.732,
+        "d": 0.418
+      },
+      {
+        "w": "et",
+        "t": 2.173,
+        "d": 0.046
+      },
+      {
+        "w": "Google",
+        "t": 2.254,
+        "d": 0.36
+      },
+      {
+        "w": "Wallet",
+        "t": 2.649,
+        "d": 0.267
+      },
+      {
+        "w": "compris",
+        "t": 2.986,
+        "d": 0.696
+      }
+    ]
+  },
+  {
+    "id": "of04",
+    "at": 8.78,
+    "gap": 0.5,
+    "text": "Sans engagement. Prête en cinq minutes.",
+    "say": "Sans engagement. Prête en cinq minutes.",
+    "dur": 2.24,
+    "words": [
+      {
+        "w": "Sans",
+        "t": -0.005,
+        "d": 0.267
+      },
+      {
+        "w": "engagement",
+        "t": 0.32,
+        "d": 0.592
+      },
+      {
+        "w": "Prête",
+        "t": 1.028,
+        "d": 0.256
+      },
+      {
+        "w": "en",
+        "t": 1.319,
+        "d": 0.046
+      },
+      {
+        "w": "cinq",
+        "t": 1.411,
+        "d": 0.175
+      },
+      {
+        "w": "minutes",
+        "t": 1.644,
+        "d": 0.766
+      }
+    ]
+  },
+  {
+    "id": "of05",
+    "at": 11.62,
+    "gap": 0.6,
+    "text": "Fidelyz. Lien en bio.",
+    "say": "Fidéliz. Lien en bio.",
+    "dur": 1.64,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": -0.005,
+        "d": 0.743
+      },
+      {
+        "w": "Lien",
+        "t": 0.854,
+        "d": 0.256
+      },
+      {
+        "w": "en",
+        "t": 1.168,
+        "d": 0.058
+      },
+      {
+        "w": "bio",
+        "t": 1.284,
+        "d": 0.522
+      }
+    ]
+  }
+]

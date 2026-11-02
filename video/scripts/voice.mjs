@@ -39,13 +39,15 @@ const todo = cues.filter(c => !only.length || only.includes(c.id))
 
 // ffmpeg fourni par Remotion (ou celui du système)
 const ffmpeg = (() => {
-  try {
-    const require = createRequire(import.meta.url)
-    const dir = path.dirname(require.resolve(`@remotion/compositor-${process.platform}-${process.arch}${process.platform === 'win32' ? '-msvc' : ''}/package.json`))
-    const exe = path.join(dir, process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg')
-    if (fs.existsSync(exe)) return exe
-  } catch {}
-  return 'ffmpeg'
+  const require = createRequire(import.meta.url)
+  const base = `@remotion/compositor-${process.platform}-${process.arch}`
+  for (const name of [base + (process.platform === 'win32' ? '-msvc' : ''), base + '-gnu', base + '-musl']) {
+    try {
+      const dir = path.dirname(require.resolve(`${name}/package.json`))
+      return path.join(dir, process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg')
+    } catch {}
+  }
+  return 'ffmpeg' // celui du système
 })()
 
 // ─── Synthèse ────────────────────────────────────────────────

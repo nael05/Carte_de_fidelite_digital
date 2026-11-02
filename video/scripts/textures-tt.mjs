@@ -41,6 +41,10 @@ const TEX = {
   'pass-noir-azur': { kind: 'pass', skin: 'noirazur' },
   'pass-noir-or': { kind: 'pass', skin: 'noiror' },
   'pass-noir-back': { kind: 'pass', skin: 'noir', back: true },
+  // Série « Studio » : la campagne de la page « Campagnes » (public/explication/ecrans/campaigns-filled.png)
+  'lock-campagne': { kind: 'lock', notifs: [{ ...ML, body: 'Le croissant du mois est là. −20 % sur les viennoiseries ce week-end. À tout de suite !' }] },
+  'notif-campagne': { kind: 'notif', body: 'Le croissant du mois est là. −20 % sur les viennoiseries ce week-end. À tout de suite !' },
+  'pass-graphite-0': { kind: 'pass', skin: 'graphite', points: 0, name: 'Maison Lumière' },
   qr: { kind: 'qr' },
   papier: { kind: 'paper', stamps: 9 },
   'lock-retour': { kind: 'lock', notifs: [{ ...ML, body: 'Ça fait longtemps ! Ton café t’attend : passe cette semaine, on t’offre le prochain.' }] },

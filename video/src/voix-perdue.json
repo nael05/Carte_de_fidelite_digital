@@ -1,0 +1,302 @@
+[
+  {
+    "id": "pa01",
+    "at": 0.25,
+    "gap": 0,
+    "text": "« J’ai perdu ma carte. »",
+    "say": "J’ai perdu ma carte.",
+    "dur": 1.29,
+    "words": [
+      {
+        "w": "J’ai",
+        "t": -0.006,
+        "d": 0.186
+      },
+      {
+        "w": "perdu",
+        "t": 0.226,
+        "d": 0.279
+      },
+      {
+        "w": "ma",
+        "t": 0.551,
+        "d": 0.093
+      },
+      {
+        "w": "carte",
+        "t": 0.702,
+        "d": 0.592
+      }
+    ]
+  },
+  {
+    "id": "pa02",
+    "at": 2.24,
+    "gap": 0.7,
+    "text": "Neuf tampons. Il n’en manquait qu’un.",
+    "say": "Neuf tampons. Il n’en manquait qu’un.",
+    "dur": 2.21,
+    "words": [
+      {
+        "w": "Neuf",
+        "t": -0.003,
+        "d": 0.232
+      },
+      {
+        "w": "tampons",
+        "t": 0.287,
+        "d": 0.441
+      },
+      {
+        "w": "Il",
+        "t": 1.112,
+        "d": 0.174
+      },
+      {
+        "w": "n’en",
+        "t": 1.355,
+        "d": 0.105
+      },
+      {
+        "w": "manquait",
+        "t": 1.495,
+        "d": 0.336
+      },
+      {
+        "w": "qu’un",
+        "t": 1.855,
+        "d": 0.51
+      }
+    ]
+  },
+  {
+    "id": "pa03",
+    "at": 4.95,
+    "gap": 0.5,
+    "text": "Et ton client repart… sans aucune raison de revenir.",
+    "say": "Et ton client repart… sans aucune raison de revenir.",
+    "dur": 3.4,
+    "words": [
+      {
+        "w": "Et",
+        "t": -0.026,
+        "d": 0.163
+      },
+      {
+        "w": "ton",
+        "t": 0.16,
+        "d": 0.127
+      },
+      {
+        "w": "client",
+        "t": 0.322,
+        "d": 0.36
+      },
+      {
+        "w": "repart",
+        "t": 0.717,
+        "d": 0.627
+      },
+      {
+        "w": "sans",
+        "t": 1.785,
+        "d": 0.232
+      },
+      {
+        "w": "aucune",
+        "t": 2.087,
+        "d": 0.29
+      },
+      {
+        "w": "raison",
+        "t": 2.424,
+        "d": 0.267
+      },
+      {
+        "w": "de",
+        "t": 2.714,
+        "d": 0.046
+      },
+      {
+        "w": "revenir",
+        "t": 2.795,
+        "d": 0.801
+      }
+    ]
+  },
+  {
+    "id": "pa04",
+    "at": 9.25,
+    "gap": 0.9,
+    "text": "Avec Fidelyz, sa carte vit dans son téléphone.",
+    "say": "Avec Fidéliz, sa carte vit dans son téléphone.",
+    "dur": 2.89,
+    "words": [
+      {
+        "w": "Avec",
+        "t": -0.042,
+        "d": 0.313
+      },
+      {
+        "w": "Fidéliz",
+        "t": 0.33,
+        "d": 0.65
+      },
+      {
+        "w": "sa",
+        "t": 1.131,
+        "d": 0.162
+      },
+      {
+        "w": "carte",
+        "t": 1.351,
+        "d": 0.325
+      },
+      {
+        "w": "vit",
+        "t": 1.723,
+        "d": 0.127
+      },
+      {
+        "w": "dans",
+        "t": 1.874,
+        "d": 0.127
+      },
+      {
+        "w": "son",
+        "t": 2.025,
+        "d": 0.127
+      },
+      {
+        "w": "téléphone",
+        "t": 2.199,
+        "d": 0.87
+      }
+    ]
+  },
+  {
+    "id": "pa05",
+    "at": 12.59,
+    "gap": 0.45,
+    "text": "Impossible à perdre. Toujours à jour.",
+    "say": "Impossible à perdre. Toujours à jour.",
+    "dur": 2.15,
+    "words": [
+      {
+        "w": "Impossible",
+        "t": -0.04,
+        "d": 0.58
+      },
+      {
+        "w": "à",
+        "t": 0.564,
+        "d": 0.023
+      },
+      {
+        "w": "perdre",
+        "t": 0.633,
+        "d": 0.453
+      },
+      {
+        "w": "Toujours",
+        "t": 1.26,
+        "d": 0.349
+      },
+      {
+        "w": "à",
+        "t": 1.632,
+        "d": 0.023
+      },
+      {
+        "w": "jour",
+        "t": 1.725,
+        "d": 0.65
+      }
+    ]
+  },
+  {
+    "id": "pa06",
+    "at": 15.19,
+    "gap": 0.45,
+    "text": "Et sa récompense l’attend, là, dans son Wallet.",
+    "say": "Et sa récompense l’attend, là, dans son Wallet.",
+    "dur": 2.85,
+    "words": [
+      {
+        "w": "Et",
+        "t": -0.041,
+        "d": 0.151
+      },
+      {
+        "w": "sa",
+        "t": 0.145,
+        "d": 0.104
+      },
+      {
+        "w": "récompense",
+        "t": 0.307,
+        "d": 0.546
+      },
+      {
+        "w": "l’attend",
+        "t": 0.888,
+        "d": 0.429
+      },
+      {
+        "w": "là",
+        "t": 1.468,
+        "d": 0.302
+      },
+      {
+        "w": "dans",
+        "t": 1.851,
+        "d": 0.175
+      },
+      {
+        "w": "son",
+        "t": 2.049,
+        "d": 0.128
+      },
+      {
+        "w": "Wallet",
+        "t": 2.223,
+        "d": 0.708
+      }
+    ]
+  },
+  {
+    "id": "pa07",
+    "at": 18.74,
+    "gap": 0.7,
+    "text": "Fidelyz. Fais revenir tes clients.",
+    "say": "Fidéliz. Fais revenir tes clients.",
+    "dur": 2.27,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": -0.022,
+        "d": 0.778
+      },
+      {
+        "w": "Fais",
+        "t": 1.081,
+        "d": 0.162
+      },
+      {
+        "w": "revenir",
+        "t": 1.278,
+        "d": 0.325
+      },
+      {
+        "w": "tes",
+        "t": 1.65,
+        "d": 0.116
+      },
+      {
+        "w": "clients",
+        "t": 1.789,
+        "d": 0.697
+      }
+    ]
+  }
+]

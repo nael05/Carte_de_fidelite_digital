@@ -1,0 +1,297 @@
+[
+  {
+    "id": "vs01",
+    "at": 0.25,
+    "gap": 0,
+    "text": "Carte en papier, ou carte dans le téléphone ?",
+    "say": "Carte en papier, ou carte dans le téléphone ?",
+    "dur": 2.58,
+    "words": [
+      {
+        "w": "Carte",
+        "t": -0.064,
+        "d": 0.337
+      },
+      {
+        "w": "en",
+        "t": 0.296,
+        "d": 0.046
+      },
+      {
+        "w": "papier",
+        "t": 0.389,
+        "d": 0.522
+      },
+      {
+        "w": "ou",
+        "t": 0.969,
+        "d": 0.105
+      },
+      {
+        "w": "carte",
+        "t": 1.143,
+        "d": 0.291
+      },
+      {
+        "w": "dans",
+        "t": 1.492,
+        "d": 0.151
+      },
+      {
+        "w": "le",
+        "t": 1.666,
+        "d": 0.081
+      },
+      {
+        "w": "téléphone",
+        "t": 1.805,
+        "d": 0.592
+      }
+    ]
+  },
+  {
+    "id": "vs02",
+    "at": 3.43,
+    "gap": 0.6,
+    "text": "Le papier se perd. Le téléphone, jamais.",
+    "say": "Le papier se perd. Le téléphone, jamais.",
+    "dur": 2.97,
+    "words": [
+      {
+        "w": "Le",
+        "t": -0.022,
+        "d": 0.151
+      },
+      {
+        "w": "papier",
+        "t": 0.175,
+        "d": 0.302
+      },
+      {
+        "w": "se",
+        "t": 0.524,
+        "d": 0.116
+      },
+      {
+        "w": "perd",
+        "t": 0.698,
+        "d": 0.418
+      },
+      {
+        "w": "Le",
+        "t": 1.394,
+        "d": 0.128
+      },
+      {
+        "w": "téléphone",
+        "t": 1.569,
+        "d": 0.731
+      },
+      {
+        "w": "jamais",
+        "t": 2.509,
+        "d": 0.766
+      }
+    ]
+  },
+  {
+    "id": "vs03",
+    "at": 7,
+    "gap": 0.6,
+    "text": "Le papier s’abîme. Le pass reste impeccable, et toujours à jour.",
+    "say": "Le papier s’abîme. Le pass reste impeccable, et toujours à jour.",
+    "dur": 3.96,
+    "words": [
+      {
+        "w": "Le",
+        "t": -0.022,
+        "d": 0.163
+      },
+      {
+        "w": "papier",
+        "t": 0.199,
+        "d": 0.29
+      },
+      {
+        "w": "s’abîme",
+        "t": 0.535,
+        "d": 0.592
+      },
+      {
+        "w": "Le",
+        "t": 1.452,
+        "d": 0.128
+      },
+      {
+        "w": "pass",
+        "t": 1.627,
+        "d": 0.174
+      },
+      {
+        "w": "reste",
+        "t": 1.859,
+        "d": 0.22
+      },
+      {
+        "w": "impeccable",
+        "t": 2.103,
+        "d": 0.673
+      },
+      {
+        "w": "et",
+        "t": 2.834,
+        "d": 0.128
+      },
+      {
+        "w": "toujours",
+        "t": 3.02,
+        "d": 0.325
+      },
+      {
+        "w": "à",
+        "t": 3.415,
+        "d": 0.023
+      },
+      {
+        "w": "jour",
+        "t": 3.496,
+        "d": 0.662
+      }
+    ]
+  },
+  {
+    "id": "vs04",
+    "at": 11.56,
+    "gap": 0.6,
+    "text": "Avec le papier, tu ne sais rien de tes clients. Avec Fidelyz, tu leur parles quand tu veux.",
+    "say": "Avec le papier, tu ne sais rien de tes clients. Avec Fidéliz, tu leur parles quand tu veux.",
+    "dur": 5.24,
+    "words": [
+      {
+        "w": "Avec",
+        "t": -0.041,
+        "d": 0.302
+      },
+      {
+        "w": "le",
+        "t": 0.319,
+        "d": 0.07
+      },
+      {
+        "w": "papier",
+        "t": 0.435,
+        "d": 0.488
+      },
+      {
+        "w": "tu",
+        "t": 1.039,
+        "d": 0.127
+      },
+      {
+        "w": "ne",
+        "t": 1.224,
+        "d": 0.059
+      },
+      {
+        "w": "sais",
+        "t": 1.317,
+        "d": 0.14
+      },
+      {
+        "w": "rien",
+        "t": 1.492,
+        "d": 0.255
+      },
+      {
+        "w": "de",
+        "t": 1.77,
+        "d": 0.047
+      },
+      {
+        "w": "tes",
+        "t": 1.863,
+        "d": 0.151
+      },
+      {
+        "w": "clients",
+        "t": 2.037,
+        "d": 0.441
+      },
+      {
+        "w": "Avec",
+        "t": 2.92,
+        "d": 0.278
+      },
+      {
+        "w": "Fidéliz",
+        "t": 3.245,
+        "d": 0.603
+      },
+      {
+        "w": "tu",
+        "t": 3.93,
+        "d": 0.127
+      },
+      {
+        "w": "leur",
+        "t": 4.115,
+        "d": 0.116
+      },
+      {
+        "w": "parles",
+        "t": 4.278,
+        "d": 0.244
+      },
+      {
+        "w": "quand",
+        "t": 4.545,
+        "d": 0.151
+      },
+      {
+        "w": "tu",
+        "t": 4.719,
+        "d": 0.105
+      },
+      {
+        "w": "veux",
+        "t": 4.882,
+        "d": 0.51
+      }
+    ]
+  },
+  {
+    "id": "vs05",
+    "at": 17.5,
+    "gap": 0.7,
+    "text": "Le choix est vite fait.",
+    "say": "Le choix est vite fait.",
+    "dur": 1.24,
+    "words": [
+      {
+        "w": "Le",
+        "t": -0.019,
+        "d": 0.186
+      },
+      {
+        "w": "choix",
+        "t": 0.213,
+        "d": 0.221
+      },
+      {
+        "w": "est",
+        "t": 0.503,
+        "d": 0.093
+      },
+      {
+        "w": "vite",
+        "t": 0.62,
+        "d": 0.243
+      },
+      {
+        "w": "fait",
+        "t": 0.91,
+        "d": 0.604
+      }
+    ]
+  }
+]

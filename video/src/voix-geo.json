@@ -1,0 +1,257 @@
+[
+  {
+    "id": "ge01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Ton client passe à cinquante mètres de ta boutique.",
+    "say": "Ton client passe à cinquante mètres de ta boutique.",
+    "dur": 2.76,
+    "words": [
+      {
+        "w": "Ton",
+        "t": -0.086,
+        "d": 0.209
+      },
+      {
+        "w": "client",
+        "t": 0.169,
+        "d": 0.372
+      },
+      {
+        "w": "passe",
+        "t": 0.587,
+        "d": 0.256
+      },
+      {
+        "w": "à",
+        "t": 0.878,
+        "d": 0.034
+      },
+      {
+        "w": "cinquante",
+        "t": 0.994,
+        "d": 0.464
+      },
+      {
+        "w": "mètres",
+        "t": 1.493,
+        "d": 0.325
+      },
+      {
+        "w": "de",
+        "t": 1.841,
+        "d": 0.07
+      },
+      {
+        "w": "ta",
+        "t": 1.969,
+        "d": 0.081
+      },
+      {
+        "w": "boutique",
+        "t": 2.108,
+        "d": 0.778
+      }
+    ]
+  },
+  {
+    "id": "ge02",
+    "at": 3.66,
+    "gap": 0.6,
+    "text": "Son téléphone le lui rappelle.",
+    "say": "Son téléphone le lui rappelle.",
+    "dur": 1.69,
+    "words": [
+      {
+        "w": "Son",
+        "t": -0.015,
+        "d": 0.209
+      },
+      {
+        "w": "téléphone",
+        "t": 0.24,
+        "d": 0.476
+      },
+      {
+        "w": "le",
+        "t": 0.74,
+        "d": 0.069
+      },
+      {
+        "w": "lui",
+        "t": 0.856,
+        "d": 0.116
+      },
+      {
+        "w": "rappelle",
+        "t": 1.03,
+        "d": 0.813
+      }
+    ]
+  },
+  {
+    "id": "ge03",
+    "at": 5.85,
+    "gap": 0.5,
+    "text": "Ta carte s’affiche sur son écran, avec ses points.",
+    "say": "Ta carte s’affiche sur son écran, avec ses points.",
+    "dur": 2.91,
+    "words": [
+      {
+        "w": "Ta",
+        "t": -0.064,
+        "d": 0.174
+      },
+      {
+        "w": "carte",
+        "t": 0.157,
+        "d": 0.325
+      },
+      {
+        "w": "s’affiche",
+        "t": 0.54,
+        "d": 0.429
+      },
+      {
+        "w": "sur",
+        "t": 1.051,
+        "d": 0.174
+      },
+      {
+        "w": "son",
+        "t": 1.26,
+        "d": 0.162
+      },
+      {
+        "w": "écran",
+        "t": 1.503,
+        "d": 0.383
+      },
+      {
+        "w": "avec",
+        "t": 2.037,
+        "d": 0.291
+      },
+      {
+        "w": "ses",
+        "t": 2.386,
+        "d": 0.104
+      },
+      {
+        "w": "points",
+        "t": 2.537,
+        "d": 0.603
+      }
+    ]
+  },
+  {
+    "id": "ge04",
+    "at": 9.36,
+    "gap": 0.6,
+    "text": "Il entre. Sans que tu aies rien eu à faire.",
+    "say": "Il entre. Sans que tu aies rien eu à faire.",
+    "dur": 2.56,
+    "words": [
+      {
+        "w": "Il",
+        "t": -0.034,
+        "d": 0.174
+      },
+      {
+        "w": "entre",
+        "t": 0.221,
+        "d": 0.418
+      },
+      {
+        "w": "Sans",
+        "t": 0.964,
+        "d": 0.244
+      },
+      {
+        "w": "que",
+        "t": 1.231,
+        "d": 0.07
+      },
+      {
+        "w": "tu",
+        "t": 1.324,
+        "d": 0.116
+      },
+      {
+        "w": "aies",
+        "t": 1.487,
+        "d": 0.104
+      },
+      {
+        "w": "rien",
+        "t": 1.615,
+        "d": 0.232
+      },
+      {
+        "w": "eu",
+        "t": 1.893,
+        "d": 0.082
+      },
+      {
+        "w": "à",
+        "t": 2.044,
+        "d": 0.023
+      },
+      {
+        "w": "faire",
+        "t": 2.137,
+        "d": 0.569
+      }
+    ]
+  },
+  {
+    "id": "ge05",
+    "at": 12.62,
+    "gap": 0.7,
+    "text": "Fidelyz. La carte qui se rappelle à eux.",
+    "say": "Fidéliz. La carte qui se rappelle à eux.",
+    "dur": 2.74,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": -0.024,
+        "d": 0.882
+      },
+      {
+        "w": "La",
+        "t": 1.137,
+        "d": 0.128
+      },
+      {
+        "w": "carte",
+        "t": 1.334,
+        "d": 0.349
+      },
+      {
+        "w": "qui",
+        "t": 1.729,
+        "d": 0.105
+      },
+      {
+        "w": "se",
+        "t": 1.88,
+        "d": 0.081
+      },
+      {
+        "w": "rappelle",
+        "t": 2.019,
+        "d": 0.372
+      },
+      {
+        "w": "à",
+        "t": 2.414,
+        "d": 0.023
+      },
+      {
+        "w": "eux",
+        "t": 2.507,
+        "d": 0.488
+      }
+    ]
+  }
+]

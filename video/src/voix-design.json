@@ -1,0 +1,122 @@
+[
+  {
+    "id": "de01",
+    "at": 0.5,
+    "gap": 0,
+    "text": "Ta carte. À ton image.",
+    "say": "Ta carte. À ton image.",
+    "dur": 1.55,
+    "words": [
+      {
+        "w": "Ta",
+        "t": -0.075,
+        "d": 0.174
+      },
+      {
+        "w": "carte",
+        "t": 0.157,
+        "d": 0.43
+      },
+      {
+        "w": "À",
+        "t": 0.645,
+        "d": 0.058
+      },
+      {
+        "w": "ton",
+        "t": 0.773,
+        "d": 0.15
+      },
+      {
+        "w": "image",
+        "t": 0.993,
+        "d": 0.557
+      }
+    ]
+  },
+  {
+    "id": "de02",
+    "at": 2.75,
+    "gap": 0.7,
+    "text": "Graphite. Azur. Champagne. Ivoire.",
+    "say": "Graphite. Azur. Champagne. Ivoire.",
+    "dur": 3.4,
+    "words": [
+      {
+        "w": "Graphite",
+        "t": -0.048,
+        "d": 0.778
+      },
+      {
+        "w": "Azur",
+        "t": 0.939,
+        "d": 0.58
+      },
+      {
+        "w": "Champagne",
+        "t": 1.763,
+        "d": 0.697
+      },
+      {
+        "w": "Ivoire",
+        "t": 2.669,
+        "d": 0.905
+      }
+    ]
+  },
+  {
+    "id": "de03",
+    "at": 6.95,
+    "gap": 0.8,
+    "text": "Ton logo, ton nom, tes récompenses.",
+    "say": "Ton logo, ton nom, tes récompenses.",
+    "dur": 2.7,
+    "words": [
+      {
+        "w": "Ton",
+        "t": -0.076,
+        "d": 0.209
+      },
+      {
+        "w": "logo",
+        "t": 0.191,
+        "d": 0.499
+      },
+      {
+        "w": "ton",
+        "t": 0.934,
+        "d": 0.197
+      },
+      {
+        "w": "nom",
+        "t": 1.189,
+        "d": 0.279
+      },
+      {
+        "w": "tes",
+        "t": 1.619,
+        "d": 0.151
+      },
+      {
+        "w": "récompenses",
+        "t": 1.805,
+        "d": 1.045
+      }
+    ]
+  },
+  {
+    "id": "de04",
+    "at": 10.65,
+    "gap": 1,
+    "text": "Fidelyz.",
+    "say": "Fidéliz.",
+    "dur": 0.83,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": -0.001,
+        "d": 0.836
+      }
+    ]
+  }
+]

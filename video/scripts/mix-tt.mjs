@@ -23,8 +23,14 @@ const SR = 44100
 
 const ffmpeg = (() => {
   const require = createRequire(import.meta.url)
-  const dir = path.dirname(require.resolve(`@remotion/compositor-${process.platform}-${process.arch}${process.platform === 'win32' ? '-msvc' : ''}/package.json`))
-  return path.join(dir, process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg')
+  const base = `@remotion/compositor-${process.platform}-${process.arch}`
+  for (const name of [base + (process.platform === 'win32' ? '-msvc' : ''), base + '-gnu', base + '-musl']) {
+    try {
+      const dir = path.dirname(require.resolve(`${name}/package.json`))
+      return path.join(dir, process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg')
+    } catch {}
+  }
+  return 'ffmpeg' // celui du système
 })()
 const decode = file => {
   const r = spawnSync(ffmpeg, ['-v', 'error', '-i', file, '-f', 'wav', '-c:a', 'pcm_s16le', '-ac', '2', '-ar', String(SR), '-'], { maxBuffer: 1 << 30 })
@@ -47,6 +53,197 @@ const db = g => Math.pow(10, g / 20)
    sfx : [nom, instant, gain dB, vitesse, { crest: aligner la crête sur l'instant, len: durée max, fade }] */
 const BAR_CC = 1.7423 // phonk, 137,75 BPM
 const CONFIG = {
+  // ─── Série « Studio » (PLAN-TIKTOK.md) : musique très en retrait, peu de bruitages, tous discrets ───
+  ...(SET === 'design' && {
+    design: {
+      dur: Math.ceil((word('de04') + 3.4) * 30) / 30,
+      music: 'musique-keynote.mp3',
+      // la montée du morceau (13,7 s) tombe sur « Graphite »
+      segments: [[0, 40, 13.7 - (word('de02') - 0.1)]],
+      xf: 0.02,
+      open: -13,
+      duck: -26,
+      fadeIn: 0.4,
+      fadeOut: 1.8,
+      sfx: [
+        ['scintille', 0.2, -24, 1, { len: 2, fade: 1 }],
+        ['swoosh', word('de02', 1) - 0.1, -24, 1.1, { crest: true }],
+        ['swoosh', word('de02', 2) - 0.1, -24, 1.2, { crest: true }],
+        ['swoosh', word('de02', 3) - 0.1, -24, 1.3, { crest: true }],
+        ['swoosh2', word('de03') - 0.2, -23, 1, { crest: true }],
+        ['clic', word('de03', 1), -24, 1],
+        ['clic', word('de03', 3), -24, 1.1],
+        ['clic', word('de03', 5), -24, 1.2],
+        ['hit_logo', word('de04') - 0.15, -16, 1],
+      ],
+    },
+  }),
+  ...(SET === 'offre' && {
+    offre: {
+      dur: Math.ceil((word('of05', 3) + 3.4) * 30) / 30,
+      music: 'musique-chrono.mp3',
+      // entrée franche du morceau (16,2 s) sur « Zéro euro »
+      segments: [[0, 40, 16.2 - word('of02')]],
+      xf: 0.02,
+      open: -9,
+      duck: -21,
+      fadeIn: 0.3,
+      fadeOut: 1.5,
+      sfx: [
+        ...[0, 0.08, 0.16, 0.24, 0.33, 0.42].map((d, i) => ['chrono_tic', word('of02') - 0.55 + d, -26, 1.2, { len: 0.2 }]),
+        ['sub', word('of02'), -18, 1],
+        ...[2, 4].map(n => ['pop', word('of03', n), -23, 1.1]),
+        ...[0, 4].map(n => ['pop', word('of04', n), -23, 1.2]),
+        ['hit_logo', word('of05') - 0.15, -16, 1],
+      ],
+    },
+  }),
+  ...(SET === 'geo' && {
+    geo: {
+      dur: Math.ceil((word('ge05') + 4.4) * 30) / 30,
+      music: 'musique-noir.mp3',
+      // la basse entre (16,2 s du morceau) quand le téléphone du passant s'allume
+      segments: [[0, 40, 16.2 - word('ge02', 4)]],
+      xf: 0.02,
+      open: -9,
+      duck: -21,
+      fadeIn: 0.3,
+      fadeOut: 1.5,
+      sfx: [
+        ['scintille', word('ge01', 4), -24, 1.2, { len: 1.6, fade: 0.8 }],
+        ['whoosh', word('ge02') - 0.3, -24, 1, { crest: true }],
+        ['notif_douce', word('ge02', 4), -13, 1],
+        ['swoosh2', word('ge03', 1), -22, 1, { crest: true }],
+        ['whoosh', word('ge04') - 0.35, -24, 0.9, { crest: true }],
+        ['pop', word('ge04', 1) + 0.3, -24, 0.8],
+        ['hit_logo', word('ge05') - 0.15, -17, 1],
+      ],
+    },
+  }),
+  ...(SET === 'etapes' && {
+    etapes: {
+      dur: Math.ceil((word('et06') + 3.4) * 30) / 30,
+      music: 'musique-chrono.mp3',
+      // l'entrée franche du morceau (16,2 s) tombe sur « Un » (étape 1)
+      segments: [[0, 40, 16.2 - (word('et02') - 0.35)]],
+      xf: 0.02,
+      open: -10,
+      duck: -22,
+      fadeIn: 0.3,
+      fadeOut: 1.5,
+      sfx: [
+        ['swoosh2', 0.3, -24, 1, { crest: true }],
+        ['whoosh', word('et02') - 0.35, -24, 1, { crest: true }],
+        ['swoosh', word('et02', 7), -27, 1.2, { crest: true }],
+        ['swoosh', word('et02', 8), -27, 1.3, { crest: true }],
+        ['swoosh', word('et02', 9), -27, 1.4, { crest: true }],
+        ['whoosh', word('et03') - 0.35, -24, 1.05, { crest: true }],
+        ['pop', word('et03', 10), -22, 1],
+        ['swoosh2', word('et03', 12), -22, 1, { crest: true }],
+        ['whoosh', word('et04') - 0.35, -24, 1.1, { crest: true }],
+        ['bip-caisse', word('et04', 5), -19, 1],
+        ['pop', word('et04', 8), -21, 1.1],
+        ['sub', word('et05'), -22, 1],
+        ['hit_logo', word('et06') - 0.2, -17, 1],
+      ],
+    },
+  }),
+  ...(SET === 'film' && {
+    film: {
+      dur: Math.ceil((word('fi07') + 4.4) * 30) / 30,
+      music: 'musique-keynote.mp3',
+      // la montée du morceau tombe sur l'arrivée des deux téléphones
+      segments: [[0, 40, 13.7 - (word('fi02') - 0.3)]],
+      xf: 0.02,
+      open: -12,
+      duck: -24,
+      fadeIn: 0.2,
+      fadeOut: 1.6,
+      sfx: [
+        ['scintille', 0.1, -24, 1, { len: 2.5, fade: 1.2 }],
+        ['swoosh2', word('fi02') - 0.2, -22, 1, { crest: true }],
+        ['swoosh2', word('fi02', 6) - 0.3, -23, 1.1, { crest: true }],
+        ['sub', word('fi03'), -20, 1],
+        ['swoosh', word('fi04', 2), -25, 1.2, { crest: true }],
+        ['swoosh', word('fi04', 3) + 0.25, -25, 1.3, { crest: true }],
+        ['swoosh', word('fi04', 4) + 0.3, -25, 1.4, { crest: true }],
+        ['bip-caisse', word('fi05', 1) + 0.3, -18, 1],
+        ['pop', word('fi05', 6), -20, 1],
+        ['notif_douce', word('fi06', 7) + 0.1, -14, 1],
+        ['hit_logo', word('fi07') - 0.15, -17, 1],
+      ],
+    },
+  }),
+  ...(SET === 'versus' && {
+    versus: {
+      dur: Math.ceil((word('vs05', 4) + 3.6) * 30) / 30,
+      music: 'musique-chrono.mp3',
+      // électro posée ; son entrée franche (16,2 s) quand le pass prend tout l'écran
+      segments: [[0, 40, 16.2 - (word('vs05') - 0.5)]],
+      xf: 0.02,
+      open: -9,
+      duck: -21,
+      fadeIn: 0.3,
+      fadeOut: 1.4,
+      sfx: [
+        ['whoosh_rapide', word('vs02', 2), -24, 1, { crest: true }],
+        ['clic', word('vs02', 3), -22, 1],
+        ['clic', word('vs02', 6), -20, 1.3],
+        ['scratch', word('vs03', 2) - 0.05, -30, 1, { len: 0.9, fade: 0.4 }],
+        ['clic', word('vs03', 2), -22, 1],
+        ['clic', word('vs03', 6), -20, 1.3],
+        ['clic', word('vs04', 6), -22, 1],
+        ['notif_douce', word('vs04', 13), -17, 1],
+        ['whoosh', word('vs05') - 0.5, -22, 0.9, { crest: true }],
+        ['hit_logo', word('vs05', 4) + 0.6, -17, 1],
+      ],
+    },
+  }),
+  ...(SET === 'ecran' && {
+    ecran: {
+      dur: Math.ceil((word('ec06') + 4.4) * 30) / 30,
+      music: 'musique-keynote.mp3',
+      // la montée du morceau (13,7 s) tombe quand la notification se pose sur l'écran
+      segments: [[0, 40, 13.7 - word('ec04', 3)]],
+      xf: 0.02,
+      open: -13,
+      duck: -25,
+      fadeIn: 0.3,
+      fadeOut: 1.6,
+      sfx: [
+        ['verre', word('ec02', 1) - 0.1, -22, 1, { len: 1.6, fade: 0.8 }],
+        ['whoosh', word('ec03') - 0.35, -24, 0.9, { crest: true }],
+        ...[0, 0.11, 0.2, 0.33, 0.41, 0.52].map((d, i) => ['clic', word('ec03', 3) + d, -29 + (i % 2), 1.4 + (i % 3) * 0.1]),
+        ['swoosh', word('ec04') - 0.4, -21, 1, { crest: true }],
+        ['notif_douce', word('ec04', 3), -13, 1],
+        ...[0.25, 0.5, 0.8, 1.1].map((d, i) => ['notif_douce', word('ec04', 5) + d, -24 - i * 2, 1.05 + i * 0.05]),
+        ['whoosh7', word('ec05', 2) + 0.2, -26, 1.2, { crest: true }],
+        ['whoosh7', word('ec05', 6) + 0.2, -26, 1.3, { crest: true }],
+        ['hit_logo', word('ec06') - 0.15, -17, 1],
+      ],
+    },
+  }),
+  ...(SET === 'perdue' && {
+    perdue: {
+      dur: Math.ceil((word('pa07') + 4.5) * 30) / 30,
+      music: 'musique-noir.mp3',
+      // intro feutrée sur la carte papier, entrée de la basse (16,2 s du morceau) quand le téléphone apparaît
+      segments: [[0, 40, 16.2 - (word('pa04') - 0.35)]],
+      xf: 0.02,
+      open: -9,
+      duck: -21,
+      fadeIn: 0.4,
+      fadeOut: 1.6,
+      sfx: [
+        ['feu', word('pa03', 2), -24, 1, { len: 2.6, fade: 1.2 }],
+        ['whoosh', word('pa04') - 0.35, -22, 0.8, { crest: true }],
+        ['swoosh2', word('pa05') + 0.3, -21, 1, { crest: true }],
+        ['scintille', word('pa06', 2), -20, 1, { len: 2.4, fade: 1 }],
+        ['notif_douce', word('pa06', 2) + 0.05, -16, 1],
+        ['hit_logo', word('pa07') - 0.15, -17, 1],
+      ],
+    },
+  }),
   bandeannonce: {
     dur: 40,
     music: 'musique-bandeannonce.mp3',

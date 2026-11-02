@@ -8,10 +8,19 @@ import VOIX_KN from './voix-keynote.json'
 import VOIX_CC from './voix-concurrent.json'
 import VOIX_NOIR from './voix-noir.json'
 import VOIX_CHRONO from './voix-chrono.json'
+// Série « Studio » (PLAN-TIKTOK.md)
+import VOIX_S_PERDUE from './voix-perdue.json'
+import VOIX_S_ECRAN from './voix-ecran.json'
+import VOIX_S_FILM from './voix-film.json'
+import VOIX_S_VERSUS from './voix-versus.json'
+import VOIX_S_ETAPES from './voix-etapes.json'
+import VOIX_S_GEO from './voix-geo.json'
+import VOIX_S_DESIGN from './voix-design.json'
+import VOIX_S_OFFRE from './voix-offre.json'
 
 // Répliques de toutes les vidéos (identifiants distincts : vNN en 16:9, tNN en vertical, eNN pour l'explication,
 // aNN bande-annonce, kNN keynote, cNN concurrent, nNN noir, hNN chrono)
-const VOIX = [...VOIX_MAIN, ...VOIX_TIKTOK, ...VOIX_EXPLICATION, ...VOIX_BA, ...VOIX_KN, ...VOIX_CC, ...VOIX_NOIR, ...VOIX_CHRONO]
+const VOIX = [...VOIX_MAIN, ...VOIX_TIKTOK, ...VOIX_EXPLICATION, ...VOIX_BA, ...VOIX_KN, ...VOIX_CC, ...VOIX_NOIR, ...VOIX_CHRONO, ...VOIX_S_PERDUE, ...VOIX_S_ECRAN, ...VOIX_S_FILM, ...VOIX_S_VERSUS, ...VOIX_S_ETAPES, ...VOIX_S_GEO, ...VOIX_S_DESIGN, ...VOIX_S_OFFRE]
 
 // Inter embarquée dans le bundle (aucun appel réseau pendant le rendu)
 export const fontFamily = '"Inter Variable", "Inter", sans-serif'

@@ -1,0 +1,337 @@
+[
+  {
+    "id": "fi01",
+    "at": 0.4,
+    "gap": 0,
+    "text": "Voici la carte de fidélité qui ne se perd jamais.",
+    "say": "Voici la carte de fidélité qui ne se perd jamais.",
+    "dur": 2.73,
+    "words": [
+      {
+        "w": "Voici",
+        "t": -0.026,
+        "d": 0.337
+      },
+      {
+        "w": "la",
+        "t": 0.38,
+        "d": 0.07
+      },
+      {
+        "w": "carte",
+        "t": 0.52,
+        "d": 0.313
+      },
+      {
+        "w": "de",
+        "t": 0.891,
+        "d": 0.07
+      },
+      {
+        "w": "fidélité",
+        "t": 1.019,
+        "d": 0.58
+      },
+      {
+        "w": "qui",
+        "t": 1.657,
+        "d": 0.093
+      },
+      {
+        "w": "ne",
+        "t": 1.797,
+        "d": 0.069
+      },
+      {
+        "w": "se",
+        "t": 1.901,
+        "d": 0.128
+      },
+      {
+        "w": "perd",
+        "t": 2.087,
+        "d": 0.197
+      },
+      {
+        "w": "jamais",
+        "t": 2.308,
+        "d": 0.685
+      }
+    ]
+  },
+  {
+    "id": "fi02",
+    "at": 3.73,
+    "gap": 0.6,
+    "text": "Elle vit dans Apple Wallet. Et dans Google Wallet.",
+    "say": "Elle vit dans Apple Wallet. Et dans Google Wallet.",
+    "dur": 3.14,
+    "words": [
+      {
+        "w": "Elle",
+        "t": -0.019,
+        "d": 0.221
+      },
+      {
+        "w": "vit",
+        "t": 0.225,
+        "d": 0.186
+      },
+      {
+        "w": "dans",
+        "t": 0.434,
+        "d": 0.197
+      },
+      {
+        "w": "Apple",
+        "t": 0.712,
+        "d": 0.267
+      },
+      {
+        "w": "Wallet",
+        "t": 1.014,
+        "d": 0.569
+      },
+      {
+        "w": "Et",
+        "t": 1.792,
+        "d": 0.151
+      },
+      {
+        "w": "dans",
+        "t": 1.966,
+        "d": 0.151
+      },
+      {
+        "w": "Google",
+        "t": 2.14,
+        "d": 0.337
+      },
+      {
+        "w": "Wallet",
+        "t": 2.512,
+        "d": 0.72
+      }
+    ]
+  },
+  {
+    "id": "fi03",
+    "at": 7.37,
+    "gap": 0.5,
+    "text": "Aucune application à télécharger.",
+    "say": "Aucune application à télécharger.",
+    "dur": 1.92,
+    "words": [
+      {
+        "w": "Aucune",
+        "t": -0.021,
+        "d": 0.372
+      },
+      {
+        "w": "application",
+        "t": 0.374,
+        "d": 0.627
+      },
+      {
+        "w": "à",
+        "t": 1.059,
+        "d": 0.023
+      },
+      {
+        "w": "télécharger",
+        "t": 1.117,
+        "d": 0.998
+      }
+    ]
+  },
+  {
+    "id": "fi04",
+    "at": 9.89,
+    "gap": 0.6,
+    "text": "Ton logo. Tes couleurs. En cinq minutes.",
+    "say": "Ton logo. Tes couleurs. En cinq minutes.",
+    "dur": 2.73,
+    "words": [
+      {
+        "w": "Ton",
+        "t": -0.074,
+        "d": 0.197
+      },
+      {
+        "w": "logo",
+        "t": 0.158,
+        "d": 0.407
+      },
+      {
+        "w": "Tes",
+        "t": 0.657,
+        "d": 0.163
+      },
+      {
+        "w": "couleurs",
+        "t": 0.855,
+        "d": 0.557
+      },
+      {
+        "w": "En",
+        "t": 1.563,
+        "d": 0.163
+      },
+      {
+        "w": "cinq",
+        "t": 1.772,
+        "d": 0.186
+      },
+      {
+        "w": "minutes",
+        "t": 2.016,
+        "d": 0.743
+      }
+    ]
+  },
+  {
+    "id": "fi05",
+    "at": 13.22,
+    "gap": 0.6,
+    "text": "Un scan en caisse, et les points s’ajoutent.",
+    "say": "Un scan en caisse, et les points s’ajoutent.",
+    "dur": 2.26,
+    "words": [
+      {
+        "w": "Un",
+        "t": -0.033,
+        "d": 0.139
+      },
+      {
+        "w": "scan",
+        "t": 0.13,
+        "d": 0.22
+      },
+      {
+        "w": "en",
+        "t": 0.42,
+        "d": 0.046
+      },
+      {
+        "w": "caisse",
+        "t": 0.524,
+        "d": 0.441
+      },
+      {
+        "w": "et",
+        "t": 1.082,
+        "d": 0.116
+      },
+      {
+        "w": "les",
+        "t": 1.244,
+        "d": 0.093
+      },
+      {
+        "w": "points",
+        "t": 1.372,
+        "d": 0.22
+      },
+      {
+        "w": "s’ajoutent",
+        "t": 1.616,
+        "d": 0.859
+      }
+    ]
+  },
+  {
+    "id": "fi06",
+    "at": 16.08,
+    "gap": 0.6,
+    "text": "Et pour les faire revenir : une notification, directement sur leur écran.",
+    "say": "Et pour les faire revenir : une notification, directement sur leur écran.",
+    "dur": 4.18,
+    "words": [
+      {
+        "w": "Et",
+        "t": -0.051,
+        "d": 0.139
+      },
+      {
+        "w": "pour",
+        "t": 0.112,
+        "d": 0.139
+      },
+      {
+        "w": "les",
+        "t": 0.274,
+        "d": 0.081
+      },
+      {
+        "w": "faire",
+        "t": 0.39,
+        "d": 0.174
+      },
+      {
+        "w": "revenir",
+        "t": 0.588,
+        "d": 0.487
+      },
+      {
+        "w": "une",
+        "t": 1.377,
+        "d": 0.163
+      },
+      {
+        "w": "notification",
+        "t": 1.563,
+        "d": 0.975
+      },
+      {
+        "w": "directement",
+        "t": 2.747,
+        "d": 0.65
+      },
+      {
+        "w": "sur",
+        "t": 3.432,
+        "d": 0.151
+      },
+      {
+        "w": "leur",
+        "t": 3.618,
+        "d": 0.116
+      },
+      {
+        "w": "écran",
+        "t": 3.815,
+        "d": 0.592
+      }
+    ]
+  },
+  {
+    "id": "fi07",
+    "at": 20.96,
+    "gap": 0.7,
+    "text": "Fidelyz. Gratuit pour commencer.",
+    "say": "Fidéliz. Gratuit pour commencer.",
+    "dur": 2.52,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0,
+        "d": 0.859
+      },
+      {
+        "w": "Gratuit",
+        "t": 1.3,
+        "d": 0.441
+      },
+      {
+        "w": "pour",
+        "t": 1.776,
+        "d": 0.128
+      },
+      {
+        "w": "commencer",
+        "t": 1.95,
+        "d": 0.79
+      }
+    ]
+  }
+]

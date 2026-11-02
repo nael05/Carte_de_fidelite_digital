@@ -2,7 +2,7 @@
 
 Tous issus de Pixabay (licence Pixabay : usage commercial autorisé, mention facultative).
 Les fichiers audio ne sont pas versionnés (redistribution isolée interdite par la licence) : les retélécharger depuis ces pages.
-Quelques bruitages viennent aussi de `public/sons_tiktok/` (voir son `SOURCES.md`) : `dechirure`.
+Quelques bruitages viennent aussi de `public/sons_tiktok/` (voir son `SOURCES.md`) : `dechirure`, `bip-caisse`.
 
 ## Musiques
 
@@ -11,6 +11,8 @@ Quelques bruitages viennent aussi de `public/sons_tiktok/` (voir son `SOURCES.md
 | musique-bandeannonce.mp3 | La retraite | Epic Hollywood Trailer | Good_B_Music | https://pixabay.com/music/main-title-epic-hollywood-trailer-9489/ |
 | musique-keynote.mp3 | Elle n'existe pas | Minimal Technology | NastelBom | https://pixabay.com/music/search/minimal%20technology/ (n° 345194) |
 | musique-concurrent.mp3 | Ton concurrent | Phonk Aggressive Drift Night | alex-morgan | https://pixabay.com/music/search/phonk/ (n° 573644) |
+| musique-noir.mp3 | Noir | Deep Bass House Fashion | bearstockmusic | https://pixabay.com/music/search/dark%20deep%20house/ (n° 594205) |
+| musique-chrono.mp3 | Chrono | Fashion Electro | Sub_Clair | https://pixabay.com/music/search/electro%20energetic/ (n° 623466) |
 
 ## Bruitages
 
@@ -40,5 +42,12 @@ Quelques bruitages viennent aussi de `public/sons_tiktok/` (voir son `SOURCES.md
 | pop_cartoon.mp3 | Pop Cartoon | CreatorsHome | 328167 |
 | scintille.mp3 | Magical Sparkle Whoosh | DJARTMUSIC | 298750 |
 | verre.mp3 | Shimmer glass | freesound_community | 81711 |
+| goutte.mp3 | Water Drop | Universfield | 131023 |
+| visqueux.mp3 | viscous liquid fall in | freesound_community | 83980 |
+| chrono_tic.mp3 | Ticking Stopwatch (dry) | freesound_community | 103837 |
+| chrono_stop.mp3 | Stopwatch Sounds | tramp963 | 269019 |
+| laser.mp3 | Laser Whoosh | freesound_community | 37530 |
+| laser_long.mp3 | Whoosh Laser Beam | SoundReality | 247160 |
+| neon.mp3 | Cyberpunk Neon Sign Electric Buzz #1 | Vadim_Makes_Sound | 547828 |
 
 Les pages se retrouvent en cherchant le titre sur pixabay.com/sound-effects (ou /music) ; le numéro est la fin de l'adresse de la page.

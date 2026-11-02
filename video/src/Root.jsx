@@ -11,6 +11,10 @@ import { Concurrent } from './tt/concurrent/Concurrent'
 import { DUREE_CC } from './tt/concurrent/temps'
 import { Formes } from './tt/formes/Formes'
 import { DUREE_LAQUE, Laque } from './tt/formes/Laque'
+import { Noir } from './tt/noir/Noir'
+import { DUREE_NOIR } from './tt/noir/temps'
+import { Chrono } from './tt/chrono/Chrono'
+import { DUREE_CHRONO } from './tt/chrono/temps'
 import { FPS, fontFamily, sec } from './lib'
 
 /* Planche contact : 20 images de la vidéo sur une seule image, pour vérifier le montage */
@@ -66,5 +70,7 @@ export const Root = () => (
     <Composition id="Concurrent" component={Concurrent} durationInFrames={sec(DUREE_CC)} fps={FPS} width={1080} height={1920} defaultProps={{ son: true }} />
     <Composition id="Formes" component={Formes} durationInFrames={1} fps={FPS} width={1080} height={1080} defaultProps={{ idee: 1, k: 0 }} />
     <Composition id="Laque" component={Laque} durationInFrames={sec(DUREE_LAQUE)} fps={FPS} width={1080} height={1920} defaultProps={{ variante: 1 }} />
+    <Composition id="Noir" component={Noir} durationInFrames={sec(DUREE_NOIR)} fps={FPS} width={1080} height={1920} defaultProps={{ son: true }} />
+    <Composition id="Chrono" component={Chrono} durationInFrames={sec(DUREE_CHRONO)} fps={FPS} width={1080} height={1920} defaultProps={{ son: true }} />
   </>
 )

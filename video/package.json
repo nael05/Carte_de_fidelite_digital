@@ -8,10 +8,12 @@
     "stills": "node scripts/stills.mjs",
     "render:explication": "remotion render Explication out/fidelyz-explication.mp4",
     "textures:tt": "node scripts/textures-tt.mjs",
-    "mix:tt": "node scripts/mix-tt.mjs bandeannonce && node scripts/mix-tt.mjs keynote && node scripts/mix-tt.mjs concurrent",
+    "mix:tt": "node scripts/mix-tt.mjs bandeannonce && node scripts/mix-tt.mjs keynote && node scripts/mix-tt.mjs concurrent && node scripts/mix-tt.mjs noir && node scripts/mix-tt.mjs chrono",
     "render:bande-annonce": "remotion render BandeAnnonce out/tt-1-bande-annonce.mp4 --gl=angle --crf=16",
     "render:keynote": "remotion render Keynote out/tt-2-keynote.mp4 --gl=angle --crf=16",
-    "render:concurrent": "remotion render Concurrent out/tt-3-concurrent.mp4 --gl=angle --crf=16"
+    "render:concurrent": "remotion render Concurrent out/tt-3-concurrent.mp4 --gl=angle --crf=16",
+    "render:noir": "remotion render Noir out/tt-4-noir.mp4 --gl=angle --crf=16",
+    "render:chrono": "remotion render Chrono out/tt-5-chrono.mp4 --gl=angle --crf=16"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.1.0",

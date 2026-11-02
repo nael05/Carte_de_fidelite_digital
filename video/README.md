@@ -103,6 +103,8 @@ Trois vidéos verticales (1080 × 1920) qui ne se ressemblent ni dans le ton, ni
 | `BandeAnnonce` → `tt-1-bande-annonce.mp4` | Bande-annonce de film : la carte papier, héroïne tragique, prend sa retraite | François Louis (grave) | trailer épique | 40 s |
 | `Keynote` → `tt-2-keynote.mp4` | Présentation produit, studio blanc, un seul plan-séquence | Victoria (posée) | électro minimale | 28 s |
 | `Concurrent` → `tt-3-concurrent.mp4` | Liste rapide « 3 trucs », jouets en pâte, couleurs saturées | Corentin (énergique) | phonk | 24,4 s |
+| `Noir` → `tt-4-noir.mp4` | Laque noire, rythme lent, chaque transition est un morphing liquide (goutte → téléphone → carte → chiffres → logo) | Hugo (grave) | deep house | 24 s |
+| `Chrono` → `tt-5-chrono.mp4` | Speedrun « chrono en main », laque noire + rubans LED, traînées de néon sur les coupes | Simon (rapide) | électro 126 BPM | 23 s |
 
 **Accroches** : « Elle a survécu à trois machines à laver. » · « Regarde bien cette carte. Elle n'existe pas. » · « Ton concurrent vient de s'afficher sur l'écran de TES clients. »
 
@@ -118,5 +120,7 @@ node scripts/stills-tt.mjs Keynote 2.5 9.2 17.6        # images de contrôle (ou
 
 - Voix : `src/voix-<set>.json` (`aNN`, `kNN`, `cNN`). Une voix et des réglages par vidéo dans `PROFILS` (`scripts/voice-elevenlabs.mjs`). Si une réplique change de durée, revoir son `at` et les instants de `src/tt/<set>/temps.js`.
 - Musique : chaque morceau est recoupé dans `scripts/mix-tt.mjs` pour que ses coups tombent sur l'image (`segments`) ; les bruitages y sont placés à la main (`sfx`). Sources et licences : `public/sons_tt/SOURCES.md`.
+- `src/tt/laque.jsx` : laque noire (matériau, éclairage), morphing liquide entre formes (`Morph`), bassin à ondes, carte bancaire, ruban LED.
+- `src/tt/formes/` : planches de propositions de formes (`Formes`, `Laque`), `node scripts/formes-tt.mjs`.
 - `src/tt/kit3d.jsx` : carte Wallet et téléphone en 3D, texte extrudé (polices converties par `scripts/typeface-tt.mjs`), particules, matériau qui se consume, trajectoire de caméra continue.
 - Chaque vidéo : `temps.js` (instants clés), `Scene3D.jsx` (la 3D, plan par plan), le composant principal (légendes, transitions, étalonnage, son).

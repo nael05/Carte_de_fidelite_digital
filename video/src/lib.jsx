@@ -6,10 +6,12 @@ import VOIX_EXPLICATION from './voix-explication.json'
 import VOIX_BA from './voix-bandeannonce.json'
 import VOIX_KN from './voix-keynote.json'
 import VOIX_CC from './voix-concurrent.json'
+import VOIX_NOIR from './voix-noir.json'
+import VOIX_CHRONO from './voix-chrono.json'
 
 // Répliques de toutes les vidéos (identifiants distincts : vNN en 16:9, tNN en vertical, eNN pour l'explication,
-// aNN bande-annonce, kNN keynote, cNN concurrent)
-const VOIX = [...VOIX_MAIN, ...VOIX_TIKTOK, ...VOIX_EXPLICATION, ...VOIX_BA, ...VOIX_KN, ...VOIX_CC]
+// aNN bande-annonce, kNN keynote, cNN concurrent, nNN noir, hNN chrono)
+const VOIX = [...VOIX_MAIN, ...VOIX_TIKTOK, ...VOIX_EXPLICATION, ...VOIX_BA, ...VOIX_KN, ...VOIX_CC, ...VOIX_NOIR, ...VOIX_CHRONO]
 
 // Inter embarquée dans le bundle (aucun appel réseau pendant le rendu)
 export const fontFamily = '"Inter Variable", "Inter", sans-serif'

@@ -155,6 +155,67 @@ const CONFIG = {
     ],
   },
 }
+CONFIG.noir = {
+  dur: 24,
+  music: 'musique-noir.mp3',
+  // la basse du morceau (16,24 s) entre quand la carte sort du téléphone (4,6 s)
+  segments: [[0, 24, 16.24 - 4.6]],
+  xf: 0.02,
+  open: -9,
+  duck: -19,
+  fadeIn: 0.15,
+  fadeOut: 1.6,
+  sfx: [
+    ['goutte', 0.9, -10, 0.85], // la goutte touche le bassin
+    ['goutte', 1.55, -16, 1.1],
+    ['visqueux', 2.4, -14, 0.8], // le liquide remonte
+    ['swoosh2', 4.6, -16, 0.8, { crest: true }], // la carte sort de l'écran
+    ['scintille', 5.85, -19, 1, { len: 2, fade: 0.8 }], // le logo
+    ['clic', 6.45, -22, 1.2],
+    ['clic', 6.73, -22, 1.3],
+    ['clic', 7.0, -22, 1.4],
+    ['swoosh', 9.55, -18, 0.9, { crest: true }], // la carte bancaire
+    ['visqueux', 11.0, -13, 0.7], // la carte fond
+    ['goutte', 11.85, -12, 0.7], // elle plonge
+    ['hit_grave', 12.55, -20, 1.3], // 480 → 500
+    ['goutte', 13.9, -12, 0.8],
+    ['visqueux', 14.0, -15, 0.85],
+    ['notif_douce', 15.4, -11, 1], // la notification
+    ['visqueux', 17.4, -14, 0.75], // le téléphone fond
+    ['sub', 18.3, -16, 1],
+    ['scintille', 18.35, -16, 1, { len: 3, fade: 1.2 }], // le logo
+  ],
+}
+CONFIG.chrono = {
+  dur: 23,
+  music: 'musique-chrono.mp3',
+  // le drop (16,18 s) tombe sur « chrono » (2,645 s)
+  segments: [[0, 23, 16.18 - 2.645]],
+  xf: 0.02,
+  open: -8,
+  duck: -18,
+  fadeIn: 0.05,
+  fadeOut: 0.6,
+  sfx: [
+    ['chrono_tic', 0.15, -17, 1, { len: 2.4, fade: 0.2 }], // le tic-tac sous l'accroche
+    ['clic', 2.55, -9, 0.8], // la couronne du chronomètre
+    ['bass_drop', 2.645, -17, 1], // « Top chrono ! »
+    ...[3.2, 5.2, 7.5, 12.35, 15.95, 18.95].map((c, i) => ['laser', c, -15, 0.9 + (i % 3) * 0.1, { crest: true }]), // traînées de néon
+    ['pop', 3.97, -12, 0.9], // le logo se pose
+    ['clic', 4.42, -19, 1.2],
+    ['clic', 4.78, -19, 1.3],
+    ['clic', 5.0, -19, 1.4],
+    ['laser_long', 6.2, -20, 1.2, { len: 0.7, fade: 0.2 }], // impression du QR code
+    ['bip-caisse', 8.98, -13, 1], // le scan
+    ['swoosh', 10.1, -15, 1, { crest: true }], // la carte vole vers le téléphone
+    ['pop', 10.7, -14, 1.1],
+    ['notif', 14.3, -10, 1], // l'offre s'affiche
+    ['chrono_stop', 15.95, -9, 1, { len: 0.8, fade: 0.2 }], // « Stop ! »
+    ['hit', 15.97, -16, 1.2],
+    ['scintille', 18.95, -17, 1, { len: 2.5, fade: 1 }],
+    ['neon', 19.0, -23, 1, { len: 1.2, fade: 0.5 }],
+  ],
+}
 const C = CONFIG[SET]
 if (!C) throw new Error('set inconnu : ' + SET)
 const N = Math.round(SR * C.dur)

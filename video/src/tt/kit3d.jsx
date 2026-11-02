@@ -36,7 +36,7 @@ export const noise1 = x => {
 // Images de public/tt/tex (scripts/textures-tt.mjs), chargées une fois pour toutes avant la première image :
 // usePreloadTextures() dans le composant de la vidéo (hors du canevas) renvoie true quand elles sont prêtes :
 // le canevas n'est monté qu'à ce moment-là, sinon sa première image part avec des textures vides.
-const TEXTURES = ['couche-details', 'couche-fond-azur', 'couche-fond-champagne', 'couche-fond-ivory', 'couche-fond', 'couche-logo', 'couche-points-500', 'couche-points', 'lock-concurrent', 'lock-offre', 'lock-proche', 'lock-retour', 'lock-toi', 'lock-vide', 'notif-concurrent', 'notif-offre', 'notif-retour', 'notif-toi', 'papier', 'pass-azur', 'pass-back', 'pass-champagne', 'pass-graphite-500', 'pass-graphite', 'pass-ivory', 'toast', 'wallet', 'logo-fidelyz.png']
+const TEXTURES = ['couche-details', 'couche-fond-azur', 'couche-fond-champagne', 'couche-fond-ivory', 'couche-fond', 'couche-logo', 'couche-points-500', 'couche-points', 'lock-concurrent', 'lock-offre', 'lock-proche', 'lock-retour', 'lock-toi', 'lock-vide', 'notif-concurrent', 'notif-offre', 'notif-retour', 'notif-toi', 'papier', 'pass-azur', 'pass-back', 'pass-champagne', 'pass-graphite-500', 'pass-graphite', 'pass-ivory', 'pass-noir-500', 'pass-noir-azur', 'pass-noir-back', 'pass-noir-or', 'pass-noir-vide', 'pass-noir', 'qr', 'toast', 'wallet-noir', 'wallet', 'logo-fidelyz.png']
 const texUrl = n => (n.includes('.') ? staticFile(n) : staticFile(`tt/tex/${n}.png`))
 const texCache = new Map()
 const loadTex = n => {

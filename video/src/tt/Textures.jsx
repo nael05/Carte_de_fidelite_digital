@@ -1,7 +1,7 @@
 import { AbsoluteFill } from 'remotion'
 import { fontFamily } from '../lib'
-import { Notif, Pass } from '../Pass'
-import { LockVis, WalletStack } from '../explication/site'
+import { Notif, Pass, QRCode } from '../Pass'
+import { LockVis, WALLET_STACK, WalletStack } from '../explication/site'
 import './textures.css'
 
 /* Images fixes servant de textures aux scènes 3D (rendues par scripts/textures-tt.mjs dans public/tt/tex/).
@@ -14,6 +14,7 @@ const SIZES = {
   paper: [1700, 1100],
   notif: [760, 168],
   toast: [640, 104],
+  qr: [800, 1000],
 }
 
 export const texMetadata = ({ props }) => {
@@ -22,8 +23,8 @@ export const texMetadata = ({ props }) => {
 }
 
 /* Pass à plat. layer : tout, ou une seule couche pour la vue éclatée (fond, logo, points, détails) ; back : le verso */
-const PassTex = ({ skin = 'graphite', points = 480, name = 'Maison Lumière', mark = 'L', layer = 'all', back = false }) => (
-  <AbsoluteFill className={`tex tex-${layer} ${back ? 'tex-back' : ''}`}>
+const PassTex = ({ skin = 'graphite', points = 480, name = 'Maison Lumière', mark = 'L', layer = 'all', back = false, vide = false }) => (
+  <AbsoluteFill className={`tex tex-${layer} ${back ? 'tex-back' : ''} ${vide ? 'tex-vide' : ''}`}>
     <Pass width={1000} skin={skin} points={points} name={name} mark={mark} light={0.35} />
   </AbsoluteFill>
 )
@@ -41,7 +42,7 @@ const LockTex = ({ notifs = [], date = 'Lundi 2 novembre' }) => (
   </Screen>
 )
 
-const WalletTex = () => (
+const WalletTex = ({ last }) => (
   <Screen>
     <div className="fzx" style={{ position: 'absolute', inset: 0, background: '#000', fontFamily }}>
       <div style={{ padding: '62px 22px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -49,7 +50,17 @@ const WalletTex = () => (
         <span style={{ width: 34, height: 34, borderRadius: 17, background: '#1c1c1e', color: '#2997ff', display: 'grid', placeItems: 'center', fontSize: 26, fontWeight: 400 }}>+</span>
       </div>
       <div style={{ position: 'absolute', left: 22, top: 130 }}>
-        <WalletStack t={100} at={0} width={346} spread={66} />
+        {last ? (
+          <div style={{ position: 'relative' }}>
+            {WALLET_STACK.map((c, k) => (
+              <div key={c.name} className="mp" style={{ position: k ? 'absolute' : 'relative', left: 0, top: k * 66 }}>
+                <Pass width={346} skin={k === 3 ? last : c.skin} name={c.name} mark={c.mark} points={c.pts} light={0.35} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <WalletStack t={100} at={0} width={346} spread={66} />
+        )}
       </div>
     </div>
   </Screen>
@@ -118,7 +129,16 @@ const ToastTex = () => (
   </AbsoluteFill>
 )
 
+const QrTex = () => (
+  <AbsoluteFill className="qr-plaque">
+    <div className="qr-t2">Carte de fidélité</div>
+    <div className="qr-box"><QRCode /></div>
+    <div className="qr-t1">Scanne-moi</div>
+  </AbsoluteFill>
+)
+
 export const Tex = ({ kind, ...p }) => {
+  if (kind === 'qr') return <QrTex />
   if (kind === 'notif') return <NotifTex {...p} />
   if (kind === 'toast') return <ToastTex {...p} />
   if (kind === 'pass') return <PassTex {...p} />

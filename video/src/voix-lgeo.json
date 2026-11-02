@@ -1,0 +1,217 @@
+[
+  {
+    "id": "lg01",
+    "at": 0.4,
+    "gap": 0,
+    "text": "Ton client passe à cinquante mètres de ta boutique.",
+    "say": "[whispers] Ton client passe à cinquante mètres de ta boutique...",
+    "dur": 2.47,
+    "words": [
+      {
+        "w": "Ton",
+        "t": 0.045,
+        "d": 0.024
+      },
+      {
+        "w": "client",
+        "t": 0.126,
+        "d": 0.343
+      },
+      {
+        "w": "passe",
+        "t": 0.509,
+        "d": 0.2
+      },
+      {
+        "w": "à",
+        "t": 0.749,
+        "d": 0.04
+      },
+      {
+        "w": "cinquante",
+        "t": 0.849,
+        "d": 0.42
+      },
+      {
+        "w": "mètres",
+        "t": 1.349,
+        "d": 0.24
+      },
+      {
+        "w": "de",
+        "t": 1.616,
+        "d": 0.053
+      },
+      {
+        "w": "ta",
+        "t": 1.722,
+        "d": 0.107
+      },
+      {
+        "w": "boutique",
+        "t": 1.891,
+        "d": 0.578
+      }
+    ]
+  },
+  {
+    "id": "lg02",
+    "at": 3.27,
+    "gap": 0.4,
+    "text": "Et sa carte de fidélité Fidelyz s’affiche sur son écran.",
+    "say": "[excited] Et sa carte de fidélité Fidéliz s’affiche sur son écran.",
+    "dur": 3.25,
+    "words": [
+      {
+        "w": "Et",
+        "t": -0.04,
+        "d": 0.011
+      },
+      {
+        "w": "sa",
+        "t": 0.024,
+        "d": 0.107
+      },
+      {
+        "w": "carte",
+        "t": 0.184,
+        "d": 0.267
+      },
+      {
+        "w": "de",
+        "t": 0.504,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 0.651,
+        "d": 0.44
+      },
+      {
+        "w": "Fidéliz",
+        "t": 1.211,
+        "d": 0.68
+      },
+      {
+        "w": "s’affiche",
+        "t": 1.971,
+        "d": 0.56
+      },
+      {
+        "w": "sur",
+        "t": 2.571,
+        "d": 0.12
+      },
+      {
+        "w": "son",
+        "t": 2.731,
+        "d": 0.12
+      },
+      {
+        "w": "écran",
+        "t": 2.931,
+        "d": 0.32
+      }
+    ]
+  },
+  {
+    "id": "lg03",
+    "at": 6.92,
+    "gap": 0.4,
+    "text": "Avec ses points. Et l’envie d’entrer.",
+    "say": "[warmly] Avec ses points. Et l’envie d’entrer.",
+    "dur": 2.36,
+    "words": [
+      {
+        "w": "Avec",
+        "t": 0.164,
+        "d": 0.038
+      },
+      {
+        "w": "ses",
+        "t": 0.262,
+        "d": 0.18
+      },
+      {
+        "w": "points",
+        "t": 0.499,
+        "d": 0.663
+      },
+      {
+        "w": "Et",
+        "t": 1.269,
+        "d": 0.213
+      },
+      {
+        "w": "l’envie",
+        "t": 1.502,
+        "d": 0.3
+      },
+      {
+        "w": "d’entrer",
+        "t": 1.842,
+        "d": 0.52
+      }
+    ]
+  },
+  {
+    "id": "lg04",
+    "at": 9.88,
+    "gap": 0.6,
+    "text": "Fidelyz. La carte de fidélité qui fait revenir tes clients.",
+    "say": "[confident] Fidéliz. La carte de fidélité qui fait revenir tes clients.",
+    "dur": 4.4,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.072,
+        "d": 0.728
+      },
+      {
+        "w": "La",
+        "t": 1.067,
+        "d": 0.533
+      },
+      {
+        "w": "carte",
+        "t": 1.667,
+        "d": 0.333
+      },
+      {
+        "w": "de",
+        "t": 2.053,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 2.22,
+        "d": 0.58
+      },
+      {
+        "w": "qui",
+        "t": 2.86,
+        "d": 0.18
+      },
+      {
+        "w": "fait",
+        "t": 3.088,
+        "d": 0.192
+      },
+      {
+        "w": "revenir",
+        "t": 3.333,
+        "d": 0.427
+      },
+      {
+        "w": "tes",
+        "t": 3.8,
+        "d": 0.12
+      },
+      {
+        "w": "clients",
+        "t": 3.97,
+        "d": 0.43
+      }
+    ]
+  }
+]

@@ -1,0 +1,272 @@
+[
+  {
+    "id": "lv01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Ta carte de fidélité : en papier, ou dans le téléphone ?",
+    "say": "[curious] Ta carte de fidélité... en papier, ou dans le téléphone ?",
+    "dur": 3.59,
+    "words": [
+      {
+        "w": "Ta",
+        "t": 0.041,
+        "d": 0.027
+      },
+      {
+        "w": "carte",
+        "t": 0.135,
+        "d": 0.333
+      },
+      {
+        "w": "de",
+        "t": 0.495,
+        "d": 0.053
+      },
+      {
+        "w": "fidélité",
+        "t": 0.628,
+        "d": 1.04
+      },
+      {
+        "w": "en",
+        "t": 1.721,
+        "d": 0.107
+      },
+      {
+        "w": "papier",
+        "t": 1.888,
+        "d": 0.42
+      },
+      {
+        "w": "ou",
+        "t": 2.415,
+        "d": 0.213
+      },
+      {
+        "w": "dans",
+        "t": 2.644,
+        "d": 0.064
+      },
+      {
+        "w": "le",
+        "t": 2.735,
+        "d": 0.053
+      },
+      {
+        "w": "téléphone",
+        "t": 2.852,
+        "d": 0.576
+      }
+    ]
+  },
+  {
+    "id": "lv02",
+    "at": 4.39,
+    "gap": 0.5,
+    "text": "Le papier se perd. Le téléphone, jamais.",
+    "say": "Le papier se perd. [confident] Le téléphone, jamais.",
+    "dur": 3.12,
+    "words": [
+      {
+        "w": "Le",
+        "t": -0.084,
+        "d": 0.16
+      },
+      {
+        "w": "papier",
+        "t": 0.116,
+        "d": 0.28
+      },
+      {
+        "w": "se",
+        "t": 0.449,
+        "d": 0.107
+      },
+      {
+        "w": "perd",
+        "t": 0.636,
+        "d": 0.4
+      },
+      {
+        "w": "Le",
+        "t": 1.663,
+        "d": 0.013
+      },
+      {
+        "w": "téléphone",
+        "t": 1.74,
+        "d": 0.896
+      },
+      {
+        "w": "jamais",
+        "t": 2.693,
+        "d": 0.423
+      }
+    ]
+  },
+  {
+    "id": "lv03",
+    "at": 8.01,
+    "gap": 0.5,
+    "text": "Le papier s’abîme. Fidelyz reste impeccable, et à jour.",
+    "say": "[sighs] Le papier s’abîme. [confident] Fidéliz reste impeccable, et à jour.",
+    "dur": 5.18,
+    "words": [
+      {
+        "w": "Le",
+        "t": 0.319,
+        "d": 0.053
+      },
+      {
+        "w": "papier",
+        "t": 0.432,
+        "d": 0.34
+      },
+      {
+        "w": "s’abîme",
+        "t": 0.852,
+        "d": 1
+      },
+      {
+        "w": "Fidéliz",
+        "t": 2.362,
+        "d": 0.573
+      },
+      {
+        "w": "reste",
+        "t": 2.988,
+        "d": 0.267
+      },
+      {
+        "w": "impeccable",
+        "t": 3.328,
+        "d": 0.927
+      },
+      {
+        "w": "et",
+        "t": 4.322,
+        "d": 0.133
+      },
+      {
+        "w": "à",
+        "t": 4.495,
+        "d": 0.04
+      },
+      {
+        "w": "jour",
+        "t": 4.615,
+        "d": 1.52
+      }
+    ]
+  },
+  {
+    "id": "lv04",
+    "at": 13.69,
+    "gap": 0.5,
+    "text": "Le papier ne dit rien. Fidelyz envoie tes offres à tes clients.",
+    "say": "Le papier ne dit rien. [excited] Fidéliz envoie tes offres à tes clients !",
+    "dur": 4.75,
+    "words": [
+      {
+        "w": "Le",
+        "t": -0.048,
+        "d": 0.08
+      },
+      {
+        "w": "papier",
+        "t": 0.092,
+        "d": 0.26
+      },
+      {
+        "w": "ne",
+        "t": 0.405,
+        "d": 0.107
+      },
+      {
+        "w": "dit",
+        "t": 0.552,
+        "d": 0.12
+      },
+      {
+        "w": "rien",
+        "t": 0.72,
+        "d": 0.272
+      },
+      {
+        "w": "Fidéliz",
+        "t": 1.702,
+        "d": 0.41
+      },
+      {
+        "w": "envoie",
+        "t": 2.192,
+        "d": 0.32
+      },
+      {
+        "w": "tes",
+        "t": 2.552,
+        "d": 0.12
+      },
+      {
+        "w": "offres",
+        "t": 2.732,
+        "d": 0.22
+      },
+      {
+        "w": "à",
+        "t": 2.972,
+        "d": 0.02
+      },
+      {
+        "w": "tes",
+        "t": 3.032,
+        "d": 0.12
+      },
+      {
+        "w": "clients",
+        "t": 3.202,
+        "d": 0.35
+      }
+    ]
+  },
+  {
+    "id": "lv05",
+    "at": 19.04,
+    "gap": 0.6,
+    "text": "Fidelyz. La carte de fidélité digitale.",
+    "say": "[warmly] Fidéliz. La carte de fidélité digitale.",
+    "dur": 2.89,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.077,
+        "d": 0.57
+      },
+      {
+        "w": "La",
+        "t": 0.78,
+        "d": 0.267
+      },
+      {
+        "w": "carte",
+        "t": 1.114,
+        "d": 0.333
+      },
+      {
+        "w": "de",
+        "t": 1.474,
+        "d": 0.053
+      },
+      {
+        "w": "fidélité",
+        "t": 1.587,
+        "d": 0.58
+      },
+      {
+        "w": "digitale",
+        "t": 2.234,
+        "d": 0.653
+      }
+    ]
+  }
+]

@@ -17,6 +17,8 @@ import { Chrono } from './tt/chrono/Chrono'
 import { DUREE_CHRONO } from './tt/chrono/temps'
 import { FPS, fontFamily, sec } from './lib'
 import { SERIE } from './serie/Serie'
+import { LuxTest } from './lux/Test'
+import { LUMIERE } from './lux/Lumiere'
 
 /* Planche contact : 20 images de la vidéo sur une seule image, pour vérifier le montage */
 const Planche = ({ times = [] }) => (
@@ -72,6 +74,10 @@ export const Root = () => (
     <Composition id="Formes" component={Formes} durationInFrames={1} fps={FPS} width={1080} height={1080} defaultProps={{ idee: 1, k: 0 }} />
     <Composition id="Laque" component={Laque} durationInFrames={sec(DUREE_LAQUE)} fps={FPS} width={1080} height={1920} defaultProps={{ variante: 1 }} />
     <Composition id="Noir" component={Noir} durationInFrames={sec(DUREE_NOIR)} fps={FPS} width={1080} height={1920} defaultProps={{ son: true }} />
+    <Composition id="LuxTest" component={LuxTest} durationInFrames={300} fps={FPS} width={1080} height={1920} />
+    {LUMIERE.map(v => (
+      <Composition key={v.id} id={v.id} component={v.component} durationInFrames={sec(v.duree())} fps={FPS} width={1080} height={1920} defaultProps={{ son: true }} />
+    ))}
     {SERIE.map(v => (
       <Composition key={v.id} id={v.id} component={v.component} durationInFrames={sec(v.duree())} fps={FPS} width={1080} height={1920} defaultProps={{ son: true }} />
     ))}

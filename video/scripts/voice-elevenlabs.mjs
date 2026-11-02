@@ -76,6 +76,8 @@ const PROFILS = {
   noir: { voice: 'IbbR6Av0dWuQJS0b8JVT', speed: 0.92, stability: 0.5, style: 0.3 }, // Hugo, chaud et posé
   // Série « Studio » (PLAN-TIKTOK.md) : une seule voix, Paul K, posée
   ...Object.fromEntries(['perdue', 'ecran', 'film', 'versus', 'etapes', 'geo', 'design', 'offre'].map(k => [k, { voice: 'MBIQRZjHPU6xEjGuB3b8', speed: k === 'offre' ? 1.04 : 1.0, stability: 0.5, style: 0.28 }])),
+  // Série « Lumière » : Paul K sur le modèle v3, qui joue les émotions indiquées entre crochets
+  ...Object.fromEntries(['lperdue', 'lecran', 'lfilm', 'lversus', 'letapes', 'lgeo', 'ldesign', 'lprix'].map(k => [k, { voice: 'MBIQRZjHPU6xEjGuB3b8', model: 'eleven_v3', stability: 0.5 }])),
   chrono: { voice: 'mvhJVdVoTWVUtL4keT7W', speed: 1.08, stability: 0.35, style: 0.5 }, // Simon, énergique et rapide
 }
 const P = PROFILS[SET] ?? {}
@@ -101,6 +103,7 @@ const wordsFrom = (text, al) => {
     const t = al.character_start_times_seconds[a]
     const e = al.character_end_times_seconds[b]
     const w = m[0].replace(/[.,:;!?…]+$/g, '')
+    if (/^\[.*\]$/.test(m[0]) || !/[\p{L}\p{N}]/u.test(w)) continue // balise d'émotion, guillemet seul
     if (w) out.push({ w, t, d: e - t }) // ponctuation isolée (« : », « ? ») : pas un mot
   }
   return out
@@ -113,8 +116,8 @@ for (const cue of cues) {
     method: 'POST',
     body: JSON.stringify({
       text,
-      model_id: env.ELEVENLABS_MODEL ?? 'eleven_multilingual_v2',
-      voice_settings: {
+      model_id: P.model ?? env.ELEVENLABS_MODEL ?? 'eleven_multilingual_v2',
+      voice_settings: P.model === 'eleven_v3' ? { stability: P.stability, similarity_boost: 0.8 } : {
         stability: P.stability ?? num('ELEVENLABS_STABILITY', 0.45),
         similarity_boost: 0.8,
         style: P.style ?? num('ELEVENLABS_STYLE', 0.3),

@@ -1,0 +1,172 @@
+[
+  {
+    "id": "ld01",
+    "at": 0.6,
+    "gap": 0,
+    "text": "Fidelyz. La carte de fidélité digitale.",
+    "say": "[whispers] Fidéliz. La carte de fidélité digitale.",
+    "dur": 3.16,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.107,
+        "d": 0.81
+      },
+      {
+        "w": "La",
+        "t": 0.997,
+        "d": 0.16
+      },
+      {
+        "w": "carte",
+        "t": 1.237,
+        "d": 0.4
+      },
+      {
+        "w": "de",
+        "t": 1.664,
+        "d": 0.053
+      },
+      {
+        "w": "fidélité",
+        "t": 1.797,
+        "d": 0.56
+      },
+      {
+        "w": "digitale",
+        "t": 2.437,
+        "d": 0.72
+      }
+    ]
+  },
+  {
+    "id": "ld02",
+    "at": 4.16,
+    "gap": 0.4,
+    "text": "À ton image.",
+    "say": "[warmly] À ton image.",
+    "dur": 1.28,
+    "words": [
+      {
+        "w": "À",
+        "t": 0.063,
+        "d": 0.016
+      },
+      {
+        "w": "ton",
+        "t": 0.159,
+        "d": 0.24
+      },
+      {
+        "w": "image",
+        "t": 0.506,
+        "d": 1.173
+      }
+    ]
+  },
+  {
+    "id": "ld03",
+    "at": 5.94,
+    "gap": 0.5,
+    "text": "Graphite. Azur. Champagne. Ivoire.",
+    "say": "Graphite. Azur. Champagne. Ivoire.",
+    "dur": 3.36,
+    "words": [
+      {
+        "w": "Graphite",
+        "t": 0,
+        "d": 0.92
+      },
+      {
+        "w": "Azur",
+        "t": 1.013,
+        "d": 0.947
+      },
+      {
+        "w": "Champagne",
+        "t": 2.004,
+        "d": 0.476
+      },
+      {
+        "w": "Ivoire",
+        "t": 2.68,
+        "d": 0.68
+      }
+    ]
+  },
+  {
+    "id": "ld04",
+    "at": 9.8,
+    "gap": 0.5,
+    "text": "Ton logo, tes couleurs, dans le Wallet de tes clients.",
+    "say": "Ton logo, tes couleurs, dans le Wallet de tes clients.",
+    "dur": 2.88,
+    "words": [
+      {
+        "w": "Ton",
+        "t": 0,
+        "d": 0.16
+      },
+      {
+        "w": "logo",
+        "t": 0.224,
+        "d": 0.416
+      },
+      {
+        "w": "tes",
+        "t": 0.68,
+        "d": 0.12
+      },
+      {
+        "w": "couleurs",
+        "t": 0.84,
+        "d": 0.6
+      },
+      {
+        "w": "dans",
+        "t": 1.472,
+        "d": 0.128
+      },
+      {
+        "w": "le",
+        "t": 1.627,
+        "d": 0.053
+      },
+      {
+        "w": "Wallet",
+        "t": 1.76,
+        "d": 0.48
+      },
+      {
+        "w": "de",
+        "t": 2.267,
+        "d": 0.053
+      },
+      {
+        "w": "tes",
+        "t": 2.36,
+        "d": 0.12
+      },
+      {
+        "w": "clients",
+        "t": 2.53,
+        "d": 0.35
+      }
+    ]
+  },
+  {
+    "id": "ld05",
+    "at": 13.38,
+    "gap": 0.7,
+    "text": "Fidelyz.",
+    "say": "[excited] Fidéliz.",
+    "dur": 1.04,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.12,
+        "d": 1.16
+      }
+    ]
+  }
+]

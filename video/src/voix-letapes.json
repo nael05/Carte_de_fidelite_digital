@@ -1,0 +1,312 @@
+[
+  {
+    "id": "ls01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Ta carte de fidélité digitale ? Trois étapes.",
+    "say": "[curious] Ta carte de fidélité digitale ? [confident] Trois étapes.",
+    "dur": 3.89,
+    "words": [
+      {
+        "w": "Ta",
+        "t": -0.031,
+        "d": 0.053
+      },
+      {
+        "w": "carte",
+        "t": 0.089,
+        "d": 0.333
+      },
+      {
+        "w": "de",
+        "t": 0.475,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 0.642,
+        "d": 0.58
+      },
+      {
+        "w": "digitale",
+        "t": 1.275,
+        "d": 0.507
+      },
+      {
+        "w": "Trois",
+        "t": 2.97,
+        "d": 0.092
+      },
+      {
+        "w": "étapes",
+        "t": 3.142,
+        "d": 0.96
+      }
+    ]
+  },
+  {
+    "id": "ls02",
+    "at": 4.69,
+    "gap": 0.5,
+    "text": "Un. Ton logo, tes couleurs : ta carte est prête.",
+    "say": "Un. Ton logo, tes couleurs... [warmly] ta carte est prête.",
+    "dur": 3.36,
+    "words": [
+      {
+        "w": "Un",
+        "t": -0.08,
+        "d": 0.24
+      },
+      {
+        "w": "Ton",
+        "t": 0.3,
+        "d": 0.42
+      },
+      {
+        "w": "logo",
+        "t": 0.8,
+        "d": 0.4
+      },
+      {
+        "w": "tes",
+        "t": 1.26,
+        "d": 0.18
+      },
+      {
+        "w": "couleurs",
+        "t": 1.48,
+        "d": 0.84
+      },
+      {
+        "w": "ta",
+        "t": 2.381,
+        "d": 0.107
+      },
+      {
+        "w": "carte",
+        "t": 2.541,
+        "d": 0.267
+      },
+      {
+        "w": "est",
+        "t": 2.828,
+        "d": 0.06
+      },
+      {
+        "w": "prête",
+        "t": 2.941,
+        "d": 0.427
+      }
+    ]
+  },
+  {
+    "id": "ls03",
+    "at": 8.55,
+    "gap": 0.5,
+    "text": "Deux. Tes clients scannent ton QR code, et l’ajoutent à leur Wallet.",
+    "say": "Deux. Tes clients scannent ton QR code, et l’ajoutent à leur Wallet.",
+    "dur": 3.84,
+    "words": [
+      {
+        "w": "Deux",
+        "t": 0,
+        "d": 0.24
+      },
+      {
+        "w": "Tes",
+        "t": 0.36,
+        "d": 0.36
+      },
+      {
+        "w": "clients",
+        "t": 0.76,
+        "d": 0.28
+      },
+      {
+        "w": "scannent",
+        "t": 1.12,
+        "d": 0.4
+      },
+      {
+        "w": "ton",
+        "t": 1.56,
+        "d": 0.12
+      },
+      {
+        "w": "QR",
+        "t": 1.76,
+        "d": 0.16
+      },
+      {
+        "w": "code",
+        "t": 2,
+        "d": 0.56
+      },
+      {
+        "w": "et",
+        "t": 2.587,
+        "d": 0.053
+      },
+      {
+        "w": "l’ajoutent",
+        "t": 2.68,
+        "d": 0.4
+      },
+      {
+        "w": "à",
+        "t": 3.1,
+        "d": 0.02
+      },
+      {
+        "w": "leur",
+        "t": 3.152,
+        "d": 0.128
+      },
+      {
+        "w": "Wallet",
+        "t": 3.337,
+        "d": 0.503
+      }
+    ]
+  },
+  {
+    "id": "ls04",
+    "at": 12.89,
+    "gap": 0.5,
+    "text": "Trois. À chaque passage, un scan, et les points s’ajoutent.",
+    "say": "Trois. À chaque passage, un scan... [excited] et les points s’ajoutent !",
+    "dur": 4.13,
+    "words": [
+      {
+        "w": "Trois",
+        "t": -0.028,
+        "d": 0.32
+      },
+      {
+        "w": "À",
+        "t": 0.532,
+        "d": 0.24
+      },
+      {
+        "w": "chaque",
+        "t": 0.806,
+        "d": 0.206
+      },
+      {
+        "w": "passage",
+        "t": 1.082,
+        "d": 0.65
+      },
+      {
+        "w": "un",
+        "t": 1.759,
+        "d": 0.053
+      },
+      {
+        "w": "scan",
+        "t": 1.908,
+        "d": 0.944
+      },
+      {
+        "w": "et",
+        "t": 3.008,
+        "d": 0.036
+      },
+      {
+        "w": "les",
+        "t": 3.057,
+        "d": 0.04
+      },
+      {
+        "w": "points",
+        "t": 3.143,
+        "d": 0.274
+      },
+      {
+        "w": "s’ajoutent",
+        "t": 3.457,
+        "d": 0.52
+      }
+    ]
+  },
+  {
+    "id": "ls05",
+    "at": 17.52,
+    "gap": 0.5,
+    "text": "Moins de cinq minutes. Gratuit jusqu’à quinze clients.",
+    "say": "[warmly] Moins de cinq minutes. Gratuit jusqu’à quinze clients.",
+    "dur": 3.12,
+    "words": [
+      {
+        "w": "Moins",
+        "t": 0.069,
+        "d": 0.091
+      },
+      {
+        "w": "de",
+        "t": 0.24,
+        "d": 0.16
+      },
+      {
+        "w": "cinq",
+        "t": 0.44,
+        "d": 0.12
+      },
+      {
+        "w": "minutes",
+        "t": 0.62,
+        "d": 0.66
+      },
+      {
+        "w": "Gratuit",
+        "t": 1.35,
+        "d": 0.49
+      },
+      {
+        "w": "jusqu’à",
+        "t": 1.88,
+        "d": 0.36
+      },
+      {
+        "w": "quinze",
+        "t": 2.267,
+        "d": 0.213
+      },
+      {
+        "w": "clients",
+        "t": 2.53,
+        "d": 0.75
+      }
+    ]
+  },
+  {
+    "id": "ls06",
+    "at": 21.04,
+    "gap": 0.4,
+    "text": "Fidelyz. Lien en bio.",
+    "say": "[excited] Fidéliz. Lien en bio !",
+    "dur": 1.67,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.06,
+        "d": 0.813
+      },
+      {
+        "w": "Lien",
+        "t": 0.993,
+        "d": 0.2
+      },
+      {
+        "w": "en",
+        "t": 1.246,
+        "d": 0.107
+      },
+      {
+        "w": "bio",
+        "t": 1.393,
+        "d": 0.12
+      }
+    ]
+  }
+]

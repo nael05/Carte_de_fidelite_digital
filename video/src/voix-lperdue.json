@@ -1,0 +1,297 @@
+[
+  {
+    "id": "lp01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "« J’ai perdu ma carte. »",
+    "say": "[sighs] J’ai perdu ma carte...",
+    "dur": 2.16,
+    "words": [
+      {
+        "w": "J’ai",
+        "t": 0.48,
+        "d": 0.16
+      },
+      {
+        "w": "perdu",
+        "t": 0.68,
+        "d": 0.2
+      },
+      {
+        "w": "ma",
+        "t": 0.96,
+        "d": 0.16
+      },
+      {
+        "w": "carte",
+        "t": 1.187,
+        "d": 0.493
+      }
+    ]
+  },
+  {
+    "id": "lp02",
+    "at": 2.96,
+    "gap": 0.5,
+    "text": "Neuf tampons. Il n’en manquait qu’un.",
+    "say": "Neuf tampons. [disappointed] Il n’en manquait qu’un.",
+    "dur": 3.2,
+    "words": [
+      {
+        "w": "Neuf",
+        "t": 0,
+        "d": 0.32
+      },
+      {
+        "w": "tampons",
+        "t": 0.42,
+        "d": 0.62
+      },
+      {
+        "w": "Il",
+        "t": 1.907,
+        "d": 0.013
+      },
+      {
+        "w": "n’en",
+        "t": 1.96,
+        "d": 0.2
+      },
+      {
+        "w": "manquait",
+        "t": 2.2,
+        "d": 0.44
+      },
+      {
+        "w": "qu’un",
+        "t": 2.667,
+        "d": 0.533
+      }
+    ]
+  },
+  {
+    "id": "lp03",
+    "at": 6.56,
+    "gap": 0.4,
+    "text": "Et ton client repart… sans raison de revenir.",
+    "say": "Et ton client repart... [sad] sans raison de revenir.",
+    "dur": 3.34,
+    "words": [
+      {
+        "w": "Et",
+        "t": -0.097,
+        "d": 0.08
+      },
+      {
+        "w": "ton",
+        "t": 0.043,
+        "d": 0.18
+      },
+      {
+        "w": "client",
+        "t": 0.28,
+        "d": 0.343
+      },
+      {
+        "w": "repart",
+        "t": 0.683,
+        "d": 1.46
+      },
+      {
+        "w": "sans",
+        "t": 2.271,
+        "d": 0.032
+      },
+      {
+        "w": "raison",
+        "t": 2.349,
+        "d": 0.274
+      },
+      {
+        "w": "de",
+        "t": 2.65,
+        "d": 0.053
+      },
+      {
+        "w": "revenir",
+        "t": 2.756,
+        "d": 0.587
+      }
+    ]
+  },
+  {
+    "id": "lp04",
+    "at": 10.6,
+    "gap": 0.7,
+    "text": "Fidelyz, c’est la carte de fidélité digitale.",
+    "say": "[confident] Fidéliz, c’est la carte de fidélité digitale.",
+    "dur": 2.76,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.031,
+        "d": 0.808
+      },
+      {
+        "w": "c’est",
+        "t": 0.879,
+        "d": 0.12
+      },
+      {
+        "w": "la",
+        "t": 1.026,
+        "d": 0.053
+      },
+      {
+        "w": "carte",
+        "t": 1.132,
+        "d": 0.267
+      },
+      {
+        "w": "de",
+        "t": 1.452,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 1.599,
+        "d": 0.44
+      },
+      {
+        "w": "digitale",
+        "t": 2.106,
+        "d": 0.653
+      }
+    ]
+  },
+  {
+    "id": "lp05",
+    "at": 13.66,
+    "gap": 0.3,
+    "text": "Elle vit dans leur téléphone : Apple Wallet, Google Wallet.",
+    "say": "Elle vit dans leur téléphone. Apple Wallet, Google Wallet.",
+    "dur": 3.39,
+    "words": [
+      {
+        "w": "Elle",
+        "t": -0.045,
+        "d": 0.16
+      },
+      {
+        "w": "vit",
+        "t": 0.155,
+        "d": 0.12
+      },
+      {
+        "w": "dans",
+        "t": 0.307,
+        "d": 0.128
+      },
+      {
+        "w": "leur",
+        "t": 0.467,
+        "d": 0.128
+      },
+      {
+        "w": "téléphone",
+        "t": 0.651,
+        "d": 0.864
+      },
+      {
+        "w": "Apple",
+        "t": 1.575,
+        "d": 0.3
+      },
+      {
+        "w": "Wallet",
+        "t": 1.932,
+        "d": 0.623
+      },
+      {
+        "w": "Google",
+        "t": 2.595,
+        "d": 0.24
+      },
+      {
+        "w": "Wallet",
+        "t": 2.892,
+        "d": 0.503
+      }
+    ]
+  },
+  {
+    "id": "lp06",
+    "at": 17.35,
+    "gap": 0.3,
+    "text": "Impossible à perdre. Toujours à jour.",
+    "say": "[warmly] Impossible à perdre. Toujours à jour.",
+    "dur": 2.5,
+    "words": [
+      {
+        "w": "Impossible",
+        "t": 0.394,
+        "d": 0.102
+      },
+      {
+        "w": "à",
+        "t": 0.536,
+        "d": 0.04
+      },
+      {
+        "w": "perdre",
+        "t": 0.64,
+        "d": 0.776
+      },
+      {
+        "w": "Toujours",
+        "t": 1.506,
+        "d": 0.43
+      },
+      {
+        "w": "à",
+        "t": 2.016,
+        "d": 0.08
+      },
+      {
+        "w": "jour",
+        "t": 2.176,
+        "d": 0.32
+      }
+    ]
+  },
+  {
+    "id": "lp07",
+    "at": 20.35,
+    "gap": 0.5,
+    "text": "Fidelyz. Fais revenir tes clients.",
+    "say": "[excited] Fidéliz. Fais revenir tes clients !",
+    "dur": 2.27,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.096,
+        "d": 0.73
+      },
+      {
+        "w": "Fais",
+        "t": 0.986,
+        "d": 0.32
+      },
+      {
+        "w": "revenir",
+        "t": 1.346,
+        "d": 0.28
+      },
+      {
+        "w": "tes",
+        "t": 1.666,
+        "d": 0.12
+      },
+      {
+        "w": "clients",
+        "t": 1.836,
+        "d": 0.35
+      }
+    ]
+  }
+]

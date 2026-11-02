@@ -1,0 +1,292 @@
+[
+  {
+    "id": "lf01",
+    "at": 0.6,
+    "gap": 0,
+    "text": "Voici Fidelyz.",
+    "say": "[whispers] Voici... Fidéliz.",
+    "dur": 2.08,
+    "words": [
+      {
+        "w": "Voici",
+        "t": 0.069,
+        "d": 1.211
+      },
+      {
+        "w": "Fidéliz",
+        "t": 1.32,
+        "d": 0.76
+      }
+    ]
+  },
+  {
+    "id": "lf02",
+    "at": 2.98,
+    "gap": 0.3,
+    "text": "La carte de fidélité digitale de ton commerce.",
+    "say": "La carte de fidélité digitale de ton commerce.",
+    "dur": 2.72,
+    "words": [
+      {
+        "w": "La",
+        "t": 0,
+        "d": 0.08
+      },
+      {
+        "w": "carte",
+        "t": 0.133,
+        "d": 0.267
+      },
+      {
+        "w": "de",
+        "t": 0.453,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 0.62,
+        "d": 0.5
+      },
+      {
+        "w": "digitale",
+        "t": 1.2,
+        "d": 0.56
+      },
+      {
+        "w": "de",
+        "t": 1.813,
+        "d": 0.107
+      },
+      {
+        "w": "ton",
+        "t": 1.96,
+        "d": 0.12
+      },
+      {
+        "w": "commerce",
+        "t": 2.142,
+        "d": 0.578
+      }
+    ]
+  },
+  {
+    "id": "lf03",
+    "at": 6.1,
+    "gap": 0.4,
+    "text": "Dans Apple Wallet. Et dans Google Wallet.",
+    "say": "Dans Apple Wallet. Et dans Google Wallet.",
+    "dur": 3.04,
+    "words": [
+      {
+        "w": "Dans",
+        "t": 0,
+        "d": 0.08
+      },
+      {
+        "w": "Apple",
+        "t": 0.147,
+        "d": 0.333
+      },
+      {
+        "w": "Wallet",
+        "t": 0.56,
+        "d": 0.88
+      },
+      {
+        "w": "Et",
+        "t": 1.573,
+        "d": 0.267
+      },
+      {
+        "w": "dans",
+        "t": 1.872,
+        "d": 0.128
+      },
+      {
+        "w": "Google",
+        "t": 2.057,
+        "d": 0.343
+      },
+      {
+        "w": "Wallet",
+        "t": 2.469,
+        "d": 0.571
+      }
+    ]
+  },
+  {
+    "id": "lf04",
+    "at": 9.44,
+    "gap": 0.3,
+    "text": "Aucune application à télécharger.",
+    "say": "[confident] Aucune application à télécharger.",
+    "dur": 1.92,
+    "words": [
+      {
+        "w": "Aucune",
+        "t": 0.15,
+        "d": 0.33
+      },
+      {
+        "w": "application",
+        "t": 0.533,
+        "d": 0.587
+      },
+      {
+        "w": "à",
+        "t": 1.16,
+        "d": 0.04
+      },
+      {
+        "w": "télécharger",
+        "t": 1.248,
+        "d": 0.672
+      }
+    ]
+  },
+  {
+    "id": "lf05",
+    "at": 11.76,
+    "gap": 0.4,
+    "text": "Ton logo. Tes couleurs.",
+    "say": "Ton logo. Tes couleurs.",
+    "dur": 1.86,
+    "words": [
+      {
+        "w": "Ton",
+        "t": -0.059,
+        "d": 0.08
+      },
+      {
+        "w": "logo",
+        "t": 0.117,
+        "d": 0.784
+      },
+      {
+        "w": "Tes",
+        "t": 1.001,
+        "d": 0.3
+      },
+      {
+        "w": "couleurs",
+        "t": 1.341,
+        "d": 0.52
+      }
+    ]
+  },
+  {
+    "id": "lf06",
+    "at": 14.02,
+    "gap": 0.4,
+    "text": "Un scan en caisse, et les points tombent.",
+    "say": "Un scan en caisse... [excited] et les points tombent !",
+    "dur": 2.45,
+    "words": [
+      {
+        "w": "Un",
+        "t": -0.03,
+        "d": 0.08
+      },
+      {
+        "w": "scan",
+        "t": 0.114,
+        "d": 0.256
+      },
+      {
+        "w": "en",
+        "t": 0.397,
+        "d": 0.053
+      },
+      {
+        "w": "caisse",
+        "t": 0.503,
+        "d": 0.827
+      },
+      {
+        "w": "et",
+        "t": 1.399,
+        "d": 0.011
+      },
+      {
+        "w": "les",
+        "t": 1.45,
+        "d": 0.12
+      },
+      {
+        "w": "points",
+        "t": 1.616,
+        "d": 0.274
+      },
+      {
+        "w": "tombent",
+        "t": 1.954,
+        "d": 0.416
+      }
+    ]
+  },
+  {
+    "id": "lf07",
+    "at": 16.87,
+    "gap": 0.4,
+    "text": "Une notification, et ils reviennent.",
+    "say": "Une notification... [warmly] et ils reviennent.",
+    "dur": 2.64,
+    "words": [
+      {
+        "w": "Une",
+        "t": -0.076,
+        "d": 0.16
+      },
+      {
+        "w": "notification",
+        "t": 0.152,
+        "d": 1.612
+      },
+      {
+        "w": "et",
+        "t": 1.833,
+        "d": 0.011
+      },
+      {
+        "w": "ils",
+        "t": 1.884,
+        "d": 0.12
+      },
+      {
+        "w": "reviennent",
+        "t": 2.064,
+        "d": 0.58
+      }
+    ]
+  },
+  {
+    "id": "lf08",
+    "at": 20.01,
+    "gap": 0.5,
+    "text": "Fidelyz. Gratuit pour commencer.",
+    "say": "[excited] Fidéliz. Gratuit pour commencer !",
+    "dur": 2,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.039,
+        "d": 1
+      },
+      {
+        "w": "Gratuit",
+        "t": 1.089,
+        "d": 0.35
+      },
+      {
+        "w": "pour",
+        "t": 1.455,
+        "d": 0.064
+      },
+      {
+        "w": "commencer",
+        "t": 1.551,
+        "d": 0.448
+      }
+    ]
+  }
+]

@@ -1,0 +1,327 @@
+[
+  {
+    "id": "le01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Tu sais ce que tes clients regardent cent fois par jour ?",
+    "say": "[curious] Tu sais ce que tes clients regardent... cent fois par jour ?",
+    "dur": 3.36,
+    "words": [
+      {
+        "w": "Tu",
+        "t": 0.142,
+        "d": 0.018
+      },
+      {
+        "w": "sais",
+        "t": 0.208,
+        "d": 0.192
+      },
+      {
+        "w": "ce",
+        "t": 0.453,
+        "d": 0.107
+      },
+      {
+        "w": "que",
+        "t": 0.58,
+        "d": 0.06
+      },
+      {
+        "w": "tes",
+        "t": 0.68,
+        "d": 0.12
+      },
+      {
+        "w": "clients",
+        "t": 0.85,
+        "d": 0.35
+      },
+      {
+        "w": "regardent",
+        "t": 1.257,
+        "d": 0.983
+      },
+      {
+        "w": "cent",
+        "t": 2.272,
+        "d": 0.128
+      },
+      {
+        "w": "fois",
+        "t": 2.448,
+        "d": 0.192
+      },
+      {
+        "w": "par",
+        "t": 2.68,
+        "d": 0.12
+      },
+      {
+        "w": "jour",
+        "t": 2.88,
+        "d": 0.32
+      }
+    ]
+  },
+  {
+    "id": "le02",
+    "at": 4.06,
+    "gap": 0.4,
+    "text": "Leur écran de verrouillage.",
+    "say": "[whispers] Leur écran de verrouillage.",
+    "dur": 2.42,
+    "words": [
+      {
+        "w": "Leur",
+        "t": 0.081,
+        "d": 0.101
+      },
+      {
+        "w": "écran",
+        "t": 0.262,
+        "d": 0.4
+      },
+      {
+        "w": "de",
+        "t": 0.689,
+        "d": 0.053
+      },
+      {
+        "w": "verrouillage",
+        "t": 0.782,
+        "d": 1.64
+      }
+    ]
+  },
+  {
+    "id": "le03",
+    "at": 7.08,
+    "gap": 0.6,
+    "text": "Fidelyz met ta carte de fidélité dans leur Wallet.",
+    "say": "[confident] Fidéliz met ta carte de fidélité dans leur Wallet.",
+    "dur": 2.68,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.031,
+        "d": 0.488
+      },
+      {
+        "w": "met",
+        "t": 0.559,
+        "d": 0.12
+      },
+      {
+        "w": "ta",
+        "t": 0.732,
+        "d": 0.107
+      },
+      {
+        "w": "carte",
+        "t": 0.892,
+        "d": 0.267
+      },
+      {
+        "w": "de",
+        "t": 1.212,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 1.359,
+        "d": 0.52
+      },
+      {
+        "w": "dans",
+        "t": 1.895,
+        "d": 0.064
+      },
+      {
+        "w": "leur",
+        "t": 1.991,
+        "d": 0.128
+      },
+      {
+        "w": "Wallet",
+        "t": 2.176,
+        "d": 0.503
+      }
+    ]
+  },
+  {
+    "id": "le04",
+    "at": 10.06,
+    "gap": 0.3,
+    "text": "Et quand tu veux les faire revenir…",
+    "say": "Et quand tu veux les faire revenir...",
+    "dur": 1.91,
+    "words": [
+      {
+        "w": "Et",
+        "t": -0.093,
+        "d": 0.16
+      },
+      {
+        "w": "quand",
+        "t": 0.094,
+        "d": 0.133
+      },
+      {
+        "w": "tu",
+        "t": 0.307,
+        "d": 0.16
+      },
+      {
+        "w": "veux",
+        "t": 0.494,
+        "d": 0.133
+      },
+      {
+        "w": "les",
+        "t": 0.667,
+        "d": 0.12
+      },
+      {
+        "w": "faire",
+        "t": 0.827,
+        "d": 0.2
+      },
+      {
+        "w": "revenir",
+        "t": 1.094,
+        "d": 0.813
+      }
+    ]
+  },
+  {
+    "id": "le05",
+    "at": 12.17,
+    "gap": 0.2,
+    "text": "ton offre s’affiche ici. Chez tous tes clients.",
+    "say": "[excited] ton offre s’affiche ici. Chez tous tes clients !",
+    "dur": 2.96,
+    "words": [
+      {
+        "w": "ton",
+        "t": 0.133,
+        "d": 0.03
+      },
+      {
+        "w": "offre",
+        "t": 0.216,
+        "d": 0.267
+      },
+      {
+        "w": "s’affiche",
+        "t": 0.523,
+        "d": 0.52
+      },
+      {
+        "w": "ici",
+        "t": 1.143,
+        "d": 0.3
+      },
+      {
+        "w": "Chez",
+        "t": 1.583,
+        "d": 0.58
+      },
+      {
+        "w": "tous",
+        "t": 2.195,
+        "d": 0.128
+      },
+      {
+        "w": "tes",
+        "t": 2.363,
+        "d": 0.12
+      },
+      {
+        "w": "clients",
+        "t": 2.533,
+        "d": 0.35
+      }
+    ]
+  },
+  {
+    "id": "le06",
+    "at": 15.53,
+    "gap": 0.4,
+    "text": "Pas de SMS. Pas d’email perdu.",
+    "say": "Pas de SMS. Pas d’email perdu.",
+    "dur": 2.26,
+    "words": [
+      {
+        "w": "Pas",
+        "t": -0.06,
+        "d": 0.08
+      },
+      {
+        "w": "de",
+        "t": 0.073,
+        "d": 0.107
+      },
+      {
+        "w": "SMS",
+        "t": 0.34,
+        "d": 0.76
+      },
+      {
+        "w": "Pas",
+        "t": 1.17,
+        "d": 0.21
+      },
+      {
+        "w": "d’email",
+        "t": 1.42,
+        "d": 0.36
+      },
+      {
+        "w": "perdu",
+        "t": 1.84,
+        "d": 0.42
+      }
+    ]
+  },
+  {
+    "id": "le07",
+    "at": 18.29,
+    "gap": 0.5,
+    "text": "Fidelyz. La carte de fidélité digitale.",
+    "say": "[warmly] Fidéliz. La carte de fidélité digitale.",
+    "dur": 3.2,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.072,
+        "d": 0.968
+      },
+      {
+        "w": "La",
+        "t": 1.067,
+        "d": 0.053
+      },
+      {
+        "w": "carte",
+        "t": 1.2,
+        "d": 0.4
+      },
+      {
+        "w": "de",
+        "t": 1.653,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 1.82,
+        "d": 0.58
+      },
+      {
+        "w": "digitale",
+        "t": 2.467,
+        "d": 0.733
+      }
+    ]
+  }
+]

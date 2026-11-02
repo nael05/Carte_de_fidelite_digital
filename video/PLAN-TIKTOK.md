@@ -106,6 +106,26 @@ Plans : grande typographie, le prix défile jusqu'à 0 €, puis trois chiffres 
 > Sans engagement. Prête en cinq minutes.
 > Fidelyz. Lien en bio.
 
+## Version 2 : série « Lumière » (à publier à la place de la série « Studio »)
+
+Même ordre de publication et mêmes sujets, refaits en studio automobile : noir total, barres néon qui balaient le téléphone et la carte, sol miroir, halo lumineux, poussière dans le faisceau. Chaque vidéo enchaîne des transitions de cinéma différentes : coup de fouet avec flou de bougé, balayage néon, plongée avec flash, iris lumineux, morphing liquide, tunnel de lumière.
+
+- **On comprend le produit dans chaque vidéo** : une réplique le dit (« Fidelyz, c'est la carte de fidélité digitale », « dans Apple Wallet et Google Wallet »), un bandeau « Carte de fidélité digitale · Apple Wallet · Google Wallet » l'écrit, et le plan de fin le répète.
+- **Voix avec émotions** : ElevenLabs v3 (Paul K) avec des indications de jeu (chuchoté, confiant, enthousiaste, chaleureux, déçu…), dans `scripts/serie-scripts.mjs` (sets `lperdue` … `lprix`).
+
+| Jour | Vidéo | Fichier |
+| --- | --- | --- |
+| J1 | La carte perdue | `lumiere-1-carte-perdue.mp4` |
+| J2 | L'écran de verrouillage | `lumiere-2-ecran.mp4` |
+| J3 | Fidelyz en 30 secondes | `lumiere-3-film.mp4` |
+| J4 | Papier ou téléphone ? | `lumiere-4-versus.mp4` |
+| J5 | Trois étapes | `lumiere-5-etapes.mp4` |
+| J6 | Ils passent devant chez toi | `lumiere-6-proximite.mp4` |
+| J7 | À ton image | `lumiere-7-design.mp4` |
+| J8 | Combien ça coûte ? | `lumiere-8-prix.mp4` |
+
+Code : `src/lux/` (`engine.jsx` éclairage et objets, `shots.jsx` plans réutilisables, `fx.jsx` montage, transitions, typographie, plan de fin, `v1/` … `v8/` les vidéos). Rendu : `sh scripts/lux-queue.sh` rend les lignes de `out/queue.txt` (« L1Perdue:lumiere-1-carte-perdue »).
+
 ## Fabrication
 
 Clé ElevenLabs : variable d'environnement `ELEVENLABS_API_KEY` (jamais dans le dépôt).

@@ -44,6 +44,7 @@ const TEX = {
   // Série « Studio » : la campagne de la page « Campagnes » (public/explication/ecrans/campaigns-filled.png)
   'lock-campagne': { kind: 'lock', notifs: [{ ...ML, body: 'Le croissant du mois est là. −20 % sur les viennoiseries ce week-end. À tout de suite !' }] },
   'notif-campagne': { kind: 'notif', body: 'Le croissant du mois est là. −20 % sur les viennoiseries ce week-end. À tout de suite !' },
+  'notif-proche': { kind: 'notif', title: 'Wallet', body: 'Maison Lumière est à 50 m. Ta carte : 480 points.' },
   'pass-graphite-0': { kind: 'pass', skin: 'graphite', points: 0, name: 'Maison Lumière' },
   qr: { kind: 'qr' },
   papier: { kind: 'paper', stamps: 9 },

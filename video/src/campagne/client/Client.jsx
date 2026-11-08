@@ -140,7 +140,7 @@ export const Client = ({ voix = true, son = true }) => {
         <>
           <Audio src={staticFile('sons_tt/musique-noir.mp3')} startFrom={Math.round(40 * FPS)} volume={f => {
             const tt = f / FPS
-            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * (voix && speaking(f) ? 0.2 : 0.42)
+            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * (voix && speaking(f) ? 0.1 : 0.42)
           }} />
           {voix && Q.$list.filter(c => c.voice).map(c => <Son key={c.id} src={`campagne/voix/${c.id}.mp3`} at={c.at - c.lead} />)}
           <Son src="sons_tt/clic.mp3" at={W(Q, 'k02', 1) - 0.25} vol={0.5} />

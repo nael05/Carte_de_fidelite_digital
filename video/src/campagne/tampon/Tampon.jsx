@@ -178,7 +178,7 @@ export const Tampon = ({ voix = true, son = true }) => {
           <Audio src={staticFile('sons_tt/musique-noir.mp3')} startFrom={0} volume={f => {
             const tt = f / FPS
             const rwv = tt >= r0 && tt <= r1 ? 0.25 : 1
-            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * rwv * (voix && speaking(f) ? 0.22 : 0.45)
+            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * rwv * (voix && speaking(f) ? 0.1 : 0.45)
           }} />
           {voix && Q.$list.filter(c => c.voice).map(c => <Son key={c.id} src={`campagne/voix/${c.id}.mp3`} at={c.at - c.lead} />)}
           {STAMPS.map((x, i) => <Son key={i} src="sons_tt/hit_grave.mp3" at={x - 0.02} vol={0.18 + i * 0.02} dur={0.4} />)}

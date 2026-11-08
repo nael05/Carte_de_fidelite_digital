@@ -195,7 +195,7 @@ export const Push = ({ voix = true, son = true }) => {
         <>
           <Audio src={staticFile('sons_tt/musique-chrono.mp3')} startFrom={Math.round(0.5 * FPS)} volume={f => {
             const tt = f / FPS
-            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * (voix && speaking(f) ? 0.17 : 0.36)
+            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * (voix && speaking(f) ? 0.1 : 0.36)
           }} />
           {voix && Q.$list.filter(c => c.voice).map(c => <Son key={c.id} src={`campagne/voix/${c.id}.mp3`} at={c.at - c.lead} />)}
           <Son src="sons_tt/notif.mp3" at={0.35} vol={0.6} />

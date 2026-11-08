@@ -290,7 +290,7 @@ export const Site = ({ voix = true, son = true }) => {
         <>
           <Audio src={staticFile('sons_tt/musique-keynote.mp3')} startFrom={Math.round(1.2 * FPS)} volume={f => {
             const tt = f / FPS
-            return Math.min(1, tt / 0.6) * Math.min(1, (DUREE - tt) / 2) * (voix && speaking(f) ? 0.16 : 0.34)
+            return Math.min(1, tt / 0.6) * Math.min(1, (DUREE - tt) / 2) * (voix && speaking(f) ? 0.1 : 0.34)
           }} />
           {voix && Q.$list.filter(c => c.voice).map(c => <Son key={c.id} src={`campagne/voix/${c.id}.mp3`} at={c.at - c.lead} />)}
           {['s03', 's05', 's08', 's10', 's12', 's14', 's15', 's16'].map(id => <Son key={id} src="sons_tt/whoosh7.mp3" at={A(id) - 0.5} vol={0.25} />)}

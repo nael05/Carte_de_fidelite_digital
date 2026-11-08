@@ -25,7 +25,7 @@ export const BandeSon = ({ voix = true }) => {
       <Audio src={staticFile('sons_tt/musique-keynote.mp3')} startFrom={Math.round(1.2 * FPS)} volume={f => {
         const t = f / FPS
         const fade = Math.min(1, t / 0.4) * Math.min(1, (DUREE - t) / 1.2)
-        return fade * (voix && speaking(f) ? 0.2 : 0.42)
+        return fade * (voix && speaking(f) ? 0.1 : 0.42)
       }} />
       {voix && Q.$list.filter(c => c.voice).map(c => <Son key={c.id} src={`campagne/voix/${c.id}.mp3`} at={c.at - c.lead} vol={1} />)}
       {[...Array(9)].map((_, i) => <Son key={i} src="sons_tt/pop.mp3" at={0.05 + i * 0.13} vol={0.35} />)}

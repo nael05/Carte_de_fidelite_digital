@@ -22,10 +22,10 @@ const KEY = env.ELEVENLABS_API_KEY || process.env.ELEVENLABS_API_KEY || 'proxy-i
 // Voix d'homme uniquement. Réglages : stabilité basse + style élevé = plus d'intonation.
 const VOIX = {
   paul: { id: 'MBIQRZjHPU6xEjGuB3b8', speed: 1.04, stability: 0.4, style: 0.42 }, // Paul K, conteur grave et engageant (vidéo du site)
-  corentin: { id: 'IHngRooVccHyPqB4uQkG', speed: 1.06, stability: 0.33, style: 0.55 }, // énergique, réseaux sociaux
-  hugo: { id: 'IbbR6Av0dWuQJS0b8JVT', speed: 1.0, stability: 0.38, style: 0.5 }, // chaud, narratif (mises en scène)
+  corentin: { id: 'IHngRooVccHyPqB4uQkG', speed: 0.88, stability: 0.33, style: 0.55 }, // énergique, réseaux sociaux
+  hugo: { id: 'IbbR6Av0dWuQJS0b8JVT', speed: 0.88, stability: 0.38, style: 0.5 }, // chaud, narratif (mises en scène)
   francois: { id: 'UBXZKOKbt62aLQHhc1Jm', speed: 1.0, stability: 0.36, style: 0.55 }, // grave, cinéma
-  simon: { id: 'mvhJVdVoTWVUtL4keT7W', speed: 1.07, stability: 0.35, style: 0.5 }, // rapide, dynamique
+  simon: { id: 'mvhJVdVoTWVUtL4keT7W', speed: 0.94, stability: 0.35, style: 0.5 }, // rapide, dynamique
 }
 const MODEL = env.ELEVENLABS_MODEL || process.env.ELEVENLABS_MODEL || 'eleven_multilingual_v2'
 

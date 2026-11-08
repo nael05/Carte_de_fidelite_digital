@@ -2,8 +2,7 @@ import { AbsoluteFill, Audio, staticFile } from 'remotion'
 import { Carte } from '../Carte'
 import {
   BarreSafari, C, E, FPS, FeuilleAjout, FondEcran, Fin, Grain, IPhone, Nuit, Page, Plan, SH, SW, Son, SousTitre, Tap, WalletApp,
-  clamp, lerp, spring, ts, useT, font,
-} from '../kit'
+  clamp, lerp, spring, ts, useT, font, volMusique } from '../kit'
 import { VueCamera } from '../objets'
 import { cues, W } from '../voix'
 
@@ -140,7 +139,7 @@ export const Client = ({ voix = true, son = true }) => {
         <>
           <Audio src={staticFile('sons_tt/musique-noir.mp3')} startFrom={Math.round(40 * FPS)} volume={f => {
             const tt = f / FPS
-            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * (voix && speaking(f) ? 0.1 : 0.42)
+            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * volMusique(Q.$list, f / FPS, voix, 0.42)
           }} />
           {voix && Q.$list.filter(c => c.voice).map(c => <Son key={c.id} src={`campagne/voix/${c.id}.mp3`} at={c.at - c.lead} />)}
           <Son src="sons_tt/clic.mp3" at={W(Q, 'k02', 1) - 0.25} vol={0.5} />

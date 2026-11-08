@@ -1,6 +1,6 @@
 import { AbsoluteFill, Audio, staticFile } from 'remotion'
 import { Carte } from '../Carte'
-import { C, E, FPS, Fin, Grain, IPhone, Nuit, Page, Plan, Son, SousTitre, Verrouille, WalletApp, clamp, spring, ts, useT, font } from '../kit'
+import { C, E, FPS, Fin, Grain, IPhone, Nuit, Page, Plan, Son, SousTitre, Verrouille, WalletApp, clamp, spring, ts, useT, font, volMusique } from '../kit'
 import { CartePapier } from '../objets'
 import { cues, W } from '../voix'
 
@@ -139,7 +139,7 @@ export const Papier = ({ voix = true, son = true }) => {
         <>
           <Audio src={staticFile('sons_tt/musique-chrono.mp3')} startFrom={Math.round(20 * FPS)} volume={fr => {
             const tt = fr / FPS
-            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * (voix && speaking(fr) ? 0.1 : 0.36)
+            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * volMusique(Q.$list, fr / FPS, voix, 0.36)
           }} />
           {voix && Q.$list.filter(c => c.voice).map(c => <Son key={c.id} src={`campagne/voix/${c.id}.mp3`} at={c.at - c.lead} />)}
           {ROUNDS.map((x, i) => <Son key={i} src="sons_tt/whoosh_rapide.mp3" at={x.at() - 0.35} vol={0.4} />)}

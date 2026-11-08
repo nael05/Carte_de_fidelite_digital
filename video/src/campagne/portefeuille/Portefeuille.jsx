@@ -1,6 +1,6 @@
 import { AbsoluteFill, Audio, staticFile } from 'remotion'
 import { Carte } from '../Carte'
-import { C, E, FPS, Fin, Grain, IPhone, Nuit, Plan, Son, SousTitre, WalletApp, clamp, lerp, spring, ts, useT, font } from '../kit'
+import { C, E, FPS, Fin, Grain, IPhone, Nuit, Plan, Son, SousTitre, WalletApp, clamp, lerp, spring, ts, useT, font, volMusique } from '../kit'
 import { CartePapier } from '../objets'
 import { cues, W } from '../voix'
 
@@ -83,7 +83,7 @@ export const Portefeuille = ({ voix = true, son = true }) => {
         <>
           <Audio src={staticFile('sons_tt/musique-chrono.mp3')} startFrom={Math.round(80 * FPS)} volume={f => {
             const tt = f / FPS
-            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * (voix && speaking(f) ? 0.1 : 0.36)
+            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * volMusique(Q.$list, f / FPS, voix, 0.36)
           }} />
           {voix && Q.$list.filter(c => c.voice).map(c => <Son key={c.id} src={`campagne/voix/${c.id}.mp3`} at={c.at - c.lead} />)}
           {SHOPS.map((_, k) => <Son key={k} src="sons_tt/pop.mp3" at={Math.max(0, -0.12 + k * 0.11)} vol={0.22} />)}

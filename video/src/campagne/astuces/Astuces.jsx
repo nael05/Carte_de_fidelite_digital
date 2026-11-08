@@ -1,6 +1,6 @@
 import { AbsoluteFill, Audio, staticFile } from 'remotion'
 import { Carte } from '../Carte'
-import { C, E, FPS, Grain, IPhone, Logo, NotifIOS, Nuit, Plan, Son, SousTitre, WalletApp, clamp, spring, ts, useT, font } from '../kit'
+import { C, E, FPS, Grain, IPhone, Logo, NotifIOS, Nuit, Plan, Son, SousTitre, WalletApp, clamp, spring, ts, useT, font, volMusique } from '../kit'
 import { cues, W } from '../voix'
 
 /* 17 — Trois astuces pour que tes clients reviennent (TikTok 1080 × 1920). Contenu utile, Fidelyz en conclusion. */
@@ -107,7 +107,7 @@ export const Astuces = ({ voix = true, son = true }) => {
         <>
           <Audio src={staticFile('sons_tt/musique-keynote.mp3')} startFrom={Math.round(80 * FPS)} volume={f => {
             const tt = f / FPS
-            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * (voix && speaking(f) ? 0.1 : 0.42)
+            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * volMusique(Q.$list, f / FPS, voix, 0.42)
           }} />
           {voix && Q.$list.filter(c => c.voice).map(c => <Son key={c.id} src={`campagne/voix/${c.id}.mp3`} at={c.at - c.lead} />)}
           {[0.6, 0.85, 1.1].map((x, i) => <Son key={i} src="sons_tt/pop.mp3" at={x} vol={0.3} />)}

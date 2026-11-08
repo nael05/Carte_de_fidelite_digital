@@ -1,6 +1,6 @@
 import { AbsoluteFill, Audio, staticFile } from 'remotion'
 import { Carte, CarteGoogle } from '../Carte'
-import { C, E, FPS, Fin, Grain, IPhone, Nuit, Plan, SH, SW, Son, SousTitre, Verrouille, WalletApp, clamp, lerp, spring, ts, useT, font } from '../kit'
+import { C, E, FPS, Fin, Grain, IPhone, Nuit, Plan, SH, SW, Son, SousTitre, Verrouille, WalletApp, clamp, lerp, spring, ts, useT, font, volMusique } from '../kit'
 import { Android, GoogleWalletApp } from '../objets'
 import { Accueil } from '../client/Client'
 import { cues, W } from '../voix'
@@ -94,7 +94,7 @@ export const Appli = ({ voix = true, son = true }) => {
         <>
           <Audio src={staticFile('sons_tt/musique-chrono.mp3')} startFrom={Math.round(100 * FPS)} volume={f => {
             const tt = f / FPS
-            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * (voix && speaking(f) ? 0.1 : 0.36)
+            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * volMusique(Q.$list, f / FPS, voix, 0.36)
           }} />
           {voix && Q.$list.filter(c => c.voice).map(c => <Son key={c.id} src={`campagne/voix/${c.id}.mp3`} at={c.at - c.lead} />)}
           <Son src="sons_tt/hit.mp3" at={W(Q, 'y01', 9)} vol={0.35} />

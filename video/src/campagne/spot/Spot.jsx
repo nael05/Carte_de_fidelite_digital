@@ -1,6 +1,6 @@
 import { AbsoluteFill, Audio, staticFile } from 'remotion'
 import { Carte, CarteGoogle } from '../Carte'
-import { C, E, FPS, FeuilleAjout, Grain, IPhone, Logo, Nuit, Plan, SH, Son, Titre, Verrouille, WalletApp, clamp, lerp, spring, ts, useT, font } from '../kit'
+import { C, E, FPS, FeuilleAjout, Grain, IPhone, Logo, Nuit, Plan, SH, Son, Titre, Verrouille, WalletApp, clamp, lerp, spring, ts, useT, font, volMusique } from '../kit'
 import { Android, CartePapier, GoogleWalletApp } from '../objets'
 import { cues, W } from '../voix'
 
@@ -147,7 +147,7 @@ export const Spot = ({ voix = true, son = true }) => {
         <>
           <Audio src={staticFile('sons_tt/musique-noir.mp3')} startFrom={Math.round(90 * FPS)} volume={f => {
             const tt = f / FPS
-            return Math.min(1, tt / 0.8) * Math.min(1, (DUREE - tt) / 2) * (voix && speaking(f) ? 0.1 : 0.45)
+            return Math.min(1, tt / 0.8) * Math.min(1, (DUREE - tt) / 2) * volMusique(Q.$list, f / FPS, voix, 0.45)
           }} />
           {voix && Q.$list.filter(c => c.voice).map(c => <Son key={c.id} src={`campagne/voix/${c.id}.mp3`} at={c.at - c.lead} />)}
           {['sp02', 'sp03', 'sp04', 'sp05', 'sp06'].map(id => <Son key={id} src="sons_tt/whoosh7.mp3" at={A(id) - 0.7} vol={0.3} />)}

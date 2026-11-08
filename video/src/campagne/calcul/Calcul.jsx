@@ -1,6 +1,6 @@
 import { AbsoluteFill, Audio, staticFile } from 'remotion'
 import { Carte } from '../Carte'
-import { C, E, FPS, Fin, Grain, NotifIOS, Nuit, Plan, Son, SousTitre, Studio, clamp, lerp, spring, ts, useT, font } from '../kit'
+import { C, E, FPS, Fin, Grain, NotifIOS, Nuit, Plan, Son, SousTitre, Studio, clamp, lerp, spring, ts, useT, font, volMusique } from '../kit'
 import { cues, W } from '../voix'
 
 /* 09 — Le calcul (TikTok 1080 × 1920). Typographie et chiffres, studio blanc puis noir pour la solution. */
@@ -107,7 +107,7 @@ export const Calcul = ({ voix = true, son = true }) => {
         <>
           <Audio src={staticFile('sons_tt/musique-keynote.mp3')} startFrom={Math.round(60 * FPS)} volume={f => {
             const tt = f / FPS
-            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * (voix && speaking(f) ? 0.1 : 0.42)
+            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * volMusique(Q.$list, f / FPS, voix, 0.42)
           }} />
           {voix && Q.$list.filter(c => c.voice).map(c => <Son key={c.id} src={`campagne/voix/${c.id}.mp3`} at={c.at - c.lead} />)}
           <Son src="sons_tt/hit_grave.mp3" at={0.1} vol={0.35} />

@@ -2,8 +2,7 @@ import { AbsoluteFill, Audio, staticFile } from 'remotion'
 import { Carte } from '../Carte'
 import {
   C, E, FPS, Fin, Grain, IPhone, Nuit, Page, Plan, SH, SW, Son, SousTitre, Verrouille, WalletApp,
-  clamp, kf, lerp, phonePoint, spring, ts, useT, font,
-} from '../kit'
+  clamp, kf, lerp, phonePoint, spring, ts, useT, font, volMusique } from '../kit'
 import { Boutique, CartePapier } from '../objets'
 import { cues, W } from '../voix'
 
@@ -175,10 +174,10 @@ export const Tampon = ({ voix = true, son = true }) => {
       <Grain o={0.05} />
       {son && (
         <>
-          <Audio src={staticFile('sons_tt/musique-noir.mp3')} startFrom={0} volume={f => {
+          <Audio src={staticFile('sons_tt/musique-noir.mp3')} startFrom={Math.round(16.2 * FPS)} volume={f => {
             const tt = f / FPS
             const rwv = tt >= r0 && tt <= r1 ? 0.25 : 1
-            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * rwv * (voix && speaking(f) ? 0.1 : 0.45)
+            return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * rwv * volMusique(Q.$list, f / FPS, voix, 0.45)
           }} />
           {voix && Q.$list.filter(c => c.voice).map(c => <Son key={c.id} src={`campagne/voix/${c.id}.mp3`} at={c.at - c.lead} />)}
           {STAMPS.map((x, i) => <Son key={i} src="sons_tt/hit_grave.mp3" at={x - 0.02} vol={0.18 + i * 0.02} dur={0.4} />)}

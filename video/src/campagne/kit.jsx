@@ -52,6 +52,26 @@ export const kf = (t, keys, easing = E.io) => {
 }
 
 // ─── Sons ───
+/* Ducking progressif : 1 pendant la voix, 0 hors voix. Les pauses de moins de 0,9 s restent « parlées »
+   (pas de pompage entre deux phrases) et la musique remonte ou redescend sur 0,4 s. */
+export const parle = (list, t) => {
+  const iv = []
+  for (const c of list) {
+    if (!c.voice) continue
+    const a = c.at - 0.2, b = c.at + c.dur + 0.25
+    if (iv.length && a - iv[iv.length - 1][1] < 0.9) iv[iv.length - 1][1] = b
+    else iv.push([a, b])
+  }
+  let v = 0
+  for (const [a, b] of iv) {
+    const d = t < a ? a - t : t > b ? t - b : 0
+    v = Math.max(v, 1 - Math.min(1, d / 0.4))
+  }
+  return v
+}
+/* Volume de la musique : `haut` sans voix, `bas` sous la voix */
+export const volMusique = (list, t, voix, haut, bas = 0.1) => (voix ? haut + (bas - haut) * parle(list, t) : haut)
+
 export const Son = ({ src, at, vol = 1, dur }) => (
   <Sequence from={Math.round(at * FPS)} durationInFrames={dur ? Math.round(dur * FPS) : undefined} layout="none">
     <Audio src={staticFile(src)} volume={vol} />

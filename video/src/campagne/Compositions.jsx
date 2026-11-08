@@ -12,6 +12,7 @@ import { Questions, DUREE as D_QUESTIONS } from './questions/Questions'
 import { Calcul, DUREE as D_CALCUL } from './calcul/Calcul'
 import { Metier, dureeMetier } from './metier/Metier'
 import { Spot, DUREE as D_SPOT } from './spot/Spot'
+import { Portefeuille, DUREE as D_PORTEFEUILLE } from './portefeuille/Portefeuille'
 
 /* Vidéos « campagne » : chaque vidéo existe avec voix (C-…) et sans voix (C-…-muet, musique et sous-titres). */
 const V = (id, Comp, duree, w = 1080, h = 1920, extra = {}) => [
@@ -33,6 +34,7 @@ export const Campagne = () => (
     {V('10-boulangerie', Metier, dureeMetier('boulangerie'), 1080, 1920, { metier: 'boulangerie' })}
     {V('11-coiffure', Metier, dureeMetier('coiffure'), 1080, 1920, { metier: 'coiffure' })}
     {V('12-restaurant', Metier, dureeMetier('restaurant'), 1080, 1920, { metier: 'restaurant' })}
+    {V('13-portefeuille', Portefeuille, D_PORTEFEUILLE)}
     {V('site-paysage', Site, D_SITE, 1920, 1080)}
     {V('spot-paysage', Spot, D_SPOT, 1920, 1080)}
   </>

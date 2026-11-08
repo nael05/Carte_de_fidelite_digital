@@ -56,7 +56,7 @@ const Scene = ({ t }) => {
   return (
     <AbsoluteFill>
       <Nuit t={t} cool={0.18} />
-      <div style={{ position: 'absolute', inset: 0, filter: `blur(${ph * 6 * (1 - out)}px) brightness(${1 - 0.35 * ph})` }}><Carte3D t={t} /></div>
+      <div style={{ position: 'absolute', inset: 0, filter: `brightness(${1 - 0.4 * ph})` }}><Carte3D t={t} /></div>
       {/* l'écran verrouillé du client remonte, la carte apparaît */}
       <IPhone x={540} y={lerp(lerp(2900, 1130, ph), 1000 - (690 - SH / 2) * 2.0, zN)} s={lerp(1.25, 2.0, zN)} rx={6 * (1 - zN)} ry={(-6 + 8 * ts(t, tN, A('x04'))) * (1 - zN)} time="">
         <Verrouille t={t} time="17:42" notifs={[{ at: tN, title: 'Maison Lumière', body: 'Maison Lumière est à 50 m ☕ Plus que 20 points avant votre café.', time: 'à proximité' }]} />

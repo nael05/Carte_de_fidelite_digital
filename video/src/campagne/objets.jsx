@@ -4,10 +4,10 @@ import { C, SH, SW, clamp, font, spring, ts } from './kit'
 
 /* Carte papier à tampons (carte classique d'un café) : papier crème, 10 cases, `stamps` tampons à l'encre.
    pop : instants d'apparition de chaque tampon (sinon tous visibles). */
-export const CartePapier = ({ width = 640, stamps = 9, t = 0, pop, shop = 'Maison Lumière', torn = 0, worn = 0.4, glowLast = 0 }) => {
+export const CartePapier = ({ width = 640, stamps = 9, t = 0, pop, shop = 'Maison Lumière', torn = 0, worn = 0.4, glowLast = 0, paper = '#f3ead8', ink = '#5a3a24', stamp = 'rgba(178,34,52,0.82)', sub = 'Le 10<sup>e</sup> café vous est offert' }) => {
   const h = width * 0.62, u = width / 640
   return (
-    <div style={{ width, height: h, position: 'relative', borderRadius: 14 * u, background: '#f3ead8', boxShadow: '0 30px 60px -20px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(0,0,0,0.06)', overflow: 'hidden', fontFamily: 'Georgia, "Times New Roman", serif', color: '#5a3a24' }}>
+    <div style={{ width, height: h, position: 'relative', borderRadius: 14 * u, background: paper, boxShadow: '0 30px 60px -20px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(0,0,0,0.06)', overflow: 'hidden', fontFamily: 'Georgia, "Times New Roman", serif', color: ink }}>
       <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.55 }}>
         <filter id="papier"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" seed="11" /><feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.35  0 0 0 0 0.25  0 0 0 0.35 0" /></filter>
         <rect width="100%" height="100%" filter="url(#papier)" />
@@ -20,7 +20,7 @@ export const CartePapier = ({ width = 640, stamps = 9, t = 0, pop, shop = 'Maiso
           <span style={{ fontSize: 38 * u, fontStyle: 'italic', fontWeight: 700 }}>{shop}</span>
           <span style={{ fontSize: 17 * u, letterSpacing: '0.12em', fontFamily: font, fontWeight: 600, opacity: 0.7 }}>CARTE DE FIDÉLITÉ</span>
         </div>
-        <div style={{ fontSize: 19 * u, marginTop: 6 * u, opacity: 0.75, fontFamily: font }}>Le 10<sup>e</sup> café vous est offert</div>
+        <div style={{ fontSize: 19 * u, marginTop: 6 * u, opacity: 0.75, fontFamily: font }} dangerouslySetInnerHTML={{ __html: sub }} />
       </div>
       <div style={{ position: 'absolute', left: 34 * u, right: 34 * u, top: 150 * u, display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', rowGap: 22 * u, justifyItems: 'center' }}>
         {[...Array(10)].map((_, i) => {
@@ -32,7 +32,7 @@ export const CartePapier = ({ width = 640, stamps = 9, t = 0, pop, shop = 'Maiso
             <div key={i} style={{ width: 84 * u, height: 84 * u, borderRadius: '50%', border: `${2.5 * u}px dashed rgba(90,58,36,${last ? 0.6 : 0.35})`, position: 'relative', display: 'grid', placeItems: 'center', boxShadow: last && glowLast ? `0 0 ${40 * glowLast * u}px rgba(255,90,70,${0.8 * glowLast}), inset 0 0 ${20 * glowLast * u}px rgba(255,90,70,${0.5 * glowLast})` : undefined }}>
               {last && !on && <span style={{ fontFamily: font, fontSize: 15 * u, fontWeight: 700, opacity: 0.55, letterSpacing: '0.04em' }}>OFFERT</span>}
               {on && (
-                <div style={{ position: 'absolute', inset: 4 * u, borderRadius: '50%', border: `${4 * u}px solid rgba(178,34,52,0.82)`, display: 'grid', placeItems: 'center', transform: `rotate(${r}deg) scale(${1.6 - 0.6 * p})`, opacity: p, mixBlendMode: 'multiply' }}>
+                <div style={{ position: 'absolute', inset: 4 * u, borderRadius: '50%', border: `${4 * u}px solid ${stamp}`, display: 'grid', placeItems: 'center', transform: `rotate(${r}deg) scale(${1.6 - 0.6 * p})`, opacity: p, mixBlendMode: 'multiply' }}>
                   <svg width={40 * u} height={40 * u} viewBox="0 0 24 24" fill="none" stroke="rgba(178,34,52,0.9)" strokeWidth="2.2" strokeLinecap="round"><path d="M4 9h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z" /><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16" /><path d="M8 3c0 1.5 1 1.5 1 3M12 3c0 1.5 1 1.5 1 3" /></svg>
                 </div>
               )}

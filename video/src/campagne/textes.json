@@ -640,5 +640,37 @@
     "gap": 1.6
    }
   ]
+ },
+ "portefeuille": {
+  "titre": "13 POV : le portefeuille de ton client",
+  "voix": "corentin",
+  "lignes": [
+   {
+    "id": "w01",
+    "text": "POV : le portefeuille de ton client.",
+    "gap": 0.3
+   },
+   {
+    "id": "w02",
+    "text": "La boulangerie, le coiffeur, le pressing, le café… et la tienne, perdue au milieu.",
+    "gap": 0.45
+   },
+   {
+    "id": "w03",
+    "text": "Maintenant, regarde son téléphone.",
+    "gap": 0.35
+   },
+   {
+    "id": "w04",
+    "text": "Toutes ses cartes au même endroit. Et la tienne, juste à côté de sa carte bancaire.",
+    "gap": 0.45
+   },
+   {
+    "id": "w05",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "say": "Fidéliz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
  }
 }

@@ -1,6 +1,6 @@
 # Campagne TikTok / Reels / Shorts + film du site
 
-Plan marketing : [`PLAN-MARKETING.md`](PLAN-MARKETING.md).
+Plan marketing : [`PLAN-MARKETING.md`](PLAN-MARKETING.md). Légendes prêtes à publier : [`LEGENDES.md`](LEGENDES.md).
 Code des vidéos : `video/src/campagne/` (Remotion). Rendus : `video/out/campagne/` (non versionnés).
 
 ## Les vidéos
@@ -19,6 +19,7 @@ Code des vidéos : `video/src/campagne/` (Remotion). Rendus : `video/out/campagn
 | 10 | `C-10-boulangerie` | `10-si-tas-une-boulangerie` | 9:16 | Série par métier : façade, carte aux couleurs du commerce, récompense, caisse et message adaptés (« Fournil Doré ») | « Si t'as une boulangerie, regarde ça. » |
 | 11 | `C-11-coiffure` | `11-si-tas-un-salon-de-coiffure` | 9:16 | Même série, salon de coiffure (« Studio Élise ») | « Si t'as un salon de coiffure, regarde ça. » |
 | 12 | `C-12-restaurant` | `12-si-tas-un-restaurant` | 9:16 | Même série, restaurant (« Chez Paolo ») | « Si t'as un restaurant, regarde ça. » |
+| 13 | `C-13-portefeuille` | `13-pov-portefeuille` | 9:16 | Avalanche de cartes papier de toutes les boutiques, la tienne perdue au milieu ; puis toutes rangées dans le Wallet | « POV : le portefeuille de ton client. » |
 | — | `C-site-paysage` | `site-fidelyz-de-a-a-z-paysage` | 16:9 | Film du site (1 min 30, vouvoiement) : tout le parcours, de A à Z | — |
 | — | `C-spot-paysage` | `spot-30s-paysage` | 16:9 | Spot de 25 s façon publicité, peu de mots, slogan « La fidélité, réinventée. » (haut de la page d'accueil, pré-diffusion YouTube) | — |
 

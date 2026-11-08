@@ -70,13 +70,35 @@ export const parle = (list, t) => {
   return v
 }
 /* Volume de la musique : `haut` sans voix, `bas` sous la voix */
-export const volMusique = (list, t, voix, haut, bas = 0.1) => (voix ? haut + (bas - haut) * parle(list, t) : haut)
+export const volMusique = (list, t, voix) => (voix ? 0.5 + (0.15 - 0.5) * parle(list, t) : 0.5) // musiques normalisées à -16 LUFS
 
-export const Son = ({ src, at, vol = 1, dur }) => (
-  <Sequence from={Math.round(at * FPS)} durationInFrames={dur ? Math.round(dur * FPS) : undefined} layout="none">
-    <Audio src={staticFile(src)} volume={vol} />
-  </Sequence>
-)
+/* Bruitages : une petite bibliothèque cohérente (public/campagne/sfx, générée et normalisée à -20 LUFS),
+   dosée bas et de façon constante. Les anciens noms de sons sont redirigés ; montées, lasers, tic-tac… sont supprimés. */
+const SFX = {
+  whoosh: ['whoosh', 0.22], whoosh7: ['whoosh', 0.22], whoosh_rapide: ['whoosh', 0.22], swoosh: ['whoosh', 0.18], swoosh2: ['whoosh', 0.18],
+  clic: ['tap', 0.3], chrono_stop: ['tap', 0.3],
+  notif: ['notif', 0.45], notif_douce: ['notif', 0.38],
+  'bip-caisse': ['scan', 0.32],
+  hit_logo: ['impact', 0.32], hit: ['impact', 0.28], braam: ['impact', 0.28], braam2: ['impact', 0.28], bass_drop: ['impact', 0.28], sub: ['impact', 0.28],
+  hit_grave: ['stamp', 0.3],
+  scintille: ['shimmer', 0.18], verre: ['shimmer', 0.18],
+  pop: ['pop', 0.2], pop_cartoon: ['pop', 0.2],
+}
+export const Son = ({ src, at, vol = 1, dur }) => {
+  let file = src, v = vol
+  const m = src.match(/^sons_(?:tt|tiktok)\/([^/.]+)\.mp3$/)
+  if (m) {
+    const s = SFX[m[1]]
+    if (!s) return null
+    file = `campagne/sfx/${s[0]}.mp3`
+    v = s[1] * Math.max(0.5, Math.min(1, vol / 0.4)) // garde les écarts voulus (ex. échos plus faibles), sans jamais dépasser le dosage
+  }
+  return (
+    <Sequence from={Math.round(at * FPS)} durationInFrames={dur ? Math.round(dur * FPS) : undefined} layout="none">
+      <Audio src={staticFile(file)} volume={v} />
+    </Sequence>
+  )
+}
 
 // ─── Fonds ───
 /* Nuit : noir profond, deux lueurs qui dérivent lentement (bleu et champagne), vignette */

@@ -145,7 +145,7 @@ export const Spot = ({ voix = true, son = true }) => {
       <Grain o={0.035} />
       {son && (
         <>
-          <Audio src={staticFile('sons_tt/musique-noir.mp3')} startFrom={Math.round(90 * FPS)} volume={f => {
+          <Audio src={staticFile('campagne/musique/spot.mp3')} volume={f => {
             const tt = f / FPS
             return Math.min(1, tt / 0.8) * Math.min(1, (DUREE - tt) / 2) * volMusique(Q.$list, f / FPS, voix, 0.45)
           }} />

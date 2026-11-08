@@ -1,7 +1,7 @@
 {
  "tour": {
   "titre": "01 Le tour complet",
-  "voix": "corentin",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "g01",
@@ -53,7 +53,7 @@
  },
  "tampon": {
   "titre": "02 Le tampon manquant",
-  "voix": "hugo",
+  "voix": "nicolas",
   "lignes": [
    {
     "id": "m01",
@@ -101,7 +101,7 @@
  },
  "push": {
   "titre": "03 Les notifications push",
-  "voix": "francois",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "p01",
@@ -148,7 +148,7 @@
  },
  "creer": {
   "titre": "04 Ta carte en 2 minutes",
-  "voix": "simon",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "c01",
@@ -163,7 +163,8 @@
    {
     "id": "c03",
     "text": "La couleur de fond. Celle du texte. Les détails.",
-    "gap": 0.3
+    "gap": 0.3,
+    "say": "La couleur de fond, celle du texte, les détails."
    },
    {
     "id": "c04",
@@ -195,7 +196,7 @@
  },
  "papier": {
   "titre": "05 Papier contre Fidelyz",
-  "voix": "corentin",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "v01",
@@ -238,7 +239,7 @@
  },
  "client": {
   "titre": "06 10 secondes côté client",
-  "voix": "corentin",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "k01",
@@ -280,7 +281,7 @@
  },
  "proximite": {
   "titre": "07 Le rappel de proximité",
-  "voix": "hugo",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "x01",
@@ -317,7 +318,7 @@
  },
  "questions": {
   "titre": "08 Trois questions",
-  "voix": "simon",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "q01",
@@ -363,7 +364,7 @@
  },
  "site": {
   "titre": "Fidelyz de A à Z (paysage)",
-  "voix": "paul",
+  "voix": "nicolas",
   "lignes": [
    {
     "id": "s01",
@@ -457,7 +458,7 @@
  },
  "calcul": {
   "titre": "09 Le calcul",
-  "voix": "francois",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "n01",
@@ -494,7 +495,7 @@
  },
  "boulangerie": {
   "titre": "10 Si t'as une boulangerie",
-  "voix": "corentin",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "bo01",
@@ -531,7 +532,7 @@
  },
  "coiffure": {
   "titre": "11 Si t'as un salon de coiffure",
-  "voix": "corentin",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "cf01",
@@ -568,7 +569,7 @@
  },
  "restaurant": {
   "titre": "12 Si t'as un restaurant",
-  "voix": "corentin",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "rs01",
@@ -605,7 +606,7 @@
  },
  "spot": {
   "titre": "Spot 30 s (paysage)",
-  "voix": "paul",
+  "voix": "nicolas",
   "lignes": [
    {
     "id": "sp01",
@@ -643,7 +644,7 @@
  },
  "portefeuille": {
   "titre": "13 POV : le portefeuille de ton client",
-  "voix": "corentin",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "w01",
@@ -675,7 +676,7 @@
  },
  "barbier": {
   "titre": "14 Si t'as un barber shop",
-  "voix": "simon",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "bb01",
@@ -712,7 +713,7 @@
  },
  "fleuriste": {
   "titre": "15 Si t'es fleuriste",
-  "voix": "hugo",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "fl01",
@@ -749,7 +750,7 @@
  },
  "institut": {
   "titre": "16 Si t'as un institut de beauté",
-  "voix": "hugo",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "ib01",
@@ -786,7 +787,7 @@
  },
  "astuces": {
   "titre": "17 Trois astuces",
-  "voix": "simon",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "a01",
@@ -818,7 +819,7 @@
  },
  "appli": {
   "titre": "18 Le mythe de l'appli",
-  "voix": "corentin",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "y01",

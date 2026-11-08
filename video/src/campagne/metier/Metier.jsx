@@ -165,7 +165,7 @@ export const Metier = ({ voix = true, son = true, metier = 'boulangerie' }) => {
       <Grain o={0.04} />
       {son && (
         <>
-          <Audio src={staticFile(m.musique)} startFrom={Math.round(m.from * FPS)} volume={f => {
+          <Audio src={staticFile(`campagne/musique/${metier}.mp3`)} volume={f => {
             const tt = f / FPS
             return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * volMusique(Q.$list, f / FPS, voix, 0.42)
           }} />

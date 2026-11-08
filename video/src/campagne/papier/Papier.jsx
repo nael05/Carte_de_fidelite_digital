@@ -137,7 +137,7 @@ export const Papier = ({ voix = true, son = true }) => {
       <Grain o={0.04} />
       {son && (
         <>
-          <Audio src={staticFile('sons_tt/musique-chrono.mp3')} startFrom={Math.round(20 * FPS)} volume={fr => {
+          <Audio src={staticFile('campagne/musique/papier.mp3')} volume={fr => {
             const tt = fr / FPS
             return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * volMusique(Q.$list, fr / FPS, voix, 0.36)
           }} />

@@ -174,7 +174,7 @@ export const Tampon = ({ voix = true, son = true }) => {
       <Grain o={0.05} />
       {son && (
         <>
-          <Audio src={staticFile('sons_tt/musique-noir.mp3')} startFrom={Math.round(16.2 * FPS)} volume={f => {
+          <Audio src={staticFile('campagne/musique/tampon.mp3')} volume={f => {
             const tt = f / FPS
             const rwv = tt >= r0 && tt <= r1 ? 0.25 : 1
             return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * rwv * volMusique(Q.$list, f / FPS, voix, 0.45)

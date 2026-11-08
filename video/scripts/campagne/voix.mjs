@@ -1,13 +1,16 @@
-// Voix off ElevenLabs des vidéos « campagne » (voix d'homme, avec intonation).
-// → public/campagne/voix/<id>.mp3 et src/campagne/voix-data.json (durée, silence de tête, instant de chaque mot).
+// Voix off ElevenLabs des vidéos « campagne » (voix d'homme, modèle eleven_v3).
+// Chaque vidéo est dite D'UNE SEULE TRAITE (intonation continue, pauses naturelles), puis découpée phrase par phrase
+// grâce à l'horodatage de chaque caractère :
+// → public/campagne/voix/<id>.mp3 (une réplique par fichier, avec ses silences naturels)
+// → src/campagne/voix-data.json : { id: { dur, lead, words: [t…], gap } } (gap = pause naturelle après la réplique)
 //
-// La clé n'est jamais dans le dépôt : dans le cloud, le proxy l'injecte lui-même (secret réseau pour api.elevenlabs.io) ;
+// La clé n'est jamais dans le dépôt : dans le cloud, le proxy l'injecte (secret réseau pour api.elevenlabs.io) ;
 // en local, mettre ELEVENLABS_API_KEY dans video/.env.
 //
-// Usage : NODE_USE_ENV_PROXY=1 node scripts/campagne/voix.mjs <video> [id…] [--force]
-//         node scripts/campagne/voix.mjs --toutes            (toutes les vidéos)
+// Usage : NODE_USE_ENV_PROXY=1 node scripts/campagne/voix.mjs <video…> | --toutes   [--force]
 import fs from 'node:fs'
 import path from 'node:path'
+import { execFileSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..')
@@ -19,66 +22,89 @@ if (fs.existsSync(envFile)) for (const line of fs.readFileSync(envFile, 'utf8').
 }
 const KEY = env.ELEVENLABS_API_KEY || process.env.ELEVENLABS_API_KEY || 'proxy-injected'
 
-// Voix d'homme uniquement. Réglages : stabilité basse + style élevé = plus d'intonation.
+// Voix d'homme, choisies parmi les voix françaises les plus utilisées de la bibliothèque ElevenLabs.
+// Réglages « naturels » : stabilité moyenne, aucun effet de style, vitesse normale.
 const VOIX = {
-  paul: { id: 'MBIQRZjHPU6xEjGuB3b8', speed: 1.04, stability: 0.4, style: 0.42 }, // Paul K, conteur grave et engageant (vidéo du site)
-  corentin: { id: 'IHngRooVccHyPqB4uQkG', speed: 0.88, stability: 0.33, style: 0.55 }, // énergique, réseaux sociaux
-  hugo: { id: 'IbbR6Av0dWuQJS0b8JVT', speed: 0.88, stability: 0.38, style: 0.5 }, // chaud, narratif (mises en scène)
-  francois: { id: 'UBXZKOKbt62aLQHhc1Jm', speed: 1.0, stability: 0.36, style: 0.55 }, // grave, cinéma
-  simon: { id: 'mvhJVdVoTWVUtL4keT7W', speed: 0.94, stability: 0.35, style: 0.5 }, // rapide, dynamique
+  anatole: { id: 'Jrq4GqCKqYpigdQsZRkP', stability: 0.5 }, // Anatole, dynamique et clair (TikTok)
+  nicolas: { id: 'aQROLel5sQbj1vuIVi6B', stability: 0.5 }, // Nicolas, narrateur (film du site, spot, mise en scène)
 }
-const MODEL = env.ELEVENLABS_MODEL || process.env.ELEVENLABS_MODEL || 'eleven_multilingual_v2'
+const MODEL = 'eleven_v3'
 
 const TEXTES = JSON.parse(fs.readFileSync(path.join(root, 'src/campagne/textes.json'), 'utf8'))
 const dataFile = path.join(root, 'src/campagne/voix-data.json')
 const DATA = JSON.parse(fs.readFileSync(dataFile, 'utf8'))
 const OUT = path.join(root, 'public/campagne/voix')
+const TMP = '/tmp/claude-0/voix'
 fs.mkdirSync(OUT, { recursive: true })
+fs.mkdirSync(TMP, { recursive: true })
+
+/* Ce que la voix prononce : la marque, et une ponctuation d'oral (pas de « … » ni de « : » qui hachent la phrase) */
+const parle = l => (l.say ?? l.text)
+  .replace(/\bFidelyz\b/g, 'Fidéliz')
+  .replace(/\s*…\s*/g, ', ')
+  .replace(/\s+:\s+/g, ', ')
+  .replace(/\s+/g, ' ')
+  .trim()
 
 const args = process.argv.slice(2)
 const force = args.includes('--force')
-const videos = args.includes('--toutes') ? Object.keys(TEXTES) : [args[0]]
-const only = args.slice(1).filter(a => !a.startsWith('--'))
+const videos = args.includes('--toutes') ? Object.keys(TEXTES) : args.filter(a => !a.startsWith('--'))
 
 for (const video of videos) {
   const v = TEXTES[video]
   if (!v) { console.error('vidéo inconnue :', video, '— au choix :', Object.keys(TEXTES).join(', ')); process.exit(1) }
-  const P = VOIX[v.voix]
   const lignes = v.lignes
-  for (let i = 0; i < lignes.length; i++) {
-    const l = lignes[i]
-    if (only.length && !only.includes(l.id)) continue
-    const file = path.join(OUT, `${l.id}.mp3`)
-    if (!force && DATA[l.id] && fs.existsSync(file)) continue
-    const text = l.say ?? l.text
-    const body = {
-      text, model_id: MODEL,
-      previous_text: lignes.slice(Math.max(0, i - 2), i).map(x => x.say ?? x.text).join(' ') || undefined,
-      next_text: lignes[i + 1] ? (lignes[i + 1].say ?? lignes[i + 1].text) : undefined,
-      voice_settings: { stability: P.stability, similarity_boost: 0.8, style: P.style, use_speaker_boost: true, speed: P.speed },
-    }
-    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${P.id}/with-timestamps?output_format=mp3_44100_192`, {
-      method: 'POST', headers: { 'xi-api-key': KEY, 'Content-Type': 'application/json' }, body: JSON.stringify(body),
-    })
-    const txt = await r.text()
-    if (!r.ok) { console.error(`❌ ${l.id} : ${r.status} ${txt.slice(0, 200)}`); process.exit(1) }
-    const res = JSON.parse(txt)
-    fs.writeFileSync(file, Buffer.from(res.audio_base64, 'base64'))
-    const al = res.alignment
-    const chars = al.characters, st = al.character_start_times_seconds, en = al.character_end_times_seconds
-    // début de chaque mot (premier caractère non blanc après un espace)
+  if (!force && lignes.every(l => DATA[l.id]?.v3 && fs.existsSync(path.join(OUT, `${l.id}.mp3`)))) continue
+  const P = VOIX[v.voix] ?? VOIX.anatole
+  const says = lignes.map(parle)
+  const full = says.join(' ')
+  const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${P.id}/with-timestamps?output_format=mp3_44100_192`, {
+    method: 'POST', headers: { 'xi-api-key': KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: full, model_id: MODEL, language_code: 'fr', voice_settings: { stability: P.stability, similarity_boost: 0.8, use_speaker_boost: true } }),
+  })
+  const txt = await r.text()
+  if (!r.ok) { console.error(`❌ ${video} : ${r.status} ${txt.slice(0, 300)}`); process.exit(1) }
+  const res = JSON.parse(txt)
+  const whole = path.join(TMP, `${video}.mp3`)
+  fs.writeFileSync(whole, Buffer.from(res.audio_base64, 'base64'))
+  const { characters: ch, character_start_times_seconds: st, character_end_times_seconds: en } = res.alignment
+  if (ch.join('') !== full) console.warn(`⚠ ${video} : alignement différent du texte (${ch.length} / ${full.length} caractères)`)
+
+  // bornes de chaque réplique dans le texte complet
+  let off = 0
+  const spans = says.map(s => { const a = off; off += s.length + 1; return [a, a + s.length] })
+  const info = spans.map(([a, b]) => {
+    let i0 = a; while (i0 < b && /\s/.test(ch[i0])) i0++
+    let i1 = b - 1; while (i1 > i0 && /[\s.,…!?;:]/.test(ch[i1])) i1--
     const starts = []
     let inWord = false
-    for (let k = 0; k < chars.length; k++) {
-      const blank = /\s/.test(chars[k])
+    for (let k = a; k < b; k++) {
+      const blank = /\s/.test(ch[k])
       if (!blank && !inWord) starts.push(st[k])
       inWord = !blank
     }
-    let last = 0
-    for (let k = chars.length - 1; k >= 0; k--) if (!/[\s.,…!?;:]/.test(chars[k])) { last = en[k]; break }
-    const lead = starts[0] ?? 0
-    DATA[l.id] = { dur: +(last - lead).toFixed(3), lead: +lead.toFixed(3), words: starts.map(s => +(s - lead).toFixed(3)) }
-    fs.writeFileSync(dataFile, JSON.stringify(DATA, null, 1))
-    console.log(`✓ ${l.id} ${DATA[l.id].dur}s · ${text}`)
+    return { start: st[i0], end: en[i1], starts }
+  })
+  const total = Number(execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', whole]).toString())
+  for (let i = 0; i < lignes.length; i++) {
+    const l = lignes[i], f = info[i]
+    const cutA = i === 0 ? 0 : (info[i - 1].end + f.start) / 2
+    const cutB = i === lignes.length - 1 ? total : (f.end + info[i + 1].start) / 2
+    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', whole, '-ss', cutA.toFixed(3), '-to', cutB.toFixed(3), '-af', 'afade=t=in:d=0.02,areverse,afade=t=in:d=0.04,areverse', '-c:a', 'libmp3lame', '-b:a', '192k', path.join(OUT, `${l.id}.mp3`)])
+    // mots affichés (sous-titres) : les signes isolés (« : », « ? »…) prennent l'instant du mot précédent
+    const shown = l.text.split(' ')
+    const spoken = f.starts.map(s => +(s - f.start).toFixed(3))
+    const words = []
+    let k = 0
+    for (const w of shown) {
+      if (!/[\p{L}\p{N}]/u.test(w)) words.push(words.length ? words[words.length - 1] : 0)
+      else words.push(spoken[Math.min(k++, spoken.length - 1)] ?? 0)
+    }
+    DATA[l.id] = {
+      v3: true, dur: +(f.end - f.start).toFixed(3), lead: +(f.start - cutA).toFixed(3), words,
+      gap: i < lignes.length - 1 ? +(info[i + 1].start - f.end).toFixed(3) : 0,
+    }
   }
+  fs.writeFileSync(dataFile, JSON.stringify(DATA, null, 1))
+  console.log(`✓ ${video} (${v.voix}) ${total.toFixed(1)} s · ${full.slice(0, 70)}…`)
 }

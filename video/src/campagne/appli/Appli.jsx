@@ -92,7 +92,7 @@ export const Appli = ({ voix = true, son = true }) => {
       <Grain o={0.04} />
       {son && (
         <>
-          <Audio src={staticFile('sons_tt/musique-chrono.mp3')} startFrom={Math.round(100 * FPS)} volume={f => {
+          <Audio src={staticFile('campagne/musique/appli.mp3')} volume={f => {
             const tt = f / FPS
             return Math.min(1, tt / 0.3) * Math.min(1, (DUREE - tt) / 1.2) * volMusique(Q.$list, f / FPS, voix, 0.36)
           }} />

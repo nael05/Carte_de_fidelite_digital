@@ -21,7 +21,7 @@ export const BandeSon = ({ voix = true }) => {
   const speaking = f => Q.$list.some(c => f / FPS > c.at - 0.1 && f / FPS < c.at + c.dur + 0.15)
   return (
     <>
-      <Audio src={staticFile('sons_tt/musique-keynote.mp3')} startFrom={Math.round(1.2 * FPS)} volume={f => {
+      <Audio src={staticFile('campagne/musique/tour.mp3')} volume={f => {
         const t = f / FPS
         const fade = Math.min(1, t / 0.4) * Math.min(1, (DUREE - t) / 1.2)
         return fade * volMusique(Q.$list, f / FPS, voix, 0.42)

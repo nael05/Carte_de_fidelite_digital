@@ -29,7 +29,8 @@ export const cues = (video, start = 0.35) => {
       wt = words.map(w => { const v = (acc / total) * dur * 0.95; acc += w.length + 1; return v })
     }
     out[l.id] = { id: l.id, at: t, dur, lead: d?.lead ?? 0, voice: !!d, text: l.text, words: words.map((w, i) => ({ w, t: wt[i] })) }
-    t += dur + (l.gap ?? 0.25)
+    // voix v3 : pause naturelle de la prise, allongée seulement si le plan demande plus de temps (`gap`)
+    t += dur + (d?.v3 ? Math.max(l.gap ?? 0.25, d.gap) : (l.gap ?? 0.25))
   }
   out.$end = t
   out.$list = lignes.map(l => out[l.id])

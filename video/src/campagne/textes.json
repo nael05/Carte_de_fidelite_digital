@@ -1,0 +1,495 @@
+{
+ "tour": {
+  "titre": "01 Le tour complet",
+  "voix": "corentin",
+  "lignes": [
+   {
+    "id": "g01",
+    "text": "Tes clients oublient ta carte de fidélité.",
+    "gap": 0.3
+   },
+   {
+    "id": "g02",
+    "text": "Alors on l'a mise dans leur téléphone.",
+    "gap": 0.35
+   },
+   {
+    "id": "g03",
+    "text": "Apple Wallet, Google Wallet. Aucune application à télécharger.",
+    "gap": 0.4
+   },
+   {
+    "id": "g04",
+    "text": "Toi, tu crées ta carte en deux minutes : ton logo, tes couleurs.",
+    "gap": 0.4
+   },
+   {
+    "id": "g05",
+    "text": "Ton client scanne le QR code en caisse… et sa carte est ajoutée.",
+    "gap": 1.0
+   },
+   {
+    "id": "g06",
+    "text": "À chaque passage, ses points tombent en un clic.",
+    "gap": 0.7
+   },
+   {
+    "id": "g07",
+    "text": "Et surtout : tu peux lui envoyer une notification, directement sur son écran.",
+    "gap": 0.7
+   },
+   {
+    "id": "g08",
+    "text": "Résultat ? Il revient.",
+    "gap": 0.5
+   },
+   {
+    "id": "g09",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "say": "Fidéliz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
+ },
+ "tampon": {
+  "titre": "02 Le tampon manquant",
+  "voix": "hugo",
+  "lignes": [
+   {
+    "id": "m01",
+    "text": "Neuf tampons. Il lui en manquait un seul.",
+    "at": 0.5,
+    "gap": 0.4
+   },
+   {
+    "id": "m02",
+    "text": "Et ce jour-là… il avait oublié sa carte.",
+    "gap": 0.5
+   },
+   {
+    "id": "m03",
+    "text": "Pas de carte, pas de café offert. Alors il est allé en face.",
+    "gap": 0.6
+   },
+   {
+    "id": "m04",
+    "text": "Maintenant, on rembobine.",
+    "gap": 0.5
+   },
+   {
+    "id": "m05",
+    "text": "Cette fois, sa carte est dans son téléphone. Impossible de l'oublier.",
+    "gap": 0.4
+   },
+   {
+    "id": "m06",
+    "text": "Un scan en caisse, et ses points sont à jour.",
+    "gap": 0.4
+   },
+   {
+    "id": "m07",
+    "text": "Et quand il a droit à son café, son téléphone le lui dit.",
+    "gap": 0.5
+   },
+   {
+    "id": "m08",
+    "text": "Fidelyz. Ta carte de fidélité, dans Apple Wallet et Google Wallet.",
+    "say": "Fidéliz. Ta carte de fidélité, dans Apple Wallet et Google Wallet.",
+    "gap": 0.8
+   }
+  ]
+ },
+ "push": {
+  "titre": "03 Les notifications push",
+  "voix": "francois",
+  "lignes": [
+   {
+    "id": "p01",
+    "text": "Et si ta boutique s'affichait sur l'écran de tes clients ?",
+    "gap": 0.4
+   },
+   {
+    "id": "p02",
+    "text": "Pas un SMS. Pas un email que personne n'ouvre.",
+    "gap": 0.35
+   },
+   {
+    "id": "p03",
+    "text": "Une notification, sur l'écran verrouillé.",
+    "gap": 0.4
+   },
+   {
+    "id": "p04",
+    "text": "Tu écris ton message : une offre, une nouveauté, un produit du jour.",
+    "gap": 0.35
+   },
+   {
+    "id": "p05",
+    "text": "Tu appuies sur envoyer.",
+    "gap": 0.3
+   },
+   {
+    "id": "p06",
+    "text": "Et tous tes clients la reçoivent. Sur leur carte de fidélité.",
+    "gap": 0.4
+   },
+   {
+    "id": "p07",
+    "text": "Sans application, sans numéro de téléphone, sans frais d'envoi.",
+    "gap": 0.5
+   },
+   {
+    "id": "p08",
+    "text": "Fidelyz. Fais revenir tes clients. Lien en bio.",
+    "say": "Fidéliz. Fais revenir tes clients. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
+ },
+ "creer": {
+  "titre": "04 Ta carte en 2 minutes",
+  "voix": "simon",
+  "lignes": [
+   {
+    "id": "c01",
+    "text": "Je crée une carte de fidélité en deux minutes. Chrono.",
+    "gap": 0.3
+   },
+   {
+    "id": "c02",
+    "text": "Le nom de ta boutique, ton logo.",
+    "gap": 0.3
+   },
+   {
+    "id": "c03",
+    "text": "La couleur de fond. Celle du texte. Les détails.",
+    "gap": 0.3
+   },
+   {
+    "id": "c04",
+    "text": "Une photo pour la bannière.",
+    "gap": 0.3
+   },
+   {
+    "id": "c05",
+    "text": "Ta récompense : un café offert à cinq cents points.",
+    "gap": 0.3
+   },
+   {
+    "id": "c06",
+    "text": "Enregistré. Ta carte est prête, pour iPhone et pour Android.",
+    "gap": 0.4
+   },
+   {
+    "id": "c07",
+    "text": "Il te reste plus qu'à afficher ton QR code en caisse.",
+    "gap": 0.5
+   },
+   {
+    "id": "c08",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "say": "Fidéliz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
+ },
+ "papier": {
+  "titre": "05 Papier contre Fidelyz",
+  "voix": "corentin",
+  "lignes": [
+   {
+    "id": "v01",
+    "text": "Carte papier contre carte dans le téléphone. Round un.",
+    "gap": 0.3
+   },
+   {
+    "id": "v02",
+    "text": "Oubliée à la maison ? Le téléphone, lui, est toujours dans la poche.",
+    "gap": 0.35
+   },
+   {
+    "id": "v03",
+    "text": "Round deux. Imprimer mille cartes, ça coûte. La carte Wallet, elle, ne s'imprime pas.",
+    "gap": 0.35
+   },
+   {
+    "id": "v04",
+    "text": "Round trois. Ta carte papier ne peut pas dire à ton client que tu as une offre.",
+    "gap": 0.2
+   },
+   {
+    "id": "v05",
+    "text": "Ta carte Fidelyz, si. Directement sur son écran.",
+    "say": "Ta carte Fidéliz, si. Directement sur son écran.",
+    "gap": 0.35
+   },
+   {
+    "id": "v06",
+    "text": "Et en bonus, tu sais combien de clients reviennent vraiment.",
+    "gap": 0.4
+   },
+   {
+    "id": "v07",
+    "text": "Trois rounds, trois K.O. Fidelyz, lien en bio.",
+    "say": "Trois rounds, trois K.O. Fidéliz, lien en bio.",
+    "gap": 0.8
+   }
+  ]
+ },
+ "client": {
+  "titre": "06 10 secondes côté client",
+  "voix": "corentin",
+  "lignes": [
+   {
+    "id": "k01",
+    "text": "Ton client n'a rien à télécharger. Regarde.",
+    "gap": 0.3
+   },
+   {
+    "id": "k02",
+    "text": "Il scanne le QR code posé sur ton comptoir.",
+    "gap": 0.3
+   },
+   {
+    "id": "k03",
+    "text": "Il met son prénom, son email.",
+    "gap": 0.3
+   },
+   {
+    "id": "k04",
+    "text": "Il appuie sur Ajouter.",
+    "gap": 0.3
+   },
+   {
+    "id": "k05",
+    "text": "Et c'est tout : sa carte est dans son Wallet, à côté de sa carte bancaire.",
+    "gap": 0.35
+   },
+   {
+    "id": "k06",
+    "text": "Dix secondes. Chrono.",
+    "gap": 0.5
+   },
+   {
+    "id": "k07",
+    "text": "Fidelyz. Ta carte de fidélité, sans application. Lien en bio.",
+    "say": "Fidéliz. Ta carte de fidélité, sans application. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
+ },
+ "proximite": {
+  "titre": "07 Le rappel de proximité",
+  "voix": "hugo",
+  "lignes": [
+   {
+    "id": "x01",
+    "text": "Ton client passe devant ta boutique. Il ne pensait même pas à toi.",
+    "gap": 0.4
+   },
+   {
+    "id": "x02",
+    "text": "Et là, sa carte de fidélité apparaît sur son écran.",
+    "gap": 0.35
+   },
+   {
+    "id": "x03",
+    "text": "Maison Lumière est à cinquante mètres. Plus que vingt points avant ton café.",
+    "gap": 0.45
+   },
+   {
+    "id": "x04",
+    "text": "Tu indiques l'adresse de ta boutique une seule fois.",
+    "gap": 0.3
+   },
+   {
+    "id": "x05",
+    "text": "Ensuite, c'est le téléphone de ton client qui fait le travail.",
+    "gap": 0.5
+   },
+   {
+    "id": "x06",
+    "text": "Fidelyz. Fais revenir tes clients. Lien en bio.",
+    "say": "Fidéliz. Fais revenir tes clients. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
+ },
+ "questions": {
+  "titre": "08 Trois questions",
+  "voix": "simon",
+  "lignes": [
+   {
+    "id": "q01",
+    "text": "Les trois questions que les commerçants nous posent.",
+    "gap": 0.3
+   },
+   {
+    "id": "q02",
+    "text": "Un : mes clients doivent télécharger une application ?",
+    "gap": 0.2
+   },
+   {
+    "id": "q03",
+    "text": "Non. La carte va dans Apple Wallet ou Google Wallet, déjà installés sur leur téléphone.",
+    "gap": 0.4
+   },
+   {
+    "id": "q04",
+    "text": "Deux : et pour ajouter les points ?",
+    "gap": 0.2
+   },
+   {
+    "id": "q05",
+    "text": "Tu scannes sa carte avec ton téléphone, ou tu cherches son nom. Un clic.",
+    "gap": 0.4
+   },
+   {
+    "id": "q06",
+    "text": "Trois : combien ça coûte ?",
+    "gap": 0.2
+   },
+   {
+    "id": "q07",
+    "text": "Gratuit jusqu'à quinze clients. Sans carte bancaire, sans engagement.",
+    "gap": 0.4
+   },
+   {
+    "id": "q08",
+    "text": "Une autre question ? Pose-la en commentaire.",
+    "gap": 0.8
+   }
+  ]
+ },
+ "site": {
+  "titre": "Fidelyz de A à Z (paysage)",
+  "voix": "paul",
+  "lignes": [
+   {
+    "id": "s01",
+    "text": "Une carte de fidélité en papier, vos clients l'oublient, la perdent, ou la jettent.",
+    "gap": 0.4
+   },
+   {
+    "id": "s02",
+    "text": "Et vous, vous ne savez même pas qui revient.",
+    "gap": 0.5
+   },
+   {
+    "id": "s03",
+    "text": "Fidelyz met votre carte de fidélité là où vos clients ne l'oublient jamais : dans leur téléphone.",
+    "say": "Fidéliz met votre carte de fidélité là où vos clients ne l'oublient jamais : dans leur téléphone.",
+    "gap": 0.4
+   },
+   {
+    "id": "s04",
+    "text": "Dans Apple Wallet sur iPhone, et dans Google Wallet sur Android. Sans aucune application à télécharger.",
+    "gap": 0.6
+   },
+   {
+    "id": "s05",
+    "text": "Tout commence dans votre espace pro.",
+    "gap": 0.3
+   },
+   {
+    "id": "s06",
+    "text": "En quelques minutes, vous créez votre carte : votre logo, vos couleurs, une photo de votre commerce.",
+    "gap": 0.3
+   },
+   {
+    "id": "s07",
+    "text": "Et vous choisissez vos récompenses.",
+    "gap": 0.6
+   },
+   {
+    "id": "s08",
+    "text": "Ensuite, vous affichez votre QR code en caisse.",
+    "gap": 0.3
+   },
+   {
+    "id": "s09",
+    "text": "Votre client le scanne, entre son prénom, et ajoute sa carte en un geste. Dix secondes, pas plus.",
+    "gap": 0.6
+   },
+   {
+    "id": "s10",
+    "text": "À chaque passage, vous scannez sa carte, ou vous cherchez son nom, et ses points sont ajoutés.",
+    "gap": 0.3
+   },
+   {
+    "id": "s11",
+    "text": "Sa carte se met à jour instantanément, dans son téléphone.",
+    "gap": 0.6
+   },
+   {
+    "id": "s12",
+    "text": "Et c'est là que tout change : vous pouvez lui écrire.",
+    "gap": 0.3
+   },
+   {
+    "id": "s13",
+    "text": "Une offre, une nouveauté : votre message s'affiche directement sur l'écran verrouillé de vos clients.",
+    "gap": 0.4
+   },
+   {
+    "id": "s14",
+    "text": "Et quand ils passent près de chez vous, leur carte se rappelle à eux.",
+    "gap": 0.6
+   },
+   {
+    "id": "s15",
+    "text": "Vous suivez tout en temps réel : vos clients, leurs visites, vos récompenses.",
+    "gap": 0.6
+   },
+   {
+    "id": "s16",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients, sans carte bancaire, sans engagement.",
+    "say": "Fidéliz. Gratuit jusqu'à quinze clients, sans carte bancaire, sans engagement.",
+    "gap": 0.3
+   },
+   {
+    "id": "s17",
+    "text": "Créez votre carte dès aujourd'hui, sur fidelyzapp.fr",
+    "say": "Créez votre carte dès aujourd'hui, sur fidéliz app point F R.",
+    "gap": 1.2
+   }
+  ]
+ },
+ "calcul": {
+  "titre": "09 Le calcul",
+  "voix": "francois",
+  "lignes": [
+   {
+    "id": "n01",
+    "text": "Combien te coûte un client qui ne revient pas ?",
+    "gap": 0.4
+   },
+   {
+    "id": "n02",
+    "text": "Un client fidèle, c'est un café par semaine. Cinquante semaines par an.",
+    "gap": 0.35
+   },
+   {
+    "id": "n03",
+    "text": "À trois euros le café, ça fait cent cinquante euros par an. Pour un seul client.",
+    "gap": 0.4
+   },
+   {
+    "id": "n04",
+    "text": "Perds-en dix, et c'est mille cinq cents euros qui partent chez le concurrent.",
+    "gap": 0.5
+   },
+   {
+    "id": "n05",
+    "text": "Fidelyz est fait pour ça : garder le contact, et les faire revenir.",
+    "say": "Fidéliz est fait pour ça : garder le contact, et les faire revenir.",
+    "gap": 0.4
+   },
+   {
+    "id": "n06",
+    "text": "Gratuit jusqu'à quinze clients. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
+ }
+}

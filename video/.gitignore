@@ -16,3 +16,7 @@ public/sons_tt/candidats/
 public/tt/*.wav
 # Textures des scènes 3D, régénérées par scripts/textures-tt.mjs
 public/tt/tex/
+# Campagne : captures et voix régénérables (scripts/campagne/capture.cjs, voix.mjs)
+public/campagne/ecrans/*.png
+public/campagne/voix/
+.env

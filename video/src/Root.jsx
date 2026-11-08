@@ -16,6 +16,7 @@ import { DUREE_NOIR } from './tt/noir/temps'
 import { Chrono } from './tt/chrono/Chrono'
 import { DUREE_CHRONO } from './tt/chrono/temps'
 import { FPS, fontFamily, sec } from './lib'
+import { Campagne } from './campagne/Compositions'
 
 /* Planche contact : 20 images de la vidéo sur une seule image, pour vérifier le montage */
 const Planche = ({ times = [] }) => (
@@ -51,6 +52,7 @@ const PlancheV = ({ times = [], video = 'tiktok' }) => (
 
 export const Root = () => (
   <>
+    <Campagne />
     <Composition
       id="Fidelyz"
       component={Promo}

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 150" width="480" height="150">
+  <g fill="#f5ead8">
+    <circle cx="62" cy="75" r="40" fill="none" stroke="#d9a75b" stroke-width="5"/>
+    <path d="M62 45 l6 22 22 8 -22 8 -6 22 -6 -22 -22 -8 22 -8z" fill="#d9a75b"/>
+    <text x="122" y="70" font-family="Georgia, 'Times New Roman', serif" font-size="44" letter-spacing="1">Maison</text>
+    <text x="122" y="118" font-family="Georgia, 'Times New Roman', serif" font-size="44" font-style="italic" fill="#d9a75b">Lumière</text>
+  </g>
+</svg>

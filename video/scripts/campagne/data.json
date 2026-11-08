@@ -1,0 +1,3468 @@
+{
+ "routes": {
+  "GET /pro/status": {
+   "id": "e42",
+   "nom": "Maison Lumière",
+   "email": "contact@maisonlumiere.fr",
+   "statut": "actif",
+   "tier": "pro",
+   "client_count": 248,
+   "client_limit": null,
+   "locked": false,
+   "blocked": false,
+   "staff_role": null,
+   "establishment_id": null
+  },
+  "GET /pro/info": {
+   "id": "e42",
+   "nom": "Maison Lumière",
+   "email": "contact@maisonlumiere.fr",
+   "points_per_purchase": 10,
+   "points_for_reward": 100,
+   "reward_title": "Un café offert",
+   "push_notifications_enabled": true,
+   "loyalty_type": "points"
+  },
+  "GET /pro/clients": [
+   {
+    "id": "c1001",
+    "prenom": "Camille",
+    "nom": "Roux",
+    "type_wallet": "apple",
+    "points": 460,
+    "telephone": "0612345678",
+    "email": "camille.roux@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-01T10:00:00Z",
+    "last_activity": "2026-11-03T11:00:00Z"
+   },
+   {
+    "id": "c1002",
+    "prenom": "Victor",
+    "nom": "Guerin",
+    "type_wallet": "apple",
+    "points": 50,
+    "telephone": "0612346789",
+    "email": "victor.guerin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-15T10:00:00Z",
+    "last_activity": "2026-11-04T12:00:00Z"
+   },
+   {
+    "id": "c1003",
+    "prenom": "Louis",
+    "nom": "Michel",
+    "type_wallet": "apple",
+    "points": 390,
+    "telephone": "0612347900",
+    "email": "louis.michel@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-10T10:00:00Z",
+    "last_activity": "2026-11-06T10:00:00Z"
+   },
+   {
+    "id": "c1004",
+    "prenom": "Noah",
+    "nom": "Laurent",
+    "type_wallet": "apple",
+    "points": 230,
+    "telephone": "0612349011",
+    "email": "noah.laurent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-25T10:00:00Z",
+    "last_activity": "2026-11-01T10:00:00Z"
+   },
+   {
+    "id": "c1005",
+    "prenom": "Victor",
+    "nom": "Masson",
+    "type_wallet": "apple",
+    "points": 370,
+    "telephone": "0612350122",
+    "email": "victor.masson@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-23T10:00:00Z",
+    "last_activity": "2026-11-03T12:00:00Z"
+   },
+   {
+    "id": "c1006",
+    "prenom": "Sarah",
+    "nom": "Legrand",
+    "type_wallet": "apple",
+    "points": 250,
+    "telephone": "0612351233",
+    "email": "sarah.legrand@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-11T10:00:00Z",
+    "last_activity": "2026-11-03T11:00:00Z"
+   },
+   {
+    "id": "c1007",
+    "prenom": "Inès",
+    "nom": "Denis",
+    "type_wallet": "apple",
+    "points": 480,
+    "telephone": "0612352344",
+    "email": "ines.denis@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-16T10:00:00Z",
+    "last_activity": "2026-11-02T14:00:00Z"
+   },
+   {
+    "id": "c1008",
+    "prenom": "Victor",
+    "nom": "Michel",
+    "type_wallet": "apple",
+    "points": 210,
+    "telephone": "0612353455",
+    "email": "victor.michel@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-20T10:00:00Z",
+    "last_activity": "2026-11-06T17:00:00Z"
+   },
+   {
+    "id": "c1009",
+    "prenom": "Hugo",
+    "nom": "Martin",
+    "type_wallet": "apple",
+    "points": 180,
+    "telephone": "0612354566",
+    "email": "hugo.martin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-04T10:00:00Z",
+    "last_activity": "2026-11-04T10:00:00Z"
+   },
+   {
+    "id": "c1010",
+    "prenom": "Victor",
+    "nom": "Rousseau",
+    "type_wallet": "apple",
+    "points": 320,
+    "telephone": "0612355677",
+    "email": "victor.rousseau@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-08-22T10:00:00Z",
+    "last_activity": "2026-11-04T18:00:00Z"
+   },
+   {
+    "id": "c1011",
+    "prenom": "Lina",
+    "nom": "Denis",
+    "type_wallet": "google",
+    "points": 420,
+    "telephone": "0612356788",
+    "email": "lina.denis@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-09T10:00:00Z",
+    "last_activity": "2026-11-06T14:00:00Z"
+   },
+   {
+    "id": "c1012",
+    "prenom": "Manon",
+    "nom": "Rousseau",
+    "type_wallet": "apple",
+    "points": 270,
+    "telephone": "0612357899",
+    "email": "manon.rousseau@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-09T10:00:00Z",
+    "last_activity": "2026-11-04T14:00:00Z"
+   },
+   {
+    "id": "c1013",
+    "prenom": "Camille",
+    "nom": "Robin",
+    "type_wallet": "apple",
+    "points": 450,
+    "telephone": "0612359010",
+    "email": "camille.robin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-11T10:00:00Z",
+    "last_activity": "2026-11-03T13:00:00Z"
+   },
+   {
+    "id": "c1014",
+    "prenom": "Louis",
+    "nom": "Vincent",
+    "type_wallet": "google",
+    "points": 10,
+    "telephone": "0612360121",
+    "email": "louis.vincent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-20T10:00:00Z",
+    "last_activity": "2026-11-04T11:00:00Z"
+   },
+   {
+    "id": "c1015",
+    "prenom": "Zoé",
+    "nom": "Laurent",
+    "type_wallet": "apple",
+    "points": 40,
+    "telephone": "0612361232",
+    "email": "zoe.laurent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-23T10:00:00Z",
+    "last_activity": "2026-11-02T13:00:00Z"
+   },
+   {
+    "id": "c1016",
+    "prenom": "Manon",
+    "nom": "Francois",
+    "type_wallet": "apple",
+    "points": 470,
+    "telephone": "0612362343",
+    "email": "manon.francois@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-06T10:00:00Z",
+    "last_activity": "2026-11-04T17:00:00Z"
+   },
+   {
+    "id": "c1017",
+    "prenom": "Nathan",
+    "nom": "Vincent",
+    "type_wallet": "apple",
+    "points": 80,
+    "telephone": "0612363454",
+    "email": "nathan.vincent@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-09-07T10:00:00Z",
+    "last_activity": "2026-11-05T14:00:00Z"
+   },
+   {
+    "id": "c1018",
+    "prenom": "Jules",
+    "nom": "Vincent",
+    "type_wallet": "apple",
+    "points": 200,
+    "telephone": "0612364565",
+    "email": "jules.vincent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-09T10:00:00Z",
+    "last_activity": "2026-11-03T10:00:00Z"
+   },
+   {
+    "id": "c1019",
+    "prenom": "Maël",
+    "nom": "Faure",
+    "type_wallet": "apple",
+    "points": 260,
+    "telephone": "0612365676",
+    "email": "mael.faure@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-01T10:00:00Z",
+    "last_activity": "2026-11-07T18:00:00Z"
+   },
+   {
+    "id": "c1020",
+    "prenom": "Nolan",
+    "nom": "Garcia",
+    "type_wallet": "apple",
+    "points": 420,
+    "telephone": "0612366787",
+    "email": "nolan.garcia@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-15T10:00:00Z",
+    "last_activity": "2026-11-03T15:00:00Z"
+   },
+   {
+    "id": "c1021",
+    "prenom": "Mila",
+    "nom": "Gautier",
+    "type_wallet": "apple",
+    "points": 480,
+    "telephone": "0612367898",
+    "email": "mila.gautier@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-06-04T10:00:00Z",
+    "last_activity": "2026-11-03T10:00:00Z"
+   },
+   {
+    "id": "c1022",
+    "prenom": "Noah",
+    "nom": "Simon",
+    "type_wallet": "apple",
+    "points": 380,
+    "telephone": "0612369009",
+    "email": "noah.simon@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-15T10:00:00Z",
+    "last_activity": "2026-11-03T16:00:00Z"
+   },
+   {
+    "id": "c1023",
+    "prenom": "Zoé",
+    "nom": "Duval",
+    "type_wallet": "apple",
+    "points": 310,
+    "telephone": "0612370120",
+    "email": "zoe.duval@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-08-17T10:00:00Z",
+    "last_activity": "2026-11-04T10:00:00Z"
+   },
+   {
+    "id": "c1024",
+    "prenom": "Julia",
+    "nom": "Simon",
+    "type_wallet": "apple",
+    "points": 170,
+    "telephone": "0612371231",
+    "email": "julia.simon@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-17T10:00:00Z",
+    "last_activity": "2026-11-06T14:00:00Z"
+   },
+   {
+    "id": "c1025",
+    "prenom": "Théo",
+    "nom": "Guerin",
+    "type_wallet": "apple",
+    "points": 320,
+    "telephone": "0612372342",
+    "email": "theo.guerin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-02T10:00:00Z",
+    "last_activity": "2026-11-02T10:00:00Z"
+   },
+   {
+    "id": "c1026",
+    "prenom": "Lina",
+    "nom": "Clement",
+    "type_wallet": "apple",
+    "points": 20,
+    "telephone": "0612373453",
+    "email": "lina.clement@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-27T10:00:00Z",
+    "last_activity": "2026-11-04T13:00:00Z"
+   },
+   {
+    "id": "c1027",
+    "prenom": "Raphaël",
+    "nom": "Roussel",
+    "type_wallet": "google",
+    "points": 270,
+    "telephone": "0612374564",
+    "email": "raphael.roussel@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-24T10:00:00Z",
+    "last_activity": "2026-11-02T15:00:00Z"
+   },
+   {
+    "id": "c1028",
+    "prenom": "Camille",
+    "nom": "Mercier",
+    "type_wallet": "google",
+    "points": 160,
+    "telephone": "0612375675",
+    "email": "camille.mercier@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-10-18T10:00:00Z",
+    "last_activity": "2026-11-04T14:00:00Z"
+   },
+   {
+    "id": "c1029",
+    "prenom": "Yanis",
+    "nom": "Roux",
+    "type_wallet": "apple",
+    "points": 260,
+    "telephone": "0612376786",
+    "email": "yanis.roux@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-02T10:00:00Z",
+    "last_activity": "2026-11-05T15:00:00Z"
+   },
+   {
+    "id": "c1030",
+    "prenom": "Anna",
+    "nom": "Laurent",
+    "type_wallet": "google",
+    "points": 470,
+    "telephone": "0612377897",
+    "email": "anna.laurent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-22T10:00:00Z",
+    "last_activity": "2026-11-04T18:00:00Z"
+   },
+   {
+    "id": "c1031",
+    "prenom": "Nina",
+    "nom": "Faure",
+    "type_wallet": "google",
+    "points": 380,
+    "telephone": "0612379008",
+    "email": "nina.faure@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-10T10:00:00Z",
+    "last_activity": "2026-11-01T18:00:00Z"
+   },
+   {
+    "id": "c1032",
+    "prenom": "Théo",
+    "nom": "Masson",
+    "type_wallet": "google",
+    "points": 70,
+    "telephone": "0612380119",
+    "email": "theo.masson@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-21T10:00:00Z",
+    "last_activity": "2026-11-03T12:00:00Z"
+   },
+   {
+    "id": "c1033",
+    "prenom": "Arthur",
+    "nom": "Clement",
+    "type_wallet": "apple",
+    "points": 210,
+    "telephone": "0612381230",
+    "email": "arthur.clement@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-21T10:00:00Z",
+    "last_activity": "2026-11-04T17:00:00Z"
+   },
+   {
+    "id": "c1034",
+    "prenom": "Eva",
+    "nom": "David",
+    "type_wallet": "apple",
+    "points": 110,
+    "telephone": "0612382341",
+    "email": "eva.david@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-07T10:00:00Z",
+    "last_activity": "2026-11-05T11:00:00Z"
+   },
+   {
+    "id": "c1035",
+    "prenom": "Anna",
+    "nom": "Vincent",
+    "type_wallet": "apple",
+    "points": 190,
+    "telephone": "0612383452",
+    "email": "anna.vincent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-04T10:00:00Z",
+    "last_activity": "2026-11-01T10:00:00Z"
+   },
+   {
+    "id": "c1036",
+    "prenom": "Emma",
+    "nom": "Perrin",
+    "type_wallet": "apple",
+    "points": 0,
+    "telephone": "0612384563",
+    "email": "emma.perrin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-24T10:00:00Z",
+    "last_activity": "2026-11-01T11:00:00Z"
+   },
+   {
+    "id": "c1037",
+    "prenom": "Raphaël",
+    "nom": "Martin",
+    "type_wallet": "apple",
+    "points": 100,
+    "telephone": "0612385674",
+    "email": "raphael.martin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-08T10:00:00Z",
+    "last_activity": "2026-11-06T10:00:00Z"
+   },
+   {
+    "id": "c1038",
+    "prenom": "Clara",
+    "nom": "Boyer",
+    "type_wallet": "google",
+    "points": 470,
+    "telephone": "0612386785",
+    "email": "clara.boyer@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-15T10:00:00Z",
+    "last_activity": "2026-11-03T14:00:00Z"
+   },
+   {
+    "id": "c1039",
+    "prenom": "Mila",
+    "nom": "Lefebvre",
+    "type_wallet": "apple",
+    "points": 290,
+    "telephone": "0612387896",
+    "email": "mila.lefebvre@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-12T10:00:00Z",
+    "last_activity": "2026-11-03T14:00:00Z"
+   },
+   {
+    "id": "c1040",
+    "prenom": "Alice",
+    "nom": "Rousseau",
+    "type_wallet": "google",
+    "points": 420,
+    "telephone": "0612389007",
+    "email": "alice.rousseau@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-21T10:00:00Z",
+    "last_activity": "2026-11-03T11:00:00Z"
+   },
+   {
+    "id": "c1041",
+    "prenom": "Arthur",
+    "nom": "Morin",
+    "type_wallet": "google",
+    "points": 300,
+    "telephone": "0612390118",
+    "email": "arthur.morin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-27T10:00:00Z",
+    "last_activity": "2026-11-07T14:00:00Z"
+   },
+   {
+    "id": "c1042",
+    "prenom": "Adam",
+    "nom": "Clement",
+    "type_wallet": "apple",
+    "points": 70,
+    "telephone": "0612391229",
+    "email": "adam.clement@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-11T10:00:00Z",
+    "last_activity": "2026-11-07T16:00:00Z"
+   },
+   {
+    "id": "c1043",
+    "prenom": "Sacha",
+    "nom": "Clement",
+    "type_wallet": "apple",
+    "points": 270,
+    "telephone": "0612392340",
+    "email": "sacha.clement@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-10T10:00:00Z",
+    "last_activity": "2026-11-06T15:00:00Z"
+   },
+   {
+    "id": "c1044",
+    "prenom": "Adam",
+    "nom": "Michel",
+    "type_wallet": "apple",
+    "points": 410,
+    "telephone": "0612393451",
+    "email": "adam.michel@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-10-23T10:00:00Z",
+    "last_activity": "2026-11-03T12:00:00Z"
+   },
+   {
+    "id": "c1045",
+    "prenom": "Emma",
+    "nom": "Garnier",
+    "type_wallet": "google",
+    "points": 410,
+    "telephone": "0612394562",
+    "email": "emma.garnier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-22T10:00:00Z",
+    "last_activity": "2026-11-02T12:00:00Z"
+   },
+   {
+    "id": "c1046",
+    "prenom": "Sacha",
+    "nom": "Nicolas",
+    "type_wallet": "google",
+    "points": 130,
+    "telephone": "0612395673",
+    "email": "sacha.nicolas@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-18T10:00:00Z",
+    "last_activity": "2026-11-01T13:00:00Z"
+   },
+   {
+    "id": "c1047",
+    "prenom": "Sarah",
+    "nom": "Gautier",
+    "type_wallet": "apple",
+    "points": 150,
+    "telephone": "0612396784",
+    "email": "sarah.gautier@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-09-17T10:00:00Z",
+    "last_activity": "2026-11-03T14:00:00Z"
+   },
+   {
+    "id": "c1048",
+    "prenom": "Nathan",
+    "nom": "Bernard",
+    "type_wallet": "google",
+    "points": 360,
+    "telephone": "0612397895",
+    "email": "nathan.bernard@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-06T10:00:00Z",
+    "last_activity": "2026-11-01T11:00:00Z"
+   },
+   {
+    "id": "c1049",
+    "prenom": "Emma",
+    "nom": "Francois",
+    "type_wallet": "apple",
+    "points": 220,
+    "telephone": "0612399006",
+    "email": "emma.francois@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-26T10:00:00Z",
+    "last_activity": "2026-11-07T12:00:00Z"
+   },
+   {
+    "id": "c1050",
+    "prenom": "Clara",
+    "nom": "Garnier",
+    "type_wallet": "apple",
+    "points": 260,
+    "telephone": "0612400117",
+    "email": "clara.garnier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-06T10:00:00Z",
+    "last_activity": "2026-11-02T17:00:00Z"
+   },
+   {
+    "id": "c1051",
+    "prenom": "Margaux",
+    "nom": "Morin",
+    "type_wallet": "apple",
+    "points": 140,
+    "telephone": "0612401228",
+    "email": "margaux.morin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-23T10:00:00Z",
+    "last_activity": "2026-11-07T11:00:00Z"
+   },
+   {
+    "id": "c1052",
+    "prenom": "Margaux",
+    "nom": "Gautier",
+    "type_wallet": "google",
+    "points": 70,
+    "telephone": "0612402339",
+    "email": "margaux.gautier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-16T10:00:00Z",
+    "last_activity": "2026-11-07T11:00:00Z"
+   },
+   {
+    "id": "c1053",
+    "prenom": "Victor",
+    "nom": "Bernard",
+    "type_wallet": "google",
+    "points": 380,
+    "telephone": "0612403450",
+    "email": "victor.bernard@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-27T10:00:00Z",
+    "last_activity": "2026-11-02T13:00:00Z"
+   },
+   {
+    "id": "c1054",
+    "prenom": "Chloé",
+    "nom": "Laurent",
+    "type_wallet": "google",
+    "points": 370,
+    "telephone": "0612404561",
+    "email": "chloe.laurent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-14T10:00:00Z",
+    "last_activity": "2026-11-07T12:00:00Z"
+   },
+   {
+    "id": "c1055",
+    "prenom": "Sarah",
+    "nom": "Morin",
+    "type_wallet": "apple",
+    "points": 240,
+    "telephone": "0612405672",
+    "email": "sarah.morin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-09T10:00:00Z",
+    "last_activity": "2026-11-07T14:00:00Z"
+   },
+   {
+    "id": "c1056",
+    "prenom": "Jade",
+    "nom": "Legrand",
+    "type_wallet": "apple",
+    "points": 330,
+    "telephone": "0612406783",
+    "email": "jade.legrand@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-22T10:00:00Z",
+    "last_activity": "2026-11-03T18:00:00Z"
+   },
+   {
+    "id": "c1057",
+    "prenom": "Anna",
+    "nom": "André",
+    "type_wallet": "apple",
+    "points": 470,
+    "telephone": "0612407894",
+    "email": "anna.andre@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-23T10:00:00Z",
+    "last_activity": "2026-11-01T17:00:00Z"
+   },
+   {
+    "id": "c1058",
+    "prenom": "Louis",
+    "nom": "Mathieu",
+    "type_wallet": "apple",
+    "points": 190,
+    "telephone": "0612409005",
+    "email": "louis.mathieu@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-10T10:00:00Z",
+    "last_activity": "2026-11-03T17:00:00Z"
+   },
+   {
+    "id": "c1059",
+    "prenom": "Emma",
+    "nom": "Boyer",
+    "type_wallet": "apple",
+    "points": 360,
+    "telephone": "0612410116",
+    "email": "emma.boyer@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-23T10:00:00Z",
+    "last_activity": "2026-11-05T17:00:00Z"
+   },
+   {
+    "id": "c1060",
+    "prenom": "Maël",
+    "nom": "Lefebvre",
+    "type_wallet": "apple",
+    "points": 310,
+    "telephone": "0612411227",
+    "email": "mael.lefebvre@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-18T10:00:00Z",
+    "last_activity": "2026-11-05T18:00:00Z"
+   },
+   {
+    "id": "c1061",
+    "prenom": "Jade",
+    "nom": "Moreau",
+    "type_wallet": "google",
+    "points": 200,
+    "telephone": "0612412338",
+    "email": "jade.moreau@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-21T10:00:00Z",
+    "last_activity": "2026-11-06T16:00:00Z"
+   },
+   {
+    "id": "c1062",
+    "prenom": "Nina",
+    "nom": "Lefebvre",
+    "type_wallet": "google",
+    "points": 70,
+    "telephone": "0612413449",
+    "email": "nina.lefebvre@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-18T10:00:00Z",
+    "last_activity": "2026-11-02T13:00:00Z"
+   },
+   {
+    "id": "c1063",
+    "prenom": "Jade",
+    "nom": "Gauthier",
+    "type_wallet": "google",
+    "points": 50,
+    "telephone": "0612414560",
+    "email": "jade.gauthier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-04T10:00:00Z",
+    "last_activity": "2026-11-06T11:00:00Z"
+   },
+   {
+    "id": "c1064",
+    "prenom": "Zoé",
+    "nom": "Petit",
+    "type_wallet": "apple",
+    "points": 40,
+    "telephone": "0612415671",
+    "email": "zoe.petit@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-20T10:00:00Z",
+    "last_activity": "2026-11-07T10:00:00Z"
+   },
+   {
+    "id": "c1065",
+    "prenom": "Hugo",
+    "nom": "Faure",
+    "type_wallet": "google",
+    "points": 190,
+    "telephone": "0612416782",
+    "email": "hugo.faure@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-09T10:00:00Z",
+    "last_activity": "2026-11-02T18:00:00Z"
+   },
+   {
+    "id": "c1066",
+    "prenom": "Clara",
+    "nom": "Roussel",
+    "type_wallet": "apple",
+    "points": 200,
+    "telephone": "0612417893",
+    "email": "clara.roussel@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-14T10:00:00Z",
+    "last_activity": "2026-11-04T16:00:00Z"
+   },
+   {
+    "id": "c1067",
+    "prenom": "Paul",
+    "nom": "Bertrand",
+    "type_wallet": "apple",
+    "points": 20,
+    "telephone": "0612419004",
+    "email": "paul.bertrand@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-12T10:00:00Z",
+    "last_activity": "2026-11-05T14:00:00Z"
+   },
+   {
+    "id": "c1068",
+    "prenom": "Margaux",
+    "nom": "Clement",
+    "type_wallet": "apple",
+    "points": 280,
+    "telephone": "0612420115",
+    "email": "margaux.clement@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-13T10:00:00Z",
+    "last_activity": "2026-11-02T15:00:00Z"
+   },
+   {
+    "id": "c1069",
+    "prenom": "Maël",
+    "nom": "Muller",
+    "type_wallet": "google",
+    "points": 480,
+    "telephone": "0612421226",
+    "email": "mael.muller@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-10-19T10:00:00Z",
+    "last_activity": "2026-11-03T16:00:00Z"
+   },
+   {
+    "id": "c1070",
+    "prenom": "Manon",
+    "nom": "Robin",
+    "type_wallet": "apple",
+    "points": 320,
+    "telephone": "0612422337",
+    "email": "manon.robin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-05T10:00:00Z",
+    "last_activity": "2026-11-03T15:00:00Z"
+   },
+   {
+    "id": "c1071",
+    "prenom": "Ethan",
+    "nom": "Garnier",
+    "type_wallet": "google",
+    "points": 260,
+    "telephone": "0612423448",
+    "email": "ethan.garnier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-24T10:00:00Z",
+    "last_activity": "2026-11-04T15:00:00Z"
+   },
+   {
+    "id": "c1072",
+    "prenom": "Lou",
+    "nom": "André",
+    "type_wallet": "apple",
+    "points": 430,
+    "telephone": "0612424559",
+    "email": "lou.andre@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-03T10:00:00Z",
+    "last_activity": "2026-11-01T10:00:00Z"
+   },
+   {
+    "id": "c1073",
+    "prenom": "Louis",
+    "nom": "Clement",
+    "type_wallet": "apple",
+    "points": 340,
+    "telephone": "0612425670",
+    "email": "louis.clement@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-02T10:00:00Z",
+    "last_activity": "2026-11-06T13:00:00Z"
+   },
+   {
+    "id": "c1074",
+    "prenom": "Anna",
+    "nom": "Bernard",
+    "type_wallet": "google",
+    "points": 280,
+    "telephone": "0612426781",
+    "email": "anna.bernard@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-09-23T10:00:00Z",
+    "last_activity": "2026-11-03T18:00:00Z"
+   },
+   {
+    "id": "c1075",
+    "prenom": "Gabriel",
+    "nom": "Duval",
+    "type_wallet": "apple",
+    "points": 250,
+    "telephone": "0612427892",
+    "email": "gabriel.duval@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-02T10:00:00Z",
+    "last_activity": "2026-11-05T12:00:00Z"
+   },
+   {
+    "id": "c1076",
+    "prenom": "Nina",
+    "nom": "Francois",
+    "type_wallet": "apple",
+    "points": 10,
+    "telephone": "0612429003",
+    "email": "nina.francois@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-01T10:00:00Z",
+    "last_activity": "2026-11-02T16:00:00Z"
+   },
+   {
+    "id": "c1077",
+    "prenom": "Clara",
+    "nom": "Martin",
+    "type_wallet": "apple",
+    "points": 440,
+    "telephone": "0612430114",
+    "email": "clara.martin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-03T10:00:00Z",
+    "last_activity": "2026-11-03T17:00:00Z"
+   },
+   {
+    "id": "c1078",
+    "prenom": "Anna",
+    "nom": "Nicolas",
+    "type_wallet": "apple",
+    "points": 230,
+    "telephone": "0612431225",
+    "email": "anna.nicolas@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-28T10:00:00Z",
+    "last_activity": "2026-11-01T10:00:00Z"
+   },
+   {
+    "id": "c1079",
+    "prenom": "Lucas",
+    "nom": "Gauthier",
+    "type_wallet": "google",
+    "points": 0,
+    "telephone": "0612432336",
+    "email": "lucas.gauthier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-02T10:00:00Z",
+    "last_activity": "2026-11-03T10:00:00Z"
+   },
+   {
+    "id": "c1080",
+    "prenom": "Lou",
+    "nom": "Rousseau",
+    "type_wallet": "google",
+    "points": 220,
+    "telephone": "0612433447",
+    "email": "lou.rousseau@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-05T10:00:00Z",
+    "last_activity": "2026-11-04T10:00:00Z"
+   },
+   {
+    "id": "c1081",
+    "prenom": "Adam",
+    "nom": "Petit",
+    "type_wallet": "apple",
+    "points": 200,
+    "telephone": "0612434558",
+    "email": "adam.petit@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-19T10:00:00Z",
+    "last_activity": "2026-11-03T12:00:00Z"
+   },
+   {
+    "id": "c1082",
+    "prenom": "Léa",
+    "nom": "André",
+    "type_wallet": "google",
+    "points": 210,
+    "telephone": "0612435669",
+    "email": "lea.andre@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-05T10:00:00Z",
+    "last_activity": "2026-11-06T14:00:00Z"
+   },
+   {
+    "id": "c1083",
+    "prenom": "Tom",
+    "nom": "Faure",
+    "type_wallet": "apple",
+    "points": 50,
+    "telephone": "0612436780",
+    "email": "tom.faure@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-09-25T10:00:00Z",
+    "last_activity": "2026-11-05T14:00:00Z"
+   },
+   {
+    "id": "c1084",
+    "prenom": "Chloé",
+    "nom": "Gauthier",
+    "type_wallet": "google",
+    "points": 270,
+    "telephone": "0612437891",
+    "email": "chloe.gauthier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-01T10:00:00Z",
+    "last_activity": "2026-11-03T15:00:00Z"
+   },
+   {
+    "id": "c1085",
+    "prenom": "Inès",
+    "nom": "Robin",
+    "type_wallet": "apple",
+    "points": 80,
+    "telephone": "0612439002",
+    "email": "ines.robin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-01T10:00:00Z",
+    "last_activity": "2026-11-03T14:00:00Z"
+   },
+   {
+    "id": "c1086",
+    "prenom": "Adam",
+    "nom": "Michel",
+    "type_wallet": "apple",
+    "points": 230,
+    "telephone": "0612440113",
+    "email": "adam.michel@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-15T10:00:00Z",
+    "last_activity": "2026-11-07T13:00:00Z"
+   },
+   {
+    "id": "c1087",
+    "prenom": "Inès",
+    "nom": "Muller",
+    "type_wallet": "google",
+    "points": 440,
+    "telephone": "0612441224",
+    "email": "ines.muller@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-15T10:00:00Z",
+    "last_activity": "2026-11-04T17:00:00Z"
+   },
+   {
+    "id": "c1088",
+    "prenom": "Eva",
+    "nom": "Robin",
+    "type_wallet": "apple",
+    "points": 320,
+    "telephone": "0612442335",
+    "email": "eva.robin@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-06-12T10:00:00Z",
+    "last_activity": "2026-11-06T12:00:00Z"
+   },
+   {
+    "id": "c1089",
+    "prenom": "Sarah",
+    "nom": "Marchand",
+    "type_wallet": "apple",
+    "points": 340,
+    "telephone": "0612443446",
+    "email": "sarah.marchand@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-15T10:00:00Z",
+    "last_activity": "2026-11-03T11:00:00Z"
+   },
+   {
+    "id": "c1090",
+    "prenom": "Lucas",
+    "nom": "Fontaine",
+    "type_wallet": "google",
+    "points": 90,
+    "telephone": "0612444557",
+    "email": "lucas.fontaine@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-21T10:00:00Z",
+    "last_activity": "2026-11-05T13:00:00Z"
+   },
+   {
+    "id": "c1091",
+    "prenom": "Hugo",
+    "nom": "Petit",
+    "type_wallet": "apple",
+    "points": 170,
+    "telephone": "0612445668",
+    "email": "hugo.petit@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-14T10:00:00Z",
+    "last_activity": "2026-11-02T18:00:00Z"
+   },
+   {
+    "id": "c1092",
+    "prenom": "Jade",
+    "nom": "Michel",
+    "type_wallet": "apple",
+    "points": 400,
+    "telephone": "0612446779",
+    "email": "jade.michel@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-06-26T10:00:00Z",
+    "last_activity": "2026-11-06T16:00:00Z"
+   },
+   {
+    "id": "c1093",
+    "prenom": "Alice",
+    "nom": "Martin",
+    "type_wallet": "apple",
+    "points": 70,
+    "telephone": "0612447890",
+    "email": "alice.martin@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-07-10T10:00:00Z",
+    "last_activity": "2026-11-05T15:00:00Z"
+   },
+   {
+    "id": "c1094",
+    "prenom": "Yanis",
+    "nom": "André",
+    "type_wallet": "google",
+    "points": 30,
+    "telephone": "0612449001",
+    "email": "yanis.andre@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-21T10:00:00Z",
+    "last_activity": "2026-11-02T10:00:00Z"
+   },
+   {
+    "id": "c1095",
+    "prenom": "Inès",
+    "nom": "Morin",
+    "type_wallet": "apple",
+    "points": 470,
+    "telephone": "0612450112",
+    "email": "ines.morin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-28T10:00:00Z",
+    "last_activity": "2026-11-02T11:00:00Z"
+   },
+   {
+    "id": "c1096",
+    "prenom": "Hugo",
+    "nom": "Vincent",
+    "type_wallet": "apple",
+    "points": 450,
+    "telephone": "0612451223",
+    "email": "hugo.vincent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-01T10:00:00Z",
+    "last_activity": "2026-11-07T11:00:00Z"
+   },
+   {
+    "id": "c1097",
+    "prenom": "Adam",
+    "nom": "Francois",
+    "type_wallet": "apple",
+    "points": 180,
+    "telephone": "0612452334",
+    "email": "adam.francois@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-04T10:00:00Z",
+    "last_activity": "2026-11-01T14:00:00Z"
+   },
+   {
+    "id": "c1098",
+    "prenom": "Camille",
+    "nom": "Fontaine",
+    "type_wallet": "apple",
+    "points": 120,
+    "telephone": "0612453445",
+    "email": "camille.fontaine@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-13T10:00:00Z",
+    "last_activity": "2026-11-05T11:00:00Z"
+   },
+   {
+    "id": "c1099",
+    "prenom": "Lina",
+    "nom": "Bernard",
+    "type_wallet": "apple",
+    "points": 120,
+    "telephone": "0612454556",
+    "email": "lina.bernard@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-06T10:00:00Z",
+    "last_activity": "2026-11-03T18:00:00Z"
+   },
+   {
+    "id": "c1100",
+    "prenom": "Mila",
+    "nom": "Faure",
+    "type_wallet": "google",
+    "points": 190,
+    "telephone": "0612455667",
+    "email": "mila.faure@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-10T10:00:00Z",
+    "last_activity": "2026-11-02T10:00:00Z"
+   },
+   {
+    "id": "c1101",
+    "prenom": "Rose",
+    "nom": "Roussel",
+    "type_wallet": "apple",
+    "points": 20,
+    "telephone": "0612456778",
+    "email": "rose.roussel@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-01T10:00:00Z",
+    "last_activity": "2026-11-02T10:00:00Z"
+   },
+   {
+    "id": "c1102",
+    "prenom": "Yanis",
+    "nom": "Lefebvre",
+    "type_wallet": "apple",
+    "points": 110,
+    "telephone": "0612457889",
+    "email": "yanis.lefebvre@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-02T10:00:00Z",
+    "last_activity": "2026-11-05T14:00:00Z"
+   },
+   {
+    "id": "c1103",
+    "prenom": "Hugo",
+    "nom": "Lefebvre",
+    "type_wallet": "apple",
+    "points": 310,
+    "telephone": "0612459000",
+    "email": "hugo.lefebvre@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-01T10:00:00Z",
+    "last_activity": "2026-11-06T14:00:00Z"
+   },
+   {
+    "id": "c1104",
+    "prenom": "Maël",
+    "nom": "Duval",
+    "type_wallet": "apple",
+    "points": 270,
+    "telephone": "0612460111",
+    "email": "mael.duval@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-14T10:00:00Z",
+    "last_activity": "2026-11-04T15:00:00Z"
+   },
+   {
+    "id": "c1105",
+    "prenom": "Jade",
+    "nom": "Vincent",
+    "type_wallet": "apple",
+    "points": 330,
+    "telephone": "0612461222",
+    "email": "jade.vincent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-21T10:00:00Z",
+    "last_activity": "2026-11-04T17:00:00Z"
+   },
+   {
+    "id": "c1106",
+    "prenom": "Margaux",
+    "nom": "Clement",
+    "type_wallet": "apple",
+    "points": 290,
+    "telephone": "0612462333",
+    "email": "margaux.clement@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-08T10:00:00Z",
+    "last_activity": "2026-11-06T14:00:00Z"
+   },
+   {
+    "id": "c1107",
+    "prenom": "Arthur",
+    "nom": "Vincent",
+    "type_wallet": "apple",
+    "points": 60,
+    "telephone": "0612463444",
+    "email": "arthur.vincent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-19T10:00:00Z",
+    "last_activity": "2026-11-04T12:00:00Z"
+   },
+   {
+    "id": "c1108",
+    "prenom": "Alice",
+    "nom": "Muller",
+    "type_wallet": "apple",
+    "points": 200,
+    "telephone": "0612464555",
+    "email": "alice.muller@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-27T10:00:00Z",
+    "last_activity": "2026-11-06T16:00:00Z"
+   },
+   {
+    "id": "c1109",
+    "prenom": "Adam",
+    "nom": "Legrand",
+    "type_wallet": "google",
+    "points": 110,
+    "telephone": "0612465666",
+    "email": "adam.legrand@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-28T10:00:00Z",
+    "last_activity": "2026-11-01T16:00:00Z"
+   },
+   {
+    "id": "c1110",
+    "prenom": "Sacha",
+    "nom": "Roux",
+    "type_wallet": "apple",
+    "points": 430,
+    "telephone": "0612466777",
+    "email": "sacha.roux@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-20T10:00:00Z",
+    "last_activity": "2026-11-05T14:00:00Z"
+   },
+   {
+    "id": "c1111",
+    "prenom": "Anna",
+    "nom": "Duval",
+    "type_wallet": "apple",
+    "points": 60,
+    "telephone": "0612467888",
+    "email": "anna.duval@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-26T10:00:00Z",
+    "last_activity": "2026-11-01T14:00:00Z"
+   },
+   {
+    "id": "c1112",
+    "prenom": "Sarah",
+    "nom": "Bernard",
+    "type_wallet": "apple",
+    "points": 260,
+    "telephone": "0612468999",
+    "email": "sarah.bernard@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-24T10:00:00Z",
+    "last_activity": "2026-11-03T12:00:00Z"
+   },
+   {
+    "id": "c1113",
+    "prenom": "Louis",
+    "nom": "Roussel",
+    "type_wallet": "apple",
+    "points": 80,
+    "telephone": "0612470110",
+    "email": "louis.roussel@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-04T10:00:00Z",
+    "last_activity": "2026-11-04T15:00:00Z"
+   },
+   {
+    "id": "c1114",
+    "prenom": "Lucas",
+    "nom": "Mathieu",
+    "type_wallet": "apple",
+    "points": 200,
+    "telephone": "0612471221",
+    "email": "lucas.mathieu@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-01T10:00:00Z",
+    "last_activity": "2026-11-03T16:00:00Z"
+   },
+   {
+    "id": "c1115",
+    "prenom": "Margaux",
+    "nom": "Chevalier",
+    "type_wallet": "apple",
+    "points": 250,
+    "telephone": "0612472332",
+    "email": "margaux.chevalier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-22T10:00:00Z",
+    "last_activity": "2026-11-05T13:00:00Z"
+   },
+   {
+    "id": "c1116",
+    "prenom": "Clara",
+    "nom": "Perrin",
+    "type_wallet": "google",
+    "points": 190,
+    "telephone": "0612473443",
+    "email": "clara.perrin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-20T10:00:00Z",
+    "last_activity": "2026-11-07T15:00:00Z"
+   },
+   {
+    "id": "c1117",
+    "prenom": "Louis",
+    "nom": "Masson",
+    "type_wallet": "apple",
+    "points": 210,
+    "telephone": "0612474554",
+    "email": "louis.masson@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-15T10:00:00Z",
+    "last_activity": "2026-11-01T10:00:00Z"
+   },
+   {
+    "id": "c1118",
+    "prenom": "Gabriel",
+    "nom": "Muller",
+    "type_wallet": "apple",
+    "points": 140,
+    "telephone": "0612475665",
+    "email": "gabriel.muller@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-01T10:00:00Z",
+    "last_activity": "2026-11-03T18:00:00Z"
+   },
+   {
+    "id": "c1119",
+    "prenom": "Hugo",
+    "nom": "Morin",
+    "type_wallet": "apple",
+    "points": 40,
+    "telephone": "0612476776",
+    "email": "hugo.morin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-12T10:00:00Z",
+    "last_activity": "2026-11-01T18:00:00Z"
+   },
+   {
+    "id": "c1120",
+    "prenom": "Léo",
+    "nom": "Petit",
+    "type_wallet": "apple",
+    "points": 210,
+    "telephone": "0612477887",
+    "email": "leo.petit@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-07-19T10:00:00Z",
+    "last_activity": "2026-11-02T15:00:00Z"
+   },
+   {
+    "id": "c1121",
+    "prenom": "Jade",
+    "nom": "Mercier",
+    "type_wallet": "google",
+    "points": 210,
+    "telephone": "0612478998",
+    "email": "jade.mercier@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-06-19T10:00:00Z",
+    "last_activity": "2026-11-06T11:00:00Z"
+   },
+   {
+    "id": "c1122",
+    "prenom": "Victor",
+    "nom": "Faure",
+    "type_wallet": "apple",
+    "points": 130,
+    "telephone": "0612480109",
+    "email": "victor.faure@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-21T10:00:00Z",
+    "last_activity": "2026-11-02T10:00:00Z"
+   },
+   {
+    "id": "c1123",
+    "prenom": "Louis",
+    "nom": "Rousseau",
+    "type_wallet": "apple",
+    "points": 180,
+    "telephone": "0612481220",
+    "email": "louis.rousseau@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-11T10:00:00Z",
+    "last_activity": "2026-11-05T17:00:00Z"
+   },
+   {
+    "id": "c1124",
+    "prenom": "Léa",
+    "nom": "Laurent",
+    "type_wallet": "apple",
+    "points": 450,
+    "telephone": "0612482331",
+    "email": "lea.laurent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-12T10:00:00Z",
+    "last_activity": "2026-11-07T17:00:00Z"
+   },
+   {
+    "id": "c1125",
+    "prenom": "Lina",
+    "nom": "Duval",
+    "type_wallet": "apple",
+    "points": 20,
+    "telephone": "0612483442",
+    "email": "lina.duval@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-07T10:00:00Z",
+    "last_activity": "2026-11-02T12:00:00Z"
+   },
+   {
+    "id": "c1126",
+    "prenom": "Eva",
+    "nom": "Denis",
+    "type_wallet": "google",
+    "points": 360,
+    "telephone": "0612484553",
+    "email": "eva.denis@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-06-25T10:00:00Z",
+    "last_activity": "2026-11-07T11:00:00Z"
+   },
+   {
+    "id": "c1127",
+    "prenom": "Nina",
+    "nom": "Laurent",
+    "type_wallet": "google",
+    "points": 110,
+    "telephone": "0612485664",
+    "email": "nina.laurent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-09T10:00:00Z",
+    "last_activity": "2026-11-03T17:00:00Z"
+   },
+   {
+    "id": "c1128",
+    "prenom": "Paul",
+    "nom": "Blanc",
+    "type_wallet": "apple",
+    "points": 20,
+    "telephone": "0612486775",
+    "email": "paul.blanc@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-09-15T10:00:00Z",
+    "last_activity": "2026-11-03T18:00:00Z"
+   },
+   {
+    "id": "c1129",
+    "prenom": "Alice",
+    "nom": "Gauthier",
+    "type_wallet": "google",
+    "points": 210,
+    "telephone": "0612487886",
+    "email": "alice.gauthier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-26T10:00:00Z",
+    "last_activity": "2026-11-02T17:00:00Z"
+   },
+   {
+    "id": "c1130",
+    "prenom": "Raphaël",
+    "nom": "Roux",
+    "type_wallet": "apple",
+    "points": 340,
+    "telephone": "0612488997",
+    "email": "raphael.roux@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-18T10:00:00Z",
+    "last_activity": "2026-11-03T17:00:00Z"
+   },
+   {
+    "id": "c1131",
+    "prenom": "Mila",
+    "nom": "Henry",
+    "type_wallet": "apple",
+    "points": 130,
+    "telephone": "0612490108",
+    "email": "mila.henry@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-17T10:00:00Z",
+    "last_activity": "2026-11-05T16:00:00Z"
+   },
+   {
+    "id": "c1132",
+    "prenom": "Yanis",
+    "nom": "Lefebvre",
+    "type_wallet": "apple",
+    "points": 330,
+    "telephone": "0612491219",
+    "email": "yanis.lefebvre@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-16T10:00:00Z",
+    "last_activity": "2026-11-03T14:00:00Z"
+   },
+   {
+    "id": "c1133",
+    "prenom": "Alice",
+    "nom": "Denis",
+    "type_wallet": "apple",
+    "points": 410,
+    "telephone": "0612492330",
+    "email": "alice.denis@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-08T10:00:00Z",
+    "last_activity": "2026-11-03T17:00:00Z"
+   },
+   {
+    "id": "c1134",
+    "prenom": "Zoé",
+    "nom": "Martin",
+    "type_wallet": "apple",
+    "points": 440,
+    "telephone": "0612493441",
+    "email": "zoe.martin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-28T10:00:00Z",
+    "last_activity": "2026-11-07T15:00:00Z"
+   },
+   {
+    "id": "c1135",
+    "prenom": "Rose",
+    "nom": "Morin",
+    "type_wallet": "apple",
+    "points": 120,
+    "telephone": "0612494552",
+    "email": "rose.morin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-05T10:00:00Z",
+    "last_activity": "2026-11-03T13:00:00Z"
+   },
+   {
+    "id": "c1136",
+    "prenom": "Noah",
+    "nom": "Marchand",
+    "type_wallet": "apple",
+    "points": 20,
+    "telephone": "0612495663",
+    "email": "noah.marchand@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-12T10:00:00Z",
+    "last_activity": "2026-11-06T13:00:00Z"
+   },
+   {
+    "id": "c1137",
+    "prenom": "Rose",
+    "nom": "Bernard",
+    "type_wallet": "apple",
+    "points": 90,
+    "telephone": "0612496774",
+    "email": "rose.bernard@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-08-23T10:00:00Z",
+    "last_activity": "2026-11-06T10:00:00Z"
+   },
+   {
+    "id": "c1138",
+    "prenom": "Gabriel",
+    "nom": "Chevalier",
+    "type_wallet": "apple",
+    "points": 220,
+    "telephone": "0612497885",
+    "email": "gabriel.chevalier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-27T10:00:00Z",
+    "last_activity": "2026-11-01T14:00:00Z"
+   },
+   {
+    "id": "c1139",
+    "prenom": "Maël",
+    "nom": "Denis",
+    "type_wallet": "google",
+    "points": 30,
+    "telephone": "0612498996",
+    "email": "mael.denis@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-15T10:00:00Z",
+    "last_activity": "2026-11-05T17:00:00Z"
+   },
+   {
+    "id": "c1140",
+    "prenom": "Manon",
+    "nom": "Garcia",
+    "type_wallet": "apple",
+    "points": 110,
+    "telephone": "0612500107",
+    "email": "manon.garcia@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-12T10:00:00Z",
+    "last_activity": "2026-11-03T16:00:00Z"
+   },
+   {
+    "id": "c1141",
+    "prenom": "Julia",
+    "nom": "Simon",
+    "type_wallet": "apple",
+    "points": 410,
+    "telephone": "0612501218",
+    "email": "julia.simon@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-06-15T10:00:00Z",
+    "last_activity": "2026-11-02T15:00:00Z"
+   },
+   {
+    "id": "c1142",
+    "prenom": "Nathan",
+    "nom": "Mathieu",
+    "type_wallet": "apple",
+    "points": 430,
+    "telephone": "0612502329",
+    "email": "nathan.mathieu@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-03T10:00:00Z",
+    "last_activity": "2026-11-06T13:00:00Z"
+   },
+   {
+    "id": "c1143",
+    "prenom": "Julia",
+    "nom": "David",
+    "type_wallet": "google",
+    "points": 90,
+    "telephone": "0612503440",
+    "email": "julia.david@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-27T10:00:00Z",
+    "last_activity": "2026-11-06T10:00:00Z"
+   },
+   {
+    "id": "c1144",
+    "prenom": "Chloé",
+    "nom": "Boyer",
+    "type_wallet": "apple",
+    "points": 470,
+    "telephone": "0612504551",
+    "email": "chloe.boyer@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-05T10:00:00Z",
+    "last_activity": "2026-11-05T14:00:00Z"
+   },
+   {
+    "id": "c1145",
+    "prenom": "Camille",
+    "nom": "Vincent",
+    "type_wallet": "google",
+    "points": 320,
+    "telephone": "0612505662",
+    "email": "camille.vincent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-16T10:00:00Z",
+    "last_activity": "2026-11-01T17:00:00Z"
+   },
+   {
+    "id": "c1146",
+    "prenom": "Julia",
+    "nom": "David",
+    "type_wallet": "apple",
+    "points": 90,
+    "telephone": "0612506773",
+    "email": "julia.david@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-16T10:00:00Z",
+    "last_activity": "2026-11-03T18:00:00Z"
+   },
+   {
+    "id": "c1147",
+    "prenom": "Nina",
+    "nom": "Laurent",
+    "type_wallet": "apple",
+    "points": 170,
+    "telephone": "0612507884",
+    "email": "nina.laurent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-20T10:00:00Z",
+    "last_activity": "2026-11-04T14:00:00Z"
+   },
+   {
+    "id": "c1148",
+    "prenom": "Adam",
+    "nom": "Chevalier",
+    "type_wallet": "apple",
+    "points": 270,
+    "telephone": "0612508995",
+    "email": "adam.chevalier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-12T10:00:00Z",
+    "last_activity": "2026-11-02T14:00:00Z"
+   },
+   {
+    "id": "c1149",
+    "prenom": "Victor",
+    "nom": "Rousseau",
+    "type_wallet": "apple",
+    "points": 240,
+    "telephone": "0612510106",
+    "email": "victor.rousseau@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-08-01T10:00:00Z",
+    "last_activity": "2026-11-06T18:00:00Z"
+   },
+   {
+    "id": "c1150",
+    "prenom": "Léa",
+    "nom": "David",
+    "type_wallet": "google",
+    "points": 270,
+    "telephone": "0612511217",
+    "email": "lea.david@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-23T10:00:00Z",
+    "last_activity": "2026-11-06T17:00:00Z"
+   },
+   {
+    "id": "c1151",
+    "prenom": "Nolan",
+    "nom": "Morin",
+    "type_wallet": "apple",
+    "points": 200,
+    "telephone": "0612512328",
+    "email": "nolan.morin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-19T10:00:00Z",
+    "last_activity": "2026-11-05T17:00:00Z"
+   },
+   {
+    "id": "c1152",
+    "prenom": "Clara",
+    "nom": "Perrin",
+    "type_wallet": "apple",
+    "points": 390,
+    "telephone": "0612513439",
+    "email": "clara.perrin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-20T10:00:00Z",
+    "last_activity": "2026-11-04T15:00:00Z"
+   },
+   {
+    "id": "c1153",
+    "prenom": "Mila",
+    "nom": "Nicolas",
+    "type_wallet": "apple",
+    "points": 160,
+    "telephone": "0612514550",
+    "email": "mila.nicolas@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-08-20T10:00:00Z",
+    "last_activity": "2026-11-07T15:00:00Z"
+   },
+   {
+    "id": "c1154",
+    "prenom": "Mila",
+    "nom": "Petit",
+    "type_wallet": "apple",
+    "points": 460,
+    "telephone": "0612515661",
+    "email": "mila.petit@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-10T10:00:00Z",
+    "last_activity": "2026-11-04T14:00:00Z"
+   },
+   {
+    "id": "c1155",
+    "prenom": "Inès",
+    "nom": "Gautier",
+    "type_wallet": "apple",
+    "points": 260,
+    "telephone": "0612516772",
+    "email": "ines.gautier@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-10-02T10:00:00Z",
+    "last_activity": "2026-11-04T17:00:00Z"
+   },
+   {
+    "id": "c1156",
+    "prenom": "Jade",
+    "nom": "Perrin",
+    "type_wallet": "google",
+    "points": 410,
+    "telephone": "0612517883",
+    "email": "jade.perrin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-24T10:00:00Z",
+    "last_activity": "2026-11-05T17:00:00Z"
+   },
+   {
+    "id": "c1157",
+    "prenom": "Clara",
+    "nom": "Francois",
+    "type_wallet": "apple",
+    "points": 50,
+    "telephone": "0612518994",
+    "email": "clara.francois@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-24T10:00:00Z",
+    "last_activity": "2026-11-02T17:00:00Z"
+   },
+   {
+    "id": "c1158",
+    "prenom": "Adam",
+    "nom": "David",
+    "type_wallet": "google",
+    "points": 90,
+    "telephone": "0612520105",
+    "email": "adam.david@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-09T10:00:00Z",
+    "last_activity": "2026-11-05T18:00:00Z"
+   },
+   {
+    "id": "c1159",
+    "prenom": "Chloé",
+    "nom": "Faure",
+    "type_wallet": "apple",
+    "points": 30,
+    "telephone": "0612521216",
+    "email": "chloe.faure@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-14T10:00:00Z",
+    "last_activity": "2026-11-05T15:00:00Z"
+   },
+   {
+    "id": "c1160",
+    "prenom": "Lina",
+    "nom": "Marchand",
+    "type_wallet": "google",
+    "points": 100,
+    "telephone": "0612522327",
+    "email": "lina.marchand@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-16T10:00:00Z",
+    "last_activity": "2026-11-01T16:00:00Z"
+   },
+   {
+    "id": "c1161",
+    "prenom": "Rose",
+    "nom": "Simon",
+    "type_wallet": "google",
+    "points": 280,
+    "telephone": "0612523438",
+    "email": "rose.simon@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-19T10:00:00Z",
+    "last_activity": "2026-11-04T12:00:00Z"
+   },
+   {
+    "id": "c1162",
+    "prenom": "Camille",
+    "nom": "David",
+    "type_wallet": "apple",
+    "points": 170,
+    "telephone": "0612524549",
+    "email": "camille.david@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-07-07T10:00:00Z",
+    "last_activity": "2026-11-04T11:00:00Z"
+   },
+   {
+    "id": "c1163",
+    "prenom": "Gabriel",
+    "nom": "Blanc",
+    "type_wallet": "google",
+    "points": 310,
+    "telephone": "0612525660",
+    "email": "gabriel.blanc@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-07-02T10:00:00Z",
+    "last_activity": "2026-11-04T18:00:00Z"
+   },
+   {
+    "id": "c1164",
+    "prenom": "Nolan",
+    "nom": "Francois",
+    "type_wallet": "apple",
+    "points": 40,
+    "telephone": "0612526771",
+    "email": "nolan.francois@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-06T10:00:00Z",
+    "last_activity": "2026-11-04T17:00:00Z"
+   },
+   {
+    "id": "c1165",
+    "prenom": "Emma",
+    "nom": "Morin",
+    "type_wallet": "apple",
+    "points": 50,
+    "telephone": "0612527882",
+    "email": "emma.morin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-22T10:00:00Z",
+    "last_activity": "2026-11-07T17:00:00Z"
+   },
+   {
+    "id": "c1166",
+    "prenom": "Léa",
+    "nom": "Marchand",
+    "type_wallet": "google",
+    "points": 30,
+    "telephone": "0612528993",
+    "email": "lea.marchand@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-22T10:00:00Z",
+    "last_activity": "2026-11-04T16:00:00Z"
+   },
+   {
+    "id": "c1167",
+    "prenom": "Léa",
+    "nom": "Muller",
+    "type_wallet": "google",
+    "points": 90,
+    "telephone": "0612530104",
+    "email": "lea.muller@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-24T10:00:00Z",
+    "last_activity": "2026-11-06T13:00:00Z"
+   },
+   {
+    "id": "c1168",
+    "prenom": "Yanis",
+    "nom": "Roux",
+    "type_wallet": "google",
+    "points": 400,
+    "telephone": "0612531215",
+    "email": "yanis.roux@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-28T10:00:00Z",
+    "last_activity": "2026-11-07T12:00:00Z"
+   },
+   {
+    "id": "c1169",
+    "prenom": "Paul",
+    "nom": "Bernard",
+    "type_wallet": "google",
+    "points": 300,
+    "telephone": "0612532326",
+    "email": "paul.bernard@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-08T10:00:00Z",
+    "last_activity": "2026-11-04T15:00:00Z"
+   },
+   {
+    "id": "c1170",
+    "prenom": "Mila",
+    "nom": "Bernard",
+    "type_wallet": "apple",
+    "points": 180,
+    "telephone": "0612533437",
+    "email": "mila.bernard@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-24T10:00:00Z",
+    "last_activity": "2026-11-07T13:00:00Z"
+   },
+   {
+    "id": "c1171",
+    "prenom": "Yanis",
+    "nom": "Morin",
+    "type_wallet": "google",
+    "points": 120,
+    "telephone": "0612534548",
+    "email": "yanis.morin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-11T10:00:00Z",
+    "last_activity": "2026-11-03T11:00:00Z"
+   },
+   {
+    "id": "c1172",
+    "prenom": "Clara",
+    "nom": "Bernard",
+    "type_wallet": "google",
+    "points": 80,
+    "telephone": "0612535659",
+    "email": "clara.bernard@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-02T10:00:00Z",
+    "last_activity": "2026-11-07T17:00:00Z"
+   },
+   {
+    "id": "c1173",
+    "prenom": "Margaux",
+    "nom": "Roussel",
+    "type_wallet": "google",
+    "points": 360,
+    "telephone": "0612536770",
+    "email": "margaux.roussel@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-26T10:00:00Z",
+    "last_activity": "2026-11-05T11:00:00Z"
+   },
+   {
+    "id": "c1174",
+    "prenom": "Camille",
+    "nom": "Marchand",
+    "type_wallet": "apple",
+    "points": 310,
+    "telephone": "0612537881",
+    "email": "camille.marchand@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-14T10:00:00Z",
+    "last_activity": "2026-11-01T16:00:00Z"
+   },
+   {
+    "id": "c1175",
+    "prenom": "Louis",
+    "nom": "Faure",
+    "type_wallet": "google",
+    "points": 430,
+    "telephone": "0612538992",
+    "email": "louis.faure@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-28T10:00:00Z",
+    "last_activity": "2026-11-07T11:00:00Z"
+   },
+   {
+    "id": "c1176",
+    "prenom": "Noah",
+    "nom": "Vincent",
+    "type_wallet": "google",
+    "points": 350,
+    "telephone": "0612540103",
+    "email": "noah.vincent@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-22T10:00:00Z",
+    "last_activity": "2026-11-01T15:00:00Z"
+   },
+   {
+    "id": "c1177",
+    "prenom": "Hugo",
+    "nom": "Garnier",
+    "type_wallet": "apple",
+    "points": 360,
+    "telephone": "0612541214",
+    "email": "hugo.garnier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-18T10:00:00Z",
+    "last_activity": "2026-11-01T16:00:00Z"
+   },
+   {
+    "id": "c1178",
+    "prenom": "Gabriel",
+    "nom": "Denis",
+    "type_wallet": "apple",
+    "points": 320,
+    "telephone": "0612542325",
+    "email": "gabriel.denis@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-07-25T10:00:00Z",
+    "last_activity": "2026-11-02T12:00:00Z"
+   },
+   {
+    "id": "c1179",
+    "prenom": "Yanis",
+    "nom": "Garcia",
+    "type_wallet": "apple",
+    "points": 370,
+    "telephone": "0612543436",
+    "email": "yanis.garcia@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-08T10:00:00Z",
+    "last_activity": "2026-11-06T10:00:00Z"
+   },
+   {
+    "id": "c1180",
+    "prenom": "Mila",
+    "nom": "Bernard",
+    "type_wallet": "google",
+    "points": 320,
+    "telephone": "0612544547",
+    "email": "mila.bernard@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-25T10:00:00Z",
+    "last_activity": "2026-11-01T14:00:00Z"
+   },
+   {
+    "id": "c1181",
+    "prenom": "Camille",
+    "nom": "Masson",
+    "type_wallet": "google",
+    "points": 360,
+    "telephone": "0612545658",
+    "email": "camille.masson@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-12T10:00:00Z",
+    "last_activity": "2026-11-03T17:00:00Z"
+   },
+   {
+    "id": "c1182",
+    "prenom": "Lucas",
+    "nom": "Petit",
+    "type_wallet": "apple",
+    "points": 470,
+    "telephone": "0612546769",
+    "email": "lucas.petit@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-08T10:00:00Z",
+    "last_activity": "2026-11-05T13:00:00Z"
+   },
+   {
+    "id": "c1183",
+    "prenom": "Mila",
+    "nom": "Masson",
+    "type_wallet": "apple",
+    "points": 430,
+    "telephone": "0612547880",
+    "email": "mila.masson@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-10-03T10:00:00Z",
+    "last_activity": "2026-11-02T11:00:00Z"
+   },
+   {
+    "id": "c1184",
+    "prenom": "Clara",
+    "nom": "André",
+    "type_wallet": "apple",
+    "points": 340,
+    "telephone": "0612548991",
+    "email": "clara.andre@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-14T10:00:00Z",
+    "last_activity": "2026-11-01T13:00:00Z"
+   },
+   {
+    "id": "c1185",
+    "prenom": "Léa",
+    "nom": "Lefebvre",
+    "type_wallet": "apple",
+    "points": 230,
+    "telephone": "0612550102",
+    "email": "lea.lefebvre@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-12T10:00:00Z",
+    "last_activity": "2026-11-06T14:00:00Z"
+   },
+   {
+    "id": "c1186",
+    "prenom": "Yanis",
+    "nom": "David",
+    "type_wallet": "google",
+    "points": 130,
+    "telephone": "0612551213",
+    "email": "yanis.david@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-10T10:00:00Z",
+    "last_activity": "2026-11-06T17:00:00Z"
+   },
+   {
+    "id": "c1187",
+    "prenom": "Léo",
+    "nom": "Simon",
+    "type_wallet": "apple",
+    "points": 110,
+    "telephone": "0612552324",
+    "email": "leo.simon@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-02T10:00:00Z",
+    "last_activity": "2026-11-06T18:00:00Z"
+   },
+   {
+    "id": "c1188",
+    "prenom": "Chloé",
+    "nom": "Robin",
+    "type_wallet": "apple",
+    "points": 200,
+    "telephone": "0612553435",
+    "email": "chloe.robin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-17T10:00:00Z",
+    "last_activity": "2026-11-04T16:00:00Z"
+   },
+   {
+    "id": "c1189",
+    "prenom": "Arthur",
+    "nom": "Gauthier",
+    "type_wallet": "apple",
+    "points": 110,
+    "telephone": "0612554546",
+    "email": "arthur.gauthier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-08T10:00:00Z",
+    "last_activity": "2026-11-02T18:00:00Z"
+   },
+   {
+    "id": "c1190",
+    "prenom": "Théo",
+    "nom": "Mercier",
+    "type_wallet": "apple",
+    "points": 90,
+    "telephone": "0612555657",
+    "email": "theo.mercier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-04T10:00:00Z",
+    "last_activity": "2026-11-07T18:00:00Z"
+   },
+   {
+    "id": "c1191",
+    "prenom": "Manon",
+    "nom": "Guerin",
+    "type_wallet": "apple",
+    "points": 260,
+    "telephone": "0612556768",
+    "email": "manon.guerin@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-06-07T10:00:00Z",
+    "last_activity": "2026-11-02T15:00:00Z"
+   },
+   {
+    "id": "c1192",
+    "prenom": "Arthur",
+    "nom": "Nicolas",
+    "type_wallet": "apple",
+    "points": 410,
+    "telephone": "0612557879",
+    "email": "arthur.nicolas@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-02T10:00:00Z",
+    "last_activity": "2026-11-07T18:00:00Z"
+   },
+   {
+    "id": "c1193",
+    "prenom": "Eva",
+    "nom": "Perrin",
+    "type_wallet": "apple",
+    "points": 400,
+    "telephone": "0612558990",
+    "email": "eva.perrin@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-08-25T10:00:00Z",
+    "last_activity": "2026-11-01T16:00:00Z"
+   },
+   {
+    "id": "c1194",
+    "prenom": "Anna",
+    "nom": "Robin",
+    "type_wallet": "google",
+    "points": 140,
+    "telephone": "0612560101",
+    "email": "anna.robin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-20T10:00:00Z",
+    "last_activity": "2026-11-03T14:00:00Z"
+   },
+   {
+    "id": "c1195",
+    "prenom": "Victor",
+    "nom": "Masson",
+    "type_wallet": "google",
+    "points": 300,
+    "telephone": "0612561212",
+    "email": "victor.masson@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-08-13T10:00:00Z",
+    "last_activity": "2026-11-03T17:00:00Z"
+   },
+   {
+    "id": "c1196",
+    "prenom": "Nolan",
+    "nom": "Bertrand",
+    "type_wallet": "apple",
+    "points": 70,
+    "telephone": "0612562323",
+    "email": "nolan.bertrand@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-09T10:00:00Z",
+    "last_activity": "2026-11-03T18:00:00Z"
+   },
+   {
+    "id": "c1197",
+    "prenom": "Lou",
+    "nom": "Mercier",
+    "type_wallet": "google",
+    "points": 30,
+    "telephone": "0612563434",
+    "email": "lou.mercier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-13T10:00:00Z",
+    "last_activity": "2026-11-01T15:00:00Z"
+   },
+   {
+    "id": "c1198",
+    "prenom": "Théo",
+    "nom": "Roussel",
+    "type_wallet": "apple",
+    "points": 130,
+    "telephone": "0612564545",
+    "email": "theo.roussel@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-11T10:00:00Z",
+    "last_activity": "2026-11-05T16:00:00Z"
+   },
+   {
+    "id": "c1199",
+    "prenom": "Inès",
+    "nom": "Roux",
+    "type_wallet": "apple",
+    "points": 180,
+    "telephone": "0612565656",
+    "email": "ines.roux@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-05T10:00:00Z",
+    "last_activity": "2026-11-06T10:00:00Z"
+   },
+   {
+    "id": "c1200",
+    "prenom": "Margaux",
+    "nom": "Blanc",
+    "type_wallet": "apple",
+    "points": 410,
+    "telephone": "0612566767",
+    "email": "margaux.blanc@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-01T10:00:00Z",
+    "last_activity": "2026-11-01T12:00:00Z"
+   },
+   {
+    "id": "c1201",
+    "prenom": "Zoé",
+    "nom": "Garcia",
+    "type_wallet": "google",
+    "points": 100,
+    "telephone": "0612567878",
+    "email": "zoe.garcia@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-21T10:00:00Z",
+    "last_activity": "2026-11-07T10:00:00Z"
+   },
+   {
+    "id": "c1202",
+    "prenom": "Eva",
+    "nom": "Gauthier",
+    "type_wallet": "apple",
+    "points": 200,
+    "telephone": "0612568989",
+    "email": "eva.gauthier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-02T10:00:00Z",
+    "last_activity": "2026-11-06T14:00:00Z"
+   },
+   {
+    "id": "c1203",
+    "prenom": "Noah",
+    "nom": "Francois",
+    "type_wallet": "apple",
+    "points": 430,
+    "telephone": "0612570100",
+    "email": "noah.francois@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-21T10:00:00Z",
+    "last_activity": "2026-11-05T10:00:00Z"
+   },
+   {
+    "id": "c1204",
+    "prenom": "Emma",
+    "nom": "Mathieu",
+    "type_wallet": "apple",
+    "points": 20,
+    "telephone": "0612571211",
+    "email": "emma.mathieu@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-17T10:00:00Z",
+    "last_activity": "2026-11-03T15:00:00Z"
+   },
+   {
+    "id": "c1205",
+    "prenom": "Hugo",
+    "nom": "Chevalier",
+    "type_wallet": "apple",
+    "points": 80,
+    "telephone": "0612572322",
+    "email": "hugo.chevalier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-21T10:00:00Z",
+    "last_activity": "2026-11-06T15:00:00Z"
+   },
+   {
+    "id": "c1206",
+    "prenom": "Lucas",
+    "nom": "Petit",
+    "type_wallet": "apple",
+    "points": 410,
+    "telephone": "0612573433",
+    "email": "lucas.petit@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-19T10:00:00Z",
+    "last_activity": "2026-11-05T10:00:00Z"
+   },
+   {
+    "id": "c1207",
+    "prenom": "Maël",
+    "nom": "Boyer",
+    "type_wallet": "apple",
+    "points": 390,
+    "telephone": "0612574544",
+    "email": "mael.boyer@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-24T10:00:00Z",
+    "last_activity": "2026-11-07T11:00:00Z"
+   },
+   {
+    "id": "c1208",
+    "prenom": "Ethan",
+    "nom": "Petit",
+    "type_wallet": "apple",
+    "points": 240,
+    "telephone": "0612575655",
+    "email": "ethan.petit@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-18T10:00:00Z",
+    "last_activity": "2026-11-04T17:00:00Z"
+   },
+   {
+    "id": "c1209",
+    "prenom": "Nina",
+    "nom": "Garnier",
+    "type_wallet": "apple",
+    "points": 270,
+    "telephone": "0612576766",
+    "email": "nina.garnier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-06T10:00:00Z",
+    "last_activity": "2026-11-06T15:00:00Z"
+   },
+   {
+    "id": "c1210",
+    "prenom": "Manon",
+    "nom": "Guerin",
+    "type_wallet": "apple",
+    "points": 120,
+    "telephone": "0612577877",
+    "email": "manon.guerin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-10T10:00:00Z",
+    "last_activity": "2026-11-03T10:00:00Z"
+   },
+   {
+    "id": "c1211",
+    "prenom": "Lina",
+    "nom": "Martin",
+    "type_wallet": "apple",
+    "points": 220,
+    "telephone": "0612578988",
+    "email": "lina.martin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-05T10:00:00Z",
+    "last_activity": "2026-11-06T18:00:00Z"
+   },
+   {
+    "id": "c1212",
+    "prenom": "Nina",
+    "nom": "Chevalier",
+    "type_wallet": "apple",
+    "points": 270,
+    "telephone": "0612580099",
+    "email": "nina.chevalier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-25T10:00:00Z",
+    "last_activity": "2026-11-01T18:00:00Z"
+   },
+   {
+    "id": "c1213",
+    "prenom": "Alice",
+    "nom": "Moreau",
+    "type_wallet": "google",
+    "points": 120,
+    "telephone": "0612581210",
+    "email": "alice.moreau@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-22T10:00:00Z",
+    "last_activity": "2026-11-02T10:00:00Z"
+   },
+   {
+    "id": "c1214",
+    "prenom": "Clara",
+    "nom": "Garcia",
+    "type_wallet": "apple",
+    "points": 310,
+    "telephone": "0612582321",
+    "email": "clara.garcia@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-27T10:00:00Z",
+    "last_activity": "2026-11-01T11:00:00Z"
+   },
+   {
+    "id": "c1215",
+    "prenom": "Chloé",
+    "nom": "Francois",
+    "type_wallet": "apple",
+    "points": 220,
+    "telephone": "0612583432",
+    "email": "chloe.francois@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-07T10:00:00Z",
+    "last_activity": "2026-11-05T12:00:00Z"
+   },
+   {
+    "id": "c1216",
+    "prenom": "Yanis",
+    "nom": "Fontaine",
+    "type_wallet": "apple",
+    "points": 410,
+    "telephone": "0612584543",
+    "email": "yanis.fontaine@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-05T10:00:00Z",
+    "last_activity": "2026-11-07T12:00:00Z"
+   },
+   {
+    "id": "c1217",
+    "prenom": "Manon",
+    "nom": "Martin",
+    "type_wallet": "google",
+    "points": 360,
+    "telephone": "0612585654",
+    "email": "manon.martin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-01T10:00:00Z",
+    "last_activity": "2026-11-04T17:00:00Z"
+   },
+   {
+    "id": "c1218",
+    "prenom": "Lucas",
+    "nom": "Perrin",
+    "type_wallet": "apple",
+    "points": 340,
+    "telephone": "0612586765",
+    "email": "lucas.perrin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-07T10:00:00Z",
+    "last_activity": "2026-11-05T12:00:00Z"
+   },
+   {
+    "id": "c1219",
+    "prenom": "Tom",
+    "nom": "Clement",
+    "type_wallet": "google",
+    "points": 420,
+    "telephone": "0612587876",
+    "email": "tom.clement@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-10-13T10:00:00Z",
+    "last_activity": "2026-11-05T14:00:00Z"
+   },
+   {
+    "id": "c1220",
+    "prenom": "Ethan",
+    "nom": "Mercier",
+    "type_wallet": "apple",
+    "points": 340,
+    "telephone": "0612588987",
+    "email": "ethan.mercier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-09T10:00:00Z",
+    "last_activity": "2026-11-07T15:00:00Z"
+   },
+   {
+    "id": "c1221",
+    "prenom": "Léo",
+    "nom": "Masson",
+    "type_wallet": "apple",
+    "points": 150,
+    "telephone": "0612590098",
+    "email": "leo.masson@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-01T10:00:00Z",
+    "last_activity": "2026-11-07T17:00:00Z"
+   },
+   {
+    "id": "c1222",
+    "prenom": "Mila",
+    "nom": "Roussel",
+    "type_wallet": "google",
+    "points": 130,
+    "telephone": "0612591209",
+    "email": "mila.roussel@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-25T10:00:00Z",
+    "last_activity": "2026-11-04T17:00:00Z"
+   },
+   {
+    "id": "c1223",
+    "prenom": "Margaux",
+    "nom": "Moreau",
+    "type_wallet": "google",
+    "points": 230,
+    "telephone": "0612592320",
+    "email": "margaux.moreau@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-14T10:00:00Z",
+    "last_activity": "2026-11-04T13:00:00Z"
+   },
+   {
+    "id": "c1224",
+    "prenom": "Lou",
+    "nom": "Robin",
+    "type_wallet": "apple",
+    "points": 70,
+    "telephone": "0612593431",
+    "email": "lou.robin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-25T10:00:00Z",
+    "last_activity": "2026-11-04T16:00:00Z"
+   },
+   {
+    "id": "c1225",
+    "prenom": "Maël",
+    "nom": "Garcia",
+    "type_wallet": "google",
+    "points": 130,
+    "telephone": "0612594542",
+    "email": "mael.garcia@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-09-27T10:00:00Z",
+    "last_activity": "2026-11-06T14:00:00Z"
+   },
+   {
+    "id": "c1226",
+    "prenom": "Alice",
+    "nom": "Roussel",
+    "type_wallet": "apple",
+    "points": 390,
+    "telephone": "0612595653",
+    "email": "alice.roussel@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-06T10:00:00Z",
+    "last_activity": "2026-11-05T16:00:00Z"
+   },
+   {
+    "id": "c1227",
+    "prenom": "Lina",
+    "nom": "Gauthier",
+    "type_wallet": "google",
+    "points": 280,
+    "telephone": "0612596764",
+    "email": "lina.gauthier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-27T10:00:00Z",
+    "last_activity": "2026-11-01T14:00:00Z"
+   },
+   {
+    "id": "c1228",
+    "prenom": "Sacha",
+    "nom": "Muller",
+    "type_wallet": "google",
+    "points": 160,
+    "telephone": "0612597875",
+    "email": "sacha.muller@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-05T10:00:00Z",
+    "last_activity": "2026-11-06T11:00:00Z"
+   },
+   {
+    "id": "c1229",
+    "prenom": "Lina",
+    "nom": "Petit",
+    "type_wallet": "apple",
+    "points": 370,
+    "telephone": "0612598986",
+    "email": "lina.petit@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-06T10:00:00Z",
+    "last_activity": "2026-11-01T18:00:00Z"
+   },
+   {
+    "id": "c1230",
+    "prenom": "Noah",
+    "nom": "Bernard",
+    "type_wallet": "apple",
+    "points": 60,
+    "telephone": "0612600097",
+    "email": "noah.bernard@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-23T10:00:00Z",
+    "last_activity": "2026-11-01T16:00:00Z"
+   },
+   {
+    "id": "c1231",
+    "prenom": "Julia",
+    "nom": "Denis",
+    "type_wallet": "apple",
+    "points": 200,
+    "telephone": "0612601208",
+    "email": "julia.denis@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-27T10:00:00Z",
+    "last_activity": "2026-11-04T11:00:00Z"
+   },
+   {
+    "id": "c1232",
+    "prenom": "Jade",
+    "nom": "Robin",
+    "type_wallet": "google",
+    "points": 260,
+    "telephone": "0612602319",
+    "email": "jade.robin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-25T10:00:00Z",
+    "last_activity": "2026-11-05T14:00:00Z"
+   },
+   {
+    "id": "c1233",
+    "prenom": "Tom",
+    "nom": "Denis",
+    "type_wallet": "google",
+    "points": 30,
+    "telephone": "0612603430",
+    "email": "tom.denis@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-09-18T10:00:00Z",
+    "last_activity": "2026-11-04T16:00:00Z"
+   },
+   {
+    "id": "c1234",
+    "prenom": "Ethan",
+    "nom": "Faure",
+    "type_wallet": "apple",
+    "points": 300,
+    "telephone": "0612604541",
+    "email": "ethan.faure@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-19T10:00:00Z",
+    "last_activity": "2026-11-06T18:00:00Z"
+   },
+   {
+    "id": "c1235",
+    "prenom": "Chloé",
+    "nom": "Francois",
+    "type_wallet": "apple",
+    "points": 160,
+    "telephone": "0612605652",
+    "email": "chloe.francois@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-06-07T10:00:00Z",
+    "last_activity": "2026-11-01T14:00:00Z"
+   },
+   {
+    "id": "c1236",
+    "prenom": "Julia",
+    "nom": "Michel",
+    "type_wallet": "google",
+    "points": 390,
+    "telephone": "0612606763",
+    "email": "julia.michel@mail.fr",
+    "marketing_optin": false,
+    "created_at": "2026-08-14T10:00:00Z",
+    "last_activity": "2026-11-07T18:00:00Z"
+   },
+   {
+    "id": "c1237",
+    "prenom": "Rose",
+    "nom": "Masson",
+    "type_wallet": "google",
+    "points": 410,
+    "telephone": "0612607874",
+    "email": "rose.masson@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-05T10:00:00Z",
+    "last_activity": "2026-11-03T16:00:00Z"
+   },
+   {
+    "id": "c1238",
+    "prenom": "Victor",
+    "nom": "Rousseau",
+    "type_wallet": "apple",
+    "points": 110,
+    "telephone": "0612608985",
+    "email": "victor.rousseau@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-07T10:00:00Z",
+    "last_activity": "2026-11-02T18:00:00Z"
+   },
+   {
+    "id": "c1239",
+    "prenom": "Nina",
+    "nom": "Roussel",
+    "type_wallet": "apple",
+    "points": 130,
+    "telephone": "0612610096",
+    "email": "nina.roussel@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-13T10:00:00Z",
+    "last_activity": "2026-11-07T11:00:00Z"
+   },
+   {
+    "id": "c1240",
+    "prenom": "Yanis",
+    "nom": "Gautier",
+    "type_wallet": "google",
+    "points": 350,
+    "telephone": "0612611207",
+    "email": "yanis.gautier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-04T10:00:00Z",
+    "last_activity": "2026-11-06T13:00:00Z"
+   },
+   {
+    "id": "c1241",
+    "prenom": "Jade",
+    "nom": "Guerin",
+    "type_wallet": "apple",
+    "points": 410,
+    "telephone": "0612612318",
+    "email": "jade.guerin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-10-19T10:00:00Z",
+    "last_activity": "2026-11-02T14:00:00Z"
+   },
+   {
+    "id": "c1242",
+    "prenom": "Clara",
+    "nom": "Gauthier",
+    "type_wallet": "apple",
+    "points": 320,
+    "telephone": "0612613429",
+    "email": "clara.gauthier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-17T10:00:00Z",
+    "last_activity": "2026-11-06T16:00:00Z"
+   },
+   {
+    "id": "c1243",
+    "prenom": "Victor",
+    "nom": "Gauthier",
+    "type_wallet": "apple",
+    "points": 220,
+    "telephone": "0612614540",
+    "email": "victor.gauthier@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-03T10:00:00Z",
+    "last_activity": "2026-11-07T11:00:00Z"
+   },
+   {
+    "id": "c1244",
+    "prenom": "Paul",
+    "nom": "Henry",
+    "type_wallet": "apple",
+    "points": 280,
+    "telephone": "0612615651",
+    "email": "paul.henry@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-09T10:00:00Z",
+    "last_activity": "2026-11-03T11:00:00Z"
+   },
+   {
+    "id": "c1245",
+    "prenom": "Anna",
+    "nom": "Moreau",
+    "type_wallet": "apple",
+    "points": 10,
+    "telephone": "0612616762",
+    "email": "anna.moreau@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-07-23T10:00:00Z",
+    "last_activity": "2026-11-02T15:00:00Z"
+   },
+   {
+    "id": "c1246",
+    "prenom": "Mila",
+    "nom": "Michel",
+    "type_wallet": "apple",
+    "points": 130,
+    "telephone": "0612617873",
+    "email": "mila.michel@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-15T10:00:00Z",
+    "last_activity": "2026-11-04T13:00:00Z"
+   },
+   {
+    "id": "c1247",
+    "prenom": "Sarah",
+    "nom": "David",
+    "type_wallet": "apple",
+    "points": 330,
+    "telephone": "0612618984",
+    "email": "sarah.david@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-08-24T10:00:00Z",
+    "last_activity": "2026-11-06T16:00:00Z"
+   },
+   {
+    "id": "c1248",
+    "prenom": "Ethan",
+    "nom": "Morin",
+    "type_wallet": "apple",
+    "points": 220,
+    "telephone": "0612620095",
+    "email": "ethan.morin@mail.fr",
+    "marketing_optin": true,
+    "created_at": "2026-06-21T10:00:00Z",
+    "last_activity": "2026-11-02T14:00:00Z"
+   }
+  ],
+  "GET /pro/card-customization/.*": {
+   "primary_color": "#1c1c1e",
+   "text_color": "#ffffff",
+   "accent_color": "#e3c9a4",
+   "logo_text": "Maison Lumière",
+   "logo_url": "http://localhost:5056/api/img/mark-graphite.svg",
+   "apple_logo_url": "http://localhost:5056/api/img/mark-graphite.svg",
+   "icon_url": "http://localhost:5056/api/img/icon.svg",
+   "apple_icon_url": "http://localhost:5056/api/img/icon.svg",
+   "strip_image_url": "http://localhost:5056/api/img/strip.svg",
+   "apple_strip_image_url": "http://localhost:5056/api/img/strip.svg",
+   "apple_organization_name": "Maison Lumière",
+   "apple_pass_description": "Carte de fidélité Maison Lumière",
+   "google_primary_color": "#1c1c1e",
+   "google_logo_url": "http://localhost:5056/api/img/icon.svg",
+   "google_hero_image_url": "http://localhost:5056/api/img/strip.svg",
+   "google_card_title": "Maison Lumière",
+   "google_card_subtitle": "Carte fidélité",
+   "back_fields_info": "500 points = 1 café offert",
+   "back_fields_website": "maisonlumiere.fr",
+   "back_fields_phone": "01 42 00 00 00",
+   "back_fields_address": "12 rue des Martyrs, Paris 9e",
+   "back_fields_instagram": "@maisonlumiere",
+   "relevant_text": "Ton café offert t’attend à deux pas",
+   "locations": "[{\"latitude\":48.8794,\"longitude\":2.3399,\"relevantText\":\"Ton café offert t’attend à deux pas\"}]"
+  },
+  "GET /pro/loyalty/config": {
+   "entreprise_id": "e42",
+   "points_adding_mode": "manual",
+   "points_per_purchase": 10,
+   "max_points_balance": 1000,
+   "push_notifications_enabled": 1,
+   "points_shortcuts": [
+    10,
+    20,
+    50
+   ],
+   "reward_tiers": [
+    {
+     "id": 1,
+     "points_required": 500,
+     "title": "Un café offert"
+    }
+   ]
+  },
+  "GET /pro/loyalty/expiration": {
+   "points_expiration_months": null
+  },
+  "GET /pro/establishments": [],
+  "GET /pro/scan-lookup/.*": {
+   "clientName": "Camille Roux",
+   "currentPoints": 460,
+   "allRewards": [
+    {
+     "id": 1,
+     "points_required": 500,
+     "title": "Un café offert"
+    }
+   ]
+  },
+  "GET /companies/.*/info": {
+   "id": "e42",
+   "nom": "Maison Lumière",
+   "logo_url": "http://localhost:5056/api/img/logo.svg",
+   "primary_color": "#1d1a17",
+   "text_color": "#f5ead8",
+   "accent_color": "#d9a75b",
+   "logo_text": "",
+   "apple_logo_url": "http://localhost:5056/api/img/logo.svg",
+   "icon_url": "http://localhost:5056/api/img/icon.svg",
+   "apple_icon_url": "http://localhost:5056/api/img/icon.svg",
+   "strip_image_url": "http://localhost:5056/api/img/strip.svg",
+   "apple_strip_image_url": "http://localhost:5056/api/img/strip.svg",
+   "apple_organization_name": "Maison Lumière",
+   "apple_pass_description": "Carte de fidélité Maison Lumière",
+   "google_primary_color": "#1d1a17",
+   "google_logo_url": "http://localhost:5056/api/img/icon.svg",
+   "google_hero_image_url": "http://localhost:5056/api/img/strip.svg",
+   "google_card_title": "Maison Lumière",
+   "google_card_subtitle": "Carte fidélité",
+   "back_fields_info": "1 € dépensé = 10 points. Ton café offert dès 100 points.",
+   "back_fields_website": "maisonlumiere.fr",
+   "back_fields_phone": "01 42 00 00 00",
+   "back_fields_address": "12 rue des Martyrs, Paris 9e",
+   "back_fields_instagram": "@maisonlumiere",
+   "relevant_text": "Ton café offert t’attend à deux pas",
+   "locations": "[{\"latitude\":48.8794,\"longitude\":2.3399,\"relevantText\":\"Ton café offert t’attend à deux pas\"}]"
+  },
+  "GET /pro/notifications/quota": {
+   "tier": "pro",
+   "limit": 4,
+   "used": 1,
+   "remaining": 3,
+   "suspended": false,
+   "min_hours_between": 48,
+   "client_cooldown_days": 7,
+   "next_allowed_at": null,
+   "quiet_hours": {
+    "from": 21,
+    "to": 8,
+    "timeZone": "Europe/Paris"
+   },
+   "quiet_now": false
+  },
+  "GET /pro/notifications/history": {
+   "notifications": [
+    {
+     "id": 3,
+     "created_at": "2026-11-04T11:30:00Z",
+     "title": "Le chocolat chaud est de retour",
+     "recipients_count": 211
+    },
+    {
+     "id": 2,
+     "created_at": "2026-10-24T10:30:00Z",
+     "title": "Le croissant du mois est là",
+     "recipients_count": 198
+    },
+    {
+     "id": 1,
+     "created_at": "2026-10-10T09:00:00Z",
+     "title": "-20 % sur les boissons ce week-end",
+     "recipients_count": 176
+    }
+   ],
+   "total": 3
+  },
+  "GET /pro/stats/overview": {
+   "totalClients": 248,
+   "appleClients": 171,
+   "googleClients": 77,
+   "totalPointsInCirculation": 41280,
+   "activeClientsThisMonth": 186,
+   "newClientsThisMonth": 42,
+   "pointsDistributedThisMonth": 12840,
+   "pointsRedeemedThisMonth": 3900,
+   "pointsExpiredThisMonth": 0,
+   "scansThisMonth": 1312,
+   "scansLastMonth": 1004
+  },
+  "GET /pro/subscription": {
+   "tier": "pro",
+   "status": "active"
+  },
+  "GET /plans": [],
+  "POST /pro/scan": {
+   "success": true,
+   "clientId": "c1001",
+   "clientName": "Camille Roux",
+   "pointsAdded": 20,
+   "newPoints": 480
+  },
+  "POST /pro/notifications/send": {
+   "success": true,
+   "message": "Notification envoyée à 219 client(s)"
+  },
+  "GET /pro/stats/activity.*": {
+   "daily": [
+    {
+     "date": "2026-10-10",
+     "scans": 84
+    },
+    {
+     "date": "2026-10-11",
+     "scans": 15
+    },
+    {
+     "date": "2026-10-12",
+     "scans": 44
+    },
+    {
+     "date": "2026-10-13",
+     "scans": 38
+    },
+    {
+     "date": "2026-10-14",
+     "scans": 33
+    },
+    {
+     "date": "2026-10-15",
+     "scans": 42
+    },
+    {
+     "date": "2026-10-16",
+     "scans": 41
+    },
+    {
+     "date": "2026-10-17",
+     "scans": 70
+    },
+    {
+     "date": "2026-10-18",
+     "scans": 23
+    },
+    {
+     "date": "2026-10-19",
+     "scans": 39
+    },
+    {
+     "date": "2026-10-20",
+     "scans": 37
+    },
+    {
+     "date": "2026-10-21",
+     "scans": 48
+    },
+    {
+     "date": "2026-10-22",
+     "scans": 42
+    },
+    {
+     "date": "2026-10-23",
+     "scans": 56
+    },
+    {
+     "date": "2026-10-24",
+     "scans": 99
+    },
+    {
+     "date": "2026-10-25",
+     "scans": 19
+    },
+    {
+     "date": "2026-10-26",
+     "scans": 48
+    },
+    {
+     "date": "2026-10-27",
+     "scans": 40
+    },
+    {
+     "date": "2026-10-28",
+     "scans": 47
+    },
+    {
+     "date": "2026-10-29",
+     "scans": 60
+    },
+    {
+     "date": "2026-10-30",
+     "scans": 41
+    },
+    {
+     "date": "2026-10-31",
+     "scans": 75
+    },
+    {
+     "date": "2026-11-01",
+     "scans": 26
+    },
+    {
+     "date": "2026-11-02",
+     "scans": 52
+    },
+    {
+     "date": "2026-11-03",
+     "scans": 59
+    },
+    {
+     "date": "2026-11-04",
+     "scans": 47
+    },
+    {
+     "date": "2026-11-05",
+     "scans": 58
+    },
+    {
+     "date": "2026-11-06",
+     "scans": 47
+    },
+    {
+     "date": "2026-11-07",
+     "scans": 82
+    },
+    {
+     "date": "2026-11-08",
+     "scans": 21
+    }
+   ],
+   "byDayOfWeek": [
+    {
+     "dow": 1,
+     "scans": 140
+    },
+    {
+     "dow": 2,
+     "scans": 150
+    },
+    {
+     "dow": 3,
+     "scans": 160
+    },
+    {
+     "dow": 4,
+     "scans": 175
+    },
+    {
+     "dow": 5,
+     "scans": 210
+    },
+    {
+     "dow": 6,
+     "scans": 260
+    },
+    {
+     "dow": 7,
+     "scans": 90
+    }
+   ],
+   "byHour": [
+    {
+     "hour": 8,
+     "scans": 30
+    },
+    {
+     "hour": 9,
+     "scans": 32
+    },
+    {
+     "hour": 10,
+     "scans": 41
+    },
+    {
+     "hour": 11,
+     "scans": 73
+    },
+    {
+     "hour": 12,
+     "scans": 113
+    },
+    {
+     "hour": 13,
+     "scans": 113
+    },
+    {
+     "hour": 14,
+     "scans": 73
+    },
+    {
+     "hour": 15,
+     "scans": 44
+    },
+    {
+     "hour": 16,
+     "scans": 51
+    },
+    {
+     "hour": 17,
+     "scans": 83
+    },
+    {
+     "hour": 18,
+     "scans": 83
+    },
+    {
+     "hour": 19,
+     "scans": 49
+    },
+    {
+     "hour": 20,
+     "scans": 33
+    }
+   ]
+  },
+  "GET /pro/stats/clients": {
+   "retention": {
+    "last7days": 121,
+    "last30days": 186,
+    "last90days": 231,
+    "inactive": 17,
+    "total": 248
+   },
+   "growth": [
+    {
+     "month": "2026-06",
+     "newClients": 22
+    },
+    {
+     "month": "2026-07",
+     "newClients": 38
+    },
+    {
+     "month": "2026-08",
+     "newClients": 41
+    },
+    {
+     "month": "2026-09",
+     "newClients": 57
+    },
+    {
+     "month": "2026-10",
+     "newClients": 48
+    },
+    {
+     "month": "2026-11",
+     "newClients": 42
+    }
+   ],
+   "distribution": [
+    {
+     "label": "0-100",
+     "value": 64
+    },
+    {
+     "label": "100-300",
+     "value": 92
+    },
+    {
+     "label": "300-500",
+     "value": 71
+    },
+    {
+     "label": "500+",
+     "value": 21
+    }
+   ]
+  },
+  "GET /pro/stats/rewards": {
+   "totals": {
+    "totalPointsSpent": 38500,
+    "totalRedemptions": 77
+   },
+   "monthly": [
+    {
+     "month": "2026-06",
+     "redemptions": 4
+    },
+    {
+     "month": "2026-07",
+     "redemptions": 9
+    },
+    {
+     "month": "2026-08",
+     "redemptions": 12
+    },
+    {
+     "month": "2026-09",
+     "redemptions": 16
+    },
+    {
+     "month": "2026-10",
+     "redemptions": 19
+    },
+    {
+     "month": "2026-11",
+     "redemptions": 17
+    }
+   ],
+   "tiers": [
+    {
+     "id": 1,
+     "points_required": 500,
+     "title": "Un café offert",
+     "redemptions": 61
+    },
+    {
+     "id": 2,
+     "points_required": 1000,
+     "title": "Une pâtisserie offerte",
+     "redemptions": 16
+    }
+   ]
+  }
+ }
+}

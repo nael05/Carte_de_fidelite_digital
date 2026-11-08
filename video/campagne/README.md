@@ -16,7 +16,11 @@ Code des vidéos : `video/src/campagne/` (Remotion). Rendus : `video/out/campagn
 | 07 | `C-07-proximite` | `07-rappel-de-proximite` | 9:16 | Plan du quartier en 3D, la carte apparaît quand le client passe ; le vrai réglage Géolocalisation | « Ton client passe devant ta boutique. » |
 | 08 | `C-08-questions` | `08-trois-questions` | 9:16 | FAQ : application ? points ? prix ? Appel aux commentaires | « Les trois questions que les commerçants nous posent. » |
 | 09 | `C-09-calcul` | `09-le-calcul` | 9:16 | Grands chiffres : 1 café/semaine × 50 × 3 € = 150 €, × 10 clients perdus = 1 500 € | « Combien te coûte un client qui ne revient pas ? » |
+| 10 | `C-10-boulangerie` | `10-si-tas-une-boulangerie` | 9:16 | Série par métier : façade, carte aux couleurs du commerce, récompense, caisse et message adaptés (« Fournil Doré ») | « Si t'as une boulangerie, regarde ça. » |
+| 11 | `C-11-coiffure` | `11-si-tas-un-salon-de-coiffure` | 9:16 | Même série, salon de coiffure (« Studio Élise ») | « Si t'as un salon de coiffure, regarde ça. » |
+| 12 | `C-12-restaurant` | `12-si-tas-un-restaurant` | 9:16 | Même série, restaurant (« Chez Paolo ») | « Si t'as un restaurant, regarde ça. » |
 | — | `C-site-paysage` | `site-fidelyz-de-a-a-z-paysage` | 16:9 | Film du site (1 min 30, vouvoiement) : tout le parcours, de A à Z | — |
+| — | `C-spot-paysage` | `spot-30s-paysage` | 16:9 | Spot de 25 s façon publicité, peu de mots, slogan « La fidélité, réinventée. » (haut de la page d'accueil, pré-diffusion YouTube) | — |
 
 Chaque composition existe **avec voix** (`C-…`) et **sans voix** (`C-…-muet` : musique, bruitages et sous-titres animés).
 
@@ -34,7 +38,10 @@ cd video
 node scripts/campagne/data.mjs && node scripts/campagne/server.mjs &          # faux serveur d'API (port 5056)
 (cd ../frontend && VITE_API_URL=http://localhost:5056/api npx vite --port 3100 &)
 NODE_PATH=$(npm root -g) node scripts/campagne/capture.cjs mobile               # puis : desktop
+# série par métier : écrans au nom d'un autre commerce
+NODE_PATH=$(npm root -g) node scripts/campagne/capture-metier.cjs boulangerie "Fournil Doré" "Les croissants sortent du four 🥐" "Ils sont encore chauds : venez vite, votre carte vous attend." "#dcc39d" "#2b1f12" "#7a5530"
 ```
+Nouveau métier : ajouter son entrée dans `METIERS` (`src/campagne/metier/Metier.jsx`), ses textes dans `textes.json`, et une ligne dans `Compositions.jsx`.
 
 ## Voix (ElevenLabs, voix d'homme)
 

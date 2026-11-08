@@ -5,7 +5,7 @@ import './carte.css'
    QRCode et StripPhoto sont le même code que Home.jsx (ids rendus uniques pour plusieurs cartes à l'écran). */
 export const Carte = ({
   width = 380, rx = 0, ry = 0, rz = 0, skin = 'graphite', points = 480, name = 'Maison Lumière', mark = 'L',
-  holder = 'CAMILLE', cardId = '2BF10B', scan = null, light = 0.35, perspective = 2400, shadow = 1, style, vars = {}, build,
+  holder = 'CAMILLE', cardId = '2BF10B', scan = null, light = 0.35, perspective = 2400, shadow = 1, style, vars = {}, build, strip, reward = '500 points = 1 café offert',
 }) => {
   // build : apparition de chaque élément (0 → 1), pour construire la carte pièce par pièce
   const b = k => (build ? { opacity: build[k] ?? 1, transform: `translateY(${(1 - (build[k] ?? 1)) * 14}px)` } : undefined)
@@ -19,7 +19,7 @@ export const Carte = ({
           <div className="wp-logo"><span className="wp-mark" style={build ? { opacity: build.mark ?? 1, transform: `scale(${0.4 + 0.6 * (build.mark ?? 1)})` } : undefined}>{mark}</span><span className="wp-org" style={b('org')}>{name}</span></div>
           <div className="wp-hfield" style={b('points')}><span className="wp-label">POINTS</span><span className="wp-hval"><Odometer value={points} /></span></div>
         </div>
-        <div className="wp-strip" style={build ? { background: 'transparent' } : undefined}><div style={build ? { position: 'absolute', inset: 0, clipPath: `inset(0 ${(1 - (build.strip ?? 1)) * 100}% 0 0)` } : { position: 'absolute', inset: 0 }}><StripPhoto /></div></div>
+        <div className="wp-strip" style={build ? { background: 'transparent' } : undefined}><div style={build ? { position: 'absolute', inset: 0, clipPath: `inset(0 ${(1 - (build.strip ?? 1)) * 100}% 0 0)` } : { position: 'absolute', inset: 0 }}>{strip ?? <StripPhoto />}</div></div>
         <div className="wp-fields" style={b('fields')}>
           <div className="wp-col"><span className="wp-label">BONJOUR</span><span className="wp-val-lg">{holder}</span></div>
           <div className="wp-col wp-right"><span className="wp-label">DÉTAILS DES RÉCOMPENSES</span><span className="wp-val">Au dos</span></div>
@@ -33,7 +33,7 @@ export const Carte = ({
         </div>
       </div>
       <div className="c3-face c3-back">
-        <div className="wp-back-row"><span className="wp-back-label">Détails des récompenses</span><span>500 points = 1 café offert</span></div>
+        <div className="wp-back-row"><span className="wp-back-label">Détails des récompenses</span><span>{reward}</span></div>
         <div className="wp-back-row"><span className="wp-back-label">Solde</span><span>{Math.round(points)} points</span></div>
         <div className="wp-back-row"><span className="wp-back-label">Boutique</span><span>{name}</span></div>
         <div className="wp-back-row wp-toggle"><span>Mises à jour automatiques</span><i /></div>
@@ -54,7 +54,7 @@ export const SKIN = {
 
 /* Carte Google Wallet (programme de fidélité) : mise en page de Google Wallet.
    Logo rond et nom du commerce, titre du programme, champs, QR code sur fond blanc, image principale en bas. */
-export const CarteGoogle = ({ width = 380, points = 480, holder = 'Camille Roux', name = 'Maison Lumière', mark = 'L', bg = '#1c1c1e', ink = '#fff', rx = 0, ry = 0, rz = 0, perspective = 2400, style }) => {
+export const CarteGoogle = ({ width = 380, points = 480, holder = 'Camille Roux', name = 'Maison Lumière', mark = 'L', bg = '#1c1c1e', ink = '#fff', rx = 0, ry = 0, rz = 0, perspective = 2400, style, strip }) => {
   const u = width / 380
   return (
     <div style={{ perspective, ...style }}>
@@ -73,7 +73,7 @@ export const CarteGoogle = ({ width = 380, points = 480, holder = 'Camille Roux'
             <div style={{ width: 150 * u, padding: 12 * u, background: '#fff', borderRadius: 14 * u, color: '#000' }}><QRCode /></div>
           </div>
         </div>
-        <div style={{ height: 130 * u, position: 'relative' }}><StripPhoto /></div>
+        <div style={{ height: 130 * u, position: 'relative' }}>{strip ?? <StripPhoto />}</div>
       </div>
     </div>
   )

@@ -491,5 +491,154 @@
     "gap": 0.8
    }
   ]
+ },
+ "boulangerie": {
+  "titre": "10 Si t'as une boulangerie",
+  "voix": "corentin",
+  "lignes": [
+   {
+    "id": "bo01",
+    "text": "Si t'as une boulangerie, regarde ça.",
+    "gap": 0.35
+   },
+   {
+    "id": "bo02",
+    "text": "Ta carte de fidélité, directement dans le téléphone de tes clients.",
+    "gap": 0.4
+   },
+   {
+    "id": "bo03",
+    "text": "Dix baguettes achetées, la onzième offerte. Et plus personne ne perd sa carte.",
+    "gap": 0.4
+   },
+   {
+    "id": "bo04",
+    "text": "En caisse, un clic, et ses points sont à jour.",
+    "gap": 0.4
+   },
+   {
+    "id": "bo05",
+    "text": "Et le matin, tu leur envoies : les croissants sortent du four.",
+    "gap": 0.5
+   },
+   {
+    "id": "bo06",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "say": "Fidéliz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
+ },
+ "coiffure": {
+  "titre": "11 Si t'as un salon de coiffure",
+  "voix": "corentin",
+  "lignes": [
+   {
+    "id": "cf01",
+    "text": "Si t'as un salon de coiffure, regarde ça.",
+    "gap": 0.35
+   },
+   {
+    "id": "cf02",
+    "text": "Ta carte de fidélité, directement dans le téléphone de tes clientes.",
+    "gap": 0.4
+   },
+   {
+    "id": "cf03",
+    "text": "Dix coupes, la onzième offerte. Et plus personne ne cherche sa carte au fond du sac.",
+    "gap": 0.4
+   },
+   {
+    "id": "cf04",
+    "text": "En caisse, un clic, et ses points sont à jour.",
+    "gap": 0.4
+   },
+   {
+    "id": "cf05",
+    "text": "Un trou dans ton planning ? Tu envoies : une place s'est libérée demain à dix heures.",
+    "gap": 0.5
+   },
+   {
+    "id": "cf06",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "say": "Fidéliz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
+ },
+ "restaurant": {
+  "titre": "12 Si t'as un restaurant",
+  "voix": "corentin",
+  "lignes": [
+   {
+    "id": "rs01",
+    "text": "Si t'as un restaurant, regarde ça.",
+    "gap": 0.35
+   },
+   {
+    "id": "rs02",
+    "text": "Ta carte de fidélité, directement dans le téléphone de tes clients.",
+    "gap": 0.4
+   },
+   {
+    "id": "rs03",
+    "text": "Dix repas, le onzième offert. Et la carte ne finit plus au fond d'un tiroir.",
+    "gap": 0.4
+   },
+   {
+    "id": "rs04",
+    "text": "En caisse, un clic, et ses points sont à jour.",
+    "gap": 0.4
+   },
+   {
+    "id": "rs05",
+    "text": "Et à onze heures, tu leur envoies le plat du jour. Directement sur leur écran.",
+    "gap": 0.5
+   },
+   {
+    "id": "rs06",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "say": "Fidéliz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
+ },
+ "spot": {
+  "titre": "Spot 30 s (paysage)",
+  "voix": "paul",
+  "lignes": [
+   {
+    "id": "sp01",
+    "text": "La carte de fidélité en papier a fait son temps.",
+    "at": 0.6,
+    "gap": 0.9
+   },
+   {
+    "id": "sp02",
+    "text": "Voici la vôtre. Dans Apple Wallet, et Google Wallet.",
+    "gap": 0.9
+   },
+   {
+    "id": "sp03",
+    "text": "À vos couleurs. Créée en quelques minutes.",
+    "gap": 0.9
+   },
+   {
+    "id": "sp04",
+    "text": "Ajoutée par vos clients en dix secondes.",
+    "gap": 0.9
+   },
+   {
+    "id": "sp05",
+    "text": "Et capable de les faire revenir.",
+    "gap": 1.0
+   },
+   {
+    "id": "sp06",
+    "text": "Fidelyz. La fidélité, réinventée.",
+    "say": "Fidéliz. La fidélité, réinventée.",
+    "gap": 1.6
+   }
+  ]
  }
 }

@@ -10,11 +10,13 @@ import { Proximite, DUREE as D_PROX } from './proximite/Proximite'
 import { Site, DUREE as D_SITE } from './site/Site'
 import { Questions, DUREE as D_QUESTIONS } from './questions/Questions'
 import { Calcul, DUREE as D_CALCUL } from './calcul/Calcul'
+import { Metier, dureeMetier } from './metier/Metier'
+import { Spot, DUREE as D_SPOT } from './spot/Spot'
 
 /* Vidéos « campagne » : chaque vidéo existe avec voix (C-…) et sans voix (C-…-muet, musique et sous-titres). */
-const V = (id, Comp, duree, w = 1080, h = 1920) => [
-  <Composition key={id} id={`C-${id}`} component={Comp} durationInFrames={Math.ceil(duree * FPS)} fps={FPS} width={w} height={h} defaultProps={{ voix: true, son: true }} />,
-  <Composition key={id + 'm'} id={`C-${id}-muet`} component={Comp} durationInFrames={Math.ceil(duree * FPS)} fps={FPS} width={w} height={h} defaultProps={{ voix: false, son: true }} />,
+const V = (id, Comp, duree, w = 1080, h = 1920, extra = {}) => [
+  <Composition key={id} id={`C-${id}`} component={Comp} durationInFrames={Math.ceil(duree * FPS)} fps={FPS} width={w} height={h} defaultProps={{ voix: true, son: true, ...extra }} />,
+  <Composition key={id + 'm'} id={`C-${id}-muet`} component={Comp} durationInFrames={Math.ceil(duree * FPS)} fps={FPS} width={w} height={h} defaultProps={{ voix: false, son: true, ...extra }} />,
 ]
 
 export const Campagne = () => (
@@ -28,6 +30,10 @@ export const Campagne = () => (
     {V('07-proximite', Proximite, D_PROX)}
     {V('08-questions', Questions, D_QUESTIONS)}
     {V('09-calcul', Calcul, D_CALCUL)}
+    {V('10-boulangerie', Metier, dureeMetier('boulangerie'), 1080, 1920, { metier: 'boulangerie' })}
+    {V('11-coiffure', Metier, dureeMetier('coiffure'), 1080, 1920, { metier: 'coiffure' })}
+    {V('12-restaurant', Metier, dureeMetier('restaurant'), 1080, 1920, { metier: 'restaurant' })}
     {V('site-paysage', Site, D_SITE, 1920, 1080)}
+    {V('spot-paysage', Spot, D_SPOT, 1920, 1080)}
   </>
 )

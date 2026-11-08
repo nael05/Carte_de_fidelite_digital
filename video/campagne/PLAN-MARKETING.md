@@ -61,7 +61,11 @@ Heures conseillées (cible commerçants) : **12 h 15** (pause déjeuner) ou **20
 | J8 | **07 Le rappel de proximité** | C | « Ton client passe devant ta boutique. Son téléphone vibre. » |
 | J9 | **08 3 questions qu'on nous pose** | D | « Non, tes clients n'ont pas besoin d'application. » |
 | J10 | **09 Le calcul** (le client qui ne revient pas) | A | « Combien te coûte un client qui ne revient pas ? » |
-| J11-J21 | Variantes des 3 vidéos qui ont le mieux marché (voir § 7) + nouvelles idées (§ 8) | | |
+| J11 | **10 Si t'as une boulangerie** | B | « Si t'as une boulangerie, regarde ça. » |
+| J12 | **11 Si t'as un salon de coiffure** | B | « Si t'as un salon de coiffure, regarde ça. » |
+| J13 | **12 Si t'as un restaurant** | B | « Si t'as un restaurant, regarde ça. » |
+| J14 | Repos, ou republier la meilleure vidéo de la semaine avec une autre accroche | | |
+| J15-J21 | Variantes des 3 vidéos qui ont le mieux marché (voir § 7), autres métiers (barbier, fleuriste, caviste, institut…) et nouvelles idées (§ 9) | | |
 
 ## 6. Texte de publication (légende) et hashtags
 
@@ -107,5 +111,5 @@ Pour chaque vidéo, noter dans un tableau : vues, **durée moyenne de visionnage
 
 Tout est dans `video/out/campagne/` (voir le README de `video/campagne/`) :
 - vidéos verticales 1080 × 1920 pour TikTok, Reels et Shorts ;
-- vidéo paysage 1920 × 1080 pour le site (section « Regarder le film » de la page d'accueil) et YouTube ;
+- deux vidéos paysage 1920 × 1080 : le film complet (1 min 30, section « Regarder le film » de la page d'accueil, YouTube) et un spot de 25 s (haut de la page d'accueil, publicité) ;
 - chaque vidéo existe **avec voix** et **sans voix** (musique et sous-titres seulement), pour pouvoir tester les deux.

@@ -241,9 +241,9 @@ export const IconePass = ({ size = 38, mark = 'L' }) => (
   </div>
 )
 /* Notification iOS d'un pass Wallet : icône du pass, nom du commerce, message (changeMessage du pass) */
-export const NotifIOS = ({ title = 'Maison Lumière', body, time = 'maintenant', width = 362, light = false, style }) => (
+export const NotifIOS = ({ title = 'Maison Lumière', body, time = 'maintenant', width = 362, light = false, mark = 'L', style }) => (
   <div style={{ width, display: 'flex', gap: 11, alignItems: 'center', padding: '12px 14px', borderRadius: 24, background: light ? 'rgba(245,245,247,0.82)' : 'rgba(60,60,67,0.55)', backdropFilter: 'blur(30px) saturate(180%)', boxShadow: '0 10px 40px -10px rgba(0,0,0,0.5)', fontFamily: font, color: light ? '#000' : '#fff', boxSizing: 'border-box', ...style }}>
-    <IconePass size={38} />
+    <IconePass size={38} mark={mark} />
     <div style={{ flex: 1, minWidth: 0 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
         <strong style={{ fontSize: 15, fontWeight: 600, letterSpacing: '-0.01em' }}>{title}</strong>

@@ -670,5 +670,248 @@
   "top": 58,
   "tab": 63,
   "height": 962
+ },
+ "m-boulangerie-caisse-search": {
+  "rects": {
+   "credit": {
+    "x": 240.921875,
+    "y": 715.8125,
+    "w": 102.078125,
+    "h": 34
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-boulangerie-caisse-points": {
+  "rects": {
+   "b20": {
+    "x": 111,
+    "y": 683,
+    "w": 80,
+    "h": 48
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-boulangerie-caisse-points20": {
+  "rects": {
+   "ok": {
+    "x": 23,
+    "y": 770,
+    "w": 344,
+    "h": 52
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-boulangerie-caisse-done": {
+  "rects": {},
+  "height": 844,
+  "view": true
+ },
+ "m-coiffure-caisse-search": {
+  "rects": {
+   "credit": {
+    "x": 240.921875,
+    "y": 715.8125,
+    "w": 102.078125,
+    "h": 34
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-coiffure-caisse-points": {
+  "rects": {
+   "b20": {
+    "x": 111,
+    "y": 683,
+    "w": 80,
+    "h": 48
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-coiffure-caisse-points20": {
+  "rects": {
+   "ok": {
+    "x": 23,
+    "y": 770,
+    "w": 344,
+    "h": 52
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-coiffure-caisse-done": {
+  "rects": {},
+  "height": 844,
+  "view": true
+ },
+ "m-restaurant-caisse-search": {
+  "rects": {
+   "credit": {
+    "x": 240.921875,
+    "y": 715.8125,
+    "w": 102.078125,
+    "h": 34
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-restaurant-caisse-points": {
+  "rects": {
+   "b20": {
+    "x": 111,
+    "y": 683,
+    "w": 80,
+    "h": 48
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-restaurant-caisse-points20": {
+  "rects": {
+   "ok": {
+    "x": 23,
+    "y": 770,
+    "w": 344,
+    "h": 52
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-restaurant-caisse-done": {
+  "rects": {},
+  "height": 844,
+  "view": true
+ },
+ "m-boulangerie-campagnes": {
+  "rects": {
+   "title": {
+    "x": 37,
+    "y": 620.234375,
+    "w": 316,
+    "h": 46
+   },
+   "msg": {
+    "x": 37,
+    "y": 708.734375,
+    "w": 316,
+    "h": 81
+   },
+   "send": {
+    "x": 37,
+    "y": 894.234375,
+    "w": 215.0625,
+    "h": 42
+   }
+  },
+  "height": 1310,
+  "view": false,
+  "top": 58,
+  "tab": 63
+ },
+ "m-boulangerie-carte": {
+  "rects": {
+   "preview": {
+    "x": 42.84999084472656,
+    "y": 936.53125,
+    "w": 304.300048828125,
+    "h": 545.500732421875
+   }
+  },
+  "height": 1614,
+  "view": false,
+  "top": 58,
+  "tab": 63
+ },
+ "m-coiffure-campagnes": {
+  "rects": {
+   "title": {
+    "x": 37,
+    "y": 620.234375,
+    "w": 316,
+    "h": 46
+   },
+   "msg": {
+    "x": 37,
+    "y": 708.734375,
+    "w": 316,
+    "h": 81
+   },
+   "send": {
+    "x": 37,
+    "y": 894.234375,
+    "w": 215.0625,
+    "h": 42
+   }
+  },
+  "height": 1310,
+  "view": false,
+  "top": 58,
+  "tab": 63
+ },
+ "m-coiffure-carte": {
+  "rects": {
+   "preview": {
+    "x": 42.84999084472656,
+    "y": 936.53125,
+    "w": 304.300048828125,
+    "h": 545.500732421875
+   }
+  },
+  "height": 1614,
+  "view": false,
+  "top": 58,
+  "tab": 63
+ },
+ "m-restaurant-campagnes": {
+  "rects": {
+   "title": {
+    "x": 37,
+    "y": 620.234375,
+    "w": 316,
+    "h": 46
+   },
+   "msg": {
+    "x": 37,
+    "y": 708.734375,
+    "w": 316,
+    "h": 81
+   },
+   "send": {
+    "x": 37,
+    "y": 894.234375,
+    "w": 215.0625,
+    "h": 42
+   }
+  },
+  "height": 1310,
+  "view": false,
+  "top": 58,
+  "tab": 63
+ },
+ "m-restaurant-carte": {
+  "rects": {
+   "preview": {
+    "x": 42.84999084472656,
+    "y": 936.53125,
+    "w": 304.300048828125,
+    "h": 545.500732421875
+   }
+  },
+  "height": 1614,
+  "view": false,
+  "top": 58,
+  "tab": 63
  }
 }

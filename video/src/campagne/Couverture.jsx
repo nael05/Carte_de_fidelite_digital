@@ -11,6 +11,8 @@ import { Questions } from './questions/Questions'
 import { Calcul } from './calcul/Calcul'
 import { Metier } from './metier/Metier'
 import { Portefeuille } from './portefeuille/Portefeuille'
+import { Astuces } from './astuces/Astuces'
+import { Appli } from './appli/Appli'
 
 /* Images de couverture (TikTok, Reels) : une image de la vidéo, un voile, un titre court au centre
    (zone visible aussi dans la grille Instagram, recadrée en 4:5). */
@@ -30,6 +32,8 @@ export const COUVERTURES = {
   '13': { C: Portefeuille, at: 8.3, l1: 'POV : le portefeuille', l2: 'de ton client', a: C.red },
   '14': { C: Metier, p: { metier: 'barbier' }, at: 1.8, l1: 'Si t\'as un', l2: 'barber shop', a: '#e0b25a' },
   '15': { C: Metier, p: { metier: 'fleuriste' }, at: 1.8, l1: 'Si t\'es', l2: 'fleuriste', a: '#e8a3b5' },
+  '17': { C: Astuces, at: 1.6, l1: '3 astuces pour que', l2: 'tes clients reviennent', a: C.blue },
+  '18': { C: Appli, at: 3.6, l1: 'Une appli pour', l2: 'ta boutique ?', a: C.red },
   '16': { C: Metier, p: { metier: 'institut' }, at: 1.8, l1: 'Si t\'as un institut', l2: 'de beauté', a: '#f2c6d4' },
 }
 

@@ -69,7 +69,9 @@ Heures conseillées (cible commerçants) : **12 h 15** (pause déjeuner) ou **20
 | J16 | **14 Si t'as un barber shop** | B | « Si t'as un barber shop, regarde ça. » |
 | J17 | **15 Si t'es fleuriste** | B | « Si t'es fleuriste, regarde ça. » |
 | J18 | **16 Si t'as un institut de beauté** | B | « Si t'as un institut de beauté, regarde ça. » |
-| J19-J21 | Variantes des 3 vidéos qui ont le mieux marché (voir § 7), autres métiers (caviste, pressing, primeur…) et nouvelles idées (§ 9) | | |
+| J19 | **17 Trois astuces** (contenu utile, à faire enregistrer) | D | « La troisième, presque personne ne la fait. » |
+| J20 | **18 Le mythe de l'appli** | A | « Tu veux créer une appli pour ta boutique ? Attends. » |
+| J21 | Repos, puis variantes des vidéos qui ont le mieux marché (voir § 7), autres métiers (caviste, pressing, primeur…) et nouvelles idées (§ 9) | | |
 
 ## 6. Texte de publication (légende) et hashtags
 

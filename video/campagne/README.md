@@ -23,6 +23,8 @@ Code des vidéos : `video/src/campagne/` (Remotion). Rendus : `video/out/campagn
 | 14 | `C-14-barbier` | `14-si-tas-un-barber-shop` | 9:16 | Série par métier, barber shop (« Barbier Léon ») | « Si t'as un barber shop, regarde ça. » |
 | 15 | `C-15-fleuriste` | `15-si-tes-fleuriste` | 9:16 | Série par métier, fleuriste (« Fleurs & Co ») | « Si t'es fleuriste, regarde ça. » |
 | 16 | `C-16-institut` | `16-si-tas-un-institut-de-beaute` | 9:16 | Série par métier, institut de beauté (« Institut Iris ») | « Si t'as un institut de beauté, regarde ça. » |
+| 17 | `C-17-astuces` | `17-trois-astuces` | 9:16 | Contenu utile : récompense atteignable, rappels sans spam, carte impossible à perdre ; Fidelyz en conclusion | « Trois astuces pour que tes clients reviennent. La troisième, presque personne ne la fait. » |
+| 18 | `C-18-appli` | `18-le-mythe-de-lappli` | 9:16 | « Personne ne télécharge l'appli d'une boulangerie » : le Wallet est déjà sur le téléphone | « Tu veux créer une appli pour ta boutique ? Attends. » |
 | — | `C-site-paysage` | `site-fidelyz-de-a-a-z-paysage` | 16:9 | Film du site (1 min 30, vouvoiement) : tout le parcours, de A à Z | — |
 | — | `C-spot-paysage` | `spot-30s-paysage` | 16:9 | Spot de 25 s façon publicité, peu de mots, slogan « La fidélité, réinventée. » (haut de la page d'accueil, pré-diffusion YouTube) | — |
 

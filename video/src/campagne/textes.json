@@ -783,5 +783,74 @@
     "gap": 0.8
    }
   ]
+ },
+ "astuces": {
+  "titre": "17 Trois astuces",
+  "voix": "simon",
+  "lignes": [
+   {
+    "id": "a01",
+    "text": "Trois astuces pour que tes clients reviennent. La troisième, presque personne ne la fait.",
+    "gap": 0.4
+   },
+   {
+    "id": "a02",
+    "text": "Un : une récompense atteignable. Vingt tampons, personne n'y arrive. Dix, ça motive.",
+    "gap": 0.4
+   },
+   {
+    "id": "a03",
+    "text": "Deux : rappelle-toi à eux, sans les saouler. Un message par semaine, maximum.",
+    "gap": 0.4
+   },
+   {
+    "id": "a04",
+    "text": "Trois : rends ta carte impossible à perdre. Dans leur téléphone, à côté de la carte bancaire.",
+    "gap": 0.45
+   },
+   {
+    "id": "a05",
+    "text": "Les trois d'un coup ? C'est exactement ce que fait Fidelyz. Lien en bio.",
+    "say": "Les trois d'un coup ? C'est exactement ce que fait Fidéliz. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
+ },
+ "appli": {
+  "titre": "18 Le mythe de l'appli",
+  "voix": "corentin",
+  "lignes": [
+   {
+    "id": "y01",
+    "text": "Tu veux créer une appli pour ta boutique ? Attends.",
+    "gap": 0.4
+   },
+   {
+    "id": "y02",
+    "text": "Combien d'applis de commerçants t'as sur ton téléphone ? Zéro. Comme tes clients.",
+    "gap": 0.4
+   },
+   {
+    "id": "y03",
+    "text": "Personne ne télécharge une appli pour acheter son pain.",
+    "gap": 0.4
+   },
+   {
+    "id": "y04",
+    "text": "Par contre, le Wallet est déjà là. Sur tous les iPhone et sur Android.",
+    "gap": 0.35
+   },
+   {
+    "id": "y05",
+    "text": "Ta carte s'y ajoute en dix secondes, sans rien installer. Et tu peux quand même leur envoyer des notifications.",
+    "gap": 0.45
+   },
+   {
+    "id": "y06",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "say": "Fidéliz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
  }
 }

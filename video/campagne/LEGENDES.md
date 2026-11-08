@@ -117,6 +117,20 @@ Couverture : 1,5 s (la façade de Fleurs & Co).
 `#institutdebeaute #estheticienne #beaute #cartedefidelite #commerçant`
 Couverture : 1,5 s (la façade de l'Institut Iris).
 
+### 17 — Trois astuces pour que tes clients reviennent
+> 3 astuces pour que tes clients reviennent. La 3e, presque personne ne la fait 👀 Enregistre la vidéo pour plus tard.
+> Laquelle tu appliques déjà ?
+
+`#astucecommerçant #fidelisationclient #commerçant #marketinglocal #entrepreneur`
+Couverture : 1,5 s (le grand « 3 »).
+
+### 18 — Le mythe de l'appli
+> Avant de payer une appli pour ta boutique, regarde ça 🛑 Le Wallet est déjà sur le téléphone de tous tes clients.
+> T'as déjà téléchargé l'appli d'un commerçant, toi ?
+
+`#application #commerçant #applewallet #googlewallet #astuce`
+Couverture : 3,5 s (le panneau STOP).
+
 ---
 
 ## Épingler en haut du profil

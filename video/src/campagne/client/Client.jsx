@@ -13,18 +13,19 @@ export const DUREE = Q.$end + 0.4
 const A = id => Q[id].at
 
 /* Écran d'accueil iOS (icônes génériques), l'appareil photo en évidence */
-const Accueil = ({ t, tapCam, noStore }) => {
-  const icons = ['#34c759', '#0a84ff', '#ff9f0a', '#5e5ce6', '#ff375f', '#64d2ff', '#30d158', '#ffd60a', '#bf5af2', '#ff453a', '#8e8e93', '#0a84ff', '#ac8e68', '#32ade6', '#ff9f0a', '#5856d6']
+export const Accueil = ({ t, tapCam = -10, noStore = 0, glow = 0 }) => {
+  const icons = ['#34c759', '#0a84ff', '#ff9f0a', '#5e5ce6', '#ff375f', '#64d2ff', '#30d158', '#ffd60a', '#bf5af2', '#ff453a', '#8e8e93', '#0a84ff', '#1c1c1e', '#32ade6', '#ff9f0a', '#5856d6']
   const labels = ['Messages', 'Plans', 'Photos', 'Podcasts', 'Musique', 'Météo', 'FaceTime', 'Notes', 'Raccourcis', 'Agenda', 'Réglages', 'App Store', 'Cartes', 'Horloge', 'Rappels', 'Fichiers']
   return (
     <div style={{ position: 'absolute', inset: 0, fontFamily: font }}>
       <FondEcran hue={30} />
       <div style={{ position: 'absolute', left: 26, right: 26, top: 80, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', rowGap: 26, justifyItems: 'center' }}>
         {icons.map((c, i) => {
-          const store = labels[i] === 'App Store'
+          const store = labels[i] === 'App Store', wallet = labels[i] === 'Cartes'
           return (
             <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, opacity: store ? 1 : 0.9 }}>
-              <div style={{ position: 'relative', width: 62, height: 62, borderRadius: 15, background: `linear-gradient(160deg, ${c}, ${c}bb)`, boxShadow: '0 4px 10px rgba(0,0,0,0.25)', filter: store ? `grayscale(${noStore})` : undefined, opacity: store ? 1 - 0.5 * noStore : 1 }}>
+              <div style={{ position: 'relative', width: 62, height: 62, borderRadius: 15, background: `linear-gradient(160deg, ${c}, ${c}bb)`, boxShadow: wallet && glow ? `0 0 0 ${4 * glow}px #fff, 0 0 ${40 * glow}px rgba(255,255,255,0.8)` : '0 4px 10px rgba(0,0,0,0.25)', transform: wallet ? `scale(${1 + 0.25 * glow})` : undefined, filter: store ? `grayscale(${noStore})` : undefined, opacity: store ? 1 - 0.5 * noStore : 1 }}>
+                {wallet && <div style={{ position: 'absolute', left: 10, right: 10, top: 14, bottom: 14, display: 'flex', flexDirection: 'column', gap: 3 }}>{['#ff9f0a', '#30d158', '#0a84ff', '#ff375f'].map(c => <div key={c} style={{ flex: 1, borderRadius: 3, background: c }} />)}</div>}
                 {store && noStore > 0 && <svg width="62" height="62" viewBox="0 0 62 62" style={{ position: 'absolute', inset: 0 }}><line x1="8" y1="54" x2="54" y2="8" stroke={C.red} strokeWidth="6" strokeLinecap="round" strokeDasharray="66" strokeDashoffset={66 * (1 - noStore)} /></svg>}
               </div>
               <span style={{ color: '#fff', fontSize: 12, fontWeight: 500 }}>{labels[i]}</span>

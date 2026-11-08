@@ -65,7 +65,11 @@ Heures conseillées (cible commerçants) : **12 h 15** (pause déjeuner) ou **20
 | J12 | **11 Si t'as un salon de coiffure** | B | « Si t'as un salon de coiffure, regarde ça. » |
 | J13 | **12 Si t'as un restaurant** | B | « Si t'as un restaurant, regarde ça. » |
 | J14 | Repos, ou republier la meilleure vidéo de la semaine avec une autre accroche | | |
-| J15-J21 | Variantes des 3 vidéos qui ont le mieux marché (voir § 7), autres métiers (barbier, fleuriste, caviste, institut…) et nouvelles idées (§ 9) | | |
+| J15 | **13 POV : le portefeuille de ton client** | A | « POV : le portefeuille de ton client. » |
+| J16 | **14 Si t'as un barber shop** | B | « Si t'as un barber shop, regarde ça. » |
+| J17 | **15 Si t'es fleuriste** | B | « Si t'es fleuriste, regarde ça. » |
+| J18 | **16 Si t'as un institut de beauté** | B | « Si t'as un institut de beauté, regarde ça. » |
+| J19-J21 | Variantes des 3 vidéos qui ont le mieux marché (voir § 7), autres métiers (caviste, pressing, primeur…) et nouvelles idées (§ 9) | | |
 
 ## 6. Texte de publication (légende) et hashtags
 

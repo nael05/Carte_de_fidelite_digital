@@ -96,6 +96,27 @@ Couverture : 10 s (la carte bleue de Chez Paolo).
 `#pov #cartedefidelite #commerçant #applewallet #humour`
 Couverture : 8 s (la pile de cartes, la tienne entourée de rouge).
 
+### 14 — Si t'as un barber shop
+> Barbiers : votre carte de fidélité dans le téléphone de vos clients 💈 Plus jamais de carte cornée dans la poche arrière. Et une chaise libre se remplit en une notification.
+> Tag ton barber 👇
+
+`#barber #barbershop #barbier #cartedefidelite #commerçant`
+Couverture : 1,5 s (la façade de Barbier Léon).
+
+### 15 — Si t'es fleuriste
+> Fleuristes : votre carte de fidélité ne finit plus à la poubelle avec l'emballage 💐 Et la veille de la fête des mères, un message à tous vos clients.
+> Tag un fleuriste 👇
+
+`#fleuriste #fleurs #cartedefidelite #commerçant #fetedesmeres`
+Couverture : 1,5 s (la façade de Fleurs & Co).
+
+### 16 — Si t'as un institut de beauté
+> Instituts de beauté : la carte de fidélité que vos clientes n'oublient plus jamais ✨ Et un créneau libéré se remplit en une notification.
+> Tag ton institut 👇
+
+`#institutdebeaute #estheticienne #beaute #cartedefidelite #commerçant`
+Couverture : 1,5 s (la façade de l'Institut Iris).
+
 ---
 
 ## Épingler en haut du profil

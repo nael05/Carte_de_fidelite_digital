@@ -13,6 +13,7 @@ import { Calcul, DUREE as D_CALCUL } from './calcul/Calcul'
 import { Metier, dureeMetier } from './metier/Metier'
 import { Spot, DUREE as D_SPOT } from './spot/Spot'
 import { Portefeuille, DUREE as D_PORTEFEUILLE } from './portefeuille/Portefeuille'
+import { Couverture } from './Couverture'
 
 /* Vidéos « campagne » : chaque vidéo existe avec voix (C-…) et sans voix (C-…-muet, musique et sous-titres). */
 const V = (id, Comp, duree, w = 1080, h = 1920, extra = {}) => [
@@ -35,6 +36,10 @@ export const Campagne = () => (
     {V('11-coiffure', Metier, dureeMetier('coiffure'), 1080, 1920, { metier: 'coiffure' })}
     {V('12-restaurant', Metier, dureeMetier('restaurant'), 1080, 1920, { metier: 'restaurant' })}
     {V('13-portefeuille', Portefeuille, D_PORTEFEUILLE)}
+    {V('14-barbier', Metier, dureeMetier('barbier'), 1080, 1920, { metier: 'barbier' })}
+    {V('15-fleuriste', Metier, dureeMetier('fleuriste'), 1080, 1920, { metier: 'fleuriste' })}
+    {V('16-institut', Metier, dureeMetier('institut'), 1080, 1920, { metier: 'institut' })}
+    <Composition id="C-couverture" component={Couverture} durationInFrames={40 * FPS} fps={FPS} width={1080} height={1920} defaultProps={{ n: '01' }} />
     {V('site-paysage', Site, D_SITE, 1920, 1080)}
     {V('spot-paysage', Spot, D_SPOT, 1920, 1080)}
   </>

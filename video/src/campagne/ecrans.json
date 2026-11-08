@@ -913,5 +913,248 @@
   "view": false,
   "top": 58,
   "tab": 63
+ },
+ "m-barbier-caisse-search": {
+  "rects": {
+   "credit": {
+    "x": 240.921875,
+    "y": 715.8125,
+    "w": 102.078125,
+    "h": 34
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-barbier-caisse-points": {
+  "rects": {
+   "b20": {
+    "x": 111,
+    "y": 683,
+    "w": 80,
+    "h": 48
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-barbier-caisse-points20": {
+  "rects": {
+   "ok": {
+    "x": 23,
+    "y": 770,
+    "w": 344,
+    "h": 52
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-barbier-caisse-done": {
+  "rects": {},
+  "height": 844,
+  "view": true
+ },
+ "m-barbier-campagnes": {
+  "rects": {
+   "title": {
+    "x": 37,
+    "y": 620.234375,
+    "w": 316,
+    "h": 46
+   },
+   "msg": {
+    "x": 37,
+    "y": 708.734375,
+    "w": 316,
+    "h": 81
+   },
+   "send": {
+    "x": 37,
+    "y": 894.234375,
+    "w": 215.0625,
+    "h": 42
+   }
+  },
+  "height": 1310,
+  "view": false,
+  "top": 58,
+  "tab": 63
+ },
+ "m-barbier-carte": {
+  "rects": {
+   "preview": {
+    "x": 42.84999084472656,
+    "y": 936.53125,
+    "w": 304.300048828125,
+    "h": 545.500732421875
+   }
+  },
+  "height": 1614,
+  "view": false,
+  "top": 58,
+  "tab": 63
+ },
+ "m-fleuriste-caisse-search": {
+  "rects": {
+   "credit": {
+    "x": 240.921875,
+    "y": 715.8125,
+    "w": 102.078125,
+    "h": 34
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-fleuriste-caisse-points": {
+  "rects": {
+   "b20": {
+    "x": 111,
+    "y": 683,
+    "w": 80,
+    "h": 48
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-fleuriste-caisse-points20": {
+  "rects": {
+   "ok": {
+    "x": 23,
+    "y": 770,
+    "w": 344,
+    "h": 52
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-fleuriste-caisse-done": {
+  "rects": {},
+  "height": 844,
+  "view": true
+ },
+ "m-fleuriste-campagnes": {
+  "rects": {
+   "title": {
+    "x": 37,
+    "y": 620.234375,
+    "w": 316,
+    "h": 46
+   },
+   "msg": {
+    "x": 37,
+    "y": 708.734375,
+    "w": 316,
+    "h": 81
+   },
+   "send": {
+    "x": 37,
+    "y": 894.234375,
+    "w": 215.0625,
+    "h": 42
+   }
+  },
+  "height": 1310,
+  "view": false,
+  "top": 58,
+  "tab": 63
+ },
+ "m-fleuriste-carte": {
+  "rects": {
+   "preview": {
+    "x": 42.84999084472656,
+    "y": 936.53125,
+    "w": 304.300048828125,
+    "h": 545.500732421875
+   }
+  },
+  "height": 1614,
+  "view": false,
+  "top": 58,
+  "tab": 63
+ },
+ "m-institut-caisse-search": {
+  "rects": {
+   "credit": {
+    "x": 240.921875,
+    "y": 715.8125,
+    "w": 102.078125,
+    "h": 34
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-institut-caisse-points": {
+  "rects": {
+   "b20": {
+    "x": 111,
+    "y": 683,
+    "w": 80,
+    "h": 48
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-institut-caisse-points20": {
+  "rects": {
+   "ok": {
+    "x": 23,
+    "y": 770,
+    "w": 344,
+    "h": 52
+   }
+  },
+  "height": 844,
+  "view": true
+ },
+ "m-institut-caisse-done": {
+  "rects": {},
+  "height": 844,
+  "view": true
+ },
+ "m-institut-campagnes": {
+  "rects": {
+   "title": {
+    "x": 37,
+    "y": 620.234375,
+    "w": 316,
+    "h": 46
+   },
+   "msg": {
+    "x": 37,
+    "y": 708.734375,
+    "w": 316,
+    "h": 81
+   },
+   "send": {
+    "x": 37,
+    "y": 894.234375,
+    "w": 215.0625,
+    "h": 42
+   }
+  },
+  "height": 1310,
+  "view": false,
+  "top": 58,
+  "tab": 63
+ },
+ "m-institut-carte": {
+  "rects": {
+   "preview": {
+    "x": 42.84999084472656,
+    "y": 936.53125,
+    "w": 304.300048828125,
+    "h": 545.500732421875
+   }
+  },
+  "height": 1614,
+  "view": false,
+  "top": 58,
+  "tab": 63
  }
 }

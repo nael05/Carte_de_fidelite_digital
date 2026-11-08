@@ -672,5 +672,116 @@
     "gap": 0.8
    }
   ]
+ },
+ "barbier": {
+  "titre": "14 Si t'as un barber shop",
+  "voix": "simon",
+  "lignes": [
+   {
+    "id": "bb01",
+    "text": "Si t'as un barber shop, regarde ça.",
+    "gap": 0.35
+   },
+   {
+    "id": "bb02",
+    "text": "Ta carte de fidélité, directement dans le téléphone de tes clients.",
+    "gap": 0.4
+   },
+   {
+    "id": "bb03",
+    "text": "Dix coupes, la onzième offerte. Et plus jamais de carte cornée dans la poche arrière.",
+    "gap": 0.4
+   },
+   {
+    "id": "bb04",
+    "text": "En caisse, un clic, et ses points sont à jour.",
+    "gap": 0.4
+   },
+   {
+    "id": "bb05",
+    "text": "Une chaise libre cet après-midi ? Tu envoies : dispo à quinze heures, premier arrivé.",
+    "gap": 0.5
+   },
+   {
+    "id": "bb06",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "say": "Fidéliz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
+ },
+ "fleuriste": {
+  "titre": "15 Si t'es fleuriste",
+  "voix": "hugo",
+  "lignes": [
+   {
+    "id": "fl01",
+    "text": "Si t'es fleuriste, regarde ça.",
+    "gap": 0.35
+   },
+   {
+    "id": "fl02",
+    "text": "Ta carte de fidélité, directement dans le téléphone de tes clients.",
+    "gap": 0.4
+   },
+   {
+    "id": "fl03",
+    "text": "Dix bouquets, le onzième offert. Et ta carte ne finit plus à la poubelle avec l'emballage.",
+    "gap": 0.4
+   },
+   {
+    "id": "fl04",
+    "text": "En caisse, un clic, et ses points sont à jour.",
+    "gap": 0.4
+   },
+   {
+    "id": "fl05",
+    "text": "La veille de la fête des mères, tu leur envoies : pensez à réserver votre bouquet.",
+    "gap": 0.5
+   },
+   {
+    "id": "fl06",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "say": "Fidéliz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
+ },
+ "institut": {
+  "titre": "16 Si t'as un institut de beauté",
+  "voix": "hugo",
+  "lignes": [
+   {
+    "id": "ib01",
+    "text": "Si t'as un institut de beauté, regarde ça.",
+    "gap": 0.35
+   },
+   {
+    "id": "ib02",
+    "text": "Ta carte de fidélité, directement dans le téléphone de tes clientes.",
+    "gap": 0.4
+   },
+   {
+    "id": "ib03",
+    "text": "Cinq soins, le sixième offert. Et plus personne n'oublie sa carte à la maison.",
+    "gap": 0.4
+   },
+   {
+    "id": "ib04",
+    "text": "En caisse, un clic, et ses points sont à jour.",
+    "gap": 0.4
+   },
+   {
+    "id": "ib05",
+    "text": "Un créneau qui se libère ? Tu envoies : soin du visage disponible jeudi à dix-huit heures.",
+    "gap": 0.5
+   },
+   {
+    "id": "ib06",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "say": "Fidéliz. Gratuit jusqu'à quinze clients. Lien en bio.",
+    "gap": 0.8
+   }
+  ]
  }
 }

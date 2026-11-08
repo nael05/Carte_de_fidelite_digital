@@ -20,6 +20,9 @@ Code des vidéos : `video/src/campagne/` (Remotion). Rendus : `video/out/campagn
 | 11 | `C-11-coiffure` | `11-si-tas-un-salon-de-coiffure` | 9:16 | Même série, salon de coiffure (« Studio Élise ») | « Si t'as un salon de coiffure, regarde ça. » |
 | 12 | `C-12-restaurant` | `12-si-tas-un-restaurant` | 9:16 | Même série, restaurant (« Chez Paolo ») | « Si t'as un restaurant, regarde ça. » |
 | 13 | `C-13-portefeuille` | `13-pov-portefeuille` | 9:16 | Avalanche de cartes papier de toutes les boutiques, la tienne perdue au milieu ; puis toutes rangées dans le Wallet | « POV : le portefeuille de ton client. » |
+| 14 | `C-14-barbier` | `14-si-tas-un-barber-shop` | 9:16 | Série par métier, barber shop (« Barbier Léon ») | « Si t'as un barber shop, regarde ça. » |
+| 15 | `C-15-fleuriste` | `15-si-tes-fleuriste` | 9:16 | Série par métier, fleuriste (« Fleurs & Co ») | « Si t'es fleuriste, regarde ça. » |
+| 16 | `C-16-institut` | `16-si-tas-un-institut-de-beaute` | 9:16 | Série par métier, institut de beauté (« Institut Iris ») | « Si t'as un institut de beauté, regarde ça. » |
 | — | `C-site-paysage` | `site-fidelyz-de-a-a-z-paysage` | 16:9 | Film du site (1 min 30, vouvoiement) : tout le parcours, de A à Z | — |
 | — | `C-spot-paysage` | `spot-30s-paysage` | 16:9 | Spot de 25 s façon publicité, peu de mots, slogan « La fidélité, réinventée. » (haut de la page d'accueil, pré-diffusion YouTube) | — |
 
@@ -56,6 +59,10 @@ NODE_USE_ENV_PROXY=1 node scripts/campagne/voix.mjs --toutes      # ou : … voi
 Le script écrit `public/campagne/voix/<id>.mp3` et `src/campagne/voix-data.json` (durée et instant de chaque mot).
 **La timeline de chaque vidéo se recale toute seule sur la vraie durée des voix** : il suffit de relancer les rendus.
 Clé : jamais dans le dépôt (secret réseau de l'environnement cloud, ou `video/.env` en local).
+
+## Couvertures
+
+`scripts/campagne/couvertures.sh` (ou `… couvertures.sh 04 09`) → `out/campagne/couvertures/NN.jpg` : une image de la vidéo, un voile et un titre court, centré pour rester visible dans la grille Instagram (4:5). Titres et instants dans `src/campagne/Couverture.jsx` et `couvertures-liste.mjs`.
 
 ## Rendu
 

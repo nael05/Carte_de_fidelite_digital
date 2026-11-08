@@ -1,5 +1,5 @@
 import { AbsoluteFill, Audio, staticFile } from 'remotion'
-import { ChefHat, Croissant, Scissors, Sparkles, UtensilsCrossed, Wheat } from 'lucide-react'
+import { Brush, ChefHat, Croissant, Flower, Flower2, Gem, Leaf, Scissors, Sparkles, UtensilsCrossed, Wheat } from 'lucide-react'
 import { Carte, CarteGoogle } from '../Carte'
 import { C, E, FPS, Fin, Grain, IPhone, Nuit, Page, Plan, SH, SW, Son, SousTitre, Tap, Verrouille, WalletApp, clamp, lerp, phonePoint, rectOf, spring, ts, useT, font } from '../kit'
 import { Android, Boutique, GoogleWalletApp } from '../objets'
@@ -26,6 +26,24 @@ export const METIERS = {
     strip: ['#b23a2a', '#4a120c'], icons: [UtensilsCrossed, ChefHat], awning: '#0b3a8f', stripe: '#f5f5f7', sign: '#f5f5f7',
     notif: 'Ce midi : risotto aux cèpes 🍽️ Votre dessert est offert avec votre carte.', time: '11:02', musique: 'sons_tt/musique-chrono.mp3', from: 60,
   },
+  barbier: {
+    p: 'bb', nom: 'Barbier Léon', mark: 'B', holder: 'KARIM', reward: '10 coupes = la 11e offerte',
+    vars: { '--pass-bg': '#2a2a2d', '--ink': '#ffffff', '--label': '#e0b25a', '--edge': '#151517', '--mark-bg': 'linear-gradient(135deg,#f3d58a,#b8862e)', '--mark-ink': '#1d1d1f' }, gbg: '#2a2a2d', gink: '#fff',
+    strip: ['#3a3a3f', '#0f0f11'], icons: [Scissors, Brush], awning: '#1d1d1f', stripe: '#b8302a', sign: '#e0b25a',
+    notif: 'Une chaise libre à 15 h 💈 Premier arrivé, premier servi.', time: '13:47', musique: 'sons_tt/musique-chrono.mp3', from: 5,
+  },
+  fleuriste: {
+    p: 'fl', nom: 'Fleurs & Co', mark: 'F', holder: 'CLARA', reward: '10 bouquets = le 11e offert',
+    vars: { '--pass-bg': '#eef4ea', '--ink': '#1f3a1c', '--label': '#4f8a3c', '--edge': '#c7d6bf', '--mark-bg': '#1f3a1c', '--mark-ink': '#eef4ea' }, gbg: '#2f5a2a', gink: '#fff',
+    strip: ['#e8a3b5', '#6b2a45'], icons: [Flower2, Leaf], awning: '#2f5a2a', stripe: '#f4e7ea', sign: '#f4e7ea',
+    notif: 'Demain, c\'est la fête des mères 💐 Pensez à réserver votre bouquet.', time: '17:30', musique: 'sons_tt/musique-keynote.mp3', from: 45,
+  },
+  institut: {
+    p: 'ib', nom: 'Institut Iris', mark: 'I', holder: 'SARAH', reward: '5 soins = le 6e offert',
+    vars: { '--pass-bg': '#f5f5f7', '--ink': '#1d1d1f', '--label': '#c2185b', '--edge': '#c7c7cc', '--mark-bg': '#1d1d1f', '--mark-ink': '#fff' }, gbg: '#7a2a4a', gink: '#fff',
+    strip: ['#f2c6d4', '#8a3a5c'], icons: [Sparkles, Gem], awning: '#7a2a4a', stripe: '#f8e8ee', sign: '#f8e8ee',
+    notif: 'Un créneau s\'est libéré jeudi à 18 h ✨ Soin du visage disponible : appelez-nous.', time: '10:15', musique: 'sons_tt/musique-noir.mp3', from: 100,
+  },
 }
 
 /* Bannière du pass : dégradé du métier, motif discret et grande icône */
@@ -41,6 +59,16 @@ const Banniere = ({ m }) => {
       <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(90% 120% at 20% 0%, rgba(255,255,255,0.18), transparent 60%)' }} />
     </div>
   )
+}
+
+/* Couleur sur le nom du métier dans « Si t'as un salon de coiffure, regarde ça. » */
+const accent1 = c => {
+  const w = c.words.map(x => x.w.toLowerCase())
+  const a = Math.max(w.indexOf('un'), w.indexOf('une'), w.indexOf("t'es")) + 1
+  const b = w.indexOf('regarde')
+  const o = {}
+  for (let i = a; i < b; i++) o[i] = C.champagne
+  return o
 }
 
 export const Metier = ({ voix = true, son = true, metier = 'boulangerie' }) => {
@@ -132,7 +160,7 @@ export const Metier = ({ voix = true, son = true, metier = 'boulangerie' }) => {
       </Plan>
       <Plan t={t} a={cut(6)} b={DUREE + 1} tin="push" din={0.8} tout="cut"><Nuit t={t} /><Fin t={t} at={A(6)} /></Plan>
       {Q.$list.slice(0, 5).map(c => (
-        <SousTitre key={c.id} t={t} cue={c} y={170} size={70} maxW={920} accent={c.id === id(1) ? { 3: C.champagne, 4: C.champagne, 5: C.champagne, 6: C.champagne } : {}} />
+        <SousTitre key={c.id} t={t} cue={c} y={170} size={70} maxW={920} accent={c.id === id(1) ? accent1(c) : {}} />
       ))}
       <Grain o={0.04} />
       {son && (

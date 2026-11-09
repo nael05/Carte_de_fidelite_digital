@@ -284,7 +284,7 @@ export const SigFilm = ({ voix = true, son = true }) => {
   const c = ['sf3', 'sf4', 'sf5', 'sf6', 'sf7', 'sf8', 'sf9'].map(id => A(id) - 0.3)
   const F = (a, b, ch) => <Fondu t={t} a={a} b={b} w={WW} h={HH}>{ch}</Fondu>
   const N = p => <StudioNoir w={WW} h={HH} sol={0.84} {...p} />
-  const L = (at, out, txt, extra = {}) => <Ligne t={t} at={at} out={out} y={110} w={WW} size={60} maxW={1500} {...extra}>{txt}</Ligne>
+  const L = (at, out, txt, extra = {}) => <Ligne t={t} at={at} out={out} y={80} w={WW} size={60} maxW={1500} {...extra}>{txt}</Ligne>
   const tour = ts(t, A('sf2') - 0.1, A('sf2') + 1.7, 0, 1, io)
   const yP = s => SOLP - (SH + 26) * s / 2 - 20
   const maj = ts(t, A('sf6') + 1.2, A('sf6') + 2.6, 0, 1, io)
@@ -304,22 +304,22 @@ export const SigFilm = ({ voix = true, son = true }) => {
       {F(c[0], c[1], <>
         {N()}
         <Reflet sol={SOLP} long={220}>
-          <IPhone x={760} y={yP(0.78)} s={0.78} ry={lerp(4, 14, ts(t, c[0], c[1], 0, 1, io))} rx={2} shadow={0.6}><WalletApp><div style={{ position: 'absolute', left: 16, top: 120 }}><Carte width={358} light={0.45} shadow={0.5} /></div></WalletApp></IPhone>
-          <Android x={1160} y={yP(0.78)} s={0.78} ry={lerp(-4, -14, ts(t, c[0], c[1], 0, 1, io))} o={ts(t, c[0] + 0.4, c[0] + 1.2, 0, 1, io)}><GoogleWalletApp><div style={{ position: 'absolute', left: 16, top: 112 }}><CarteGoogle width={358} /></div></GoogleWalletApp></Android>
+          <IPhone x={790} y={yP(0.64)} s={0.64} ry={lerp(4, 14, ts(t, c[0], c[1], 0, 1, io))} rx={2} shadow={0.6}><WalletApp><div style={{ position: 'absolute', left: 16, top: 120 }}><Carte width={358} light={0.45} shadow={0.5} /></div></WalletApp></IPhone>
+          <Android x={1130} y={yP(0.64)} s={0.64} ry={lerp(-4, -14, ts(t, c[0], c[1], 0, 1, io))} o={ts(t, c[0] + 0.4, c[0] + 1.2, 0, 1, io)}><GoogleWalletApp><div style={{ position: 'absolute', left: 16, top: 112 }}><CarteGoogle width={358} /></div></GoogleWalletApp></Android>
         </Reflet>
         {L(A('sf3'), c[1] - 0.5, 'Dans le téléphone de vos clients.', { sub: 'Apple Wallet · Google Wallet' })}
       </>)}
       {F(c[1], c[2], <>
         <StudioBlanc />
         <div style={{ position: 'absolute', inset: 0, transform: `scale(${lerp(0.96, 1.02, ts(t, c[1], c[2], 0, 1, io))})`, transformOrigin: '960px 560px' }}>
-          <MacBook x={960} y={600} s={0.66} rx={4}><Page name="d-carte-graphite" w={1440} h={900} bars={false} layers={[{ name: 'd-carte-azur', o: ts(t, c[1] + 1.0, c[1] + 1.6, 0, 1, io) }, { name: 'd-carte-champagne', o: ts(t, c[1] + 2.0, c[1] + 2.6, 0, 1, io) }]} /></MacBook>
+          <MacBook x={960} y={600} s={0.8} rx={4}><Page name="d-carte-graphite" w={1440} h={900} bars={false} layers={[{ name: 'd-carte-azur', o: ts(t, c[1] + 1.0, c[1] + 1.6, 0, 1, io) }, { name: 'd-carte-champagne', o: ts(t, c[1] + 2.0, c[1] + 2.6, 0, 1, io) }]} /></MacBook>
         </div>
         {L(A('sf4'), c[2] - 0.5, 'À votre image. En quelques minutes.', { color: '#1d1d1f' })}
       </>)}
       {F(c[2], c[3], <>
         {N()}
         <Reflet sol={SOLP} long={220}>
-          <IPhone x={960} y={yP(0.78)} s={0.78} ry={lerp(-10, 8, ts(t, c[2], c[3], 0, 1, io))} rx={2} shadow={0.6}>
+          <IPhone x={960} y={yP(0.64)} s={0.64} ry={lerp(-10, 8, ts(t, c[2], c[3], 0, 1, io))} rx={2} shadow={0.6}>
             <div style={{ position: 'absolute', left: 0, top: 50, width: SW, height: SH - 50 }}><Page name="m-join-filled" bars={false} /></div>
             <div style={{ position: 'absolute', left: 0, top: 0, width: SW, height: 50, background: '#000' }} />
             <BarreSafari />
@@ -340,7 +340,7 @@ export const SigFilm = ({ voix = true, son = true }) => {
       {F(c[4], c[6], <>
         {N()}
         <Reflet sol={SOLP} long={220}>
-          <IPhone x={960} y={yP(0.78) - 30 * ts(t, c[4], c[6], 0, 1, io)} s={0.78 + 0.06 * ts(t, c[4], c[6], 0, 1, io)} ry={lerp(10, -6, ts(t, c[4], c[6], 0, 1, io))} rx={2} time="" shadow={0.6}>
+          <IPhone x={960} y={yP(0.64) - 30 * ts(t, c[4], c[6], 0, 1, io)} s={0.64 + 0.05 * ts(t, c[4], c[6], 0, 1, io)} ry={lerp(10, -6, ts(t, c[4], c[6], 0, 1, io))} rx={2} time="" shadow={0.6}>
             <Verrouille t={t} time="11:24" notifs={[{ at: A('sf7') + 1.0, body: 'Le chocolat chaud est de retour ☕ Votre 2e boisson est offerte cette semaine.' }]} />
           </IPhone>
         </Reflet>

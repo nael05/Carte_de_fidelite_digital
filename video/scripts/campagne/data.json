@@ -3043,6 +3043,11 @@
      "id": 1,
      "points_required": 500,
      "title": "Un café offert"
+    },
+    {
+     "id": 2,
+     "points_required": 1000,
+     "title": "Une pâtisserie offerte"
     }
    ]
   },

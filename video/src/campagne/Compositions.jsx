@@ -14,6 +14,7 @@ import { Metier, dureeMetier } from './metier/Metier'
 import { Spot, DUREE as D_SPOT } from './spot/Spot'
 import { Portefeuille, DUREE as D_PORTEFEUILLE } from './portefeuille/Portefeuille'
 import { Couverture } from './Couverture'
+import { ExpressVideo, dureeExpress } from './express/videos'
 import { SigCarte, D_SIGCARTE, SigMessage, D_SIGMESSAGE, SigDesign, D_SIGDESIGN, SigCaisse, D_SIGCAISSE, SigClient, D_SIGCLIENT, SigFilm, D_SIGFILM } from './signature/Videos'
 import { Astuces, DUREE as D_ASTUCES } from './astuces/Astuces'
 import { Appli, DUREE as D_APPLI } from './appli/Appli'
@@ -45,6 +46,13 @@ export const Campagne = () => (
     {V('17-astuces', Astuces, D_ASTUCES)}
     {V('18-appli', Appli, D_APPLI)}
     <Composition id="C-couverture" component={Couverture} durationInFrames={40 * FPS} fps={FPS} width={1080} height={1920} defaultProps={{ n: '01' }} />
+    {V('19-rep-android', ExpressVideo, dureeExpress('rep-android'), 1080, 1920, { video: 'rep-android' })}
+    {V('20-rep-ages', ExpressVideo, dureeExpress('rep-ages'), 1080, 1920, { video: 'rep-ages' })}
+    {V('21-rep-telephone', ExpressVideo, dureeExpress('rep-telephone'), 1080, 1920, { video: 'rep-telephone' })}
+    {V('22-pov-client', ExpressVideo, dureeExpress('pov-client'), 1080, 1920, { video: 'pov-client' })}
+    {V('23-erreurs', ExpressVideo, dureeExpress('erreurs'), 1080, 1920, { video: 'erreurs' })}
+    {V('24-paliers', ExpressVideo, dureeExpress('paliers'), 1080, 1920, { video: 'paliers' })}
+    {V('25-stats', ExpressVideo, dureeExpress('stats'), 1080, 1920, { video: 'stats' })}
     {V('S1-carte', SigCarte, D_SIGCARTE)}
     {V('S2-message', SigMessage, D_SIGMESSAGE)}
     {V('S3-design', SigDesign, D_SIGDESIGN)}

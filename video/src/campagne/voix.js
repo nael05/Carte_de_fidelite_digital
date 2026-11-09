@@ -33,7 +33,8 @@ export const cues = (video, start) => {
     }
     out[l.id] = { id: l.id, at: t, dur, lead: d?.lead ?? 0, voice: !!d, text: l.text, words: words.map((w, i) => ({ w, t: wt[i] })) }
     // voix v3 : pause naturelle de la prise, allongée seulement si le plan demande plus de temps (`gap`)
-    t += dur + (d?.v3 ? (dyn ? Math.min(0.35, Math.max(0.12, d.gap)) : Math.max(l.gap ?? 0.25, d.gap)) : (l.gap ?? 0.25))
+    // `hold` : temps d'image en plus après la réplique (laisser apparaître une notification, par exemple)
+    t += dur + (d?.v3 ? (dyn ? Math.min(0.35, Math.max(0.12, d.gap)) : Math.max(l.gap ?? 0.25, d.gap)) : (l.gap ?? 0.25)) + (l.hold ?? 0)
   }
   out.$end = t
   out.$list = lignes.map(l => out[l.id])

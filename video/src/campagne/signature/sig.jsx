@@ -31,9 +31,9 @@ export const Reflet = ({ sol, children, o = 0.16, long = 360 }) => (
 )
 
 /* Une ligne de texte : fondu et légère montée, sortie en fondu. Le mot `accent` peut être coloré. */
-export const Ligne = ({ t, at, out, children, y, size = 76, weight = 650, color = '#f5f5f7', w = 1080, lh = 1.08, maxW = 900, sub }) => {
-  const a = ts(t, at, at + 0.7, 0, 1, E.out)
-  const o = out == null ? 0 : ts(t, out, out + 0.5, 0, 1, E.io)
+export const Ligne = ({ t, at, out, children, y, size = 76, weight = 650, color = '#f5f5f7', w = 1080, lh = 1.08, maxW = 900, sub, lent = false }) => {
+  const a = ts(t, at - 0.05, at + (lent ? 0.7 : 0.35), 0, 1, E.out)
+  const o = out == null ? 0 : ts(t, out, out + (lent ? 0.5 : 0.25), 0, 1, E.io)
   if (a <= 0 || o >= 1) return null
   return (
     <div style={{ position: 'absolute', left: 0, top: y, width: w, display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 50, opacity: a * (1 - o), transform: `translateY(${(1 - a) * 18}px)` }}>
@@ -44,19 +44,20 @@ export const Ligne = ({ t, at, out, children, y, size = 76, weight = 650, color 
 }
 
 /* Fondu enchaîné doux entre deux plans (sans flou ni zoom), avec une très légère respiration d'échelle */
-export const Fondu = ({ t, a, b, d = 0.8, children, w = 1080, h = 1920 }) => {
+export const Fondu = ({ t, a, b, d = 0.4, children, w = 1080, h = 1920 }) => {
   if (t < a - d / 2 || t > b + d / 2) return null
   const i = a <= 0 ? 1 : ts(t, a - d / 2, a + d / 2, 0, 1, E.io)
   const o = ts(t, b - d / 2, b + d / 2, 0, 1, E.io)
-  const s = 1.015 - 0.015 * i + 0.01 * o
+  // léger zoom continu pendant le plan (l'image n'est jamais figée)
+  const s = (1.015 - 0.015 * i + 0.01 * o) * (1 + 0.035 * clamp((t - a) / Math.max(0.5, b - a)))
   return <AbsoluteFill style={{ opacity: i * (1 - o), transform: `scale(${s})`, transformOrigin: `${w / 2}px ${h / 2}px` }}>{children}</AbsoluteFill>
 }
 
 /* Fin de film : logo, nom, promesse, adresse. Rien d'autre. */
 export const FinSig = ({ t, at, dark = true, w = 1080, h = 1920, promesse = 'La fidélité, réinventée.' }) => {
-  const a = ts(t, at, at + 1.0, 0, 1, E.out)
-  const b = ts(t, at + 0.5, at + 1.4, 0, 1, E.out)
-  const c = ts(t, at + 1.1, at + 2.0, 0, 1, E.out)
+  const a = ts(t, at, at + 0.6, 0, 1, E.out)
+  const b = ts(t, at + 0.3, at + 0.9, 0, 1, E.out)
+  const c = ts(t, at + 0.6, at + 1.2, 0, 1, E.out)
   const cy = h / 2 - (w > h ? 60 : 120)
   const ink = dark ? '#f5f5f7' : '#1d1d1f'
   return (

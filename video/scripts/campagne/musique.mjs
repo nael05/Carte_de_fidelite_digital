@@ -24,6 +24,8 @@ const STYLE = {
   site: 'Modern premium tech brand film music, melodic house with evolving soft synths, airy pads, warm sub bass, crisp light percussion, uplifting, builds gently, 118 BPM',
 }
 const QUEL = { 'sig-carte': 'signature', 'sig-message': 'signature', 'sig-caisse': 'signature', 'sig-client': 'signature', 'sig-film': 'signature', 'sig-design': 'signatureBlanc', tour: 'marque', creer: 'marque', calcul: 'marque', astuces: 'marque', spot: 'marque', site: 'site', tampon: 'histoire', push: 'energique', papier: 'energique', questions: 'energique', portefeuille: 'energique', appli: 'energique', client: 'chill', proximite: 'chill', boulangerie: 'boulangerie', coiffure: 'coiffure', restaurant: 'restaurant', barbier: 'barbier', fleuriste: 'fleuriste', institut: 'institut' }
+// ENERGIE=1 : version TikTok, plus entraînante (rythme dès la première seconde)
+const ENERGIE = 'high energy TikTok edit, driving punchy rhythm from the very first second, energetic modern drums and bass, catchy hook, 124 to 128 BPM, no slow intro, '
 const durees = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'))
 const only = process.argv.slice(3)
 fs.mkdirSync(OUT, { recursive: true })
@@ -32,7 +34,7 @@ for (const [video, d] of Object.entries(durees)) {
   const ms = Math.max(10000, Math.round((d + 4) * 1000))
   const r = await fetch('https://api.elevenlabs.io/v1/music?output_format=mp3_44100_192', {
     method: 'POST', headers: { 'xi-api-key': KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt: `${STYLE[QUEL[video]]}, ${NO}`, music_length_ms: ms }),
+    body: JSON.stringify({ prompt: `${STYLE[QUEL[video]]}, ${process.env.ENERGIE ? ENERGIE : ''}${NO}`, music_length_ms: ms }),
   })
   if (!r.ok) { console.error(`❌ ${video} ${r.status} ${(await r.text()).slice(0, 200)}`); continue }
   const raw = `/tmp/claude-0/musique-${video}.mp3`

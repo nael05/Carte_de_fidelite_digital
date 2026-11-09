@@ -53,7 +53,7 @@
  },
  "tampon": {
   "titre": "02 Le tampon manquant",
-  "voix": "nicolas",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "m01",
@@ -856,7 +856,7 @@
  },
  "sig-carte": {
   "titre": "Signature 1 · La carte, réinventée",
-  "voix": "nicolas",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "sa1",
@@ -897,7 +897,7 @@
  },
  "sig-message": {
   "titre": "Signature 2 · Un message, au bon moment",
-  "voix": "nicolas",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "sb1",
@@ -928,7 +928,7 @@
  },
  "sig-design": {
   "titre": "Signature 3 · À votre image",
-  "voix": "nicolas",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "sc1",
@@ -959,7 +959,7 @@
  },
  "sig-caisse": {
   "titre": "Signature 4 · Un scan",
-  "voix": "nicolas",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "sd1",
@@ -990,7 +990,7 @@
  },
  "sig-client": {
   "titre": "Signature 5 · Rien à installer",
-  "voix": "nicolas",
+  "voix": "anatole",
   "lignes": [
    {
     "id": "se1",

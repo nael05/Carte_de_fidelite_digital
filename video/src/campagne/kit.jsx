@@ -379,6 +379,8 @@ export const MacBook = ({ x = 960, y = 560, s = 1, rx = 0, ry = 0, o = 1, childr
    'fade' (fondu enchaîné), 'push' (la caméra avance : l'ancien grossit et se floute, le nouveau arrive de plus loin),
    'pull' (inverse), 'up' / 'left' / 'right' (glissement avec flou de mouvement léger), 'iris' (cercle depuis x, y), 'cut'. */
 export const Plan = ({ t, a, b, tin = 'fade', tout = 'fade', din = 0.6, dout = 0.6, ox = 540, oy = 960, w = 1080, h = 1920, children, z = 1 }) => {
+  // rythme TikTok : transitions vives (0,45 s au plus)
+  din = Math.min(din, 0.45); dout = Math.min(dout, 0.45)
   if (t < a - (tin === 'cut' ? 0 : din / 2) || t > b + (tout === 'cut' ? 0 : dout / 2)) return null
   const pi = tin === 'cut' ? 1 : ts(t, a - din / 2, a + din / 2, 0, 1, E.io)
   const po = tout === 'cut' ? 0 : ts(t, b - dout / 2, b + dout / 2, 0, 1, E.io)
@@ -399,6 +401,8 @@ export const Plan = ({ t, a, b, tin = 'fade', tout = 'fade', din = 0.6, dout = 0
   }
   apply(tin, pi, true)
   apply(tout, po, false)
+  // léger zoom continu pendant tout le plan : l'image n'est jamais figée
+  s *= 1 + 0.03 * clamp((t - a) / Math.max(0.5, b - a))
   return (
     <AbsoluteFill style={{ zIndex: z, opacity: op, transform: `translate(${x}px, ${y}px) scale(${s})`, filter: blur > 0.3 ? `blur(${blur}px)` : undefined, clipPath: clip }}>
       {children}

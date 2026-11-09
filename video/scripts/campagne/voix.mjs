@@ -25,7 +25,7 @@ const KEY = env.ELEVENLABS_API_KEY || process.env.ELEVENLABS_API_KEY || 'proxy-i
 // Voix d'homme, choisies parmi les voix françaises les plus utilisées de la bibliothèque ElevenLabs.
 // Réglages « naturels » : stabilité moyenne, aucun effet de style, vitesse normale.
 const VOIX = {
-  anatole: { id: 'Jrq4GqCKqYpigdQsZRkP', stability: 0.5 }, // Anatole, dynamique et clair (TikTok)
+  anatole: { id: 'Jrq4GqCKqYpigdQsZRkP', stability: 0.3, speed: 1.1, tempo: 1.1 }, // Anatole, dynamique et clair (TikTok) : expressif et rapide
   nicolas: { id: 'aQROLel5sQbj1vuIVi6B', stability: 0.5 }, // Nicolas, narrateur (film du site, spot, mise en scène)
 }
 const MODEL = 'eleven_v3'
@@ -60,14 +60,21 @@ for (const video of videos) {
   const full = says.join(' ')
   const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${P.id}/with-timestamps?output_format=mp3_44100_192`, {
     method: 'POST', headers: { 'xi-api-key': KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text: full, model_id: MODEL, language_code: 'fr', voice_settings: { stability: P.stability, similarity_boost: 0.8, use_speaker_boost: true } }),
+    body: JSON.stringify({ text: full, model_id: MODEL, language_code: 'fr', voice_settings: { stability: P.stability, similarity_boost: 0.8, use_speaker_boost: true, ...(P.speed ? { speed: P.speed } : {}) } }),
   })
   const txt = await r.text()
   if (!r.ok) { console.error(`❌ ${video} : ${r.status} ${txt.slice(0, 300)}`); process.exit(1) }
   const res = JSON.parse(txt)
   const whole = path.join(TMP, `${video}.mp3`)
   fs.writeFileSync(whole, Buffer.from(res.audio_base64, 'base64'))
-  const { characters: ch, character_start_times_seconds: st, character_end_times_seconds: en } = res.alignment
+  let { characters: ch, character_start_times_seconds: st, character_end_times_seconds: en } = res.alignment
+  // rythme TikTok : prise accélérée (hauteur conservée), horodatages recalés
+  if (P.tempo && P.tempo !== 1) {
+    const fast = path.join(TMP, `${video}-x.mp3`)
+    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', whole, '-af', `atempo=${P.tempo}`, '-c:a', 'libmp3lame', '-b:a', '192k', fast])
+    fs.renameSync(fast, whole)
+    st = st.map(x => x / P.tempo); en = en.map(x => x / P.tempo)
+  }
   if (ch.join('') !== full) console.warn(`⚠ ${video} : alignement différent du texte (${ch.length} / ${full.length} caractères)`)
 
   // bornes de chaque réplique dans le texte complet

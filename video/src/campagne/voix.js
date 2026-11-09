@@ -10,8 +10,11 @@ import DATA from './voix-data.json'
 const CPS = 15.5 // caractères par seconde
 const estimate = s => s.length / CPS + 0.2
 
-export const cues = (video, start = 0.35) => {
+export const cues = (video, start) => {
   const lignes = TEXTES[video].lignes
+  // rythme TikTok (voix Anatole) : on démarre tout de suite et on garde seulement les blancs naturels de la voix
+  const dyn = TEXTES[video].voix === 'anatole'
+  if (start == null) start = dyn ? 0.2 : 0.35
   const out = {}
   let t = start
   for (const l of lignes) {
@@ -30,7 +33,7 @@ export const cues = (video, start = 0.35) => {
     }
     out[l.id] = { id: l.id, at: t, dur, lead: d?.lead ?? 0, voice: !!d, text: l.text, words: words.map((w, i) => ({ w, t: wt[i] })) }
     // voix v3 : pause naturelle de la prise, allongée seulement si le plan demande plus de temps (`gap`)
-    t += dur + (d?.v3 ? Math.max(l.gap ?? 0.25, d.gap) : (l.gap ?? 0.25))
+    t += dur + (d?.v3 ? (dyn ? Math.min(0.35, Math.max(0.12, d.gap)) : Math.max(l.gap ?? 0.25, d.gap)) : (l.gap ?? 0.25))
   }
   out.$end = t
   out.$list = lignes.map(l => out[l.id])

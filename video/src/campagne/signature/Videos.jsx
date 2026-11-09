@@ -18,12 +18,12 @@ const CarteHeros = ({ t, w = 540, ry = 0, rx = 6, points = 480, light = 0.4, ski
 const yPhone = s => SOL - (SH + 26) * s / 2 - 30
 
 /* ─────────── 1. La carte, réinventée ─────────── */
-export const QA = cues('sig-carte', 0.6)
+export const QA = cues('sig-carte')
 export const SigCarte = ({ voix = true, son = true }) => {
   const t = useT(), Q = QA, A = id => Q[id].at, D = dur(Q)
   const c1 = A('sa3') - 0.3, c2 = A('sa5') - 0.3, c3 = A('sa6') - 0.3, c4 = A('sa7') - 0.3
-  const apparition = ts(t, 0, 1.6, 0, 1, io)
-  const tour = ts(t, A('sa2') - 0.1, A('sa2') + 1.7, 0, 1, io)
+  const apparition = ts(t, 0, 0.7, 0, 1, io)
+  const tour = ts(t, A('sa2') - 0.15, A('sa2') + 1.1, 0, 1, io)
   const ry = lerp(-26, 6, ts(t, 0, c1, 0, 1, io)) + 360 * tour
   const a4 = ts(t, A('sa4') - 0.2, A('sa4') + 1.4, 0, 1, io)
   const maj = ts(t, W(Q, 'sa5', 6), W(Q, 'sa5', 6) + 1.4, 0, 1, io)
@@ -78,7 +78,7 @@ export const SigCarte = ({ voix = true, son = true }) => {
 export const D_SIGCARTE = dur(QA)
 
 /* ─────────── 2. Un message, au bon moment ─────────── */
-export const QB = cues('sig-message', 0.6)
+export const QB = cues('sig-message')
 const MSG = [
   { body: '-20 % sur toutes les boissons ce week-end.', time: 'vendredi' },
   { body: 'Nouveau : le croissant aux amandes est arrivé 🥐', time: 'mardi' },
@@ -122,7 +122,7 @@ export const SigMessage = ({ voix = true, son = true }) => {
 export const D_SIGMESSAGE = dur(QB)
 
 /* ─────────── 3. À votre image (studio blanc) ─────────── */
-export const QC = cues('sig-design', 0.6)
+export const QC = cues('sig-design')
 const PEAUX = ['ivory', 'azur', 'champagne', 'graphite']
 export const SigDesign = ({ voix = true, son = true }) => {
   const t = useT(), Q = QC, A = id => Q[id].at, D = dur(Q)
@@ -166,7 +166,7 @@ export const SigDesign = ({ voix = true, son = true }) => {
 export const D_SIGDESIGN = dur(QC)
 
 /* ─────────── 4. Un scan ─────────── */
-export const QD = cues('sig-caisse', 0.6)
+export const QD = cues('sig-caisse')
 export const SigCaisse = ({ voix = true, son = true }) => {
   const t = useT(), Q = QD, A = id => Q[id].at, D = dur(Q)
   const c1 = A('sd2') - 0.3, c2 = A('sd3') - 0.3, c3 = A('sd4') - 0.3, c4 = A('sd5') - 0.3
@@ -220,7 +220,7 @@ export const SigCaisse = ({ voix = true, son = true }) => {
 export const D_SIGCAISSE = dur(QD)
 
 /* ─────────── 5. Rien à installer ─────────── */
-export const QE = cues('sig-client', 0.6)
+export const QE = cues('sig-client')
 export const SigClient = ({ voix = true, son = true }) => {
   const t = useT(), Q = QE, A = id => Q[id].at, D = dur(Q)
   const c1 = A('se2') - 0.3, c2 = A('se3') - 0.3, c3 = A('se4') - 0.3, c4 = A('se5') - 0.3, c5 = A('se6') - 0.3
@@ -282,9 +282,9 @@ const WW = 1920, HH = 1080, SOLP = 900
 export const SigFilm = ({ voix = true, son = true }) => {
   const t = useT(), Q = QF, A = id => Q[id].at, D = dur(Q)
   const c = ['sf3', 'sf4', 'sf5', 'sf6', 'sf7', 'sf8', 'sf9'].map(id => A(id) - 0.3)
-  const F = (a, b, ch) => <Fondu t={t} a={a} b={b} w={WW} h={HH}>{ch}</Fondu>
+  const F = (a, b, ch) => <Fondu t={t} a={a} b={b} w={WW} h={HH} d={0.8}>{ch}</Fondu>
   const N = p => <StudioNoir w={WW} h={HH} sol={0.84} {...p} />
-  const L = (at, out, txt, extra = {}) => <Ligne t={t} at={at} out={out} y={80} w={WW} size={60} maxW={1500} {...extra}>{txt}</Ligne>
+  const L = (at, out, txt, extra = {}) => <Ligne t={t} at={at} out={out} y={80} w={WW} size={60} maxW={1500} lent {...extra}>{txt}</Ligne>
   const tour = ts(t, A('sf2') - 0.1, A('sf2') + 1.7, 0, 1, io)
   const yP = s => SOLP - (SH + 26) * s / 2 - 20
   const maj = ts(t, A('sf6') + 1.2, A('sf6') + 2.6, 0, 1, io)

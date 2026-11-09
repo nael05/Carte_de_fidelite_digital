@@ -73,6 +73,27 @@ Heures conseillées (cible commerçants) : **12 h 15** (pause déjeuner) ou **20
 | J20 | **18 Le mythe de l'appli** | A | « Tu veux créer une appli pour ta boutique ? Attends. » |
 | J21 | Repos, puis variantes des vidéos qui ont le mieux marché (voir § 7), autres métiers (caviste, pressing, primeur…) et nouvelles idées (§ 9) | | |
 
+### Semaines 4 et 5 : saisons 2 et 3 (format « express », 14 à 20 s)
+
+Plus courtes et plus directes : une question ou un POV, une réponse, l'appel à l'action. Les questions viennent des vraies objections des commerçants.
+Quand un abonné pose une de ces questions en commentaire, publier la vidéo avec **« Répondre en vidéo »** sous son commentaire : TikTok la montre en priorité à ceux qui ont vu la vidéo d'origine.
+
+| Jour | Vidéo | Format |
+| --- | --- | --- |
+| J24 | **22 POV : t'es le client** | POV |
+| J25 | **19 Et pour Android ?** | Réponse à un commentaire |
+| J26 | **23 Trois erreurs qui font fuir tes clients** | Conseil |
+| J27 | **26 C'est combien ?** | Réponse à un commentaire |
+| J28 | **24 Plusieurs paliers de récompense** | Conseil |
+| J29 | **28 POV : t'es le commerçant** | POV |
+| J30 | **20 Mes clients sont âgés** | Réponse à un commentaire |
+| J31 | **27 Les clients qui ne reviennent plus** | Conseil |
+| J32 | **29 Le Wallet, pas que pour les billets d'avion** | Mythe |
+| J33 | **21 Et s'il change de téléphone ?** | Réponse à un commentaire |
+| J34 | **25 Combien de clients sont revenus ?** | Conseil |
+| J35 | **31 Ça va ralentir ma caisse ?** | Réponse à un commentaire |
+| J36 | **30 Et les données de mes clients ?** | Réponse à un commentaire |
+
 ## 6. Texte de publication (légende) et hashtags
 
 Légende courte, une question pour faire réagir, et l'appel à l'action. Exemple :

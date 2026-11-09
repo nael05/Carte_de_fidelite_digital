@@ -67,7 +67,7 @@ export const PLANS = {
   ],
   relance: [
     { cue: 'ri1', type: 'gros', text: '17', sub: 'clients pas revenus depuis 3 mois', color: C.red, size: 420, accent: { 0: C.red } },
-    { cue: 'ri2', type: 'iphone', ecran: 'page', page: 'm-stats-clients', scroll: 60, accent: { 14: C.red } },
+    { cue: 'ri2', type: 'iphone', ecran: 'page', page: 'm-stats-clients', scroll: 0, accent: { 14: C.red } },
     { cue: 'ri3', type: 'iphone', ecran: 'page', page: 'm-campagnes-filled' },
     { cue: 'ri4', type: 'iphone', ecran: 'lock', heure: '17:45', notifs: [notif('Ça fait longtemps ! ☕ Votre 2e boisson est offerte cette semaine.', Q => W(Q, 'ri4', 2), { title: 'Maison Lumière', mark: 'M' })], zoomNotif: Q => W(Q, 'ri4', 2) + 0.4, son: 'sons_tt/notif.mp3', sonAt: Q => W(Q, 'ri4', 2) },
     { cue: 'ri5', type: 'fin' },

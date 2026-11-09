@@ -55,6 +55,44 @@ const BAR_CC = 1.7423 // phonk, 137,75 BPM
 const CONFIG = {
   // ─── Série « Studio » (PLAN-TIKTOK.md) : musique très en retrait, peu de bruitages, tous discrets ───
   // ─── Série « Lumière » (v2) ───
+  ...(SET === 'mstats' && {
+    mstats: {
+      dur: Math.ceil((word('ks05') + 4.6) * 30) / 30,
+      music: 'musique-chrono.mp3',
+      segments: [[0, 40, 16.2 - (word('ks02', 10) - 0.4)]],
+      xf: 0.02, open: -10, duck: -22, fadeIn: 0.3, fadeOut: 1.6,
+      sfx: [
+        ['laser_long', 0.1, -25, 1, { len: 1.8, fade: 0.6 }],
+        ['riser_court', word('ks02', 10) - 1.2, -24, 1, { crest: true }],
+        ...[0, 1, 2, 3, 4, 5, 6].map(i => ['pop', word('ks02', 10) - 0.4 + i * 0.12, -27 + (i % 2), 1 + i * 0.05]),
+        ['visqueux', word('ks03') - 0.35, -25, 1, { len: 1, fade: 0.4 }],
+        ...[0, 2, 3, 5].map(n => ['clic', word('ks03', n), -23, 1.2]),
+        ['whoosh_rapide', word('ks04') - 0.35, -18, 1, { crest: true }],
+        ['notif_douce', word('ks04', 7), -13, 1],
+        ['neon', word('ks05') - 0.2, -19, 1.1, { len: 1.4, fade: 0.6 }],
+        ['hit_logo', word('ks05') + 0.1, -16, 1],
+      ],
+    },
+  }),
+  ...(SET === 'mmulti' && {
+    mmulti: {
+      dur: Math.ceil((word('km05') + 4.6) * 30) / 30,
+      music: 'musique-noir.mp3',
+      segments: [[0, 40, 16.2 - (word('km02') - 0.35)]],
+      xf: 0.02, open: -9, duck: -21, fadeIn: 0.3, fadeOut: 1.6,
+      sfx: [
+        ...[0.5, 0.85, 1.2].map((a, i) => ['scintille', a, -24, 1 + i * 0.1, { len: 0.8, fade: 0.4 }]),
+        ['whoosh_rapide', word('km02') - 0.35, -18, 1, { crest: true }],
+        ['visqueux', word('km03') - 0.35, -25, 1, { len: 1, fade: 0.4 }],
+        ['laser_long', word('km03'), -22, 1, { len: 1.4, fade: 0.6 }],
+        ['pop', word('km03', 4), -20, 1],
+        ['pop', word('km03', 9), -20, 1.15],
+        ['laser', word('km04') - 0.35, -22, 1, { len: 0.9, fade: 0.3 }],
+        ['neon', word('km05') - 0.2, -19, 1.1, { len: 1.4, fade: 0.6 }],
+        ['hit_logo', word('km05') + 0.1, -16, 1],
+      ],
+    },
+  }),
   ...(SET === 'mpov' && {
     mpov: {
       dur: Math.ceil((word('kv05') + 4.6) * 30) / 30,
@@ -186,16 +224,16 @@ const CONFIG = {
     },
   }),
   // vague 2 : vidéos par métier (même montage)
-  ...(['mpain', 'mcoupe', 'mresto', 'mcafe', 'mpizza'].includes(SET) && (() => {
-    const p = { mpain: 'tb', mcoupe: 'tc', mresto: 'tr', mcafe: 'ka', mpizza: 'kp' }[SET]
+  ...(['mpain', 'mcoupe', 'mresto', 'mcafe', 'mpizza', 'mfleur', 'mbeaute'].includes(SET) && (() => {
+    const p = { mpain: 'tb', mcoupe: 'tc', mresto: 'tr', mcafe: 'ka', mpizza: 'kp', mfleur: 'kf', mbeaute: 'ke' }[SET]
     const w = (n, k = 0) => word(`${p}0${n}`, k)
-    const nw = { mpain: 6, mcoupe: 5, mresto: 4, mcafe: 4, mpizza: 5 }[SET]
+    const nw = { mpain: 6, mcoupe: 5, mresto: 4, mcafe: 4, mpizza: 5, mfleur: 7, mbeaute: 4 }[SET]
     return {
       [SET]: {
         dur: Math.ceil((w(5) + 4.6) * 30) / 30,
-        music: SET === 'mcoupe' ? 'musique-keynote.mp3' : SET === 'mpizza' ? 'musique-chrono.mp3' : 'musique-noir.mp3',
-        segments: [[0, 40, (SET === 'mcoupe' ? 13.7 : 16.2) - (w(2) - 0.45)]],
-        xf: 0.02, open: SET === 'mcoupe' ? -12 : -9, duck: SET === 'mcoupe' ? -25 : -21, fadeIn: 0.3, fadeOut: 1.6,
+        music: ['mcoupe', 'mfleur', 'mbeaute'].includes(SET) ? 'musique-keynote.mp3' : SET === 'mpizza' ? 'musique-chrono.mp3' : 'musique-noir.mp3',
+        segments: [[0, 40, (['mcoupe', 'mfleur', 'mbeaute'].includes(SET) ? 13.7 : 16.2) - (w(2) - 0.45)]],
+        xf: 0.02, open: ['mcoupe', 'mfleur', 'mbeaute'].includes(SET) ? -12 : -9, duck: ['mcoupe', 'mfleur', 'mbeaute'].includes(SET) ? -25 : -21, fadeIn: 0.3, fadeOut: 1.6,
         sfx: [
           ['laser_long', 0.15, -25, 1, { len: 1.8, fade: 0.6 }],
           ['neon', 0.1, -23, 1, { len: 1, fade: 0.4 }],

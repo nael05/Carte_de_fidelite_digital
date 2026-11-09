@@ -1,0 +1,282 @@
+[
+  {
+    "id": "kf01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Fleuriste ? Tes clients reviennent… une fois par an.",
+    "say": "[curious] Fleuriste ? [sighs] Tes clients reviennent... une fois par an.",
+    "dur": 5.12,
+    "words": [
+      {
+        "w": "Fleuriste",
+        "t": 0.28,
+        "d": 0.52
+      },
+      {
+        "w": "Tes",
+        "t": 2.544,
+        "d": 0.096
+      },
+      {
+        "w": "clients",
+        "t": 2.68,
+        "d": 0.28
+      },
+      {
+        "w": "reviennent",
+        "t": 3.02,
+        "d": 0.82
+      },
+      {
+        "w": "une",
+        "t": 3.88,
+        "d": 0.12
+      },
+      {
+        "w": "fois",
+        "t": 4.048,
+        "d": 0.192
+      },
+      {
+        "w": "par",
+        "t": 4.3,
+        "d": 0.18
+      },
+      {
+        "w": "an",
+        "t": 4.533,
+        "d": 0.267
+      }
+    ]
+  },
+  {
+    "id": "kf02",
+    "at": 5.92,
+    "gap": 0.5,
+    "text": "Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.",
+    "say": "[confident] Avec Fidéliz, ta carte de fidélité passe dans leur téléphone.",
+    "dur": 3.59,
+    "words": [
+      {
+        "w": "Avec",
+        "t": 0.115,
+        "d": 0.032
+      },
+      {
+        "w": "Fidéliz",
+        "t": 0.227,
+        "d": 0.8
+      },
+      {
+        "w": "ta",
+        "t": 1.08,
+        "d": 0.107
+      },
+      {
+        "w": "carte",
+        "t": 1.24,
+        "d": 0.267
+      },
+      {
+        "w": "de",
+        "t": 1.534,
+        "d": 0.053
+      },
+      {
+        "w": "fidélité",
+        "t": 1.647,
+        "d": 0.58
+      },
+      {
+        "w": "passe",
+        "t": 2.267,
+        "d": 0.2
+      },
+      {
+        "w": "dans",
+        "t": 2.499,
+        "d": 0.128
+      },
+      {
+        "w": "leur",
+        "t": 2.675,
+        "d": 0.192
+      },
+      {
+        "w": "téléphone",
+        "t": 2.931,
+        "d": 0.656
+      }
+    ]
+  },
+  {
+    "id": "kf03",
+    "at": 9.91,
+    "gap": 0.4,
+    "text": "Un bouquet, un scan : les points s’ajoutent.",
+    "say": "Un bouquet, un scan... [excited] les points s’ajoutent !",
+    "dur": 3.13,
+    "words": [
+      {
+        "w": "Un",
+        "t": -0.067,
+        "d": 0.08
+      },
+      {
+        "w": "bouquet",
+        "t": 0.073,
+        "d": 0.58
+      },
+      {
+        "w": "un",
+        "t": 0.706,
+        "d": 0.107
+      },
+      {
+        "w": "scan",
+        "t": 0.909,
+        "d": 0.784
+      },
+      {
+        "w": "les",
+        "t": 1.903,
+        "d": 0.03
+      },
+      {
+        "w": "points",
+        "t": 1.99,
+        "d": 0.343
+      },
+      {
+        "w": "s’ajoutent",
+        "t": 2.373,
+        "d": 0.68
+      }
+    ]
+  },
+  {
+    "id": "kf04",
+    "at": 13.54,
+    "gap": 0.5,
+    "text": "Et avant la fête des mères, une notification : ton bouquet à moins quinze pour cent.",
+    "say": "Et avant la fête des mères, une notification... [excited] ton bouquet à moins quinze pour cent !",
+    "dur": 4.4,
+    "words": [
+      {
+        "w": "Et",
+        "t": 0,
+        "d": 0.08
+      },
+      {
+        "w": "avant",
+        "t": 0.12,
+        "d": 0.2
+      },
+      {
+        "w": "la",
+        "t": 0.347,
+        "d": 0.053
+      },
+      {
+        "w": "fête",
+        "t": 0.44,
+        "d": 0.2
+      },
+      {
+        "w": "des",
+        "t": 0.66,
+        "d": 0.06
+      },
+      {
+        "w": "mères",
+        "t": 0.8,
+        "d": 0.4
+      },
+      {
+        "w": "une",
+        "t": 1.24,
+        "d": 0.12
+      },
+      {
+        "w": "notification",
+        "t": 1.428,
+        "d": 1.452
+      },
+      {
+        "w": "ton",
+        "t": 3.016,
+        "d": 0.024
+      },
+      {
+        "w": "bouquet",
+        "t": 3.07,
+        "d": 0.21
+      },
+      {
+        "w": "à",
+        "t": 3.36,
+        "d": 0.08
+      },
+      {
+        "w": "moins",
+        "t": 3.453,
+        "d": 0.067
+      },
+      {
+        "w": "quinze",
+        "t": 3.573,
+        "d": 0.267
+      },
+      {
+        "w": "pour",
+        "t": 3.888,
+        "d": 0.192
+      },
+      {
+        "w": "cent",
+        "t": 4.112,
+        "d": 0.128
+      }
+    ]
+  },
+  {
+    "id": "kf05",
+    "at": 18.54,
+    "gap": 0.6,
+    "text": "Fidelyz. La carte de fidélité digitale.",
+    "say": "[warmly] Fidéliz. La carte de fidélité digitale.",
+    "dur": 3.04,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.072,
+        "d": 0.568
+      },
+      {
+        "w": "La",
+        "t": 0.8,
+        "d": 0.32
+      },
+      {
+        "w": "carte",
+        "t": 1.187,
+        "d": 0.333
+      },
+      {
+        "w": "de",
+        "t": 1.573,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 1.74,
+        "d": 0.5
+      },
+      {
+        "w": "digitale",
+        "t": 2.32,
+        "d": 0.72
+      }
+    ]
+  }
+]

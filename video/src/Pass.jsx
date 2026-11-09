@@ -293,6 +293,74 @@ export const StripResto = () => (
   </StripFrame>
 )
 
+const Fleur = ({ x, y, r, c1, c2, n = 6, s = 1, u }) => (
+  <g transform={`translate(${x} ${y}) rotate(${r}) scale(${s})`}>
+    <circle r="22" fill="#000" opacity="0.45" filter={`url(#${u}B)`} transform="translate(3 5)" />
+    {Array.from({ length: n }, (_, i) => (
+      <ellipse key={i} cx="0" cy="-12" rx="8.5" ry="14" fill={c1} transform={`rotate(${(360 / n) * i})`} stroke={c2} strokeWidth="0.8" />
+    ))}
+    {Array.from({ length: n }, (_, i) => (
+      <ellipse key={`b${i}`} cx="0" cy="-7" rx="5" ry="8" fill={c2} opacity="0.8" transform={`rotate(${(360 / n) * i + 30})`} />
+    ))}
+    <circle r="5" fill="#f3d27a" />
+  </g>
+)
+export const StripFleur = () => (
+  <StripFrame bg={null}>
+    {u => (
+      <>
+        <defs>
+          <linearGradient id={`${u}K`} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#25321f" />
+            <stop offset="100%" stopColor="#0f150c" />
+          </linearGradient>
+        </defs>
+        <rect width="320" height="120" fill={`url(#${u}K)`} />
+        {[[120, 30, 30], [280, 100, -20], [150, 110, 60], [300, 20, 10]].map(([x, y, r], i) => (
+          <ellipse key={i} cx={x} cy={y} rx="26" ry="9" fill="#3f6b33" transform={`rotate(${r} ${x} ${y})`} opacity="0.9" />
+        ))}
+        <Fleur x={190} y={58} r={10} c1="#f3a6b8" c2="#e57a95" s={1.5} u={u} />
+        <Fleur x={250} y={40} r={-15} c1="#fbe3e8" c2="#f2b8c6" s={1.1} u={u} />
+        <Fleur x={140} y={78} r={25} c1="#ffffff" c2="#e9e2da" n={8} s={1.05} u={u} />
+        <Fleur x={265} y={95} r={5} c1="#f6c27a" c2="#e8a04d" s={0.9} u={u} />
+        <Fleur x={95} y={42} r={-30} c1="#c9a7e8" c2="#a57fd0" n={5} s={0.85} u={u} />
+      </>
+    )}
+  </StripFrame>
+)
+export const StripBeaute = () => (
+  <StripFrame bg={null}>
+    {u => (
+      <>
+        <defs>
+          <linearGradient id={`${u}R`} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#3a2a2e" />
+            <stop offset="100%" stopColor="#170f12" />
+          </linearGradient>
+          <linearGradient id={`${u}G`} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#f6e2b0" />
+            <stop offset="50%" stopColor="#c9a46a" />
+            <stop offset="100%" stopColor="#f2dca6" />
+          </linearGradient>
+        </defs>
+        <rect width="320" height="120" fill={`url(#${u}R)`} />
+        <rect width="320" height="120" filter={`url(#${u}N)`} opacity="0.35" />
+        {[['#e8a0ae', 150], ['#b8263f', 196], ['#f3d6c9', 242]].map(([c, x], i) => (
+          <g key={i} transform={`translate(${x} ${30 + (i % 2) * 8})`}>
+            <rect x="-14" y="64" width="40" height="10" rx="5" fill="#000" opacity="0.45" filter={`url(#${u}B)`} />
+            <rect x="-6" y="-4" width="12" height="30" rx="2" fill={`url(#${u}G)`} />
+            <rect x="-17" y="24" width="34" height="46" rx="9" fill={c} />
+            <rect x="-13" y="28" width="8" height="34" rx="4" fill="#fff" opacity="0.28" />
+          </g>
+        ))}
+        <circle cx="90" cy="70" r="24" fill="#000" opacity="0.4" filter={`url(#${u}B)`} />
+        <circle cx="86" cy="64" r="22" fill={`url(#${u}G)`} />
+        <circle cx="86" cy="64" r="16" fill="#e7b9a6" />
+      </>
+    )}
+  </StripFrame>
+)
+
 export const Pass = ({
   width = 380, rx = 0, ry = 0, rz = 0,
   skin = 'graphite', points = 480, name = 'Maison Lumière', mark = 'L', holder = 'CAMILLE', cardId = '2BF10B',
@@ -330,7 +398,7 @@ export const Pass = ({
             }}
           >
             <div style={{ position: 'absolute', inset: 0, transform: `translateX(${stripShift}px) scale(1.08)` }}>
-              {photo === 'pain' ? <StripPain /> : photo === 'coupe' ? <StripCoupe /> : photo === 'resto' ? <StripResto /> : <StripPhoto />}
+              {photo === 'pain' ? <StripPain /> : photo === 'coupe' ? <StripCoupe /> : photo === 'resto' ? <StripResto /> : photo === 'fleur' ? <StripFleur /> : photo === 'beaute' ? <StripBeaute /> : <StripPhoto />}
             </div>
           </div>
         </div>

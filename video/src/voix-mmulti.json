@@ -1,0 +1,247 @@
+[
+  {
+    "id": "km01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Tu as plusieurs boutiques ?",
+    "say": "[curious] Tu as plusieurs boutiques ?",
+    "dur": 1.03,
+    "words": [
+      {
+        "w": "Tu",
+        "t": -0.025,
+        "d": 0.013
+      },
+      {
+        "w": "as",
+        "t": 0.041,
+        "d": 0.107
+      },
+      {
+        "w": "plusieurs",
+        "t": 0.18,
+        "d": 0.288
+      },
+      {
+        "w": "boutiques",
+        "t": 0.5,
+        "d": 0.448
+      }
+    ]
+  },
+  {
+    "id": "km02",
+    "at": 1.73,
+    "gap": 0.4,
+    "text": "Avec Fidelyz, une seule carte de fidélité digitale pour toutes.",
+    "say": "[confident] Avec Fidéliz, une seule carte de fidélité digitale pour toutes.",
+    "dur": 4.96,
+    "words": [
+      {
+        "w": "Avec",
+        "t": 0.202,
+        "d": 0.038
+      },
+      {
+        "w": "Fidéliz",
+        "t": 0.28,
+        "d": 0.84
+      },
+      {
+        "w": "une",
+        "t": 1.18,
+        "d": 0.18
+      },
+      {
+        "w": "seule",
+        "t": 1.4,
+        "d": 0.2
+      },
+      {
+        "w": "carte",
+        "t": 1.653,
+        "d": 0.267
+      },
+      {
+        "w": "de",
+        "t": 1.973,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 2.12,
+        "d": 0.44
+      },
+      {
+        "w": "digitale",
+        "t": 2.627,
+        "d": 0.653
+      },
+      {
+        "w": "pour",
+        "t": 3.344,
+        "d": 0.256
+      },
+      {
+        "w": "toutes",
+        "t": 3.669,
+        "d": 1.291
+      }
+    ]
+  },
+  {
+    "id": "km03",
+    "at": 7.09,
+    "gap": 0.4,
+    "text": "Tes clients cumulent leurs points, quelle que soit la boutique.",
+    "say": "[excited] Tes clients cumulent leurs points, quelle que soit la boutique.",
+    "dur": 2.52,
+    "words": [
+      {
+        "w": "Tes",
+        "t": 0.013,
+        "d": 0.024
+      },
+      {
+        "w": "clients",
+        "t": 0.087,
+        "d": 0.35
+      },
+      {
+        "w": "cumulent",
+        "t": 0.477,
+        "d": 0.28
+      },
+      {
+        "w": "leurs",
+        "t": 0.784,
+        "d": 0.133
+      },
+      {
+        "w": "points",
+        "t": 0.963,
+        "d": 0.354
+      },
+      {
+        "w": "quelle",
+        "t": 1.34,
+        "d": 0.137
+      },
+      {
+        "w": "que",
+        "t": 1.517,
+        "d": 0.12
+      },
+      {
+        "w": "soit",
+        "t": 1.685,
+        "d": 0.192
+      },
+      {
+        "w": "la",
+        "t": 1.904,
+        "d": 0.053
+      },
+      {
+        "w": "boutique",
+        "t": 2.01,
+        "d": 0.507
+      }
+    ]
+  },
+  {
+    "id": "km04",
+    "at": 10.11,
+    "gap": 0.5,
+    "text": "Et toi, tu suis chaque établissement, depuis un seul compte.",
+    "say": "[warmly] Et toi, tu suis chaque établissement, depuis un seul compte.",
+    "dur": 3.71,
+    "words": [
+      {
+        "w": "Et",
+        "t": 0.022,
+        "d": 0.011
+      },
+      {
+        "w": "toi",
+        "t": 0.113,
+        "d": 0.4
+      },
+      {
+        "w": "tu",
+        "t": 0.566,
+        "d": 0.107
+      },
+      {
+        "w": "suis",
+        "t": 0.737,
+        "d": 0.256
+      },
+      {
+        "w": "chaque",
+        "t": 1.027,
+        "d": 0.206
+      },
+      {
+        "w": "établissement",
+        "t": 1.273,
+        "d": 0.84
+      },
+      {
+        "w": "depuis",
+        "t": 2.159,
+        "d": 0.274
+      },
+      {
+        "w": "un",
+        "t": 2.486,
+        "d": 0.107
+      },
+      {
+        "w": "seul",
+        "t": 2.625,
+        "d": 0.128
+      },
+      {
+        "w": "compte",
+        "t": 2.822,
+        "d": 0.891
+      }
+    ]
+  },
+  {
+    "id": "km05",
+    "at": 14.42,
+    "gap": 0.6,
+    "text": "Fidelyz. Fais revenir tes clients.",
+    "say": "[confident] Fidéliz. Fais revenir tes clients.",
+    "dur": 2.24,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.072,
+        "d": 1.048
+      },
+      {
+        "w": "Fais",
+        "t": 1.16,
+        "d": 0.12
+      },
+      {
+        "w": "revenir",
+        "t": 1.333,
+        "d": 0.347
+      },
+      {
+        "w": "tes",
+        "t": 1.72,
+        "d": 0.12
+      },
+      {
+        "w": "clients",
+        "t": 1.88,
+        "d": 0.36
+      }
+    ]
+  }
+]

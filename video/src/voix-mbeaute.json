@@ -1,0 +1,272 @@
+[
+  {
+    "id": "ke01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Institut de beauté ? Tes clientes t’adorent… mais elles oublient de reprendre rendez-vous.",
+    "say": "[curious] Institut de beauté ? Tes clientes t’adorent... [sighs] mais elles oublient de reprendre rendez-vous.",
+    "dur": 5.2,
+    "words": [
+      {
+        "w": "Institut",
+        "t": 0.382,
+        "d": 0.178
+      },
+      {
+        "w": "de",
+        "t": 0.587,
+        "d": 0.053
+      },
+      {
+        "w": "beauté",
+        "t": 0.693,
+        "d": 0.347
+      },
+      {
+        "w": "Tes",
+        "t": 1.64,
+        "d": 0.12
+      },
+      {
+        "w": "clientes",
+        "t": 1.804,
+        "d": 0.355
+      },
+      {
+        "w": "t’adorent",
+        "t": 2.16,
+        "d": 0.96
+      },
+      {
+        "w": "mais",
+        "t": 3.587,
+        "d": 0.013
+      },
+      {
+        "w": "elles",
+        "t": 3.627,
+        "d": 0.133
+      },
+      {
+        "w": "oublient",
+        "t": 3.84,
+        "d": 0.16
+      },
+      {
+        "w": "de",
+        "t": 4.027,
+        "d": 0.053
+      },
+      {
+        "w": "reprendre",
+        "t": 4.133,
+        "d": 0.427
+      },
+      {
+        "w": "rendez-vous",
+        "t": 4.606,
+        "d": 0.594
+      }
+    ]
+  },
+  {
+    "id": "ke02",
+    "at": 6,
+    "gap": 0.5,
+    "text": "Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.",
+    "say": "[confident] Avec Fidéliz, ta carte de fidélité passe dans leur téléphone.",
+    "dur": 3.54,
+    "words": [
+      {
+        "w": "Avec",
+        "t": 0.141,
+        "d": 0.038
+      },
+      {
+        "w": "Fidéliz",
+        "t": 0.259,
+        "d": 0.72
+      },
+      {
+        "w": "ta",
+        "t": 1.032,
+        "d": 0.107
+      },
+      {
+        "w": "carte",
+        "t": 1.192,
+        "d": 0.267
+      },
+      {
+        "w": "de",
+        "t": 1.512,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 1.659,
+        "d": 0.6
+      },
+      {
+        "w": "passe",
+        "t": 2.286,
+        "d": 0.133
+      },
+      {
+        "w": "dans",
+        "t": 2.451,
+        "d": 0.128
+      },
+      {
+        "w": "leur",
+        "t": 2.611,
+        "d": 0.128
+      },
+      {
+        "w": "téléphone",
+        "t": 2.795,
+        "d": 0.744
+      }
+    ]
+  },
+  {
+    "id": "ke03",
+    "at": 9.94,
+    "gap": 0.4,
+    "text": "Un soin, un scan : les points s’ajoutent.",
+    "say": "Un soin, un scan... [excited] les points s’ajoutent !",
+    "dur": 3.15,
+    "words": [
+      {
+        "w": "Un",
+        "t": -0.048,
+        "d": 0.08
+      },
+      {
+        "w": "soin",
+        "t": 0.139,
+        "d": 0.613
+      },
+      {
+        "w": "un",
+        "t": 0.805,
+        "d": 0.107
+      },
+      {
+        "w": "scan",
+        "t": 1.008,
+        "d": 0.864
+      },
+      {
+        "w": "les",
+        "t": 2.082,
+        "d": 0.03
+      },
+      {
+        "w": "points",
+        "t": 2.146,
+        "d": 0.206
+      },
+      {
+        "w": "s’ajoutent",
+        "t": 2.392,
+        "d": 0.6
+      }
+    ]
+  },
+  {
+    "id": "ke04",
+    "at": 13.59,
+    "gap": 0.5,
+    "text": "Et chaque mois, une notification : leur soin les attend.",
+    "say": "[warmly] Et chaque mois, une notification... leur soin les attend.",
+    "dur": 3.67,
+    "words": [
+      {
+        "w": "Et",
+        "t": -0.024,
+        "d": 0.011
+      },
+      {
+        "w": "chaque",
+        "t": 0.044,
+        "d": 0.343
+      },
+      {
+        "w": "mois",
+        "t": 0.451,
+        "d": 0.416
+      },
+      {
+        "w": "une",
+        "t": 0.907,
+        "d": 0.12
+      },
+      {
+        "w": "notification",
+        "t": 1.095,
+        "d": 1.612
+      },
+      {
+        "w": "leur",
+        "t": 2.739,
+        "d": 0.128
+      },
+      {
+        "w": "soin",
+        "t": 2.92,
+        "d": 0.187
+      },
+      {
+        "w": "les",
+        "t": 3.147,
+        "d": 0.12
+      },
+      {
+        "w": "attend",
+        "t": 3.324,
+        "d": 0.343
+      }
+    ]
+  },
+  {
+    "id": "ke05",
+    "at": 17.86,
+    "gap": 0.6,
+    "text": "Fidelyz. La carte de fidélité digitale.",
+    "say": "[warmly] Fidéliz. La carte de fidélité digitale.",
+    "dur": 3.35,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.06,
+        "d": 1.008
+      },
+      {
+        "w": "La",
+        "t": 1.188,
+        "d": 0.24
+      },
+      {
+        "w": "carte",
+        "t": 1.495,
+        "d": 0.333
+      },
+      {
+        "w": "de",
+        "t": 1.881,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 2.048,
+        "d": 0.5
+      },
+      {
+        "w": "digitale",
+        "t": 2.615,
+        "d": 0.733
+      }
+    ]
+  }
+]

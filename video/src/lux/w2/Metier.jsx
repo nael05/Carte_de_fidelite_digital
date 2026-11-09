@@ -127,3 +127,7 @@ export const Resto = make({ set: 'mresto', p: 'tr', pass: 'pass-resto', pass2: '
 // vague 3
 export const Cafe = make({ set: 'mcafe', p: 'ka', pass: 'pass-graphite', pass2: 'pass-graphite-500', plus: 20, lock: 'lock-offre', notif: 'notif-offre', notifWord: 4, rim: '#ffd2a0', endLine: 'Fais revenir tes clients.', l1: { blue: [0], accent: [5, 6, 7] }, l3: { accent: [1], blue: [5, 6] }, l4: { accent: [2], blue: [5, 6, 7, 8] } })
 export const Pizza = make({ set: 'mpizza', p: 'kp', pass: 'pass-pizza', pass2: 'pass-pizza-110', plus: 20, lock: 'lock-pizza', notif: 'notif-pizza', notifWord: 5, rim: '#ff9a6a', endLine: 'Fais revenir tes clients.', l1: { blue: [0], accent: [6, 7, 8] }, l3: { accent: [1], blue: [5, 6] }, l4: { accent: [2, 3], blue: [9, 10, 11, 12] } })
+
+// vague 4
+export const Fleur = make({ set: 'mfleur', p: 'kf', pass: 'pass-fleur', pass2: 'pass-fleur-90', plus: 20, lock: 'lock-fleur', notif: 'notif-fleur', notifWord: 7, rim: '#f3a6b8', endLine: 'Fais revenir tes clients.', l1: { blue: [0], accent: [4, 5, 6, 7] }, l3: { accent: [1], blue: [5, 6] }, l4: { accent: [3, 4, 5], blue: [11, 12, 13, 14] } })
+export const Beaute = make({ set: 'mbeaute', p: 'ke', pass: 'pass-beaute', pass2: 'pass-beaute-180', plus: 30, lock: 'lock-beaute', notif: 'notif-beaute', notifWord: 4, rim: '#e3c9a4', endLine: 'Fais revenir tes clientes.', l1: { blue: [0, 1, 2], accent: [8, 9, 10, 11] }, l3: { accent: [1], blue: [5, 6] }, l4: { accent: [1, 2], blue: [6, 8] } })

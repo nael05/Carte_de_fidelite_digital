@@ -22,7 +22,7 @@ const walker = t => {
   return [0.95, 0.06, Math.min(z, -0.1)]
 }
 
-const City = ({ t }) => {
+export const City = ({ t }) => {
   const boxes = useMemo(() => {
     const out = []
     for (let i = -3; i <= 3; i++)

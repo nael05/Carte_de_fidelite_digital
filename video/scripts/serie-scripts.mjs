@@ -214,6 +214,35 @@ export const SCRIPTS = {
     [0.5, 'Et à chaque passage, tes points montent. Sans rien perdre.', 'Et à chaque passage, [excited] tes points montent ! Sans rien perdre.'],
     [0.6, 'Fidelyz. La carte de fidélité digitale.', '[confident] Fidelyz. La carte de fidélité digitale.'],
   ] },
+  // ─── Vague 4 (série Lumière) ───
+  mfleur: { p: 'kf', start: 0.3, lines: [
+    [0, 'Fleuriste ? Tes clients reviennent… une fois par an.', '[curious] Fleuriste ? [sighs] Tes clients reviennent... une fois par an.'],
+    [0.5, 'Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.', '[confident] Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.'],
+    [0.4, 'Un bouquet, un scan : les points s’ajoutent.', 'Un bouquet, un scan... [excited] les points s’ajoutent !'],
+    [0.5, 'Et avant la fête des mères, une notification : ton bouquet à moins quinze pour cent.', 'Et avant la fête des mères, une notification... [excited] ton bouquet à moins quinze pour cent !'],
+    [0.6, 'Fidelyz. La carte de fidélité digitale.', '[warmly] Fidelyz. La carte de fidélité digitale.'],
+  ] },
+  mbeaute: { p: 'ke', start: 0.3, lines: [
+    [0, 'Institut de beauté ? Tes clientes t’adorent… mais elles oublient de reprendre rendez-vous.', '[curious] Institut de beauté ? Tes clientes t’adorent... [sighs] mais elles oublient de reprendre rendez-vous.'],
+    [0.5, 'Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.', '[confident] Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.'],
+    [0.4, 'Un soin, un scan : les points s’ajoutent.', 'Un soin, un scan... [excited] les points s’ajoutent !'],
+    [0.5, 'Et chaque mois, une notification : leur soin les attend.', '[warmly] Et chaque mois, une notification... leur soin les attend.'],
+    [0.6, 'Fidelyz. La carte de fidélité digitale.', '[warmly] Fidelyz. La carte de fidélité digitale.'],
+  ] },
+  mstats: { p: 'ks', start: 0.3, lines: [
+    [0, 'Combien de clients sont revenus cette semaine ?', '[curious] Combien de clients sont revenus cette semaine ?'],
+    [0.5, 'Avec Fidelyz, la carte de fidélité digitale, tu le sais en temps réel.', '[confident] Avec Fidelyz, la carte de fidélité digitale, tu le sais en temps réel.'],
+    [0.4, 'Clients actifs, passages, points distribués : tout est sur ton tableau de bord.', 'Clients actifs, passages, points distribués... tout est sur ton tableau de bord.'],
+    [0.5, 'Tu sais ce qui marche. Et tu fais revenir les autres.', '[confident] Tu sais ce qui marche. [warmly] Et tu fais revenir les autres.'],
+    [0.6, 'Fidelyz. Lien en bio.', '[excited] Fidelyz. Lien en bio !'],
+  ] },
+  mmulti: { p: 'km', start: 0.3, lines: [
+    [0, 'Tu as plusieurs boutiques ?', '[curious] Tu as plusieurs boutiques ?'],
+    [0.4, 'Avec Fidelyz, une seule carte de fidélité digitale pour toutes.', '[confident] Avec Fidelyz, une seule carte de fidélité digitale pour toutes.'],
+    [0.4, 'Tes clients cumulent leurs points, quelle que soit la boutique.', '[excited] Tes clients cumulent leurs points, quelle que soit la boutique.'],
+    [0.5, 'Et toi, tu suis chaque établissement, depuis un seul compte.', '[warmly] Et toi, tu suis chaque établissement, depuis un seul compte.'],
+    [0.6, 'Fidelyz. Fais revenir tes clients.', '[confident] Fidelyz. Fais revenir tes clients.'],
+  ] },
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const only = process.argv.slice(2)

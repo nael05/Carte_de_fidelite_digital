@@ -8,7 +8,7 @@ import { Cam, Lux, Mirror, Neon, NotifDrop, Pass, PassShot, PhoneShot, Rig, ease
    Le pass du métier sort du noir → balayage : il se pose sur l'écran du téléphone (Fidelyz) → fouet : scan laser, points →
    plongée : la notification du commerce → iris : néon de fin. */
 
-const make = cfg => {
+export const make = cfg => {
   const id = n => `${cfg.p}0${n}`
   const TEX = [cfg.pass, cfg.pass2, 'pass-back', 'lock-vide', cfg.lock, cfg.notif]
   const duree = () => END(id(5)) + 2.4
@@ -123,3 +123,7 @@ const make = cfg => {
 export const Pain = make({ set: 'mpain', p: 'tb', pass: 'pass-pain', pass2: 'pass-pain-130', plus: 10, lock: 'lock-pain', notif: 'notif-pain', notifWord: 6, rim: '#ffbf7a', endLine: 'Fais revenir tes clients.', l1: { blue: [0], accent: [3, 4, 5, 6, 7] }, l3: { accent: [1], blue: [5, 6] }, l4: { accent: [2, 3], blue: [8] } })
 export const Coupe = make({ set: 'mcoupe', p: 'tc', pass: 'pass-coupe', pass2: 'pass-coupe-80', plus: 20, lock: 'lock-coupe', notif: 'notif-coupe', notifWord: 5, rim: '#c9d6ff', endLine: 'Fais revenir tes clients.', l1: { blue: [0], accent: [4, 5, 6, 7] }, l3: { accent: [1], blue: [5, 6] }, l4: { accent: [1, 2], blue: [10] } })
 export const Resto = make({ set: 'mresto', p: 'tr', pass: 'pass-resto', pass2: 'pass-resto-270', plus: 30, lock: 'lock-resto', notif: 'notif-resto', notifWord: 4, rim: '#5aa9ff', endLine: 'Fais revenir tes clients.', l1: { blue: [0], accent: [6] }, l3: { accent: [2], blue: [6, 7] }, l4: { accent: [1, 2], blue: [6, 8] } })
+
+// vague 3
+export const Cafe = make({ set: 'mcafe', p: 'ka', pass: 'pass-graphite', pass2: 'pass-graphite-500', plus: 20, lock: 'lock-offre', notif: 'notif-offre', notifWord: 4, rim: '#ffd2a0', endLine: 'Fais revenir tes clients.', l1: { blue: [0], accent: [5, 6, 7] }, l3: { accent: [1], blue: [5, 6] }, l4: { accent: [2], blue: [5, 6, 7, 8] } })
+export const Pizza = make({ set: 'mpizza', p: 'kp', pass: 'pass-pizza', pass2: 'pass-pizza-110', plus: 20, lock: 'lock-pizza', notif: 'notif-pizza', notifWord: 5, rim: '#ff9a6a', endLine: 'Fais revenir tes clients.', l1: { blue: [0], accent: [6, 7, 8] }, l3: { accent: [1], blue: [5, 6] }, l4: { accent: [2, 3], blue: [9, 10, 11, 12] } })

@@ -63,6 +63,13 @@ const TEX = {
   'pass-graphite-250': { kind: 'pass', skin: 'graphite', points: 250 },
   'lock-cafe-offert': { kind: 'lock', notifs: [{ ...ML, body: 'Bravo Camille ! 500 points : ton prochain café est offert.' }] },
   'notif-cafe-offert': { kind: 'notif', body: 'Bravo Camille ! 500 points : ton prochain café est offert.' },
+  // ─── Vague 3 ───
+  'pass-pizza': { kind: 'pass', skin: 'noir', points: 90, name: 'Pizzeria Nonna', mark: 'N', photo: 'resto' },
+  'pass-pizza-110': { kind: 'pass', skin: 'noir', points: 110, name: 'Pizzeria Nonna', mark: 'N', photo: 'resto' },
+  'notif-pizza': { kind: 'notif', title: 'Pizzeria Nonna', body: 'Ce mardi soir : ta pizza à −30 % avec ta carte. Buon appetito !' },
+  'lock-pizza': { kind: 'lock', notifs: [{ title: 'Pizzeria Nonna', time: 'maintenant', body: 'Ce mardi soir : ta pizza à −30 % avec ta carte. Buon appetito !' }] },
+  'pass-pain-0': { kind: 'pass', skin: 'champagne', points: 0, name: 'Le Fournil', mark: 'F', photo: 'pain' },
+  'pass-pain-10': { kind: 'pass', skin: 'champagne', points: 10, name: 'Le Fournil', mark: 'F', photo: 'pain' },
   qr: { kind: 'qr' },
   papier: { kind: 'paper', stamps: 9 },
   'lock-retour': { kind: 'lock', notifs: [{ ...ML, body: 'Ça fait longtemps ! Ton café t’attend : passe cette semaine, on t’offre le prochain.' }] },

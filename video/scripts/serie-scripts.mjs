@@ -178,6 +178,42 @@ export const SCRIPTS = {
     [0.5, 'Trois : c’est gratuit pour commencer.', 'Trois... [excited] c’est gratuit pour commencer !'],
     [0.6, 'Fidelyz. Lien en bio.', '[confident] Fidelyz. Lien en bio.'],
   ] },
+  // ─── Vague 3 (série Lumière) ───
+  mcafe: { p: 'ka', start: 0.3, lines: [
+    [0, 'Café ? Tes habitués reviennent… mais combien sont partis ?', '[curious] Café ? Tes habitués reviennent... [sighs] mais combien sont partis ?'],
+    [0.5, 'Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.', '[confident] Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.'],
+    [0.4, 'Un café, un scan : les points s’ajoutent.', 'Un café, un scan... [excited] les points s’ajoutent !'],
+    [0.5, 'Et le vendredi, une notification : moins vingt pour cent sur les pâtisseries.', 'Et le vendredi, une notification... [excited] moins vingt pour cent sur les pâtisseries !'],
+    [0.6, 'Fidelyz. La carte de fidélité digitale.', '[warmly] Fidelyz. La carte de fidélité digitale.'],
+  ] },
+  mpizza: { p: 'kp', start: 0.3, lines: [
+    [0, 'Pizzeria ? Tes clients commandent… puis ils essaient la concurrence.', '[curious] Pizzeria ? Tes clients commandent... [sighs] puis ils essaient la concurrence.'],
+    [0.5, 'Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.', '[confident] Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.'],
+    [0.4, 'Une pizza, un scan : les points s’ajoutent.', 'Une pizza, un scan... [excited] les points s’ajoutent !'],
+    [0.5, 'Et le mardi soir, une notification : ta pizza à moins trente pour cent.', 'Et le mardi soir, une notification... [excited] ta pizza à moins trente pour cent !'],
+    [0.6, 'Fidelyz. La carte de fidélité digitale.', '[warmly] Fidelyz. La carte de fidélité digitale.'],
+  ] },
+  mrecomp: { p: 'kr', start: 0.3, lines: [
+    [0, 'Tes clients aiment les cadeaux. Toi, tu choisis lesquels.', '[warmly] Tes clients aiment les cadeaux. [confident] Toi, tu choisis lesquels.'],
+    [0.5, 'Avec Fidelyz, la carte de fidélité digitale, tu crées tes paliers.', 'Avec Fidelyz, la carte de fidélité digitale, tu crées tes paliers.'],
+    [0.4, 'Cent points : un cookie. Trois cents : une boisson. Cinq cents : un café offert.', 'Cent points : un cookie. Trois cents : une boisson. [excited] Cinq cents : un café offert !'],
+    [0.5, 'Et ton client voit sa progression, directement dans son Wallet.', '[warmly] Et ton client voit sa progression, directement dans son Wallet.'],
+    [0.6, 'Fidelyz. Fais revenir tes clients.', '[confident] Fidelyz. Fais revenir tes clients.'],
+  ] },
+  mappli: { p: 'ko', start: 0.3, lines: [
+    [0, 'Une application pour ta boulangerie ? Personne ne la télécharge.', '[curious] Une application pour ta boulangerie ? [sighs] Personne ne la télécharge.'],
+    [0.5, 'Fidelyz, c’est la carte de fidélité digitale, sans application.', '[confident] Fidelyz, c’est la carte de fidélité digitale, sans application.'],
+    [0.4, 'Elle s’ajoute dans Apple Wallet ou Google Wallet, en un geste.', 'Elle s’ajoute dans Apple Wallet ou Google Wallet, en un geste.'],
+    [0.5, 'Ils l’ont déjà dans leur téléphone. Juste à côté de leur carte bancaire.', '[warmly] Ils l’ont déjà dans leur téléphone. Juste à côté de leur carte bancaire.'],
+    [0.6, 'Fidelyz. Gratuit pour commencer.', '[excited] Fidelyz. Gratuit pour commencer !'],
+  ] },
+  mpov: { p: 'kv', start: 0.3, lines: [
+    [0, 'POV : tu passes à la caisse de ta boulangerie préférée.', '[warmly] P.O.V... tu passes à la caisse de ta boulangerie préférée.'],
+    [0.4, 'Un QR code. Tu scannes.', 'Un QR code. [curious] Tu scannes.'],
+    [0.4, 'Prénom, email : la carte de fidélité s’ajoute à ton Wallet.', 'Prénom, email... [excited] la carte de fidélité s’ajoute à ton Wallet.'],
+    [0.5, 'Et à chaque passage, tes points montent. Sans rien perdre.', 'Et à chaque passage, [excited] tes points montent ! Sans rien perdre.'],
+    [0.6, 'Fidelyz. La carte de fidélité digitale.', '[confident] Fidelyz. La carte de fidélité digitale.'],
+  ] },
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const only = process.argv.slice(2)

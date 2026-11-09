@@ -1,0 +1,292 @@
+[
+  {
+    "id": "kr01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Tes clients aiment les cadeaux. Toi, tu choisis lesquels.",
+    "say": "[warmly] Tes clients aiment les cadeaux. [confident] Toi, tu choisis lesquels.",
+    "dur": 3.6,
+    "words": [
+      {
+        "w": "Tes",
+        "t": 0.21,
+        "d": 0.03
+      },
+      {
+        "w": "clients",
+        "t": 0.29,
+        "d": 0.35
+      },
+      {
+        "w": "aiment",
+        "t": 0.68,
+        "d": 0.12
+      },
+      {
+        "w": "les",
+        "t": 0.84,
+        "d": 0.12
+      },
+      {
+        "w": "cadeaux",
+        "t": 1.024,
+        "d": 0.416
+      },
+      {
+        "w": "Toi",
+        "t": 2.307,
+        "d": 0.173
+      },
+      {
+        "w": "tu",
+        "t": 2.507,
+        "d": 0.053
+      },
+      {
+        "w": "choisis",
+        "t": 2.6,
+        "d": 0.36
+      },
+      {
+        "w": "lesquels",
+        "t": 3,
+        "d": 0.6
+      }
+    ]
+  },
+  {
+    "id": "kr02",
+    "at": 4.4,
+    "gap": 0.5,
+    "text": "Avec Fidelyz, la carte de fidélité digitale, tu crées tes paliers.",
+    "say": "Avec Fidéliz, la carte de fidélité digitale, tu crées tes paliers.",
+    "dur": 4.32,
+    "words": [
+      {
+        "w": "Avec",
+        "t": -0.077,
+        "d": 0.24
+      },
+      {
+        "w": "Fidéliz",
+        "t": 0.243,
+        "d": 0.72
+      },
+      {
+        "w": "la",
+        "t": 1.016,
+        "d": 0.107
+      },
+      {
+        "w": "carte",
+        "t": 1.19,
+        "d": 0.333
+      },
+      {
+        "w": "de",
+        "t": 1.55,
+        "d": 0.053
+      },
+      {
+        "w": "fidélité",
+        "t": 1.663,
+        "d": 0.5
+      },
+      {
+        "w": "digitale",
+        "t": 2.23,
+        "d": 0.733
+      },
+      {
+        "w": "tu",
+        "t": 3.016,
+        "d": 0.107
+      },
+      {
+        "w": "crées",
+        "t": 3.15,
+        "d": 0.133
+      },
+      {
+        "w": "tes",
+        "t": 3.323,
+        "d": 0.12
+      },
+      {
+        "w": "paliers",
+        "t": 3.483,
+        "d": 0.84
+      }
+    ]
+  },
+  {
+    "id": "kr03",
+    "at": 9.12,
+    "gap": 0.4,
+    "text": "Cent points : un cookie. Trois cents : une boisson. Cinq cents : un café offert.",
+    "say": "Cent points : un cookie. Trois cents : une boisson. [excited] Cinq cents : un café offert !",
+    "dur": 7.76,
+    "words": [
+      {
+        "w": "Cent",
+        "t": 0,
+        "d": 0.16
+      },
+      {
+        "w": "points",
+        "t": 0.217,
+        "d": 0.343
+      },
+      {
+        "w": "un",
+        "t": 1.067,
+        "d": 0.053
+      },
+      {
+        "w": "cookie",
+        "t": 1.189,
+        "d": 0.771
+      },
+      {
+        "w": "Trois",
+        "t": 2.05,
+        "d": 0.35
+      },
+      {
+        "w": "cents",
+        "t": 2.48,
+        "d": 0.4
+      },
+      {
+        "w": "une",
+        "t": 3.22,
+        "d": 0.06
+      },
+      {
+        "w": "boisson",
+        "t": 3.333,
+        "d": 0.987
+      },
+      {
+        "w": "Cinq",
+        "t": 4.87,
+        "d": 0.09
+      },
+      {
+        "w": "cents",
+        "t": 5.027,
+        "d": 0.333
+      },
+      {
+        "w": "un",
+        "t": 5.707,
+        "d": 0.053
+      },
+      {
+        "w": "café",
+        "t": 5.84,
+        "d": 0.32
+      },
+      {
+        "w": "offert",
+        "t": 6.2,
+        "d": 0.44
+      }
+    ]
+  },
+  {
+    "id": "kr04",
+    "at": 17.38,
+    "gap": 0.5,
+    "text": "Et ton client voit sa progression, directement dans son Wallet.",
+    "say": "[warmly] Et ton client voit sa progression, directement dans son Wallet.",
+    "dur": 3.57,
+    "words": [
+      {
+        "w": "Et",
+        "t": 0.038,
+        "d": 0.013
+      },
+      {
+        "w": "ton",
+        "t": 0.091,
+        "d": 0.12
+      },
+      {
+        "w": "client",
+        "t": 0.268,
+        "d": 0.343
+      },
+      {
+        "w": "voit",
+        "t": 0.664,
+        "d": 0.187
+      },
+      {
+        "w": "sa",
+        "t": 0.904,
+        "d": 0.107
+      },
+      {
+        "w": "progression",
+        "t": 1.064,
+        "d": 1.067
+      },
+      {
+        "w": "directement",
+        "t": 2.188,
+        "d": 0.583
+      },
+      {
+        "w": "dans",
+        "t": 2.803,
+        "d": 0.128
+      },
+      {
+        "w": "son",
+        "t": 2.971,
+        "d": 0.12
+      },
+      {
+        "w": "Wallet",
+        "t": 3.148,
+        "d": 0.423
+      }
+    ]
+  },
+  {
+    "id": "kr05",
+    "at": 21.55,
+    "gap": 0.6,
+    "text": "Fidelyz. Fais revenir tes clients.",
+    "say": "[confident] Fidéliz. Fais revenir tes clients.",
+    "dur": 2.16,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.072,
+        "d": 0.888
+      },
+      {
+        "w": "Fais",
+        "t": 1,
+        "d": 0.12
+      },
+      {
+        "w": "revenir",
+        "t": 1.173,
+        "d": 0.427
+      },
+      {
+        "w": "tes",
+        "t": 1.64,
+        "d": 0.12
+      },
+      {
+        "w": "clients",
+        "t": 1.8,
+        "d": 0.36
+      }
+    ]
+  }
+]

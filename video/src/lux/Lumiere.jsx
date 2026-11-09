@@ -6,10 +6,13 @@ import { Etapes, duree as d5 } from './v5/Etapes'
 import { Geo, duree as d6 } from './v6/Geo'
 import { Design, duree as d7 } from './v7/Design'
 import { Prix, duree as d8 } from './v8/Prix'
-import { Coupe, Pain, Resto } from './w2/Metier'
+import { Cafe, Coupe, Pain, Pizza, Resto } from './w2/Metier'
 import { Camille, duree as dCam } from './w2/Camille'
 import { Relance, duree as dRel } from './w2/Relance'
 import { Raisons, duree as dRai } from './w2/Raisons'
+import { Recompenses, duree as dRec } from './w3/Recompenses'
+import { Appli, duree as dApp } from './w3/Appli'
+import { Pov, duree as dPov } from './w3/Pov'
 
 /* Série « Lumière » (v2 de la série TikTok, PLAN-TIKTOK.md) : huit vidéos, dans l'ordre de publication */
 export const LUMIERE = [
@@ -28,4 +31,10 @@ export const LUMIERE = [
   { id: 'M4Camille', set: 'mcamille', out: 'lumiere-12-camille', component: Camille, duree: dCam },
   { id: 'M5Relance', set: 'mrelance', out: 'lumiere-13-relance', component: Relance, duree: dRel },
   { id: 'M6Raisons', set: 'mraisons', out: 'lumiere-14-3-raisons', component: Raisons, duree: dRai },
+  // vague 3
+  { id: 'N1Cafe', set: 'mcafe', out: 'lumiere-15-cafe', component: Cafe.Video, duree: Cafe.duree },
+  { id: 'N2Pizza', set: 'mpizza', out: 'lumiere-16-pizzeria', component: Pizza.Video, duree: Pizza.duree },
+  { id: 'N3Recompenses', set: 'mrecomp', out: 'lumiere-17-recompenses', component: Recompenses, duree: dRec },
+  { id: 'N4Appli', set: 'mappli', out: 'lumiere-18-sans-appli', component: Appli, duree: dApp },
+  { id: 'N5Pov', set: 'mpov', out: 'lumiere-19-pov-client', component: Pov, duree: dPov },
 ]

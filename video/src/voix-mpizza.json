@@ -1,0 +1,277 @@
+[
+  {
+    "id": "kp01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Pizzeria ? Tes clients commandent… puis ils essaient la concurrence.",
+    "say": "[curious] Pizzeria ? Tes clients commandent... [sighs] puis ils essaient la concurrence.",
+    "dur": 5.08,
+    "words": [
+      {
+        "w": "Pizzeria",
+        "t": 0.157,
+        "d": 0.36
+      },
+      {
+        "w": "Tes",
+        "t": 1.117,
+        "d": 0.12
+      },
+      {
+        "w": "clients",
+        "t": 1.287,
+        "d": 0.35
+      },
+      {
+        "w": "commandent",
+        "t": 1.687,
+        "d": 0.59
+      },
+      {
+        "w": "puis",
+        "t": 3.493,
+        "d": 0.064
+      },
+      {
+        "w": "ils",
+        "t": 3.597,
+        "d": 0.12
+      },
+      {
+        "w": "essaient",
+        "t": 3.749,
+        "d": 0.208
+      },
+      {
+        "w": "la",
+        "t": 3.984,
+        "d": 0.053
+      },
+      {
+        "w": "concurrence",
+        "t": 4.085,
+        "d": 0.992
+      }
+    ]
+  },
+  {
+    "id": "kp02",
+    "at": 5.88,
+    "gap": 0.5,
+    "text": "Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.",
+    "say": "[confident] Avec Fidéliz, ta carte de fidélité passe dans leur téléphone.",
+    "dur": 3.56,
+    "words": [
+      {
+        "w": "Avec",
+        "t": 0.165,
+        "d": 0.038
+      },
+      {
+        "w": "Fidéliz",
+        "t": 0.243,
+        "d": 0.76
+      },
+      {
+        "w": "ta",
+        "t": 1.083,
+        "d": 0.16
+      },
+      {
+        "w": "carte",
+        "t": 1.296,
+        "d": 0.267
+      },
+      {
+        "w": "de",
+        "t": 1.616,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 1.763,
+        "d": 0.52
+      },
+      {
+        "w": "passe",
+        "t": 2.35,
+        "d": 0.333
+      },
+      {
+        "w": "dans",
+        "t": 2.699,
+        "d": 0.064
+      },
+      {
+        "w": "leur",
+        "t": 2.811,
+        "d": 0.192
+      },
+      {
+        "w": "téléphone",
+        "t": 3.051,
+        "d": 0.512
+      }
+    ]
+  },
+  {
+    "id": "kp03",
+    "at": 9.84,
+    "gap": 0.4,
+    "text": "Une pizza, un scan : les points s’ajoutent.",
+    "say": "Une pizza, un scan... [excited] les points s’ajoutent !",
+    "dur": 2.62,
+    "words": [
+      {
+        "w": "Une",
+        "t": -0.102,
+        "d": 0.16
+      },
+      {
+        "w": "pizza",
+        "t": 0.125,
+        "d": 0.573
+      },
+      {
+        "w": "un",
+        "t": 0.725,
+        "d": 0.053
+      },
+      {
+        "w": "scan",
+        "t": 0.89,
+        "d": 0.688
+      },
+      {
+        "w": "les",
+        "t": 1.714,
+        "d": 0.024
+      },
+      {
+        "w": "points",
+        "t": 1.772,
+        "d": 0.206
+      },
+      {
+        "w": "s’ajoutent",
+        "t": 2.018,
+        "d": 0.52
+      }
+    ]
+  },
+  {
+    "id": "kp04",
+    "at": 12.96,
+    "gap": 0.5,
+    "text": "Et le mardi soir, une notification : ta pizza à moins trente pour cent.",
+    "say": "Et le mardi soir, une notification... [excited] ta pizza à moins trente pour cent !",
+    "dur": 4.6,
+    "words": [
+      {
+        "w": "Et",
+        "t": -0.043,
+        "d": 0.08
+      },
+      {
+        "w": "le",
+        "t": 0.064,
+        "d": 0.053
+      },
+      {
+        "w": "mardi",
+        "t": 0.157,
+        "d": 0.28
+      },
+      {
+        "w": "soir",
+        "t": 0.533,
+        "d": 0.544
+      },
+      {
+        "w": "une",
+        "t": 1.117,
+        "d": 0.12
+      },
+      {
+        "w": "notification",
+        "t": 1.305,
+        "d": 1.451
+      },
+      {
+        "w": "ta",
+        "t": 2.824,
+        "d": 0.013
+      },
+      {
+        "w": "pizza",
+        "t": 2.917,
+        "d": 0.4
+      },
+      {
+        "w": "à",
+        "t": 3.437,
+        "d": 0.12
+      },
+      {
+        "w": "moins",
+        "t": 3.584,
+        "d": 0.133
+      },
+      {
+        "w": "trente",
+        "t": 3.757,
+        "d": 0.2
+      },
+      {
+        "w": "pour",
+        "t": 4.005,
+        "d": 0.192
+      },
+      {
+        "w": "cent",
+        "t": 4.245,
+        "d": 0.192
+      }
+    ]
+  },
+  {
+    "id": "kp05",
+    "at": 18.16,
+    "gap": 0.6,
+    "text": "Fidelyz. La carte de fidélité digitale.",
+    "say": "[warmly] Fidéliz. La carte de fidélité digitale.",
+    "dur": 3.44,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.072,
+        "d": 1.128
+      },
+      {
+        "w": "La",
+        "t": 1.227,
+        "d": 0.053
+      },
+      {
+        "w": "carte",
+        "t": 1.36,
+        "d": 0.4
+      },
+      {
+        "w": "de",
+        "t": 1.813,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 1.98,
+        "d": 0.58
+      },
+      {
+        "w": "digitale",
+        "t": 2.64,
+        "d": 0.8
+      }
+    ]
+  }
+]

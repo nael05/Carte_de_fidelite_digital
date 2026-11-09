@@ -1,0 +1,282 @@
+[
+  {
+    "id": "ko01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Une application pour ta boulangerie ? Personne ne la télécharge.",
+    "say": "[curious] Une application pour ta boulangerie ? [sighs] Personne ne la télécharge.",
+    "dur": 3.58,
+    "words": [
+      {
+        "w": "Une",
+        "t": 0.028,
+        "d": 0.03
+      },
+      {
+        "w": "application",
+        "t": 0.105,
+        "d": 0.513
+      },
+      {
+        "w": "pour",
+        "t": 0.65,
+        "d": 0.128
+      },
+      {
+        "w": "ta",
+        "t": 0.805,
+        "d": 0.053
+      },
+      {
+        "w": "boulangerie",
+        "t": 0.898,
+        "d": 0.52
+      },
+      {
+        "w": "Personne",
+        "t": 2.563,
+        "d": 0.135
+      },
+      {
+        "w": "ne",
+        "t": 2.725,
+        "d": 0.053
+      },
+      {
+        "w": "la",
+        "t": 2.805,
+        "d": 0.053
+      },
+      {
+        "w": "télécharge",
+        "t": 2.922,
+        "d": 0.656
+      }
+    ]
+  },
+  {
+    "id": "ko02",
+    "at": 4.38,
+    "gap": 0.5,
+    "text": "Fidelyz, c’est la carte de fidélité digitale, sans application.",
+    "say": "[confident] Fidéliz, c’est la carte de fidélité digitale, sans application.",
+    "dur": 4.38,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.038,
+        "d": 0.81
+      },
+      {
+        "w": "c’est",
+        "t": 0.888,
+        "d": 0.12
+      },
+      {
+        "w": "la",
+        "t": 1.035,
+        "d": 0.053
+      },
+      {
+        "w": "carte",
+        "t": 1.155,
+        "d": 0.333
+      },
+      {
+        "w": "de",
+        "t": 1.541,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 1.688,
+        "d": 0.52
+      },
+      {
+        "w": "digitale",
+        "t": 2.275,
+        "d": 0.973
+      },
+      {
+        "w": "sans",
+        "t": 3.296,
+        "d": 0.192
+      },
+      {
+        "w": "application",
+        "t": 3.541,
+        "d": 1.067
+      }
+    ]
+  },
+  {
+    "id": "ko03",
+    "at": 9.16,
+    "gap": 0.4,
+    "text": "Elle s’ajoute dans Apple Wallet ou Google Wallet, en un geste.",
+    "say": "Elle s’ajoute dans Apple Wallet ou Google Wallet, en un geste.",
+    "dur": 3.61,
+    "words": [
+      {
+        "w": "Elle",
+        "t": -0.073,
+        "d": 0.16
+      },
+      {
+        "w": "s’ajoute",
+        "t": 0.127,
+        "d": 0.36
+      },
+      {
+        "w": "dans",
+        "t": 0.535,
+        "d": 0.192
+      },
+      {
+        "w": "Apple",
+        "t": 0.78,
+        "d": 0.267
+      },
+      {
+        "w": "Wallet",
+        "t": 1.116,
+        "d": 0.411
+      },
+      {
+        "w": "ou",
+        "t": 1.607,
+        "d": 0.16
+      },
+      {
+        "w": "Google",
+        "t": 1.824,
+        "d": 0.343
+      },
+      {
+        "w": "Wallet",
+        "t": 2.236,
+        "d": 0.571
+      },
+      {
+        "w": "en",
+        "t": 2.86,
+        "d": 0.107
+      },
+      {
+        "w": "un",
+        "t": 2.994,
+        "d": 0.053
+      },
+      {
+        "w": "geste",
+        "t": 3.127,
+        "d": 0.48
+      }
+    ]
+  },
+  {
+    "id": "ko04",
+    "at": 13.27,
+    "gap": 0.5,
+    "text": "Ils l’ont déjà dans leur téléphone. Juste à côté de leur carte bancaire.",
+    "say": "[warmly] Ils l’ont déjà dans leur téléphone. Juste à côté de leur carte bancaire.",
+    "dur": 3.68,
+    "words": [
+      {
+        "w": "Ils",
+        "t": 0.057,
+        "d": 0.024
+      },
+      {
+        "w": "l’ont",
+        "t": 0.121,
+        "d": 0.12
+      },
+      {
+        "w": "déjà",
+        "t": 0.305,
+        "d": 0.256
+      },
+      {
+        "w": "dans",
+        "t": 0.577,
+        "d": 0.064
+      },
+      {
+        "w": "leur",
+        "t": 0.673,
+        "d": 0.128
+      },
+      {
+        "w": "téléphone",
+        "t": 0.857,
+        "d": 0.584
+      },
+      {
+        "w": "Juste",
+        "t": 1.585,
+        "d": 0.656
+      },
+      {
+        "w": "à",
+        "t": 2.281,
+        "d": 0.04
+      },
+      {
+        "w": "côté",
+        "t": 2.369,
+        "d": 0.192
+      },
+      {
+        "w": "de",
+        "t": 2.588,
+        "d": 0.053
+      },
+      {
+        "w": "leur",
+        "t": 2.673,
+        "d": 0.128
+      },
+      {
+        "w": "carte",
+        "t": 2.841,
+        "d": 0.2
+      },
+      {
+        "w": "bancaire",
+        "t": 3.101,
+        "d": 0.58
+      }
+    ]
+  },
+  {
+    "id": "ko05",
+    "at": 17.55,
+    "gap": 0.6,
+    "text": "Fidelyz. Gratuit pour commencer.",
+    "say": "[excited] Fidéliz. Gratuit pour commencer !",
+    "dur": 1.98,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.054,
+        "d": 0.89
+      },
+      {
+        "w": "Gratuit",
+        "t": 0.984,
+        "d": 0.28
+      },
+      {
+        "w": "pour",
+        "t": 1.296,
+        "d": 0.128
+      },
+      {
+        "w": "commencer",
+        "t": 1.456,
+        "d": 0.368
+      }
+    ]
+  }
+]

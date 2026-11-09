@@ -77,7 +77,7 @@ const PROFILS = {
   // Série « Studio » (PLAN-TIKTOK.md) : une seule voix, Paul K, posée
   ...Object.fromEntries(['perdue', 'ecran', 'film', 'versus', 'etapes', 'geo', 'design', 'offre'].map(k => [k, { voice: 'MBIQRZjHPU6xEjGuB3b8', speed: k === 'offre' ? 1.04 : 1.0, stability: 0.5, style: 0.28 }])),
   // Série « Lumière » : Paul K sur le modèle v3, qui joue les émotions indiquées entre crochets
-  ...Object.fromEntries(['lperdue', 'lecran', 'lfilm', 'lversus', 'letapes', 'lgeo', 'ldesign', 'lprix', 'mpain', 'mcoupe', 'mresto', 'mcamille', 'mrelance', 'mraisons'].map(k => [k, { voice: 'MBIQRZjHPU6xEjGuB3b8', model: 'eleven_v3', stability: 0.5 }])),
+  ...Object.fromEntries(['lperdue', 'lecran', 'lfilm', 'lversus', 'letapes', 'lgeo', 'ldesign', 'lprix', 'mpain', 'mcoupe', 'mresto', 'mcamille', 'mrelance', 'mraisons', 'mcafe', 'mpizza', 'mrecomp', 'mappli', 'mpov'].map(k => [k, { voice: 'MBIQRZjHPU6xEjGuB3b8', model: 'eleven_v3', stability: 0.5 }])),
   chrono: { voice: 'mvhJVdVoTWVUtL4keT7W', speed: 1.08, stability: 0.35, style: 0.5 }, // Simon, énergique et rapide
 }
 const P = PROFILS[SET] ?? {}

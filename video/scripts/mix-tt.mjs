@@ -55,6 +55,68 @@ const BAR_CC = 1.7423 // phonk, 137,75 BPM
 const CONFIG = {
   // ─── Série « Studio » (PLAN-TIKTOK.md) : musique très en retrait, peu de bruitages, tous discrets ───
   // ─── Série « Lumière » (v2) ───
+  ...(SET === 'mpov' && {
+    mpov: {
+      dur: Math.ceil((word('kv05') + 4.6) * 30) / 30,
+      music: 'musique-keynote.mp3',
+      segments: [[0, 40, 13.7 - (word('kv03') - 0.35)]],
+      xf: 0.02, open: -12, duck: -25, fadeIn: 0.5, fadeOut: 1.8,
+      sfx: [
+        ['scintille', 0.2, -25, 1, { len: 2.4, fade: 1 }],
+        ['whoosh', word('kv02') - 0.35, -21, 1, { crest: true }],
+        ['bip-caisse', word('kv02', 4), -19, 1.1],
+        ['clic', word('kv03'), -24, 1.3],
+        ['clic', word('kv03', 1), -24, 1.4],
+        ['swoosh2', word('kv03', 6) - 0.2, -20, 1, { crest: true }],
+        ['whoosh_rapide', word('kv04') - 0.35, -19, 1, { crest: true }],
+        ['pop', word('kv04', 6), -19, 1],
+        ['neon', word('kv05') - 0.2, -19, 1.1, { len: 1.4, fade: 0.6 }],
+        ['hit_logo', word('kv05') + 0.1, -16, 1],
+      ],
+    },
+  }),
+  ...(SET === 'mappli' && {
+    mappli: {
+      dur: Math.ceil((word('ko05') + 4.6) * 30) / 30,
+      music: 'musique-noir.mp3',
+      segments: [[0, 40, 16.2 - (word('ko02') - 0.4)]],
+      xf: 0.02, open: -9, duck: -21, fadeIn: 0.3, fadeOut: 1.6,
+      sfx: [
+        ['laser_long', 0.1, -25, 1, { len: 1.6, fade: 0.6 }],
+        ['feu', word('ko01', 5) - 0.1, -24, 1.2, { len: 1.8, fade: 0.8 }],
+        ['scintille', word('ko01', 6), -22, 1, { len: 1.4, fade: 0.6 }],
+        ['whoosh_rapide', word('ko02') - 0.4, -18, 1, { crest: true }],
+        ['neon', word('ko02') + 0.1, -22, 1, { len: 1, fade: 0.4 }],
+        ['whoosh7', word('ko03') - 0.35, -19, 1, { crest: true }],
+        ['laser_long', word('ko04') - 0.35, -24, 1.1, { len: 1.2, fade: 0.5 }],
+        ['swoosh2', word('ko04', 6) - 0.2, -20, 1, { crest: true }],
+        ['clic', word('ko04', 12) + 0.15, -18, 0.9],
+        ['neon', word('ko05') - 0.2, -19, 1.1, { len: 1.4, fade: 0.6 }],
+        ['hit_logo', word('ko05') + 0.1, -16, 1],
+      ],
+    },
+  }),
+  ...(SET === 'mrecomp' && {
+    mrecomp: {
+      dur: Math.ceil((word('kr05') + 4.6) * 30) / 30,
+      music: 'musique-keynote.mp3',
+      segments: [[0, 40, 13.7 - (word('kr03') - 0.35)]],
+      xf: 0.02, open: -12, duck: -25, fadeIn: 0.4, fadeOut: 1.8,
+      sfx: [
+        ['laser_long', 0.1, -25, 1, { len: 1.8, fade: 0.6 }],
+        ['whoosh7', word('kr01', 5) - 0.3, -21, 1, { crest: true }],
+        ['visqueux', word('kr02') - 0.4, -25, 1, { len: 1, fade: 0.4 }],
+        ['whoosh', word('kr03') - 0.35, -20, 1, { crest: true }],
+        ['hit', word('kr03', 0), -21, 1],
+        ['hit', word('kr03', 4), -21, 1.06],
+        ['hit', word('kr03', 8), -20, 1.12],
+        ['scintille', word('kr03', 11), -21, 1, { len: 1.6, fade: 0.7 }],
+        ['laser_long', word('kr04') - 0.3, -24, 1.2, { len: 1.2, fade: 0.5 }],
+        ['neon', word('kr05') - 0.2, -19, 1.1, { len: 1.4, fade: 0.6 }],
+        ['hit_logo', word('kr05') + 0.1, -16, 1],
+      ],
+    },
+  }),
   ...(SET === 'mraisons' && {
     mraisons: {
       dur: Math.ceil((word('tx05') + 4.6) * 30) / 30,
@@ -124,14 +186,14 @@ const CONFIG = {
     },
   }),
   // vague 2 : vidéos par métier (même montage)
-  ...(['mpain', 'mcoupe', 'mresto'].includes(SET) && (() => {
-    const p = { mpain: 'tb', mcoupe: 'tc', mresto: 'tr' }[SET]
+  ...(['mpain', 'mcoupe', 'mresto', 'mcafe', 'mpizza'].includes(SET) && (() => {
+    const p = { mpain: 'tb', mcoupe: 'tc', mresto: 'tr', mcafe: 'ka', mpizza: 'kp' }[SET]
     const w = (n, k = 0) => word(`${p}0${n}`, k)
-    const nw = { mpain: 6, mcoupe: 5, mresto: 4 }[SET]
+    const nw = { mpain: 6, mcoupe: 5, mresto: 4, mcafe: 4, mpizza: 5 }[SET]
     return {
       [SET]: {
         dur: Math.ceil((w(5) + 4.6) * 30) / 30,
-        music: SET === 'mcoupe' ? 'musique-keynote.mp3' : 'musique-noir.mp3',
+        music: SET === 'mcoupe' ? 'musique-keynote.mp3' : SET === 'mpizza' ? 'musique-chrono.mp3' : 'musique-noir.mp3',
         segments: [[0, 40, (SET === 'mcoupe' ? 13.7 : 16.2) - (w(2) - 0.45)]],
         xf: 0.02, open: SET === 'mcoupe' ? -12 : -9, duck: SET === 'mcoupe' ? -25 : -21, fadeIn: 0.3, fadeOut: 1.6,
         sfx: [

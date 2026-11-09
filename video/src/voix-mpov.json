@@ -1,0 +1,257 @@
+[
+  {
+    "id": "kv01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "POV : tu passes à la caisse de ta boulangerie préférée.",
+    "say": "[warmly] P.O.V... tu passes à la caisse de ta boulangerie préférée.",
+    "dur": 2.87,
+    "words": [
+      {
+        "w": "P.O.V",
+        "t": 0.059,
+        "d": 0.81
+      },
+      {
+        "w": "tu",
+        "t": 0.896,
+        "d": 0.053
+      },
+      {
+        "w": "passes",
+        "t": 0.983,
+        "d": 0.206
+      },
+      {
+        "w": "à",
+        "t": 1.229,
+        "d": 0.04
+      },
+      {
+        "w": "la",
+        "t": 1.322,
+        "d": 0.107
+      },
+      {
+        "w": "caisse",
+        "t": 1.456,
+        "d": 0.133
+      },
+      {
+        "w": "de",
+        "t": 1.642,
+        "d": 0.107
+      },
+      {
+        "w": "ta",
+        "t": 1.776,
+        "d": 0.053
+      },
+      {
+        "w": "boulangerie",
+        "t": 1.869,
+        "d": 0.48
+      },
+      {
+        "w": "préférée",
+        "t": 2.379,
+        "d": 0.49
+      }
+    ]
+  },
+  {
+    "id": "kv02",
+    "at": 3.57,
+    "gap": 0.4,
+    "text": "Un QR code. Tu scannes.",
+    "say": "Un QR code. [curious] Tu scannes.",
+    "dur": 2.73,
+    "words": [
+      {
+        "w": "Un",
+        "t": -0.069,
+        "d": 0.16
+      },
+      {
+        "w": "QR",
+        "t": 0.198,
+        "d": 0.213
+      },
+      {
+        "w": "code",
+        "t": 0.507,
+        "d": 0.464
+      },
+      {
+        "w": "Tu",
+        "t": 1.918,
+        "d": 0.013
+      },
+      {
+        "w": "scannes",
+        "t": 2.011,
+        "d": 0.72
+      }
+    ]
+  },
+  {
+    "id": "kv03",
+    "at": 6.7,
+    "gap": 0.4,
+    "text": "Prénom, email : la carte de fidélité s’ajoute à ton Wallet.",
+    "say": "Prénom, email... [excited] la carte de fidélité s’ajoute à ton Wallet.",
+    "dur": 4.55,
+    "words": [
+      {
+        "w": "Prénom",
+        "t": -0.092,
+        "d": 0.56
+      },
+      {
+        "w": "email",
+        "t": 0.575,
+        "d": 0.613
+      },
+      {
+        "w": "la",
+        "t": 1.895,
+        "d": 0.013
+      },
+      {
+        "w": "carte",
+        "t": 1.975,
+        "d": 0.333
+      },
+      {
+        "w": "de",
+        "t": 2.361,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 2.508,
+        "d": 0.44
+      },
+      {
+        "w": "s’ajoute",
+        "t": 2.988,
+        "d": 0.36
+      },
+      {
+        "w": "à",
+        "t": 3.388,
+        "d": 0.04
+      },
+      {
+        "w": "ton",
+        "t": 3.468,
+        "d": 0.12
+      },
+      {
+        "w": "Wallet",
+        "t": 3.657,
+        "d": 0.891
+      }
+    ]
+  },
+  {
+    "id": "kv04",
+    "at": 11.75,
+    "gap": 0.5,
+    "text": "Et à chaque passage, tes points montent. Sans rien perdre.",
+    "say": "Et à chaque passage, [excited] tes points montent ! Sans rien perdre.",
+    "dur": 3.72,
+    "words": [
+      {
+        "w": "Et",
+        "t": -0.045,
+        "d": 0.08
+      },
+      {
+        "w": "à",
+        "t": 0.115,
+        "d": 0.08
+      },
+      {
+        "w": "chaque",
+        "t": 0.241,
+        "d": 0.274
+      },
+      {
+        "w": "passage",
+        "t": 0.575,
+        "d": 0.74
+      },
+      {
+        "w": "tes",
+        "t": 1.451,
+        "d": 0.024
+      },
+      {
+        "w": "points",
+        "t": 1.532,
+        "d": 0.343
+      },
+      {
+        "w": "montent",
+        "t": 1.939,
+        "d": 0.336
+      },
+      {
+        "w": "Sans",
+        "t": 2.627,
+        "d": 0.128
+      },
+      {
+        "w": "rien",
+        "t": 2.819,
+        "d": 0.256
+      },
+      {
+        "w": "perdre",
+        "t": 3.139,
+        "d": 0.576
+      }
+    ]
+  },
+  {
+    "id": "kv05",
+    "at": 16.07,
+    "gap": 0.6,
+    "text": "Fidelyz. La carte de fidélité digitale.",
+    "say": "[confident] Fidéliz. La carte de fidélité digitale.",
+    "dur": 3.04,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.072,
+        "d": 1.128
+      },
+      {
+        "w": "La",
+        "t": 1.227,
+        "d": 0.053
+      },
+      {
+        "w": "carte",
+        "t": 1.347,
+        "d": 0.333
+      },
+      {
+        "w": "de",
+        "t": 1.707,
+        "d": 0.053
+      },
+      {
+        "w": "fidélité",
+        "t": 1.82,
+        "d": 0.5
+      },
+      {
+        "w": "digitale",
+        "t": 2.4,
+        "d": 0.64
+      }
+    ]
+  }
+]

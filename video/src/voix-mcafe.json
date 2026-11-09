@@ -1,0 +1,267 @@
+[
+  {
+    "id": "ka01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Café ? Tes habitués reviennent… mais combien sont partis ?",
+    "say": "[curious] Café ? Tes habitués reviennent... [sighs] mais combien sont partis ?",
+    "dur": 4.55,
+    "words": [
+      {
+        "w": "Café",
+        "t": 0.019,
+        "d": 0.061
+      },
+      {
+        "w": "Tes",
+        "t": 0.224,
+        "d": 0.064
+      },
+      {
+        "w": "habitués",
+        "t": 0.309,
+        "d": 1.067
+      },
+      {
+        "w": "reviennent",
+        "t": 1.429,
+        "d": 0.693
+      },
+      {
+        "w": "mais",
+        "t": 3.328,
+        "d": 0.021
+      },
+      {
+        "w": "combien",
+        "t": 3.397,
+        "d": 0.352
+      },
+      {
+        "w": "sont",
+        "t": 3.797,
+        "d": 0.192
+      },
+      {
+        "w": "partis",
+        "t": 4.037,
+        "d": 0.352
+      }
+    ]
+  },
+  {
+    "id": "ka02",
+    "at": 5.35,
+    "gap": 0.5,
+    "text": "Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.",
+    "say": "[confident] Avec Fidéliz, ta carte de fidélité passe dans leur téléphone.",
+    "dur": 3.61,
+    "words": [
+      {
+        "w": "Avec",
+        "t": 0.133,
+        "d": 0.038
+      },
+      {
+        "w": "Fidéliz",
+        "t": 0.251,
+        "d": 0.72
+      },
+      {
+        "w": "ta",
+        "t": 1.024,
+        "d": 0.107
+      },
+      {
+        "w": "carte",
+        "t": 1.184,
+        "d": 0.267
+      },
+      {
+        "w": "de",
+        "t": 1.478,
+        "d": 0.053
+      },
+      {
+        "w": "fidélité",
+        "t": 1.591,
+        "d": 0.58
+      },
+      {
+        "w": "passe",
+        "t": 2.211,
+        "d": 0.2
+      },
+      {
+        "w": "dans",
+        "t": 2.443,
+        "d": 0.128
+      },
+      {
+        "w": "leur",
+        "t": 2.635,
+        "d": 0.256
+      },
+      {
+        "w": "téléphone",
+        "t": 2.947,
+        "d": 0.664
+      }
+    ]
+  },
+  {
+    "id": "ka03",
+    "at": 9.36,
+    "gap": 0.4,
+    "text": "Un café, un scan : les points s’ajoutent.",
+    "say": "Un café, un scan... [excited] les points s’ajoutent !",
+    "dur": 3.1,
+    "words": [
+      {
+        "w": "Un",
+        "t": -0.03,
+        "d": 0.08
+      },
+      {
+        "w": "café",
+        "t": 0.13,
+        "d": 0.56
+      },
+      {
+        "w": "un",
+        "t": 0.717,
+        "d": 0.053
+      },
+      {
+        "w": "scan",
+        "t": 0.866,
+        "d": 0.864
+      },
+      {
+        "w": "les",
+        "t": 1.94,
+        "d": 0.03
+      },
+      {
+        "w": "points",
+        "t": 2.016,
+        "d": 0.274
+      },
+      {
+        "w": "s’ajoutent",
+        "t": 2.33,
+        "d": 0.52
+      }
+    ]
+  },
+  {
+    "id": "ka04",
+    "at": 12.96,
+    "gap": 0.5,
+    "text": "Et le vendredi, une notification : moins vingt pour cent sur les pâtisseries.",
+    "say": "Et le vendredi, une notification... [excited] moins vingt pour cent sur les pâtisseries !",
+    "dur": 4.02,
+    "words": [
+      {
+        "w": "Et",
+        "t": -0.062,
+        "d": 0.08
+      },
+      {
+        "w": "le",
+        "t": 0.045,
+        "d": 0.053
+      },
+      {
+        "w": "vendredi",
+        "t": 0.13,
+        "d": 0.608
+      },
+      {
+        "w": "une",
+        "t": 0.778,
+        "d": 0.12
+      },
+      {
+        "w": "notification",
+        "t": 0.953,
+        "d": 1.224
+      },
+      {
+        "w": "moins",
+        "t": 2.278,
+        "d": 0.067
+      },
+      {
+        "w": "vingt",
+        "t": 2.425,
+        "d": 0.16
+      },
+      {
+        "w": "pour",
+        "t": 2.617,
+        "d": 0.128
+      },
+      {
+        "w": "cent",
+        "t": 2.793,
+        "d": 0.192
+      },
+      {
+        "w": "sur",
+        "t": 3.025,
+        "d": 0.12
+      },
+      {
+        "w": "les",
+        "t": 3.165,
+        "d": 0.06
+      },
+      {
+        "w": "pâtisseries",
+        "t": 3.265,
+        "d": 0.6
+      }
+    ]
+  },
+  {
+    "id": "ka05",
+    "at": 17.58,
+    "gap": 0.6,
+    "text": "Fidelyz. La carte de fidélité digitale.",
+    "say": "[warmly] Fidéliz. La carte de fidélité digitale.",
+    "dur": 3.28,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.072,
+        "d": 0.648
+      },
+      {
+        "w": "La",
+        "t": 0.907,
+        "d": 0.373
+      },
+      {
+        "w": "carte",
+        "t": 1.347,
+        "d": 0.333
+      },
+      {
+        "w": "de",
+        "t": 1.707,
+        "d": 0.053
+      },
+      {
+        "w": "fidélité",
+        "t": 1.84,
+        "d": 0.64
+      },
+      {
+        "w": "digitale",
+        "t": 2.547,
+        "d": 0.733
+      }
+    ]
+  }
+]

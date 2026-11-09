@@ -13,6 +13,7 @@ import { Metier } from './metier/Metier'
 import { Portefeuille } from './portefeuille/Portefeuille'
 import { Astuces } from './astuces/Astuces'
 import { Appli } from './appli/Appli'
+import { ExpressVideo } from './express/videos'
 
 /* Images de couverture (TikTok, Reels) : une image de la vidéo, un voile, un titre court au centre
    (zone visible aussi dans la grille Instagram, recadrée en 4:5). */
@@ -35,6 +36,19 @@ export const COUVERTURES = {
   '17': { C: Astuces, at: 1.6, l1: '3 astuces pour que', l2: 'tes clients reviennent', a: C.blue },
   '18': { C: Appli, at: 3.6, l1: 'Une appli pour', l2: 'ta boutique ?', a: C.red },
   '16': { C: Metier, p: { metier: 'institut' }, at: 1.8, l1: 'Si t\'as un institut', l2: 'de beauté', a: '#f2c6d4' },
+  '19': { C: ExpressVideo, p: { video: 'rep-android' }, at: 4.6, l1: 'Et pour mes clients', l2: 'sur Android ?', a: C.green },
+  '20': { C: ExpressVideo, p: { video: 'rep-ages' }, at: 8.2, l1: 'Mes clients sont âgés,', l2: 'ils vont y arriver ?', a: '#ff9f0a' },
+  '21': { C: ExpressVideo, p: { video: 'rep-telephone' }, at: 10.2, l1: 'Il change de téléphone,', l2: 'il perd ses points ?', a: C.blue },
+  '22': { C: ExpressVideo, p: { video: 'pov-client' }, at: 13.0, l1: 'POV :', l2: "t'es le client", a: C.blue },
+  '23': { C: ExpressVideo, p: { video: 'erreurs' }, at: 4.6, l1: '3 erreurs qui font', l2: 'fuir tes clients', a: C.red },
+  '24': { C: ExpressVideo, p: { video: 'paliers' }, at: 9.2, l1: 'Une récompense ?', l2: 'Mets-en deux', a: C.champagne },
+  '25': { C: ExpressVideo, p: { video: 'stats' }, at: 7.6, l1: 'Combien de clients', l2: 'sont revenus ?', a: C.blue },
+  '26': { C: ExpressVideo, p: { video: 'rep-prix' }, at: 0, l1: "C'est combien", l2: 'Fidelyz ?', a: C.green },
+  '27': { C: ExpressVideo, p: { video: 'relance' }, at: 4.8, l1: 'Les clients qui', l2: 'ne reviennent plus', a: C.red },
+  '28': { C: ExpressVideo, p: { video: 'pov-commercant' }, at: 6.0, l1: 'POV :', l2: "t'es le commerçant", a: C.champagne },
+  '29': { C: ExpressVideo, p: { video: 'mythe-wallet' }, at: 5.0, l1: 'Le Wallet, pas que', l2: 'pour les billets', a: C.blue },
+  '30': { C: ExpressVideo, p: { video: 'rep-donnees' }, at: 13.5, l1: 'Les données de', l2: 'tes clients 🔒', a: C.blue },
+  '31': { C: ExpressVideo, p: { video: 'rep-caisse' }, at: 4.5, l1: 'Ça va ralentir', l2: 'ma caisse ?', a: '#ff9f0a' },
 }
 
 export const Couverture = ({ n = '01' }) => {

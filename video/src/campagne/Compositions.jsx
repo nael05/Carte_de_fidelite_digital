@@ -53,6 +53,12 @@ export const Campagne = () => (
     {V('23-erreurs', ExpressVideo, dureeExpress('erreurs'), 1080, 1920, { video: 'erreurs' })}
     {V('24-paliers', ExpressVideo, dureeExpress('paliers'), 1080, 1920, { video: 'paliers' })}
     {V('25-stats', ExpressVideo, dureeExpress('stats'), 1080, 1920, { video: 'stats' })}
+    {V('26-rep-prix', ExpressVideo, dureeExpress('rep-prix'), 1080, 1920, { video: 'rep-prix' })}
+    {V('27-relance', ExpressVideo, dureeExpress('relance'), 1080, 1920, { video: 'relance' })}
+    {V('28-pov-commercant', ExpressVideo, dureeExpress('pov-commercant'), 1080, 1920, { video: 'pov-commercant' })}
+    {V('29-mythe-wallet', ExpressVideo, dureeExpress('mythe-wallet'), 1080, 1920, { video: 'mythe-wallet' })}
+    {V('30-rep-donnees', ExpressVideo, dureeExpress('rep-donnees'), 1080, 1920, { video: 'rep-donnees' })}
+    {V('31-rep-caisse', ExpressVideo, dureeExpress('rep-caisse'), 1080, 1920, { video: 'rep-caisse' })}
     {V('S1-carte', SigCarte, D_SIGCARTE)}
     {V('S2-message', SigMessage, D_SIGMESSAGE)}
     {V('S3-design', SigDesign, D_SIGDESIGN)}

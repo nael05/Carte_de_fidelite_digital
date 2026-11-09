@@ -133,6 +133,104 @@ Couverture : 3,5 s (le panneau STOP).
 
 ---
 
+## Saison 2 — format « express » (réponses aux commentaires, POV, conseils)
+Ces vidéos répondent aux vraies objections. Astuce TikTok : quand quelqu'un pose une de ces questions en commentaire, publie la vidéo avec « Répondre en vidéo » à ce commentaire : TikTok la montre à ceux qui ont vu la première.
+
+### 19 — Et pour Android ?
+> Réponse à une question qu'on nous pose tout le temps : oui, ça marche aussi sur Android 🤖 La carte va dans Google Wallet, déjà installé sur le téléphone.
+> Tes clients, plutôt iPhone ou Android ?
+
+`#android #googlewallet #cartedefidelite #commerçant #faq`
+Couverture : 4,5 s (le téléphone Android avec la carte).
+
+### 20 — Mes clients sont âgés
+> « Mes clientes ont 70 ans, elles vont savoir faire ? » Oui 👵📱 Un scan avec l'appareil photo, un bouton, c'est fini. Et sinon, tu crées la carte pour elles.
+> Ta clientèle, elle a quel âge en moyenne ?
+
+`#commerçant #cartedefidelite #seniors #commercedeproximite #faq`
+Couverture : 8 s (l'appareil photo qui scanne le QR code).
+
+### 21 — Et s'il change de téléphone ?
+> Ton client change de téléphone : il perd ses points ? Non 🙅 Ses points sont enregistrés dans ton espace pro, pas dans le téléphone.
+> T'avais d'autres questions ? Pose-les en commentaire, on répond en vidéo 👇
+
+`#cartedefidelite #applewallet #commerçant #faq #fidelisationclient`
+Couverture : 10 s (la carte dans le Wallet du nouveau téléphone).
+
+### 22 — POV : t'es le client
+> POV : t'es le client de ta boulangerie préférée 🥐 Une notif, une carte qui s'affiche toute seule, un café offert. Tes clients pourraient vivre ça demain.
+> Tu reçois des notifs de quels commerces, toi ?
+
+`#pov #boulangerie #cartedefidelite #commerçant #experienceclient`
+Couverture : 13 s (la carte qui passe à 480 points).
+
+### 23 — Trois erreurs qui font fuir tes clients
+> 3 erreurs qui font fuir tes clients fidèles 🚩 La 2e, presque tout le monde la fait.
+> Tu te reconnais dans laquelle ?
+
+`#erreur #commerçant #fidelisationclient #marketinglocal #astucecommerçant`
+Couverture : 4,5 s (« 20 tampons pour un café ? »).
+
+### 24 — Une récompense, c'est bien. Deux, c'est mieux.
+> L'astuce des paliers : un café à 500 points, une pâtisserie à 1000 ☕🥐 Tes clients ont toujours un objectif proche, alors ils reviennent plus souvent.
+> Tu offrirais quoi en premier palier ?
+
+`#astucecommerçant #fidelisationclient #cartedefidelite #boulangerie #commerçant`
+Couverture : 9 s (la carte dorée).
+
+### 25 — Combien de clients sont revenus ?
+> Tu sais combien de clients sont revenus ce mois-ci ? Avec une carte papier, impossible à savoir 🤷 Avec Fidelyz, tout est dans ton espace pro.
+> Tu suis tes chiffres de fidélité, toi ?
+
+`#commerçant #statistiques #fidelisationclient #entrepreneur #cartedefidelite`
+Couverture : 7,5 s (le tableau de bord).
+
+## Saison 3 — objections et coulisses
+
+### 26 — C'est combien ?
+> « C'est combien ton truc ? » 💸 Pour démarrer : 0 €, gratuit pour toujours jusqu'à 15 clients. Et ensuite, sans engagement.
+> Tu payes combien aujourd'hui pour tes cartes papier ?
+
+`#commerçant #cartedefidelite #gratuit #entrepreneur #faq`
+Couverture : 0 s (fond noir, titre seul).
+
+### 27 — Les clients qui ne reviennent plus
+> 17 clients pas revenus depuis 3 mois 😬 Tu les vois dans ton espace pro, et un message suffit à leur donner envie de revenir.
+> Tu fais quoi, toi, pour les clients qui disparaissent ?
+
+`#fidelisationclient #commerçant #relanceclient #marketinglocal #astucecommerçant`
+Couverture : 5 s (l'écran « Rétention »).
+
+### 28 — POV : t'es le commerçant
+> POV : t'es le commerçant 🧑‍🍳 8 h, un scan. 14 h, une offre à tous tes clients. 18 h, tes stats. Tout depuis ton téléphone.
+> C'est quoi ton heure de rush ?
+
+`#pov #commerçant #journeetype #entrepreneur #cartedefidelite`
+Couverture : 6 s (« Points ajoutés ! »).
+
+### 29 — Le Wallet, pas que pour les billets d'avion
+> Ton Wallet, c'est pas que pour les billets d'avion ✈️ Ta carte de fidélité peut y être aussi, et s'afficher quand ton client passe devant ta boutique.
+> Tu savais que ça existait ?
+
+`#applewallet #googlewallet #astuce #commerçant #cartedefidelite`
+Couverture : 5 s (la carte dans le Wallet).
+
+### 30 — Et les données de mes clients ?
+> « Les données de mes clients, elles vont où ? » 🔒 Chiffrées, espace sécurisé, conforme RGPD : export et suppression à la demande.
+> D'autres questions ? Pose-les en commentaire 👇
+
+`#rgpd #donneespersonnelles #commerçant #cartedefidelite #faq`
+Couverture : 13,5 s (le fichier clients).
+
+### 31 — Ça va ralentir ma caisse ?
+> « Ça va pas ralentir ma caisse au rush de midi ? » ⏱️ Scanner, choisir, valider : moins de temps que de rendre la monnaie.
+> Ton rush, c'est le midi ou le soir ?
+
+`#commerçant #restaurant #cafe #caisse #cartedefidelite`
+Couverture : 4,5 s (l'écran Caisse).
+
+---
+
 ## Épingler en haut du profil
 1. **01 Le tour complet** (tout comprendre)
 2. **06 10 secondes côté client** (lever l'objection « application »)

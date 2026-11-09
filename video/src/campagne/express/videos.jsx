@@ -57,6 +57,50 @@ export const PLANS = {
     { cue: 'rg4', type: 'iphone', ecran: 'page', page: 'm-stats-activite', scroll: 300 },
     { cue: 'rg5', type: 'fin' },
   ],
+  // ── Saison 3 ──
+  'rep-prix': [
+    { cue: 'rh1', type: 'commentaire', user: '@patisserie.margaux', text: "C'est combien ton truc ? 💸" },
+    { cue: 'rh2', type: 'gros', text: '0 €', sub: "pour toujours, jusqu'à 15 clients", color: C.green, size: 360, accent: { 3: C.green, 4: C.green } },
+    { cue: 'rh3', type: 'liste', items: [['Ta carte dans Apple & Google Wallet', Q => W(Q, 'rh3', 4)], ['Les points', Q => W(Q, 'rh3', 9)], ['Les récompenses', Q => W(Q, 'rh3', 12)]] },
+    { cue: 'rh4', type: 'gros', text: 'Sans engagement', sub: "tu changes d'offre en deux clics", color: C.blue, size: 130, accent: { 11: C.blue, 12: C.blue } },
+    { cue: 'rh5', type: 'fin' },
+  ],
+  relance: [
+    { cue: 'ri1', type: 'gros', text: '17', sub: 'clients pas revenus depuis 3 mois', color: C.red, size: 420, accent: { 0: C.red } },
+    { cue: 'ri2', type: 'iphone', ecran: 'page', page: 'm-stats-clients', scroll: 60, accent: { 14: C.red } },
+    { cue: 'ri3', type: 'iphone', ecran: 'page', page: 'm-campagnes-filled' },
+    { cue: 'ri4', type: 'iphone', ecran: 'lock', heure: '17:45', notifs: [notif('Ça fait longtemps ! ☕ Votre 2e boisson est offerte cette semaine.', Q => W(Q, 'ri4', 2), { title: 'Maison Lumière', mark: 'M' })], zoomNotif: Q => W(Q, 'ri4', 2) + 0.4, son: 'sons_tt/notif.mp3', sonAt: Q => W(Q, 'ri4', 2) },
+    { cue: 'ri5', type: 'fin' },
+  ],
+  'pov-commercant': [
+    { cue: 'rj1', type: 'gros', text: 'POV', sub: "t'es le commerçant", color: C.champagne },
+    { cue: 'rj2', type: 'iphone', ecran: 'page', page: 'm-caisse-search' },
+    { cue: 'rj3', type: 'iphone', ecran: 'page', page: 'm-caisse-done', accent: { 2: C.green }, son: 'sons_tiktok/bip-caisse.mp3', sonAt: Q => W(Q, 'rj3', 2) },
+    { cue: 'rj4', type: 'iphone', ecran: 'page', page: 'm-campagnes-filled' },
+    { cue: 'rj5', type: 'iphone', ecran: 'page', page: 'm-stats' },
+    { cue: 'rj6', type: 'fin' },
+  ],
+  'mythe-wallet': [
+    { cue: 'rk1', type: 'gros', text: 'Wallet', sub: "pas que pour les billets d'avion ✈️", size: 260 },
+    { cue: 'rk2', type: 'iphone', ecran: 'wallet', slide: true, accent: { 1: C.blue, 2: C.blue, 3: C.blue } },
+    { cue: 'rk3', type: 'iphone', ecran: 'lock', heure: '12:04', notifs: [notif('Maison Lumière est à 50 m ☕ Votre carte est prête.', Q => W(Q, 'rk3', 2), { title: 'Maison Lumière', mark: 'M', time: 'à proximité' })], zoomNotif: Q => W(Q, 'rk3', 2) + 0.4, son: 'sons_tt/notif_douce.mp3', sonAt: Q => W(Q, 'rk3', 2) },
+    { cue: 'rk4', type: 'duo', accent: { 7: C.green } },
+    { cue: 'rk5', type: 'fin' },
+  ],
+  'rep-donnees': [
+    { cue: 'rl1', type: 'commentaire', user: '@opticien.martin', text: 'Et les données de mes clients, elles vont où ? 🔒' },
+    { cue: 'rl2', type: 'gros', text: '🔒', sub: 'Données chiffrées, espace sécurisé', size: 300 },
+    { cue: 'rl3', type: 'liste', items: [['Conforme RGPD', Q => W(Q, 'rl3', 1)], ['Export à la demande', Q => W(Q, 'rl3', 9)], ['Suppression à la demande', Q => W(Q, 'rl3', 12)]] },
+    { cue: 'rl4', type: 'iphone', ecran: 'page', page: 'm-clients' },
+    { cue: 'rl5', type: 'fin' },
+  ],
+  'rep-caisse': [
+    { cue: 'rm1', type: 'commentaire', user: '@cafe.des.arts', text: 'Ça va pas ralentir ma caisse le midi ? ⏱️' },
+    { cue: 'rm2', type: 'iphone', ecran: 'page', page: 'm-caisse' },
+    { cue: 'rm3', type: 'iphone', ecran: 'page', page: 'm-caisse-points20' },
+    { cue: 'rm4', type: 'gros', text: '3 gestes', sub: 'scanner · choisir · valider', color: C.green, size: 190, accent: { 0: C.green, 1: C.green }, son: 'sons_tiktok/bip-caisse.mp3', sonAt: Q => W(Q, 'rm4', 4) },
+    { cue: 'rm5', type: 'fin' },
+  ],
 }
 
 export const ExpressVideo = ({ voix = true, son = true, video }) => <Express voix={voix} son={son} video={video} plans={PLANS[video]} />

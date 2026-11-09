@@ -1314,5 +1314,167 @@
     "gap": 0.5
    }
   ]
+ },
+ "rep-prix": {
+  "titre": "26 C'est combien ?",
+  "voix": "anatole",
+  "lignes": [
+   {
+    "id": "rh1",
+    "text": "On me demande souvent : c'est combien, Fidelyz ?"
+   },
+   {
+    "id": "rh2",
+    "text": "Pour démarrer, c'est zéro euro. Gratuit pour toujours, jusqu'à quinze clients."
+   },
+   {
+    "id": "rh3",
+    "text": "Avec la carte dans Apple et Google Wallet, les points et les récompenses."
+   },
+   {
+    "id": "rh4",
+    "text": "Et quand ta boutique grandit, tu passes à l'offre supérieure, sans engagement."
+   },
+   {
+    "id": "rh5",
+    "text": "Fidelyz. Teste-le gratuitement, lien en bio."
+   }
+  ]
+ },
+ "relance": {
+  "titre": "27 Les clients qui ne reviennent plus",
+  "voix": "anatole",
+  "lignes": [
+   {
+    "id": "ri1",
+    "text": "Dix-sept clients ne sont pas revenus depuis trois mois."
+   },
+   {
+    "id": "ri2",
+    "text": "Dans ton espace pro, tu les vois tout de suite : ce sont tes inactifs."
+   },
+   {
+    "id": "ri3",
+    "text": "Un message, une petite offre, et tu leur donnes une raison de revenir."
+   },
+   {
+    "id": "ri4",
+    "text": "Leur téléphone vibre, et ta boutique est sur leur écran.",
+    "hold": 0.5
+   },
+   {
+    "id": "ri5",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients. Lien en bio."
+   }
+  ]
+ },
+ "pov-commercant": {
+  "titre": "28 POV : t'es le commerçant",
+  "voix": "anatole",
+  "lignes": [
+   {
+    "id": "rj1",
+    "text": "POV : t'es le commerçant."
+   },
+   {
+    "id": "rj2",
+    "text": "Huit heures. Camille passe en caisse, tu retrouves sa carte."
+   },
+   {
+    "id": "rj3",
+    "text": "Vingt points, validé. Sa carte se met à jour toute seule."
+   },
+   {
+    "id": "rj4",
+    "text": "Quatorze heures, c'est calme. Tu envoies une offre à tous tes clients."
+   },
+   {
+    "id": "rj5",
+    "text": "Dix-huit heures. Tu regardes qui est revenu cette semaine."
+   },
+   {
+    "id": "rj6",
+    "text": "Fidelyz. Ta fidélité, depuis ton téléphone. Lien en bio."
+   }
+  ]
+ },
+ "mythe-wallet": {
+  "titre": "29 Le Wallet, pas que pour les billets",
+  "voix": "anatole",
+  "lignes": [
+   {
+    "id": "rk1",
+    "text": "Le Wallet de ton téléphone, c'est pas que pour les billets d'avion."
+   },
+   {
+    "id": "rk2",
+    "text": "Ta carte de fidélité peut y être aussi, avec ton logo et tes couleurs."
+   },
+   {
+    "id": "rk3",
+    "text": "Et elle s'affiche toute seule quand ton client passe devant ta boutique.",
+    "hold": 0.4
+   },
+   {
+    "id": "rk4",
+    "text": "Sur iPhone comme sur Android, sans rien télécharger."
+   },
+   {
+    "id": "rk5",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients. Lien en bio."
+   }
+  ]
+ },
+ "rep-donnees": {
+  "titre": "30 Et les données de mes clients ?",
+  "voix": "anatole",
+  "lignes": [
+   {
+    "id": "rl1",
+    "text": "Question légitime : et les données de mes clients, elles sont protégées ?"
+   },
+   {
+    "id": "rl2",
+    "text": "Oui. Elles sont chiffrées, et ton espace pro est sécurisé."
+   },
+   {
+    "id": "rl3",
+    "text": "C'est conforme au RGPD : un client peut demander l'export ou la suppression de ses données."
+   },
+   {
+    "id": "rl4",
+    "text": "Et toi, tu retrouves tous tes clients au même endroit."
+   },
+   {
+    "id": "rl5",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients. Lien en bio."
+   }
+  ]
+ },
+ "rep-caisse": {
+  "titre": "31 Ça va ralentir ma caisse ?",
+  "voix": "anatole",
+  "lignes": [
+   {
+    "id": "rm1",
+    "text": "On m'a demandé : ça va pas ralentir ma caisse, au rush de midi ?"
+   },
+   {
+    "id": "rm2",
+    "text": "Ton client montre sa carte, tu la scannes avec ton téléphone."
+   },
+   {
+    "id": "rm3",
+    "text": "Tu choisis les points, tu valides."
+   },
+   {
+    "id": "rm4",
+    "text": "Trois gestes, et c'est crédité. Moins de temps que de rendre la monnaie."
+   },
+   {
+    "id": "rm5",
+    "text": "Fidelyz. Gratuit jusqu'à quinze clients. Lien en bio."
+   }
+  ]
  }
 }

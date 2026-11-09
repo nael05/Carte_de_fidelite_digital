@@ -90,7 +90,7 @@ export const PLANS = {
   'rep-donnees': [
     { cue: 'rl1', type: 'commentaire', user: '@opticien.martin', text: 'Et les données de mes clients, elles vont où ? 🔒' },
     { cue: 'rl2', type: 'gros', text: '🔒', sub: 'Données chiffrées, espace sécurisé', size: 300 },
-    { cue: 'rl3', type: 'liste', items: [['Conforme RGPD', Q => W(Q, 'rl3', 1)], ['Export à la demande', Q => W(Q, 'rl3', 9)], ['Suppression à la demande', Q => W(Q, 'rl3', 12)]] },
+    { cue: 'rl3', type: 'liste', items: [['Conforme RGPD', Q => W(Q, 'rl3', 1)], ['Export à la demande', Q => W(Q, 'rl3', 6)], ['Suppression à la demande', Q => W(Q, 'rl3', 9)]] },
     { cue: 'rl4', type: 'iphone', ecran: 'page', page: 'm-clients' },
     { cue: 'rl5', type: 'fin' },
   ],

@@ -95,6 +95,19 @@ const setSkin = skin => {
     await wait(1200); await page.evaluate(() => scrollTo(0, 0))
   }
 
+  // Mode « stats » : seulement les écrans de statistiques (node capture.cjs stats)
+  if (ONLY === 'stats') {
+    await go('/pro/dashboard'); await tab('Statistiques')
+    await capture('stats', {})
+    await click('Activité').catch(() => {}); await wait(3500)
+    await capture('stats-activite', {})
+    await click('Clients', 'button').catch(() => {}); await wait(3500)
+    await capture('stats-clients', {})
+    fs.writeFileSync(JSON_OUT, JSON.stringify(meta, null, 1))
+    await browser.close()
+    return
+  }
+
   // ── Caisse ──
   setSkin('graphite')
   await go('/pro/dashboard')

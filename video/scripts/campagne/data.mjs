@@ -23,11 +23,11 @@ for (let k = 29; k >= 0; k--) {
   const dt = new Date(Date.UTC(2026, 10, 8 - k)); const dow = dt.getUTCDay()
   daily.push({ date: dt.toISOString().slice(0, 10), scans: Math.round((dow === 0 ? 18 : dow === 6 ? 68 : 38) * (0.75 + rnd() * 0.5) * (1 + (29 - k) / 70)) })
 }
-R['GET /pro/stats/activity.*'] = { daily, byDayOfWeek: [1,2,3,4,5,6,7].map(dow => ({ dow, scans: [140,150,160,175,210,260,90][dow-1] })),
-  byHour: Array.from({ length: 13 }, (_, i) => ({ hour: 8 + i, scans: Math.round(30 + 90 * Math.exp(-((8 + i - 12.5) ** 2) / 3) + 60 * Math.exp(-((8 + i - 17.5) ** 2) / 2)) })) }
+R['GET /pro/stats/activity.*'] = { daily, byDayOfWeek: [1,2,3,4,5,6,7].map(dow => ({ dow, count: [140,150,160,175,210,260,90][dow-1] })),
+  byHour: Array.from({ length: 13 }, (_, i) => ({ hour: 8 + i, count: Math.round(30 + 90 * Math.exp(-((8 + i - 12.5) ** 2) / 3) + 60 * Math.exp(-((8 + i - 17.5) ** 2) / 2)) })) }
 R['GET /pro/stats/clients'] = { retention: { last7days: 121, last30days: 186, last90days: 231, inactive: 17, total: 248 },
   growth: [['2026-06',22],['2026-07',38],['2026-08',41],['2026-09',57],['2026-10',48],['2026-11',42]].map(([month,newClients]) => ({ month, newClients })),
-  distribution: [{ label: '0-100', value: 64 }, { label: '100-300', value: 92 }, { label: '300-500', value: 71 }, { label: '500+', value: 21 }] }
+  distribution: [{ range_label: '0-100', count: 64 }, { range_label: '100-300', count: 92 }, { range_label: '300-500', count: 71 }, { range_label: '500+', count: 21 }] }
 R['GET /pro/stats/rewards'] = { totals: { totalPointsSpent: 38500, totalRedemptions: 77 }, monthly: [['2026-06',4],['2026-07',9],['2026-08',12],['2026-09',16],['2026-10',19],['2026-11',17]].map(([month, redemptions]) => ({ month, redemptions })),
   tiers: [{ id: 1, points_required: 500, title: 'Un café offert', redemptions: 61 }, { id: 2, points_required: 1000, title: 'Une pâtisserie offerte', redemptions: 16 }] }
 R['GET /pro/notifications/history'] = { notifications: [

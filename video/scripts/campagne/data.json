@@ -3288,85 +3288,85 @@
    "byDayOfWeek": [
     {
      "dow": 1,
-     "scans": 140
+     "count": 140
     },
     {
      "dow": 2,
-     "scans": 150
+     "count": 150
     },
     {
      "dow": 3,
-     "scans": 160
+     "count": 160
     },
     {
      "dow": 4,
-     "scans": 175
+     "count": 175
     },
     {
      "dow": 5,
-     "scans": 210
+     "count": 210
     },
     {
      "dow": 6,
-     "scans": 260
+     "count": 260
     },
     {
      "dow": 7,
-     "scans": 90
+     "count": 90
     }
    ],
    "byHour": [
     {
      "hour": 8,
-     "scans": 30
+     "count": 30
     },
     {
      "hour": 9,
-     "scans": 32
+     "count": 32
     },
     {
      "hour": 10,
-     "scans": 41
+     "count": 41
     },
     {
      "hour": 11,
-     "scans": 73
+     "count": 73
     },
     {
      "hour": 12,
-     "scans": 113
+     "count": 113
     },
     {
      "hour": 13,
-     "scans": 113
+     "count": 113
     },
     {
      "hour": 14,
-     "scans": 73
+     "count": 73
     },
     {
      "hour": 15,
-     "scans": 44
+     "count": 44
     },
     {
      "hour": 16,
-     "scans": 51
+     "count": 51
     },
     {
      "hour": 17,
-     "scans": 83
+     "count": 83
     },
     {
      "hour": 18,
-     "scans": 83
+     "count": 83
     },
     {
      "hour": 19,
-     "scans": 49
+     "count": 49
     },
     {
      "hour": 20,
-     "scans": 33
+     "count": 33
     }
    ]
   },
@@ -3406,20 +3406,20 @@
    ],
    "distribution": [
     {
-     "label": "0-100",
-     "value": 64
+     "range_label": "0-100",
+     "count": 64
     },
     {
-     "label": "100-300",
-     "value": 92
+     "range_label": "100-300",
+     "count": 92
     },
     {
-     "label": "300-500",
-     "value": 71
+     "range_label": "300-500",
+     "count": 71
     },
     {
-     "label": "500+",
-     "value": 21
+     "range_label": "500+",
+     "count": 21
     }
    ]
   },

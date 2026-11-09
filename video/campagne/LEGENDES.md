@@ -169,7 +169,7 @@ Couverture : 13 s (la carte qui passe à 480 points).
 > Tu te reconnais dans laquelle ?
 
 `#erreur #commerçant #fidelisationclient #marketinglocal #astucecommerçant`
-Couverture : 4,5 s (« 20 tampons pour un café ? »).
+Couverture : 7,5 s (l'écran verrouillé, sans aucun message).
 
 ### 24 — Une récompense, c'est bien. Deux, c'est mieux.
 > L'astuce des paliers : un café à 500 points, une pâtisserie à 1000 ☕🥐 Tes clients ont toujours un objectif proche, alors ils reviennent plus souvent.
@@ -192,7 +192,7 @@ Couverture : 7,5 s (le tableau de bord).
 > Tu payes combien aujourd'hui pour tes cartes papier ?
 
 `#commerçant #cartedefidelite #gratuit #entrepreneur #faq`
-Couverture : 0 s (fond noir, titre seul).
+Couverture : générée à part (la carte, titre « C'est combien Fidelyz ? »).
 
 ### 27 — Les clients qui ne reviennent plus
 > 17 clients pas revenus depuis 3 mois 😬 Tu les vois dans ton espace pro, et un message suffit à leur donner envie de revenir.

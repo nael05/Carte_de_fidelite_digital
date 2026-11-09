@@ -61,8 +61,8 @@ export const PLANS = {
   'rep-prix': [
     { cue: 'rh1', type: 'commentaire', user: '@patisserie.margaux', text: "C'est combien ton truc ? 💸" },
     { cue: 'rh2', type: 'gros', text: '0 €', sub: "pour toujours, jusqu'à 15 clients", color: C.green, size: 360, accent: { 3: C.green, 4: C.green } },
-    { cue: 'rh3', type: 'liste', items: [['Ta carte dans Apple & Google Wallet', Q => W(Q, 'rh3', 4)], ['Les points', Q => W(Q, 'rh3', 9)], ['Les récompenses', Q => W(Q, 'rh3', 12)]] },
-    { cue: 'rh4', type: 'gros', text: 'Sans engagement', sub: "tu changes d'offre en deux clics", color: C.blue, size: 130, accent: { 11: C.blue, 12: C.blue } },
+    { cue: 'rh3', type: 'liste', items: [['Apple & Google Wallet', Q => W(Q, 'rh3', 4)], ['Les points', Q => W(Q, 'rh3', 9)], ['Les récompenses', Q => W(Q, 'rh3', 12)]] },
+    { cue: 'rh4', type: 'gros', text: 'Sans engagement', sub: "tu changes d'offre en deux clics", color: C.blue, size: 112, accent: { 11: C.blue, 12: C.blue } },
     { cue: 'rh5', type: 'fin' },
   ],
   relance: [

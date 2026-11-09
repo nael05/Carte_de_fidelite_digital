@@ -14,6 +14,7 @@ import { Metier, dureeMetier } from './metier/Metier'
 import { Spot, DUREE as D_SPOT } from './spot/Spot'
 import { Portefeuille, DUREE as D_PORTEFEUILLE } from './portefeuille/Portefeuille'
 import { Couverture } from './Couverture'
+import { SigCarte, D_SIGCARTE, SigMessage, D_SIGMESSAGE, SigDesign, D_SIGDESIGN, SigCaisse, D_SIGCAISSE, SigClient, D_SIGCLIENT, SigFilm, D_SIGFILM } from './signature/Videos'
 import { Astuces, DUREE as D_ASTUCES } from './astuces/Astuces'
 import { Appli, DUREE as D_APPLI } from './appli/Appli'
 
@@ -44,6 +45,12 @@ export const Campagne = () => (
     {V('17-astuces', Astuces, D_ASTUCES)}
     {V('18-appli', Appli, D_APPLI)}
     <Composition id="C-couverture" component={Couverture} durationInFrames={40 * FPS} fps={FPS} width={1080} height={1920} defaultProps={{ n: '01' }} />
+    {V('S1-carte', SigCarte, D_SIGCARTE)}
+    {V('S2-message', SigMessage, D_SIGMESSAGE)}
+    {V('S3-design', SigDesign, D_SIGDESIGN)}
+    {V('S4-caisse', SigCaisse, D_SIGCAISSE)}
+    {V('S5-client', SigClient, D_SIGCLIENT)}
+    {V('S-film', SigFilm, D_SIGFILM, 1920, 1080)}
     {V('site-paysage', Site, D_SITE, 1920, 1080)}
     {V('spot-paysage', Spot, D_SPOT, 1920, 1080)}
   </>

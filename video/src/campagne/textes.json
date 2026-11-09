@@ -853,5 +853,226 @@
     "gap": 0.8
    }
   ]
+ },
+ "sig-carte": {
+  "titre": "Signature 1 · La carte, réinventée",
+  "voix": "nicolas",
+  "lignes": [
+   {
+    "id": "sa1",
+    "text": "Voici la carte de fidélité.",
+    "gap": 0.7
+   },
+   {
+    "id": "sa2",
+    "text": "Réinventée.",
+    "gap": 1.2
+   },
+   {
+    "id": "sa3",
+    "text": "Elle vit dans le téléphone de vos clients.",
+    "gap": 0.9
+   },
+   {
+    "id": "sa4",
+    "text": "Dans Apple Wallet. Et dans Google Wallet.",
+    "gap": 1.0
+   },
+   {
+    "id": "sa5",
+    "text": "Elle ne s'oublie jamais. Elle se met à jour toute seule.",
+    "gap": 1.0
+   },
+   {
+    "id": "sa6",
+    "text": "Et elle sait les faire revenir.",
+    "gap": 1.2
+   },
+   {
+    "id": "sa7",
+    "text": "Fidelyz.",
+    "gap": 1.6
+   }
+  ]
+ },
+ "sig-message": {
+  "titre": "Signature 2 · Un message, au bon moment",
+  "voix": "nicolas",
+  "lignes": [
+   {
+    "id": "sb1",
+    "text": "Un message.",
+    "gap": 0.9
+   },
+   {
+    "id": "sb2",
+    "text": "Sur l'écran verrouillé de vos clients.",
+    "gap": 1.0
+   },
+   {
+    "id": "sb3",
+    "text": "Une offre. Une nouveauté. Un rappel.",
+    "gap": 1.0
+   },
+   {
+    "id": "sb4",
+    "text": "Au bon moment.",
+    "gap": 1.2
+   },
+   {
+    "id": "sb5",
+    "text": "Fidelyz. La carte de fidélité qui fait revenir vos clients.",
+    "gap": 1.6
+   }
+  ]
+ },
+ "sig-design": {
+  "titre": "Signature 3 · À votre image",
+  "voix": "nicolas",
+  "lignes": [
+   {
+    "id": "sc1",
+    "text": "Votre logo.",
+    "gap": 0.8
+   },
+   {
+    "id": "sc2",
+    "text": "Vos couleurs.",
+    "gap": 0.8
+   },
+   {
+    "id": "sc3",
+    "text": "Votre carte.",
+    "gap": 1.2
+   },
+   {
+    "id": "sc4",
+    "text": "Créée en quelques minutes, depuis votre espace pro.",
+    "gap": 1.2
+   },
+   {
+    "id": "sc5",
+    "text": "Fidelyz.",
+    "gap": 1.6
+   }
+  ]
+ },
+ "sig-caisse": {
+  "titre": "Signature 4 · Un scan",
+  "voix": "nicolas",
+  "lignes": [
+   {
+    "id": "sd1",
+    "text": "En caisse.",
+    "gap": 0.8
+   },
+   {
+    "id": "sd2",
+    "text": "Un scan.",
+    "gap": 0.9
+   },
+   {
+    "id": "sd3",
+    "text": "Les points sont ajoutés.",
+    "gap": 1.0
+   },
+   {
+    "id": "sd4",
+    "text": "Et la carte de votre client se met à jour. Instantanément.",
+    "gap": 1.2
+   },
+   {
+    "id": "sd5",
+    "text": "Fidelyz.",
+    "gap": 1.6
+   }
+  ]
+ },
+ "sig-client": {
+  "titre": "Signature 5 · Rien à installer",
+  "voix": "nicolas",
+  "lignes": [
+   {
+    "id": "se1",
+    "text": "Pour vos clients, rien à installer.",
+    "gap": 1.0
+   },
+   {
+    "id": "se2",
+    "text": "Un QR code.",
+    "gap": 0.8
+   },
+   {
+    "id": "se3",
+    "text": "Un prénom.",
+    "gap": 0.8
+   },
+   {
+    "id": "se4",
+    "text": "Ajouter.",
+    "gap": 1.0
+   },
+   {
+    "id": "se5",
+    "text": "Leur carte est dans leur Wallet. En dix secondes.",
+    "gap": 1.2
+   },
+   {
+    "id": "se6",
+    "text": "Fidelyz.",
+    "gap": 1.6
+   }
+  ]
+ },
+ "sig-film": {
+  "titre": "Signature · Le film (paysage)",
+  "voix": "nicolas",
+  "lignes": [
+   {
+    "id": "sf1",
+    "text": "Voici la carte de fidélité.",
+    "gap": 0.7
+   },
+   {
+    "id": "sf2",
+    "text": "Réinventée.",
+    "gap": 1.2
+   },
+   {
+    "id": "sf3",
+    "text": "Elle vit dans le téléphone de vos clients, dans Apple Wallet et Google Wallet.",
+    "gap": 1.0
+   },
+   {
+    "id": "sf4",
+    "text": "Vous la créez à votre image, en quelques minutes.",
+    "gap": 1.0
+   },
+   {
+    "id": "sf5",
+    "text": "Vos clients l'ajoutent en dix secondes, sans rien installer.",
+    "gap": 1.0
+   },
+   {
+    "id": "sf6",
+    "text": "En caisse, un scan suffit. Et leur carte se met à jour, instantanément.",
+    "gap": 1.0
+   },
+   {
+    "id": "sf7",
+    "text": "Puis, au bon moment, un message apparaît sur leur écran.",
+    "gap": 1.2
+   },
+   {
+    "id": "sf8",
+    "text": "Et ils reviennent.",
+    "gap": 1.4
+   },
+   {
+    "id": "sf9",
+    "text": "Fidelyz. La fidélité, réinventée.",
+    "gap": 1.8
+   }
+  ]
  }
 }

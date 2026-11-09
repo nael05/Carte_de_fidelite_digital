@@ -19,9 +19,11 @@ const STYLE = {
   barbier: 'Modern smooth hip-hop beat, boom bap drums, mellow keys, deep bass, confident and cool, 90 BPM',
   fleuriste: 'Modern light airy indie-pop groove, plucked strings, soft bells, fresh spring feeling, 108 BPM',
   institut: 'Modern elegant chill deep house, silky pads, soft piano chords, luxurious spa atmosphere, 112 BPM',
+  signature: 'Elegant minimal product launch film music in the style of a premium tech keynote: a soft felt piano motif, warm airy synth pads, a gentle understated electronic pulse that grows subtly, sophisticated, calm confidence, spacious and refined, 100 BPM',
+  signatureBlanc: 'Bright elegant minimal product film music: delicate plucked synth and soft piano, light clean percussion, airy and optimistic, refined premium tech brand feel, 108 BPM',
   site: 'Modern premium tech brand film music, melodic house with evolving soft synths, airy pads, warm sub bass, crisp light percussion, uplifting, builds gently, 118 BPM',
 }
-const QUEL = { tour: 'marque', creer: 'marque', calcul: 'marque', astuces: 'marque', spot: 'marque', site: 'site', tampon: 'histoire', push: 'energique', papier: 'energique', questions: 'energique', portefeuille: 'energique', appli: 'energique', client: 'chill', proximite: 'chill', boulangerie: 'boulangerie', coiffure: 'coiffure', restaurant: 'restaurant', barbier: 'barbier', fleuriste: 'fleuriste', institut: 'institut' }
+const QUEL = { 'sig-carte': 'signature', 'sig-message': 'signature', 'sig-caisse': 'signature', 'sig-client': 'signature', 'sig-film': 'signature', 'sig-design': 'signatureBlanc', tour: 'marque', creer: 'marque', calcul: 'marque', astuces: 'marque', spot: 'marque', site: 'site', tampon: 'histoire', push: 'energique', papier: 'energique', questions: 'energique', portefeuille: 'energique', appli: 'energique', client: 'chill', proximite: 'chill', boulangerie: 'boulangerie', coiffure: 'coiffure', restaurant: 'restaurant', barbier: 'barbier', fleuriste: 'fleuriste', institut: 'institut' }
 const durees = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'))
 const only = process.argv.slice(3)
 fs.mkdirSync(OUT, { recursive: true })

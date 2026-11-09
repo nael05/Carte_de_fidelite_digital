@@ -1,0 +1,307 @@
+[
+  {
+    "id": "tl01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Un client qui ne revient plus… tu ne le vois même pas partir.",
+    "say": "[sad] Un client qui ne revient plus... tu ne le vois même pas partir.",
+    "dur": 3.61,
+    "words": [
+      {
+        "w": "Un",
+        "t": -0.008,
+        "d": 0.018
+      },
+      {
+        "w": "client",
+        "t": 0.056,
+        "d": 0.274
+      },
+      {
+        "w": "qui",
+        "t": 0.37,
+        "d": 0.12
+      },
+      {
+        "w": "ne",
+        "t": 0.517,
+        "d": 0.053
+      },
+      {
+        "w": "revient",
+        "t": 0.63,
+        "d": 0.34
+      },
+      {
+        "w": "plus",
+        "t": 1.05,
+        "d": 1.04
+      },
+      {
+        "w": "tu",
+        "t": 2.143,
+        "d": 0.107
+      },
+      {
+        "w": "ne",
+        "t": 2.277,
+        "d": 0.053
+      },
+      {
+        "w": "le",
+        "t": 2.357,
+        "d": 0.053
+      },
+      {
+        "w": "vois",
+        "t": 2.442,
+        "d": 0.128
+      },
+      {
+        "w": "même",
+        "t": 2.618,
+        "d": 0.192
+      },
+      {
+        "w": "pas",
+        "t": 2.85,
+        "d": 0.12
+      },
+      {
+        "w": "partir",
+        "t": 3.039,
+        "d": 0.571
+      }
+    ]
+  },
+  {
+    "id": "tl02",
+    "at": 4.41,
+    "gap": 0.5,
+    "text": "Fidelyz, la carte de fidélité digitale, te montre qui n’est pas revenu.",
+    "say": "[confident] Fidéliz, la carte de fidélité digitale, te montre qui n’est pas revenu.",
+    "dur": 4.4,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.072,
+        "d": 0.728
+      },
+      {
+        "w": "la",
+        "t": 0.853,
+        "d": 0.107
+      },
+      {
+        "w": "carte",
+        "t": 1.013,
+        "d": 0.267
+      },
+      {
+        "w": "de",
+        "t": 1.307,
+        "d": 0.053
+      },
+      {
+        "w": "fidélité",
+        "t": 1.44,
+        "d": 0.48
+      },
+      {
+        "w": "digitale",
+        "t": 1.987,
+        "d": 0.733
+      },
+      {
+        "w": "te",
+        "t": 2.773,
+        "d": 0.107
+      },
+      {
+        "w": "montre",
+        "t": 2.944,
+        "d": 0.496
+      },
+      {
+        "w": "qui",
+        "t": 3.48,
+        "d": 0.12
+      },
+      {
+        "w": "n’est",
+        "t": 3.64,
+        "d": 0.12
+      },
+      {
+        "w": "pas",
+        "t": 3.8,
+        "d": 0.12
+      },
+      {
+        "w": "revenu",
+        "t": 3.973,
+        "d": 0.427
+      }
+    ]
+  },
+  {
+    "id": "tl03",
+    "at": 9.21,
+    "gap": 0.4,
+    "text": "En un clic, tu lui écris, directement sur son écran.",
+    "say": "En un clic, tu lui écris, directement sur son écran.",
+    "dur": 3.18,
+    "words": [
+      {
+        "w": "En",
+        "t": -0.018,
+        "d": 0.08
+      },
+      {
+        "w": "un",
+        "t": 0.089,
+        "d": 0.053
+      },
+      {
+        "w": "clic",
+        "t": 0.222,
+        "d": 0.48
+      },
+      {
+        "w": "tu",
+        "t": 0.755,
+        "d": 0.107
+      },
+      {
+        "w": "lui",
+        "t": 0.902,
+        "d": 0.12
+      },
+      {
+        "w": "écris",
+        "t": 1.062,
+        "d": 0.72
+      },
+      {
+        "w": "directement",
+        "t": 1.845,
+        "d": 0.617
+      },
+      {
+        "w": "sur",
+        "t": 2.502,
+        "d": 0.12
+      },
+      {
+        "w": "son",
+        "t": 2.662,
+        "d": 0.12
+      },
+      {
+        "w": "écran",
+        "t": 2.822,
+        "d": 0.36
+      }
+    ]
+  },
+  {
+    "id": "tl04",
+    "at": 12.79,
+    "gap": 0.4,
+    "text": "« Ça fait longtemps ! Ton café t’attend. »",
+    "say": "[warmly] Ça fait longtemps ! Ton café t’attend.",
+    "dur": 2.15,
+    "words": [
+      {
+        "w": "Ça",
+        "t": -0.02,
+        "d": 0.088
+      },
+      {
+        "w": "fait",
+        "t": 0.1,
+        "d": 0.128
+      },
+      {
+        "w": "longtemps",
+        "t": 0.276,
+        "d": 0.432
+      },
+      {
+        "w": "Ton",
+        "t": 1.308,
+        "d": 0.12
+      },
+      {
+        "w": "café",
+        "t": 1.492,
+        "d": 0.256
+      },
+      {
+        "w": "t’attend",
+        "t": 1.768,
+        "d": 0.38
+      }
+    ]
+  },
+  {
+    "id": "tl05",
+    "at": 15.44,
+    "gap": 0.5,
+    "text": "Et il revient.",
+    "say": "[excited] Et il revient.",
+    "dur": 0.96,
+    "words": [
+      {
+        "w": "Et",
+        "t": 0.069,
+        "d": 0.011
+      },
+      {
+        "w": "il",
+        "t": 0.16,
+        "d": 0.16
+      },
+      {
+        "w": "revient",
+        "t": 0.38,
+        "d": 0.58
+      }
+    ]
+  },
+  {
+    "id": "tl06",
+    "at": 17,
+    "gap": 0.6,
+    "text": "Fidelyz. Fais revenir tes clients.",
+    "say": "[confident] Fidéliz. Fais revenir tes clients.",
+    "dur": 2.27,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.103,
+        "d": 1.05
+      },
+      {
+        "w": "Fais",
+        "t": 1.193,
+        "d": 0.12
+      },
+      {
+        "w": "revenir",
+        "t": 1.366,
+        "d": 0.347
+      },
+      {
+        "w": "tes",
+        "t": 1.753,
+        "d": 0.12
+      },
+      {
+        "w": "clients",
+        "t": 1.923,
+        "d": 0.35
+      }
+    ]
+  }
+]

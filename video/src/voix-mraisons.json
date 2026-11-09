@@ -1,0 +1,252 @@
+[
+  {
+    "id": "tx01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Trois raisons de passer à la carte de fidélité digitale.",
+    "say": "[confident] Trois raisons de passer à la carte de fidélité digitale.",
+    "dur": 2.8,
+    "words": [
+      {
+        "w": "Trois",
+        "t": 0.068,
+        "d": 0.092
+      },
+      {
+        "w": "raisons",
+        "t": 0.208,
+        "d": 0.272
+      },
+      {
+        "w": "de",
+        "t": 0.533,
+        "d": 0.107
+      },
+      {
+        "w": "passer",
+        "t": 0.686,
+        "d": 0.274
+      },
+      {
+        "w": "à",
+        "t": 1,
+        "d": 0.04
+      },
+      {
+        "w": "la",
+        "t": 1.067,
+        "d": 0.053
+      },
+      {
+        "w": "carte",
+        "t": 1.173,
+        "d": 0.267
+      },
+      {
+        "w": "de",
+        "t": 1.467,
+        "d": 0.053
+      },
+      {
+        "w": "fidélité",
+        "t": 1.58,
+        "d": 0.5
+      },
+      {
+        "w": "digitale",
+        "t": 2.147,
+        "d": 0.653
+      }
+    ]
+  },
+  {
+    "id": "tx02",
+    "at": 3.6,
+    "gap": 0.5,
+    "text": "Un : elle ne se perd jamais. Elle vit dans le téléphone.",
+    "say": "Un. [warmly] Elle ne se perd jamais. Elle vit dans le téléphone.",
+    "dur": 4.13,
+    "words": [
+      {
+        "w": "Un",
+        "t": -0.07,
+        "d": 0.24
+      },
+      {
+        "w": "Elle",
+        "t": 1.114,
+        "d": 0.016
+      },
+      {
+        "w": "ne",
+        "t": 1.183,
+        "d": 0.107
+      },
+      {
+        "w": "se",
+        "t": 1.343,
+        "d": 0.107
+      },
+      {
+        "w": "perd",
+        "t": 1.498,
+        "d": 0.192
+      },
+      {
+        "w": "jamais",
+        "t": 1.747,
+        "d": 0.423
+      },
+      {
+        "w": "Elle",
+        "t": 2.298,
+        "d": 0.512
+      },
+      {
+        "w": "vit",
+        "t": 2.87,
+        "d": 0.18
+      },
+      {
+        "w": "dans",
+        "t": 3.066,
+        "d": 0.064
+      },
+      {
+        "w": "le",
+        "t": 3.157,
+        "d": 0.053
+      },
+      {
+        "w": "téléphone",
+        "t": 3.274,
+        "d": 0.656
+      }
+    ]
+  },
+  {
+    "id": "tx03",
+    "at": 8.23,
+    "gap": 0.5,
+    "text": "Deux : tes offres s’affichent directement sur l’écran de tes clients.",
+    "say": "Deux. [excited] Tes offres s’affichent directement sur l’écran de tes clients.",
+    "dur": 3.92,
+    "words": [
+      {
+        "w": "Deux",
+        "t": 0,
+        "d": 0.6
+      },
+      {
+        "w": "Tes",
+        "t": 1.09,
+        "d": 0.03
+      },
+      {
+        "w": "offres",
+        "t": 1.18,
+        "d": 0.26
+      },
+      {
+        "w": "s’affichent",
+        "t": 1.48,
+        "d": 0.44
+      },
+      {
+        "w": "directement",
+        "t": 1.977,
+        "d": 0.583
+      },
+      {
+        "w": "sur",
+        "t": 2.6,
+        "d": 0.12
+      },
+      {
+        "w": "l’écran",
+        "t": 2.76,
+        "d": 0.36
+      },
+      {
+        "w": "de",
+        "t": 3.147,
+        "d": 0.053
+      },
+      {
+        "w": "tes",
+        "t": 3.24,
+        "d": 0.12
+      },
+      {
+        "w": "clients",
+        "t": 3.41,
+        "d": 0.59
+      }
+    ]
+  },
+  {
+    "id": "tx04",
+    "at": 12.65,
+    "gap": 0.5,
+    "text": "Trois : c’est gratuit pour commencer.",
+    "say": "Trois... [excited] c’est gratuit pour commencer !",
+    "dur": 2.02,
+    "words": [
+      {
+        "w": "Trois",
+        "t": -0.057,
+        "d": 0.8
+      },
+      {
+        "w": "c’est",
+        "t": 0.803,
+        "d": 0.02
+      },
+      {
+        "w": "gratuit",
+        "t": 0.873,
+        "d": 0.35
+      },
+      {
+        "w": "pour",
+        "t": 1.271,
+        "d": 0.192
+      },
+      {
+        "w": "commencer",
+        "t": 1.495,
+        "d": 0.448
+      }
+    ]
+  },
+  {
+    "id": "tx05",
+    "at": 15.27,
+    "gap": 0.6,
+    "text": "Fidelyz. Lien en bio.",
+    "say": "[confident] Fidéliz. Lien en bio.",
+    "dur": 1.84,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.072,
+        "d": 0.928
+      },
+      {
+        "w": "Lien",
+        "t": 1.14,
+        "d": 0.3
+      },
+      {
+        "w": "en",
+        "t": 1.493,
+        "d": 0.107
+      },
+      {
+        "w": "bio",
+        "t": 1.64,
+        "d": 0.2
+      }
+    ]
+  }
+]

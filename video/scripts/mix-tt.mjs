@@ -55,6 +55,102 @@ const BAR_CC = 1.7423 // phonk, 137,75 BPM
 const CONFIG = {
   // ─── Série « Studio » (PLAN-TIKTOK.md) : musique très en retrait, peu de bruitages, tous discrets ───
   // ─── Série « Lumière » (v2) ───
+  ...(SET === 'mraisons' && {
+    mraisons: {
+      dur: Math.ceil((word('tx05') + 4.6) * 30) / 30,
+      music: 'musique-chrono.mp3',
+      segments: [[0, 40, 16.2 - (word('tx02') - 0.35)]],
+      xf: 0.02, open: -10, duck: -22, fadeIn: 0.3, fadeOut: 1.6,
+      sfx: [
+        ['laser_long', 0.1, -24, 1, { len: 2, fade: 0.6 }],
+        ['hit_grave', 0.2, -22, 1],
+        ['whoosh_rapide', word('tx02') - 0.35, -18, 1, { crest: true }],
+        ['hit', word('tx02'), -22, 1],
+        ['whoosh7', word('tx03') - 0.35, -18, 1, { crest: true }],
+        ['hit', word('tx03'), -22, 1.05],
+        ['notif_douce', word('tx03', 3) + 0.05, -14, 1],
+        ['whoosh', word('tx04') - 0.35, -18, 1.1, { crest: true }],
+        ['hit', word('tx04'), -22, 1.1],
+        ['sub', word('tx04', 2), -20, 1],
+        ['neon', word('tx05') - 0.2, -19, 1.1, { len: 1.4, fade: 0.6 }],
+        ['hit_logo', word('tx05') + 0.1, -16, 1],
+      ],
+    },
+  }),
+  ...(SET === 'mrelance' && {
+    mrelance: {
+      dur: Math.ceil((word('tl06') + 4.6) * 30) / 30,
+      music: 'musique-noir.mp3',
+      segments: [[0, 40, 16.2 - (word('tl03') - 0.35)]],
+      xf: 0.02, open: -9, duck: -21, fadeIn: 0.5, fadeOut: 1.6,
+      sfx: [
+        ['visqueux', word('tl02') - 0.4, -25, 1, { len: 1, fade: 0.4 }],
+        ['scintille', word('tl02', 6), -22, 1, { len: 1.6, fade: 0.6 }],
+        ...[0, 1, 2, 3].map(i => ['pop', word('tl02', 6) + 0.2 + i * 0.22, -25, 1.1 + i * 0.05]),
+        ['whoosh7', word('tl03') - 0.35, -19, 1, { crest: true }],
+        ...[0, 0.1, 0.19, 0.3].map((d, i) => ['clic', word('tl03', 2) + d, -27, 1.4]),
+        ['whoosh_rapide', word('tl04') - 0.3, -18, 1, { crest: true }],
+        ['notif_douce', word('tl04') + 0.1, -12, 1],
+        ['laser_long', word('tl05') - 0.3, -23, 1.1, { len: 1.2, fade: 0.5 }],
+        ['scintille', word('tl05', 2), -20, 1, { len: 1.4, fade: 0.6 }],
+        ['neon', word('tl06') - 0.2, -19, 1.1, { len: 1.4, fade: 0.6 }],
+        ['hit_logo', word('tl06') + 0.1, -16, 1],
+      ],
+    },
+  }),
+  ...(SET === 'mcamille' && {
+    mcamille: {
+      dur: Math.ceil((word('tm06') + 4.6) * 30) / 30,
+      music: 'musique-keynote.mp3',
+      segments: [[0, 40, 13.7 - (word('tm03') - 0.35)]],
+      xf: 0.02, open: -12, duck: -25, fadeIn: 0.4, fadeOut: 1.8,
+      sfx: [
+        ['laser_long', 0.1, -26, 1, { len: 1.6, fade: 0.6 }],
+        ['neon', 0.4, -23, 1, { len: 1, fade: 0.4 }],
+        ['whoosh_rapide', word('tm02') - 0.4, -19, 1, { crest: true }],
+        ['swoosh2', word('tm02', 6) - 0.2, -21, 1, { crest: true }],
+        ['whoosh7', word('tm03') - 0.35, -20, 1, { crest: true }],
+        ['pop', word('tm03'), -21, 1],
+        ['pop', word('tm03', 2), -21, 1.1],
+        ['pop', word('tm03', 5), -20, 1.2],
+        ['laser_long', word('tm04') - 0.35, -24, 1.1, { len: 1.2, fade: 0.5 }],
+        ['notif_douce', word('tm04', 3) + 0.05, -12, 1],
+        ['scintille', word('tm04', 5), -20, 1, { len: 1.6, fade: 0.7 }],
+        ['swoosh', word('tm05', 2), -22, 1.1, { crest: true }],
+        ['swoosh', word('tm05', 4), -22, 1.2, { crest: true }],
+        ['neon', word('tm06') - 0.2, -19, 1.1, { len: 1.4, fade: 0.6 }],
+        ['hit_logo', word('tm06') + 0.1, -16, 1],
+      ],
+    },
+  }),
+  // vague 2 : vidéos par métier (même montage)
+  ...(['mpain', 'mcoupe', 'mresto'].includes(SET) && (() => {
+    const p = { mpain: 'tb', mcoupe: 'tc', mresto: 'tr' }[SET]
+    const w = (n, k = 0) => word(`${p}0${n}`, k)
+    const nw = { mpain: 6, mcoupe: 5, mresto: 4 }[SET]
+    return {
+      [SET]: {
+        dur: Math.ceil((w(5) + 4.6) * 30) / 30,
+        music: SET === 'mcoupe' ? 'musique-keynote.mp3' : 'musique-noir.mp3',
+        segments: [[0, 40, (SET === 'mcoupe' ? 13.7 : 16.2) - (w(2) - 0.45)]],
+        xf: 0.02, open: SET === 'mcoupe' ? -12 : -9, duck: SET === 'mcoupe' ? -25 : -21, fadeIn: 0.3, fadeOut: 1.6,
+        sfx: [
+          ['laser_long', 0.15, -25, 1, { len: 1.8, fade: 0.6 }],
+          ['neon', 0.1, -23, 1, { len: 1, fade: 0.4 }],
+          ['laser', w(2) - 0.45, -21, 1, { len: 0.9, fade: 0.3 }],
+          ['swoosh2', w(2, 7) - 0.3, -21, 1, { crest: true }],
+          ['whoosh_rapide', w(3) - 0.35, -18, 1, { crest: true }],
+          ['laser', w(3, 3) - 0.15, -21, 1.1, { len: 0.8, fade: 0.3 }],
+          ['bip-caisse', w(3, 3) + 0.4, -18, 1],
+          ['pop', w(3, 5), -18, 1],
+          ['whoosh', w(4) - 0.35, -20, 1.1, { crest: true }],
+          ['notif_douce', w(4, nw) + 0.05, -12, 1],
+          ['neon', w(5) - 0.2, -19, 1.1, { len: 1.4, fade: 0.6 }],
+          ['hit_logo', w(5) + 0.1, -16, 1],
+        ],
+      },
+    }
+  })()),
   ...(SET === 'lprix' && {
     lprix: {
       dur: Math.ceil((word('lx06') + 4.6) * 30) / 30,

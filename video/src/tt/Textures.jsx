@@ -23,9 +23,9 @@ export const texMetadata = ({ props }) => {
 }
 
 /* Pass à plat. layer : tout, ou une seule couche pour la vue éclatée (fond, logo, points, détails) ; back : le verso */
-const PassTex = ({ skin = 'graphite', points = 480, name = 'Maison Lumière', mark = 'L', layer = 'all', back = false, vide = false }) => (
+const PassTex = ({ skin = 'graphite', points = 480, name = 'Maison Lumière', mark = 'L', layer = 'all', back = false, vide = false, photo, holder }) => (
   <AbsoluteFill className={`tex tex-${layer} ${back ? 'tex-back' : ''} ${vide ? 'tex-vide' : ''}`}>
-    <Pass width={1000} skin={skin} points={points} name={name} mark={mark} light={0.35} />
+    <Pass width={1000} skin={skin} points={points} name={name} mark={mark} light={0.35} photo={photo} holder={holder} />
   </AbsoluteFill>
 )
 

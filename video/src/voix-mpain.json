@@ -1,0 +1,252 @@
+[
+  {
+    "id": "tb01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Boulanger ? Tes clients perdent leurs cartes de fidélité.",
+    "say": "[curious] Boulanger ? [sighs] Tes clients perdent leurs cartes de fidélité.",
+    "dur": 4.17,
+    "words": [
+      {
+        "w": "Boulanger",
+        "t": 0.002,
+        "d": 0.573
+      },
+      {
+        "w": "Tes",
+        "t": 1.991,
+        "d": 0.024
+      },
+      {
+        "w": "clients",
+        "t": 2.055,
+        "d": 0.28
+      },
+      {
+        "w": "perdent",
+        "t": 2.383,
+        "d": 0.272
+      },
+      {
+        "w": "leurs",
+        "t": 2.682,
+        "d": 0.133
+      },
+      {
+        "w": "cartes",
+        "t": 2.847,
+        "d": 0.208
+      },
+      {
+        "w": "de",
+        "t": 3.108,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 3.255,
+        "d": 0.92
+      }
+    ]
+  },
+  {
+    "id": "tb02",
+    "at": 4.97,
+    "gap": 0.5,
+    "text": "Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.",
+    "say": "[confident] Avec Fidéliz, ta carte de fidélité passe dans leur téléphone.",
+    "dur": 3.19,
+    "words": [
+      {
+        "w": "Avec",
+        "t": 0.115,
+        "d": 0.032
+      },
+      {
+        "w": "Fidéliz",
+        "t": 0.187,
+        "d": 0.76
+      },
+      {
+        "w": "ta",
+        "t": 1,
+        "d": 0.107
+      },
+      {
+        "w": "carte",
+        "t": 1.147,
+        "d": 0.2
+      },
+      {
+        "w": "de",
+        "t": 1.374,
+        "d": 0.053
+      },
+      {
+        "w": "fidélité",
+        "t": 1.487,
+        "d": 0.58
+      },
+      {
+        "w": "passe",
+        "t": 2.107,
+        "d": 0.2
+      },
+      {
+        "w": "dans",
+        "t": 2.323,
+        "d": 0.064
+      },
+      {
+        "w": "leur",
+        "t": 2.419,
+        "d": 0.128
+      },
+      {
+        "w": "téléphone",
+        "t": 2.603,
+        "d": 0.584
+      }
+    ]
+  },
+  {
+    "id": "tb03",
+    "at": 8.56,
+    "gap": 0.4,
+    "text": "Une baguette, un scan : les points s’ajoutent.",
+    "say": "Une baguette, un scan... [excited] les points s’ajoutent !",
+    "dur": 3.29,
+    "words": [
+      {
+        "w": "Une",
+        "t": -0.07,
+        "d": 0.16
+      },
+      {
+        "w": "baguette",
+        "t": 0.13,
+        "d": 0.6
+      },
+      {
+        "w": "un",
+        "t": 0.783,
+        "d": 0.107
+      },
+      {
+        "w": "scan",
+        "t": 0.986,
+        "d": 0.864
+      },
+      {
+        "w": "les",
+        "t": 2.06,
+        "d": 0.03
+      },
+      {
+        "w": "points",
+        "t": 2.147,
+        "d": 0.343
+      },
+      {
+        "w": "s’ajoutent",
+        "t": 2.53,
+        "d": 0.6
+      }
+    ]
+  },
+  {
+    "id": "tb04",
+    "at": 12.35,
+    "gap": 0.5,
+    "text": "Et le samedi matin, tu leur rappelles tes croissants.",
+    "say": "[warmly] Et le samedi matin, tu leur rappelles tes croissants.",
+    "dur": 2.42,
+    "words": [
+      {
+        "w": "Et",
+        "t": 0.006,
+        "d": 0.013
+      },
+      {
+        "w": "le",
+        "t": 0.072,
+        "d": 0.107
+      },
+      {
+        "w": "samedi",
+        "t": 0.219,
+        "d": 0.28
+      },
+      {
+        "w": "matin",
+        "t": 0.559,
+        "d": 0.58
+      },
+      {
+        "w": "tu",
+        "t": 1.166,
+        "d": 0.053
+      },
+      {
+        "w": "leur",
+        "t": 1.251,
+        "d": 0.128
+      },
+      {
+        "w": "rappelles",
+        "t": 1.443,
+        "d": 0.416
+      },
+      {
+        "w": "tes",
+        "t": 1.879,
+        "d": 0.06
+      },
+      {
+        "w": "croissants",
+        "t": 1.979,
+        "d": 0.44
+      }
+    ]
+  },
+  {
+    "id": "tb05",
+    "at": 15.37,
+    "gap": 0.6,
+    "text": "Fidelyz. La carte de fidélité digitale.",
+    "say": "[excited] Fidéliz. La carte de fidélité digitale.",
+    "dur": 2.96,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.072,
+        "d": 0.568
+      },
+      {
+        "w": "La",
+        "t": 0.8,
+        "d": 0.32
+      },
+      {
+        "w": "carte",
+        "t": 1.187,
+        "d": 0.333
+      },
+      {
+        "w": "de",
+        "t": 1.547,
+        "d": 0.053
+      },
+      {
+        "w": "fidélité",
+        "t": 1.66,
+        "d": 0.58
+      },
+      {
+        "w": "digitale",
+        "t": 2.307,
+        "d": 0.653
+      }
+    ]
+  }
+]

@@ -1,0 +1,262 @@
+[
+  {
+    "id": "tc01",
+    "at": 0.3,
+    "gap": 0,
+    "text": "Coiffeur ? Tes clients reviennent… quand ils y pensent.",
+    "say": "[curious] Coiffeur ? [sighs] Tes clients reviennent... quand ils y pensent.",
+    "dur": 5.86,
+    "words": [
+      {
+        "w": "Coiffeur",
+        "t": 0.248,
+        "d": 0.329
+      },
+      {
+        "w": "Tes",
+        "t": 2.553,
+        "d": 0.024
+      },
+      {
+        "w": "clients",
+        "t": 2.617,
+        "d": 0.28
+      },
+      {
+        "w": "reviennent",
+        "t": 2.937,
+        "d": 1.16
+      },
+      {
+        "w": "quand",
+        "t": 4.124,
+        "d": 0.133
+      },
+      {
+        "w": "ils",
+        "t": 4.317,
+        "d": 0.18
+      },
+      {
+        "w": "y",
+        "t": 4.577,
+        "d": 0.08
+      },
+      {
+        "w": "pensent",
+        "t": 4.721,
+        "d": 1.136
+      }
+    ]
+  },
+  {
+    "id": "tc02",
+    "at": 6.66,
+    "gap": 0.5,
+    "text": "Avec Fidelyz, ta carte de fidélité vit dans leur téléphone.",
+    "say": "[confident] Avec Fidéliz, ta carte de fidélité vit dans leur téléphone.",
+    "dur": 3.44,
+    "words": [
+      {
+        "w": "Avec",
+        "t": 0.202,
+        "d": 0.038
+      },
+      {
+        "w": "Fidéliz",
+        "t": 0.28,
+        "d": 0.76
+      },
+      {
+        "w": "ta",
+        "t": 1.093,
+        "d": 0.107
+      },
+      {
+        "w": "carte",
+        "t": 1.253,
+        "d": 0.267
+      },
+      {
+        "w": "de",
+        "t": 1.573,
+        "d": 0.107
+      },
+      {
+        "w": "fidélité",
+        "t": 1.72,
+        "d": 0.52
+      },
+      {
+        "w": "vit",
+        "t": 2.3,
+        "d": 0.18
+      },
+      {
+        "w": "dans",
+        "t": 2.496,
+        "d": 0.064
+      },
+      {
+        "w": "leur",
+        "t": 2.608,
+        "d": 0.192
+      },
+      {
+        "w": "téléphone",
+        "t": 2.856,
+        "d": 0.584
+      }
+    ]
+  },
+  {
+    "id": "tc03",
+    "at": 10.5,
+    "gap": 0.4,
+    "text": "Chaque coupe, un scan : les points montent.",
+    "say": "Chaque coupe, un scan... [excited] les points montent !",
+    "dur": 3.12,
+    "words": [
+      {
+        "w": "Chaque",
+        "t": 0,
+        "d": 0.24
+      },
+      {
+        "w": "coupe",
+        "t": 0.307,
+        "d": 0.573
+      },
+      {
+        "w": "un",
+        "t": 0.933,
+        "d": 0.107
+      },
+      {
+        "w": "scan",
+        "t": 1.136,
+        "d": 0.944
+      },
+      {
+        "w": "les",
+        "t": 2.216,
+        "d": 0.024
+      },
+      {
+        "w": "points",
+        "t": 2.274,
+        "d": 0.206
+      },
+      {
+        "w": "montent",
+        "t": 2.56,
+        "d": 0.4
+      }
+    ]
+  },
+  {
+    "id": "tc04",
+    "at": 14.12,
+    "gap": 0.5,
+    "text": "Et six semaines après, une notification : c’est l’heure de la recoupe.",
+    "say": "[warmly] Et six semaines après, une notification... c’est l’heure de la recoupe.",
+    "dur": 4.54,
+    "words": [
+      {
+        "w": "Et",
+        "t": 0.109,
+        "d": 0.032
+      },
+      {
+        "w": "six",
+        "t": 0.221,
+        "d": 0.24
+      },
+      {
+        "w": "semaines",
+        "t": 0.521,
+        "d": 0.26
+      },
+      {
+        "w": "après",
+        "t": 0.848,
+        "d": 0.733
+      },
+      {
+        "w": "une",
+        "t": 1.621,
+        "d": 0.12
+      },
+      {
+        "w": "notification",
+        "t": 1.803,
+        "d": 1.458
+      },
+      {
+        "w": "c’est",
+        "t": 3.301,
+        "d": 0.12
+      },
+      {
+        "w": "l’heure",
+        "t": 3.461,
+        "d": 0.28
+      },
+      {
+        "w": "de",
+        "t": 3.768,
+        "d": 0.053
+      },
+      {
+        "w": "la",
+        "t": 3.848,
+        "d": 0.053
+      },
+      {
+        "w": "recoupe",
+        "t": 3.981,
+        "d": 0.56
+      }
+    ]
+  },
+  {
+    "id": "tc05",
+    "at": 19.26,
+    "gap": 0.6,
+    "text": "Fidelyz. La carte de fidélité digitale.",
+    "say": "[excited] Fidéliz. La carte de fidélité digitale.",
+    "dur": 2.96,
+    "words": [
+      {
+        "w": "Fidéliz",
+        "t": 0.072,
+        "d": 0.768
+      },
+      {
+        "w": "La",
+        "t": 0.907,
+        "d": 0.133
+      },
+      {
+        "w": "carte",
+        "t": 1.12,
+        "d": 0.4
+      },
+      {
+        "w": "de",
+        "t": 1.547,
+        "d": 0.053
+      },
+      {
+        "w": "fidélité",
+        "t": 1.66,
+        "d": 0.5
+      },
+      {
+        "w": "digitale",
+        "t": 2.227,
+        "d": 0.733
+      }
+    ]
+  }
+]

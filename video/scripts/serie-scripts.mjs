@@ -133,6 +133,51 @@ export const SCRIPTS = {
     [0.3, 'Prête en cinq minutes.', 'Prête en cinq minutes.'],
     [0.5, 'Fidelyz. Lien en bio.', '[excited] Fidelyz. Lien en bio !'],
   ] },
+  // ─── Vague 2 (série Lumière) ───
+  mpain: { p: 'tb', start: 0.3, lines: [
+    [0, 'Boulanger ? Tes clients perdent leurs cartes de fidélité.', '[curious] Boulanger ? [sighs] Tes clients perdent leurs cartes de fidélité.'],
+    [0.5, 'Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.', '[confident] Avec Fidelyz, ta carte de fidélité passe dans leur téléphone.'],
+    [0.4, 'Une baguette, un scan : les points s’ajoutent.', 'Une baguette, un scan... [excited] les points s’ajoutent !'],
+    [0.5, 'Et le samedi matin, tu leur rappelles tes croissants.', '[warmly] Et le samedi matin, tu leur rappelles tes croissants.'],
+    [0.6, 'Fidelyz. La carte de fidélité digitale.', '[excited] Fidelyz. La carte de fidélité digitale.'],
+  ] },
+  mcoupe: { p: 'tc', start: 0.3, lines: [
+    [0, 'Coiffeur ? Tes clients reviennent… quand ils y pensent.', '[curious] Coiffeur ? [sighs] Tes clients reviennent... quand ils y pensent.'],
+    [0.5, 'Avec Fidelyz, ta carte de fidélité vit dans leur téléphone.', '[confident] Avec Fidelyz, ta carte de fidélité vit dans leur téléphone.'],
+    [0.4, 'Chaque coupe, un scan : les points montent.', 'Chaque coupe, un scan... [excited] les points montent !'],
+    [0.5, 'Et six semaines après, une notification : c’est l’heure de la recoupe.', '[warmly] Et six semaines après, une notification... c’est l’heure de la recoupe.'],
+    [0.6, 'Fidelyz. La carte de fidélité digitale.', '[excited] Fidelyz. La carte de fidélité digitale.'],
+  ] },
+  mresto: { p: 'tr', start: 0.3, lines: [
+    [0, 'Restaurateur ? Tes clients adorent… puis ils t’oublient.', '[curious] Restaurateur ? Tes clients adorent... [sighs] puis ils t’oublient.'],
+    [0.5, 'Avec Fidelyz, ta carte de fidélité est dans leur Wallet.', '[confident] Avec Fidelyz, ta carte de fidélité est dans leur Wallet.'],
+    [0.4, 'À chaque repas, un scan : les points s’ajoutent.', 'À chaque repas, un scan... [excited] les points s’ajoutent !'],
+    [0.5, 'Et jeudi soir, une notification : le dessert est offert.', 'Et jeudi soir, une notification... [excited] le dessert est offert !'],
+    [0.6, 'Fidelyz. La carte de fidélité digitale.', '[warmly] Fidelyz. La carte de fidélité digitale.'],
+  ] },
+  mcamille: { p: 'tm', start: 0.4, lines: [
+    [0, 'Voici Camille.', '[warmly] Voici Camille.'],
+    [0.4, 'Premier café chez Maison Lumière : elle ajoute la carte de fidélité à son Wallet.', 'Premier café chez Maison Lumière... elle ajoute la carte de fidélité à son Wallet.'],
+    [0.5, 'Deuxième passage. Cinquième. Les points montent tout seuls.', 'Deuxième passage... cinquième... [excited] les points montent tout seuls.'],
+    [0.5, 'Un matin, une notification : son café est offert.', '[whispers] Un matin, une notification... [excited] son café est offert !'],
+    [0.5, 'Camille revient. Encore. Et encore.', '[warmly] Camille revient. Encore. Et encore.'],
+    [0.6, 'Fidelyz. La carte de fidélité digitale.', '[confident] Fidelyz. La carte de fidélité digitale.'],
+  ] },
+  mrelance: { p: 'tl', start: 0.3, lines: [
+    [0, 'Un client qui ne revient plus… tu ne le vois même pas partir.', '[sad] Un client qui ne revient plus... tu ne le vois même pas partir.'],
+    [0.5, 'Fidelyz, la carte de fidélité digitale, te montre qui n’est pas revenu.', '[confident] Fidelyz, la carte de fidélité digitale, te montre qui n’est pas revenu.'],
+    [0.4, 'En un clic, tu lui écris, directement sur son écran.', 'En un clic, tu lui écris, directement sur son écran.'],
+    [0.4, '« Ça fait longtemps ! Ton café t’attend. »', '[warmly] Ça fait longtemps ! Ton café t’attend.'],
+    [0.5, 'Et il revient.', '[excited] Et il revient.'],
+    [0.6, 'Fidelyz. Fais revenir tes clients.', '[confident] Fidelyz. Fais revenir tes clients.'],
+  ] },
+  mraisons: { p: 'tx', start: 0.3, lines: [
+    [0, 'Trois raisons de passer à la carte de fidélité digitale.', '[confident] Trois raisons de passer à la carte de fidélité digitale.'],
+    [0.5, 'Un : elle ne se perd jamais. Elle vit dans le téléphone.', 'Un. [warmly] Elle ne se perd jamais. Elle vit dans le téléphone.'],
+    [0.5, 'Deux : tes offres s’affichent directement sur l’écran de tes clients.', 'Deux. [excited] Tes offres s’affichent directement sur l’écran de tes clients.'],
+    [0.5, 'Trois : c’est gratuit pour commencer.', 'Trois... [excited] c’est gratuit pour commencer !'],
+    [0.6, 'Fidelyz. Lien en bio.', '[confident] Fidelyz. Lien en bio.'],
+  ] },
 }
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const only = process.argv.slice(2)

@@ -89,7 +89,7 @@ const Ecran = ({ t, s, a }) => {
       const pts = s.points ? lerp(s.points[0], s.points[1], ts(t, s.ptsAt ?? a + 0.6, (s.ptsAt ?? a + 0.6) + 1.0, 0, 1, io)) : 480
       return <WalletApp><div style={{ position: 'absolute', left: 16, top: 120 + (1 - spring(t, a + 0.1, 6, 0.85)) * (s.slide ? 640 : 0) }}><Carte width={358} light={0.5} shadow={0.5} points={pts} /></div></WalletApp>
     }
-    case 'lock': return <Verrouille t={t} time={s.heure ?? '9:41'} notifs={s.notifs ?? []} />
+    case 'lock': return <Verrouille t={t} time={s.heure ?? '9:41'} notifs={s.notifs ?? []} {...(s.date ? { date: s.date } : {})} />
     case 'home': return <Accueil t={t} noStore={s.noStore ? ts(t, a + 0.5, a + 1.2, 0, 1, io) : 0} />
     case 'camera': return <VueCamera t={t} detect={spring(t, a + 0.6, 8, 1)} />
     case 'ajout': return (

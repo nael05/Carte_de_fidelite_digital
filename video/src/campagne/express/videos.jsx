@@ -30,10 +30,10 @@ export const PLANS = {
   ],
   'pov-client': [
     { cue: 'rd1', type: 'gros', text: 'POV', sub: "t'es le client", color: C.blue },
-    { cue: 'rd2', type: 'iphone', ecran: 'lock', heure: '11:00', notifs: [notif('Le croissant du mois est là 🥐 Venez le goûter avant midi.', Q => W(Q, 'rd2', 4), { title: 'Maison Lumière', mark: 'M' })], zoomNotif: Q => W(Q, 'rd2', 4) + 0.5, son: 'sons_tt/notif.mp3', sonAt: Q => W(Q, 'rd2', 4) },
-    { cue: 'rd4', type: 'iphone', ecran: 'lock', heure: '12:04', notifs: [notif('Maison Lumière est à 50 m 🥐 Plus que 20 points avant votre café.', Q => W(Q, 'rd4', 7), { title: 'Maison Lumière', mark: 'M', time: 'à proximité' })], zoomNotif: Q => W(Q, 'rd4', 7) + 0.4, son: 'sons_tt/notif_douce.mp3', sonAt: Q => W(Q, 'rd4', 7) },
+    { cue: 'rd2', type: 'iphone', ecran: 'lock', heure: '11:00', date: 'mardi 10 novembre', notifs: [notif('Le croissant du mois est là 🥐 Venez le goûter avant midi.', Q => W(Q, 'rd2', 4), { title: 'Maison Lumière', mark: 'M' })], zoomNotif: Q => W(Q, 'rd2', 4) + 0.5, son: 'sons_tt/notif.mp3', sonAt: Q => W(Q, 'rd2', 4) },
+    { cue: 'rd4', type: 'iphone', ecran: 'lock', heure: '12:04', date: 'mardi 10 novembre', notifs: [notif('Maison Lumière est à 50 m 🥐 Plus que 20 points avant votre café.', Q => W(Q, 'rd4', 7), { title: 'Maison Lumière', mark: 'M', time: 'à proximité' })], zoomNotif: Q => W(Q, 'rd4', 7) + 0.4, son: 'sons_tt/notif_douce.mp3', sonAt: Q => W(Q, 'rd4', 7) },
     { cue: 'rd5', type: 'carte', points: [460, 480], ptsAt: Q => W(Q, 'rd5', 4), son: 'sons_tiktok/bip-caisse.mp3', sonAt: Q => W(Q, 'rd5', 4) },
-    { cue: 'rd6', type: 'iphone', ecran: 'lock', heure: '8:30', notifs: [notif('Votre café est offert ☕ Présentez votre carte en caisse.', Q => W(Q, 'rd6', 5), { title: 'Maison Lumière', mark: 'M' })], zoomNotif: Q => W(Q, 'rd6', 5) + 0.4, accent: { 7: C.champagne }, son: 'sons_tt/notif.mp3', sonAt: Q => W(Q, 'rd6', 5) },
+    { cue: 'rd6', type: 'iphone', ecran: 'lock', heure: '8:30', date: 'mardi 17 novembre', notifs: [notif('Votre café est offert ☕ Présentez votre carte en caisse.', Q => W(Q, 'rd6', 5), { title: 'Maison Lumière', mark: 'M' })], zoomNotif: Q => W(Q, 'rd6', 5) + 0.4, accent: { 7: C.champagne }, son: 'sons_tt/notif.mp3', sonAt: Q => W(Q, 'rd6', 5) },
     { cue: 'rd7', type: 'fin', sub: "L'expérience Fidelyz" },
   ],
   erreurs: [

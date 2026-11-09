@@ -41,7 +41,7 @@ export const PLANS = {
     { cue: 're2', type: 'gros', text: '20 tampons', sub: 'pour un café ? Personne ne tient.', color: C.red, size: 150, accent: { 0: C.red } },
     { cue: 're3', type: 'iphone', ecran: 'lock', heure: '18:30', notifs: [], accent: { 0: C.red } },
     { cue: 're4', type: 'papier', efface: Q => W(Q, 're4', 5), accent: { 0: C.red } },
-    { cue: 're5', type: 'liste', items: [['Une récompense atteignable', Q => W(Q, 're5', 1)], ['Des messages au bon moment', Q => W(Q, 're5', 3)], ['Une carte impossible à perdre', Q => W(Q, 're5', 5)]], logo: Q => W(Q, 're5', 7) },
+    { cue: 're5', type: 'liste', items: [['Une récompense atteignable', Q => W(Q, 're5', 1)], ['Des messages au bon moment', Q => W(Q, 're5', 2)], ['Une carte impossible à perdre', Q => W(Q, 're5', 3)]], logo: Q => W(Q, 're5', 5) },
   ],
   paliers: [
     { cue: 'rf1', type: 'carte' },

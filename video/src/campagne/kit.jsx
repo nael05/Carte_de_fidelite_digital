@@ -176,7 +176,7 @@ export const SousTitre = ({ t, cue, y = 1180, size = 64, accent = {}, w = 1080, 
       <div style={{ maxWidth: maxW, textAlign: 'center', fontFamily: font, fontSize: size, fontWeight: 700, lineHeight: 1.18, letterSpacing: '-0.03em', textShadow: shadow ? '0 4px 30px rgba(0,0,0,0.55)' : undefined }}>
         {cue.words.map((wd, i) => {
           const on = t >= a + wd.t - 0.06
-          return <span key={i} style={{ color: on ? (accent[i] ?? ink) : dim, transition: 'none' }}>{wd.w}{i < cue.words.length - 1 ? ' ' : ''}</span>
+          return <span key={i} style={{ color: on ? (accent[i] ?? ink) : dim, transition: 'none' }}>{wd.w}{i < cue.words.length - 1 ? (/[\p{L}\p{N}]/u.test(cue.words[i + 1].w) ? ' ' : '\u00a0') : ''}</span>
         })}
       </div>
     </div>

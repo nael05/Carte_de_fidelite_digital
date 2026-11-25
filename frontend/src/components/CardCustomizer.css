@@ -373,6 +373,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   height: 40px;
   margin-bottom: 12px;
 }
@@ -381,7 +382,8 @@
   height: 100%;
   display: flex;
   align-items: center;
-  gap: 8px; 
+  gap: 8px;
+  min-width: 0;
 }
 
 .card-logo {
@@ -394,13 +396,22 @@
   font-weight: 800;
   font-size: 18px;
   letter-spacing: -0.5px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .card-points-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
   text-align: right;
 }
 
 .card-points-header .card-field-label {
+  margin-bottom: 2px;
   font-size: 10px;
   opacity: 0.8;
   font-weight: 600;
@@ -455,7 +466,6 @@
 .card-info-col.text-right {
   align-items: flex-end;
   text-align: right;
-  margin-right: -15px; 
 }
 
 .card-field-label {

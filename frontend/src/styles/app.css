@@ -968,3 +968,11 @@
   .ui-switch::before { content: ''; position: absolute; inset: -7px -4px; }
   .app-tab { min-height: 48px; }
 }
+
+/* Onglets du bas : un libellé tient sur une ligne */
+.app-tab span { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Titres de tableaux partagés (Campagnes, Compte, Admin) — défini ici car
+   ProAccount.css n'est chargé qu'avec la page Compte. */
+.acc-table-head { padding: 20px 22px 6px; }
+

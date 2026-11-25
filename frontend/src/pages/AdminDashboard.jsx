@@ -260,6 +260,7 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
       active={activeTab}
       onSelect={goTab}
       footItems={footItems}
+      tabbarIds={['overview', 'list', 'stats', 'pricing', 'email']}
       topbarActions={topbarActions}
     >
       {/* Confirmations */}
@@ -359,6 +360,7 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
               { id: 'pricing', icon: Euro, tone: 'gold', title: 'Tarifs', desc: 'Prix des abonnements et préavis aux abonnés' },
               { id: 'promos', icon: Tag, tone: 'neutral', title: 'Codes promo', desc: 'Créer et désactiver des remises Stripe' },
               { id: 'email', icon: Mail, tone: '', title: 'E-mails', desc: 'Écrire à un commerçant ou à tout le réseau' },
+              { id: 'legal', icon: FileText, tone: 'neutral', title: 'Mentions légales', desc: 'Éditeur, hébergeur et textes affichés sur le site' },
             ].map(item => (
               <button key={item.id} className="ui-hub-item" onClick={() => goTab(item.id)}>
                 <span className={`ui-icon ${item.tone}`}><item.icon size={19} /></span>

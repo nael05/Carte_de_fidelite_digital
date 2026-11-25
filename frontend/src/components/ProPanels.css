@@ -53,3 +53,10 @@
 .pp2-subtabs { margin-bottom: 4px; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
 .pp2-subtabs::-webkit-scrollbar { display: none; }
 @media (max-width: 700px) { .pp2-row { grid-template-columns: 1fr; } }
+
+/* Sur téléphone : onglets pleine largeur, sans icône, aucun libellé coupé */
+@media (max-width: 480px) {
+  .ui-seg.pp2-subtabs { display: grid; width: 100%; grid-auto-columns: minmax(0, 1fr); overflow: visible; }
+  .ui-seg.pp2-subtabs button { padding: 8px 4px; font-size: 13px; gap: 0; }
+  .ui-seg.pp2-subtabs button svg { display: none; }
+}

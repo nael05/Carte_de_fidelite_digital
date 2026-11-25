@@ -78,3 +78,10 @@
 .acc-meter span { display: block; height: 100%; border-radius: inherit; background: var(--accent); transition: width 0.4s var(--ease, ease); }
 .acc-meter span.warn { background: var(--warning-text); }
 .acc-meter span.over { background: var(--error); }
+
+/* Sur téléphone : onglets pleine largeur, sans icône, aucun libellé coupé */
+@media (max-width: 480px) {
+  .ui-seg.acc-tabs { display: grid; width: 100%; grid-auto-columns: minmax(0, 1fr); overflow: visible; }
+  .ui-seg.acc-tabs button { padding: 8px 4px; font-size: 13px; gap: 0; }
+  .ui-seg.acc-tabs button svg { display: none; }
+}

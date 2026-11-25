@@ -23,6 +23,7 @@ const MAX_POINTS_PER_OPERATION = 100000;
 const isPointsAmount = (n) => Number.isInteger(n) && n >= 0 && n <= MAX_POINTS_PER_OPERATION;
 const normalizePhone = (phone) => String(phone || '').replace(/[\s.\-()]/g, '');
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const DUMMY_HASH = bcrypt.hashSync('fidelyz-timing-equalizer', 10);
 const sha256 = (value) => crypto.createHash('sha256').update(String(value)).digest('hex');
 
 const maskPhone = (phone) => {
@@ -233,6 +234,8 @@ export const proLogin = async (req, res) => {
 
     if (rows.length === 0) {
       if (await staffLogin(req, res)) return;
+      // Même durée de réponse qu'avec un compte existant : l'e-mail ne peut pas être deviné au chronomètre.
+      await bcrypt.compare(mot_de_passe, DUMMY_HASH);
       return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
     }
 
@@ -1398,12 +1401,12 @@ export const uploadLogo = async (req, res) => {
       .png()
       .toFile(finalPath);
 
+    await fs.promises.unlink(tempPath).catch(() => {});
     res.json({ success: true, url: `uploads/${finalFilename}` });
   } catch (err) {
+    if (tempPath) await fs.promises.unlink(tempPath).catch(() => {});
     logger.warn('Upload image refusé', { error: err.message });
     res.status(400).json({ error: "Ce fichier n'est pas une image valide (PNG, JPEG ou WebP)." });
-  } finally {
-    if (tempPath) fs.promises.unlink(tempPath).catch(() => {});
   }
 };
 

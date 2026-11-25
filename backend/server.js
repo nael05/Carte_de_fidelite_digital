@@ -116,7 +116,10 @@ app.get('/api/wallet/health', (req, res) => {
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+// En production, l'API n'écoute que sur la machine (derrière Nginx) : impossible de la joindre en direct
+// et de falsifier X-Forwarded-For pour contourner les limites par IP.
+const HOST = process.env.HOST || (isProduction ? '127.0.0.1' : '0.0.0.0');
+app.listen(PORT, HOST, () => {
   logger.info(`✅ Backend démarré sur le port ${PORT} (${process.env.NODE_ENV || 'development'})`);
   passGenerator.validateConfiguration();
   startCronJobs();

@@ -258,7 +258,7 @@ export const staffLogin = async (req, res) => {
     [email.trim().toLowerCase()]
   );
   const staff = rows[0];
-  if (!staff) return false;
+  if (!staff) return false; // proLogin applique ensuite le même délai bcrypt
 
   const valid = await bcrypt.compare(mot_de_passe, staff.mot_de_passe);
   if (!valid) {

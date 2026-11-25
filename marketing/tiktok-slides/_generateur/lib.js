@@ -21,25 +21,25 @@ const fr = s => s
 /* ───────────── CSS global ───────────── */
 const CSS = `
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{width:1080px;height:1350px;overflow:hidden;background:#000}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
 body{font-family:"Inter",sans-serif;color:#f5f5f7;-webkit-font-smoothing:antialiased;font-feature-settings:"cv11","ss01"}
-.slide{position:relative;width:1080px;height:1350px;overflow:hidden;background:#000}
+.slide{position:relative;width:1080px;height:1920px;overflow:hidden;background:radial-gradient(120% 60% at 50% 0%,#15151c,#0b0b0f 70%)}
 .glow{position:absolute;border-radius:50%;filter:blur(40px);pointer-events:none}
 .grain{position:absolute;inset:0;opacity:.05;pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
-.hd{position:absolute;top:64px;left:80px;right:80px;display:flex;align-items:center;justify-content:space-between;z-index:20}
+.hd{position:absolute;top:300px;left:80px;right:180px;display:flex;align-items:center;justify-content:space-between;z-index:20}
 .brand{display:flex;align-items:center;gap:14px;font-family:"Inter Display";font-weight:700;font-size:30px;letter-spacing:-.01em}
 .brand img{width:52px;height:52px}
 .num{font-size:24px;font-weight:600;color:rgba(245,245,247,.4);font-variant-numeric:tabular-nums;letter-spacing:.06em}
-.c{position:absolute;left:80px;right:160px;z-index:5}
+.c{position:absolute;left:80px;right:180px;z-index:5}
 .eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:28px;font-weight:600;color:#2997ff;letter-spacing:.01em;margin-bottom:22px}
 .eyebrow .step{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:#2997ff;color:#fff;font-weight:800;font-size:24px}
 h1,h2{font-family:"Inter Display";font-weight:800;letter-spacing:-.035em;line-height:1.02;color:#fff}
-h1{font-size:96px}
-h2{font-size:76px}
-.grad{background-image:linear-gradient(100deg,#8cc8ff 0%,#2997ff 35%,#a9cdf2 70%,#e3c9a4 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1{font-size:104px}
+h2{font-size:96px}
+.grad{background-image:linear-gradient(100deg,#5e9cff 0%,#2997ff 30%,#a9cdf2 65%,#e3c9a4 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 .dim{color:rgba(245,245,247,.42)}
-.lead{font-size:38px;line-height:1.32;color:rgba(245,245,247,.72);font-weight:400;margin-top:26px;letter-spacing:-.01em}
+.lead{font-size:60px;line-height:1.2;color:rgba(245,245,247,.72);font-weight:400;margin-top:26px;letter-spacing:-.01em}
 .lead b{color:#fff;font-weight:600}
 .small{font-size:28px;line-height:1.35;color:rgba(245,245,247,.55)}
 .swipe{position:absolute;left:80px;bottom:190px;display:flex;align-items:center;gap:14px;font-size:30px;font-weight:600;color:#fff;z-index:20;
@@ -260,32 +260,16 @@ const li = (txt, ok = true) => `<li>${ok ? check() : cross()}<span>${txt}</span>
 const glows = (spec = []) => spec.map(([x, y, r, a = 0.3, c = '41,151,255']) =>
   `<div class="glow" style="left:${x - r}px;top:${y - r}px;width:${r * 2}px;height:${r * 2}px;background:radial-gradient(circle,rgba(${c},${a}),rgba(${c},0) 70%)"></div>`).join('')
 
-const DEFAULT_GLOWS = [[880, 120, 520, 0.28], [80, 1250, 460, 0.16]]
 
-/* Enveloppe d'une slide */
-const page = ({ body, i, n, glow = DEFAULT_GLOWS, bg = '' }) => `<!doctype html><html lang="fr"><head><meta charset="utf-8"><style>${CSS}</style></head>
-<body><div class="slide" style="${bg}">${glows(glow)}<div class="grain"></div>
-<div class="hd"><div class="brand"><img src="${A.logo}" alt="">Fidelyz</div><div class="num">${String(i).padStart(2, '0')} / ${String(n).padStart(2, '0')}</div></div>
-${fr(body)}</div></body></html>`
+/* Enveloppe d'une slide (1080×1920). Zones sûres : 220 ≤ y ≤ 1500, x ≤ 900. */
+const DEFAULT_GLOWS = [[900, 420, 560, 0.26], [120, 1500, 520, 0.14]]
+const signature = () => `<div style="position:absolute;left:80px;top:1376px;display:flex;align-items:center;gap:20px;z-index:20">
+<img src="${A.logo}" style="width:96px;height:96px"><div style="display:flex;flex-direction:column;gap:2px">
+<span style="font-family:'Inter Display';font-weight:800;font-size:40px;letter-spacing:-.02em">Fidelyz</span>
+<span style="font-size:28px;font-weight:500;color:rgba(245,245,247,.6)">fidelyzapp.fr</span></div></div>`
+const page = ({ body, i, n, glow = DEFAULT_GLOWS, logo = false }) => `<!doctype html><html lang="fr"><head><meta charset="utf-8"><style>${CSS}</style></head>
+<body><div class="slide">${glows(glow)}<div class="grain"></div>
+<div class="hd"><div class="num">${i}/${n}</div></div>
+${fr(body)}${logo ? signature() : ''}</div></body></html>`
 
-/* Dernière slide commune : appel à l'action */
-const cta = ({ title = 'Lance ta carte <span class="grad">aujourd\'hui.</span>', sub = 'Gratuit jusqu\'à 15 clients. Sans engagement.', visual = '' } = {}) => `
-${visual}
-<div class="c" style="top:190px">
-  <div class="eyebrow">À toi de jouer</div>
-  <h1>${title}</h1>
-  <p class="lead">${sub}</p>
-</div>
-<div class="c" style="top:760px">
-  <div style="display:inline-flex;flex-direction:column;gap:18px;padding:34px 40px;border-radius:36px;background:linear-gradient(135deg,rgba(41,151,255,.22),rgba(41,151,255,.06));border:1px solid rgba(41,151,255,.45)">
-    <span style="font-size:28px;font-weight:600;color:rgba(245,245,247,.7)">Crée ton compte sur</span>
-    <span style="font-family:'Inter Display';font-weight:800;font-size:78px;letter-spacing:-.035em;color:#fff">fidelyzapp.fr</span>
-    <span style="display:inline-flex;align-items:center;gap:12px;font-size:32px;font-weight:700;color:#2997ff">Lien en bio
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#2997ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-  </div>
-  <div style="display:flex;gap:20px;align-items:center;margin-top:36px">
-    <img src="${A.apple}" style="height:66px"><img src="${A.google}" style="height:66px">
-  </div>
-</div>`
-
-module.exports = { A, fr, page, cta, pass, passBack, gpass, notif, phone, lockscreen, walletScreen, shot, sbar, check, cross, pin, li, qr, strip, glows }
+module.exports = { A, fr, page, pass, passBack, gpass, notif, phone, lockscreen, walletScreen, shot, sbar, check, cross, pin, li, qr, strip, glows }

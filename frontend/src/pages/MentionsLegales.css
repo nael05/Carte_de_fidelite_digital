@@ -2,7 +2,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--bg-main, #0f1117);
+  background: var(--bg-app, #000);
   color: var(--text-primary, #f1f5f9);
   position: relative;
   overflow-x: hidden;
@@ -15,7 +15,7 @@
   transform: translateX(-50%);
   width: 700px;
   height: 700px;
-  background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--accent-light, rgba(10,132,255,0.12)) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -29,7 +29,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 32px;
-  background: rgba(15, 17, 23, 0.85);
+  background: var(--bg-sidebar, rgba(10, 10, 12, 0.78));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-light, rgba(255,255,255,0.08));
@@ -47,7 +47,7 @@
 }
 
 .ml-back-btn:hover {
-  color: var(--accent, #6366f1);
+  color: var(--accent-text, #0a84ff);
 }
 
 .ml-navbar-brand {
@@ -85,7 +85,7 @@
 
 
 .ml-article {
-  background: var(--bg-card, rgba(255,255,255,0.03));
+  background: var(--bg-surface, rgba(255,255,255,0.03));
   border: 1px solid var(--border-light, rgba(255,255,255,0.08));
   border-radius: 20px;
   padding: 40px 48px;
@@ -96,7 +96,7 @@
   font-size: 2rem;
   font-weight: 800;
   margin: 0 0 32px;
-  background: linear-gradient(135deg, #fff 60%, rgba(99,102,241,0.8));
+  background: linear-gradient(135deg, var(--text-primary, #fff) 60%, var(--accent, #0a84ff));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -147,7 +147,7 @@
 }
 
 .ml-article a {
-  color: var(--accent, #6366f1);
+  color: var(--accent-text, #0a84ff);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -175,7 +175,7 @@
 }
 
 .ml-footer a:hover {
-  color: var(--accent, #6366f1);
+  color: var(--accent-text, #0a84ff);
 }
 
 
@@ -191,4 +191,9 @@
   .ml-article h1 {
     font-size: 1.5rem;
   }
+}
+
+/* Bouton retour : zone de toucher confortable sur téléphone */
+@media (max-width: 800px) {
+  .ml-back-btn { min-height: 44px; }
 }

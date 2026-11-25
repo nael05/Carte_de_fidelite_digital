@@ -32,7 +32,7 @@ export const staffMayAccess = (role, method, path) => {
   }
   if (MANAGER_BLOCKED.some((p) => inPrefix(path, p))) return false;
   if (inPrefix(path, '/pro/establishments') && method !== 'GET') return false;
-  if (method === 'DELETE' && path === '/pro/history') return false;
+  if (method === 'DELETE') return false; // suppressions (clients, paliers, historique…) réservées au propriétaire
   return true;
 };
 

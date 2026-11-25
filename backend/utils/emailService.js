@@ -92,7 +92,7 @@ class EmailService {
         <td style="padding:36px 40px 0;">
           <p style="margin:0 0 6px;font-size:20px;font-weight:700;color:#111827;">Bienvenue${prenomDisplay},</p>
           <p style="margin:0;font-size:14px;color:#6b7280;line-height:1.7;">
-            Votre espace commerçant <strong style="color:#111827;">${nom}</strong> vient d'être créé sur Fidelyz.<br>
+            Votre espace commerçant <strong style="color:#111827;">${escHtml(nom)}</strong> vient d'être créé sur Fidelyz.<br>
             Retrouvez ci-dessous vos informations de connexion et les premières étapes pour démarrer.
           </p>
         </td>
@@ -112,15 +112,15 @@ class EmailService {
                 <table width="100%" cellpadding="0" cellspacing="0">
                   <tr>
                     <td style="padding:6px 0;font-size:13px;color:#9ca3af;width:130px;">Entreprise</td>
-                    <td style="padding:6px 0;font-size:13px;font-weight:600;color:#111827;">${nom}</td>
+                    <td style="padding:6px 0;font-size:13px;font-weight:600;color:#111827;">${escHtml(nom)}</td>
                   </tr>
                   ${telephone ? `<tr>
                     <td style="padding:6px 0;font-size:13px;color:#9ca3af;">Telephone</td>
-                    <td style="padding:6px 0;font-size:13px;color:#374151;">${telephone}</td>
+                    <td style="padding:6px 0;font-size:13px;color:#374151;">${escHtml(telephone)}</td>
                   </tr>` : ''}
                   <tr>
                     <td style="padding:6px 0;font-size:13px;color:#9ca3af;">Email</td>
-                    <td style="padding:6px 0;font-size:13px;font-weight:600;color:#111827;">${email}</td>
+                    <td style="padding:6px 0;font-size:13px;font-weight:600;color:#111827;">${escHtml(email)}</td>
                   </tr>
                   <tr>
                     <td style="padding:6px 0;font-size:13px;color:#9ca3af;">Fidelite</td>

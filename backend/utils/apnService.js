@@ -71,8 +71,9 @@ export class APNService {
 
     const notification = new apn.Notification();
     notification.rawPayload = { aps: {} };
-    notification.pushType = 'pass';
-    notification.priority = 10;
+    // Push Wallet : charge vide, type « background », priorité 5 (seule combinaison documentée pour un push sans alerte).
+    notification.pushType = 'background';
+    notification.priority = 5;
     notification.topic = this.topic;
 
     try {

@@ -157,9 +157,11 @@ class WalletSyncService {
     const text = appleText({ title, body });
 
     await db.query(
-      `UPDATE wallet_cards SET notification_message = ?, last_updated = NOW(3)
+      // Texte identique au précédent : un caractère invisible le rend différent, sinon iOS n'afficherait pas l'alerte.
+      `UPDATE wallet_cards
+       SET notification_message = IF(notification_message = ?, CONCAT(?, '\u200B'), ?), last_updated = NOW(3)
        WHERE company_id = ? AND client_id IN (?) AND pass_serial_number NOT LIKE 'GOOGLE\\_%'`,
-      [text, companyId, clientIds]
+      [text, text, text, companyId, clientIds]
     );
     const [appleRegs] = await db.query(
       `SELECT DISTINCT r.push_token

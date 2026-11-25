@@ -109,6 +109,7 @@ app.get('/api/wallet/health', (req, res) => {
     status: 'ok',
     timestamp: new Date().toISOString(),
     appleWallet: passGenerator.validateConfiguration() ? 'configuré' : 'non configuré',
+    appleCertificateDaysLeft: passGenerator.certificateDaysLeft(),
     applePush: apnService.isConfigured() ? 'configuré' : 'non configuré'
   });
 });

@@ -629,3 +629,8 @@
   .pd-lock { min-height: 360px; }
   .pd-form-foot .ui-btn { width: 100%; }
 }
+
+/* Téléphone : on rend la largeur réservée aux points au nom du client */
+@media (max-width: 480px) {
+  .pd-client .ui-points { min-width: 0; }
+}

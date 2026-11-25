@@ -8,7 +8,7 @@
 import googleWalletGenerator from '../utils/googleWalletGenerator.js';
 import db from '../db.js';
 import logger from '../utils/logger.js';
-import { ensureWalletCard, buildApplePass, webServiceUrl, safeFilename } from '../utils/applePass.js';
+import { ensureWalletCard, buildApplePass, webServiceUrl, safeFilename, checkDownloadToken } from '../utils/applePass.js';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -120,7 +120,7 @@ export const getWalletStatus = async (req, res) => {
 export const downloadClientPass = async (req, res) => {
   try {
     const { clientId } = req.params;
-    if (!UUID_RE.test(String(clientId))) return res.status(404).send('Carte introuvable');
+    if (!UUID_RE.test(String(clientId)) || !checkDownloadToken(clientId, req.query.t)) return res.status(404).send('Carte introuvable');
 
     const client = await loadClient(clientId);
     if (!client) return res.status(404).send('Carte introuvable');
@@ -146,7 +146,24 @@ export const downloadClientPass = async (req, res) => {
   }
 };
 
+/**
+ * GET /api/app/wallet/unsubscribe/:clientId?t=... — page simple : le client ne reçoit plus d'offres.
+ */
+export const unsubscribeMarketing = async (req, res) => {
+  const page = (msg) => `<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fidelyz</title></head><body style="font-family:system-ui,sans-serif;max-width:480px;margin:15vh auto;padding:0 20px;text-align:center;color:#111"><h1 style="font-size:22px">${msg}</h1><p style="color:#555">Votre carte de fidélité et vos points restent actifs.</p></body></html>`;
+  const { clientId } = req.params;
+  if (!UUID_RE.test(String(clientId)) || !checkDownloadToken(clientId, req.query.t)) return res.status(404).send(page('Lien invalide'));
+  try {
+    await db.query('UPDATE clients SET marketing_optin = 0, marketing_optin_at = NOW() WHERE id = ?', [clientId]);
+    res.send(page('Vous ne recevrez plus d’offres de ce commerce.'));
+  } catch (error) {
+    logger.error('Désinscription marketing', { error: error.message });
+    res.status(500).send(page('Erreur, réessayez plus tard.'));
+  }
+};
+
 export default {
+  unsubscribeMarketing,
   createWalletPass,
   getWalletStatus,
   downloadClientPass

@@ -203,8 +203,20 @@ if (r.data?.url) fs.unlinkSync(new URL(`../${r.data.url}`, import.meta.url));
 // ── Lien public de carte
 r = await fetch(`${API}/app/wallet/client-download/not-a-uuid`);
 check('lien de carte invalide : 404', r.status === 404);
+const { downloadToken } = await import('../utils/applePass.js');
 r = await fetch(`${API}/app/wallet/client-download/${clientA}?type=apple`);
+check("lien de carte sans jeton (identifiant lu dans le QR) : refusé", r.status === 404);
+r = await fetch(`${API}/app/wallet/client-download/${clientA}?type=apple&t=${downloadToken(clientA)}`);
 check('lien de carte sans certificat Apple : 503 propre', r.status === 503);
+r = await call(pro, 'PUT', `/pro/clients/${clientA}/marketing`, { optin: false });
+let [[opt]] = await pool.query('SELECT marketing_optin, marketing_optin_at FROM clients WHERE id = ?', [clientA]);
+check('commerçant : retrait du consentement enregistré et daté', r.status === 200 && opt.marketing_optin === 0 && !!opt.marketing_optin_at, JSON.stringify(opt));
+await call(pro, 'PUT', `/pro/clients/${clientA}/marketing`, { optin: true });
+r = await fetch(`${API}/app/wallet/unsubscribe/${clientA}?t=bad`);
+check('désinscription : jeton invalide refusé', r.status === 404);
+r = await fetch(`${API}/app/wallet/unsubscribe/${clientA}?t=${downloadToken(clientA)}`);
+[[opt]] = await pool.query('SELECT marketing_optin FROM clients WHERE id = ?', [clientA]);
+check('client : désinscription depuis le lien au dos de sa carte', r.status === 200 && opt.marketing_optin === 0);
 
 // ── Nettoyage
 await pool.query('DELETE FROM entreprises WHERE id = ?', [ent.id]);

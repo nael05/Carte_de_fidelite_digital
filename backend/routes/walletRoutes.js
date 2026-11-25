@@ -17,6 +17,9 @@ const router = express.Router();
 router.post('/app/wallet/create', verifyToken, isPro, walletAppController.createWalletPass);
 router.get('/app/wallet/status/:clientId', verifyToken, isPro, walletAppController.getWalletStatus);
 
+// Le client retire lui-même son accord pour les offres (lien au dos de sa carte).
+router.get('/app/wallet/unsubscribe/:clientId', walletAppController.unsubscribeMarketing);
+
 // Lien envoyé au client après son inscription.
 router.get('/app/wallet/client-download/:clientId', walletAppController.downloadClientPass);
 

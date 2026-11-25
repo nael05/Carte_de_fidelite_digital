@@ -31,6 +31,7 @@ CALL fz_add_column('loyalty_config', 'points_shortcuts', 'TEXT NULL');
 CALL fz_add_column('loyalty_config', 'points_expiration_months', 'INT NULL DEFAULT NULL');
 CALL fz_add_column('clients', 'marketing_optin', 'TINYINT(1) NOT NULL DEFAULT 0');
 CALL fz_add_column('clients', 'establishment_id', 'VARCHAR(36) NULL');
+CALL fz_add_column('clients', 'marketing_optin_at', 'DATETIME NULL');
 CALL fz_add_column('transaction_history', 'establishment_id', 'VARCHAR(36) NULL');
 
 -- 2. Un même iPhone peut porter les cartes de plusieurs commerces : le jeton push ne doit pas être unique.

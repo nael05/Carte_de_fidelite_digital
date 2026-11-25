@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import axios from 'axios';
 import db from '../db.js';
+import { downloadToken } from './applePass.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -263,7 +264,7 @@ class GoogleWalletGenerator {
     };
 
     if (config) {
-      const { linksModuleData } = this._buildLinksAndOfferModules(config);
+      const { linksModuleData } = this._buildLinksAndOfferModules(config, clientId);
       if (linksModuleData) loyaltyObject.linksModuleData = linksModuleData;
     }
 
@@ -431,7 +432,7 @@ class GoogleWalletGenerator {
     };
 
     if (config) {
-      const { linksModuleData } = this._buildLinksAndOfferModules(config);
+      const { linksModuleData } = this._buildLinksAndOfferModules(config, clientId);
       if (linksModuleData) patchBody.linksModuleData = linksModuleData;
     }
 
@@ -495,7 +496,7 @@ class GoogleWalletGenerator {
     return null;
   }
 
-  _buildLinksAndOfferModules(config) {
+  _buildLinksAndOfferModules(config, clientId = null) {
     const uris = [];
 
     if (config.google_back_phone) {
@@ -524,6 +525,9 @@ class GoogleWalletGenerator {
       uris.push({ uri: reviewUrl, description: 'Laissez-nous un avis Google', id: 'link_review_google' });
     }
 
+    if (clientId && process.env.BACKEND_URL) {
+      uris.push({ uri: this._getAbsoluteUrl(`api/app/wallet/unsubscribe/${clientId}?t=${downloadToken(clientId)}`), description: 'Ne plus recevoir les offres', id: 'link_unsubscribe' });
+    }
     const linksModuleData = uris.length > 0 ? { uris } : null;
     return { linksModuleData };
   }

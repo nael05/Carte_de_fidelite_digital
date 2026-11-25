@@ -224,6 +224,7 @@ CREATE TABLE IF NOT EXISTS `clients` (
   `points` INT NOT NULL DEFAULT 0,
   `type_wallet` ENUM('apple','google') NOT NULL DEFAULT 'apple',
   `marketing_optin` TINYINT(1) NOT NULL DEFAULT 0,
+  `marketing_optin_at` DATETIME NULL COMMENT 'date du dernier changement de consentement',
   `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_clients_entreprise_telephone` (`entreprise_id`, `telephone`),

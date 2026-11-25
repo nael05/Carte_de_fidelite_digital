@@ -75,6 +75,13 @@ export const runPriceChanges = async () => {
  * sans PM2 (node server.js, mode fork), elles tournent dans l'unique processus.
  * DISABLE_CRON=true les désactive (instances supplémentaires, tests).
  */
+// 09:00 — alerte si le certificat Apple Wallet expire bientôt (toutes les cartes Apple cesseraient de fonctionner).
+export const checkAppleCertificate = async () => {
+  const { default: passGenerator } = await import('./passGenerator.js');
+  const days = passGenerator.certificateDaysLeft();
+  if (days !== null && days < 30) logger.error(`[CRON] Certificat Apple Wallet : expiration dans ${days} jour(s) — à renouveler sur developer.apple.com`);
+};
+
 export const startCronJobs = () => {
   const instance = process.env.NODE_APP_INSTANCE;
   if (process.env.DISABLE_CRON === 'true' || (instance !== undefined && instance !== '0')) {
@@ -85,5 +92,6 @@ export const startCronJobs = () => {
   cron.schedule('0 3 * * *', runCleanup, { timezone: TZ });
   cron.schedule('0 4 * * *', runPriceChanges, { timezone: TZ });
   cron.schedule('0 10 * * *', runExpiryWarnings, { timezone: TZ });
+  cron.schedule('0 9 * * *', checkAppleCertificate, { timezone: TZ });
   logger.info('[CRON] Tâches planifiées actives (expiration 2 h, purge 3 h, tarifs 4 h, alertes J-7 10 h — heure de Paris)');
 };

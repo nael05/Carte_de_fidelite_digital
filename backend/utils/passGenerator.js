@@ -11,6 +11,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import logger from './logger.js';
 import sharp from 'sharp';
+import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -59,6 +60,20 @@ export class PassGenerator {
     } catch (err) {
       logger.error('❌ Erreur chargement config PassGenerator:', err.message);
       return false;
+    }
+  }
+
+  /**
+   * Jours avant l'expiration du certificat Apple (null si illisible). Expiré = plus aucune carte générée.
+   */
+  certificateDaysLeft() {
+    try {
+      this._loadConfig();
+      if (!this.certPath || !fs.existsSync(this.certPath)) return null;
+      const cert = new crypto.X509Certificate(this.extractPEM(fs.readFileSync(this.certPath)));
+      return Math.floor((new Date(cert.validTo).getTime() - Date.now()) / 86_400_000);
+    } catch {
+      return null;
     }
   }
 
@@ -392,6 +407,15 @@ export class PassGenerator {
           label: 'DERNIER MESSAGE',
           value: appleNotifMessage,
           changeMessage: '%@'
+        });
+      }
+
+      if (customization?.unsubscribe_url) {
+        this.safeAddField(pass.backFields, {
+          key: 'unsubscribe',
+          label: 'OFFRES ET NOTIFICATIONS',
+          value: customization.unsubscribe_url,
+          attributedValue: `<a href='${escHtml(customization.unsubscribe_url)}'>Ne plus recevoir les offres</a>`
         });
       }
 

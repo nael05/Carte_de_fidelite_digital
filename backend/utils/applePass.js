@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto';
+import { randomUUID, createHmac, timingSafeEqual } from 'crypto';
 import db from '../db.js';
 import passGenerator from './passGenerator.js';
 import logger from './logger.js';
@@ -8,6 +8,17 @@ import logger from './logger.js';
  * initial (lien client, espace pro) et par le Web Service Apple (mises à jour) : la carte reçue lors
  * d'une mise à jour est exactement celle qu'on aurait téléchargée.
  */
+
+// Jeton du lien de téléchargement de la carte : l'identifiant client figure en clair dans le QR code de la
+// carte, il ne doit donc pas suffire à télécharger la carte (et son jeton d'authentification Apple).
+export const downloadToken = (clientId) =>
+  createHmac('sha256', process.env.JWT_SECRET).update(`download:${clientId}`).digest('hex').slice(0, 32);
+export const checkDownloadToken = (clientId, token) => {
+  const expected = Buffer.from(downloadToken(clientId));
+  const given = Buffer.from(String(token || ''));
+  return given.length === expected.length && timingSafeEqual(given, expected);
+};
+export const downloadPath = (clientId) => `/api/app/wallet/client-download/${clientId}?t=${downloadToken(clientId)}`;
 
 // Numéro de série Apple : dérivé de l'identifiant client (stable).
 export const appleSerialFor = (clientId) => String(clientId).replace(/-/g, '').substring(0, 20).toUpperCase();
@@ -123,7 +134,8 @@ export const buildApplePass = async (serialNumber, webServiceURL) => {
     latitude: cc.latitude,
     longitude: cc.longitude,
     relevant_text: cc.relevant_text,
-    locations: cc.locations
+    locations: cc.locations,
+    unsubscribe_url: `${webServiceURL.replace(/\/api\/wallet$/, '')}/api/app/wallet/unsubscribe/${data.client_id}?t=${downloadToken(data.client_id)}`
   };
 
   const buffer = await passGenerator.generateLoyaltyPass(passData, design, serialNumber, data.authentication_token, { webServiceURL });

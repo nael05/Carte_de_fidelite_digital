@@ -17,6 +17,7 @@ import { staffLogin } from './teamController.js';
 import { resolveEstablishmentId, findEstablishment } from '../utils/establishments.js';
 import crypto from 'crypto';
 import { stripe } from '../utils/stripeConfig.js';
+import { downloadPath, downloadToken } from '../utils/applePass.js';
 
 // Limites des opérations de caisse (protège contre les fautes de frappe et les requêtes forgées).
 const MAX_POINTS_PER_OPERATION = 100000;
@@ -1001,7 +1002,7 @@ export const registerClientAndGeneratePass = async (req, res) => {
     const clientEstablishment = await findEstablishment(entrepriseId, req.body.establishment_id);
     const marketingOptinValue = marketing_optin === true || marketing_optin === 'true' ? 1 : 0;
     await withClientQuota(entrepriseId, (conn) => conn.query(
-      'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin, establishment_id) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?)',
+      'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin, marketing_optin_at, establishment_id) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, NOW(), ?)',
       [clientId, entrepriseId, nom.trim(), prenom.trim(), phone, email ? email.trim().toLowerCase() : null, type_wallet, marketingOptinValue, clientEstablishment]
     ));
 
@@ -1009,6 +1010,7 @@ export const registerClientAndGeneratePass = async (req, res) => {
     return res.status(201).json({
       success: true,
       clientId: clientId,
+      downloadToken: downloadToken(clientId),
       message: 'Client créé avec succès'
     });
   } catch (err) {
@@ -1073,13 +1075,13 @@ export const createClientAndInvite = async (req, res) => {
 
     const clientId = randomUUID();
     await withClientQuota(entrepriseId, async (conn) => conn.query(
-      'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin, establishment_id) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?)',
+      'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin, marketing_optin_at, establishment_id) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, NOW(), ?)',
       [clientId, entrepriseId, nom.trim(), prenom.trim(), phone, email.trim().toLowerCase(), type_wallet, marketingOptin, await resolveEstablishmentId(req)]
     ));
 
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
     const apiBase = frontendUrl.endsWith('/') ? frontendUrl.slice(0, -1) : frontendUrl;
-    const downloadUrl = `${apiBase}/api/app/wallet/client-download/${clientId}`;
+    const downloadUrl = `${apiBase}${downloadPath(clientId)}`;
 
     try {
       await emailService.sendClientInviteEmail({ email, prenom, downloadUrl, companyName });
@@ -1138,7 +1140,7 @@ export const sendClientDownloadLinks = async (req, res) => {
     let skipped = 0;
     for (const client of clients) {
       if (!client.email) { skipped++; continue; }
-      const downloadUrl = `${apiBase}/api/app/wallet/client-download/${client.id}`;
+      const downloadUrl = `${apiBase}${downloadPath(client.id)}`;
       try {
         await emailService.sendCardDownloadLinkEmail({ email: client.email, prenom: client.prenom, downloadUrl, companyName });
         sent++;
@@ -1541,5 +1543,24 @@ export const resetPassword = async (req, res) => {
   } catch (err) {
     logger.error('Reset password error', { error: err.message });
     res.status(500).json({ error: 'Erreur lors de la réinitialisation' });
+  }
+};
+
+/**
+ * PUT /api/pro/clients/:clientId/marketing { optin } — le client donne ou retire son accord (RGPD).
+ */
+export const setClientMarketing = async (req, res) => {
+  const optin = req.body?.optin === true ? 1 : req.body?.optin === false ? 0 : null;
+  if (optin === null) return res.status(400).json({ error: 'optin (true/false) requis' });
+  try {
+    const [r] = await pool.query(
+      'UPDATE clients SET marketing_optin = ?, marketing_optin_at = NOW() WHERE id = ? AND entreprise_id = ?',
+      [optin, req.params.clientId, req.user.id]
+    );
+    if (r.affectedRows === 0) return res.status(404).json({ error: 'Client non trouvé' });
+    res.json({ success: true, marketing_optin: !!optin });
+  } catch (err) {
+    logger.error('Set marketing optin error', { error: err.message });
+    res.status(500).json({ error: 'Erreur serveur' });
   }
 };

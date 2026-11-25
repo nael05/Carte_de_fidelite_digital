@@ -118,6 +118,7 @@ router.delete('/pro/history', verifyToken, isPro, apiController.deleteTransactio
 
 router.get('/pro/info', verifyToken, isPro, apiController.getProInfo);
 router.delete('/pro/clients/:clientId', verifyToken, isPro, requireAccountAccess, apiController.deleteClient);
+router.put('/pro/clients/:clientId/marketing', verifyToken, isPro, requireAccountAccess, apiController.setClientMarketing);
 router.get('/pro/loyalty/config', verifyToken, isPro, loyaltyController.getLoyaltyConfig);
 router.put('/pro/loyalty/config', verifyToken, isPro, loyaltyController.updateLoyaltyConfig);
 router.get('/pro/reward-tiers', verifyToken, isPro, loyaltyController.getRewardTiers);

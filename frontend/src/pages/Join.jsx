@@ -153,7 +153,8 @@ function Join() {
         const apiUrl = import.meta.env.VITE_API_URL || '/api';
 
         const baseApi = apiUrl.endsWith('/') ? apiUrl.slice(0, -1) : apiUrl;
-        window.location.href = `${baseApi}/app/wallet/client-download/${clientId}`;
+        const token = registrationResponse.data.downloadToken
+        window.location.href = `${baseApi}/app/wallet/client-download/${clientId}?t=${encodeURIComponent(token || '')}&type=${selectedWallet || ''}`;
       }, 1000)
     } catch (err) {
       console.error('Registration error:', err)

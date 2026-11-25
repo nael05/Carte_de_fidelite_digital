@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { randomUUID } from 'crypto';
 import pool from '../db.js';
 import { verifySessionValidity } from '../utils/sessionManager.js';
 import { effectiveTier } from '../utils/plans.js';
@@ -9,7 +10,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // extra : revendications supplémentaires (compte équipe : staffId, staffRole).
 // Le compte Master Admin a une session courte (12 h) ; les commerçants 7 jours (renouvelés par la session).
 export const generateToken = (userId, role, extra = {}) => {
-  return jwt.sign({ id: userId, role, ...extra }, JWT_SECRET, { expiresIn: role === 'admin' ? '12h' : '7d', algorithm: 'HS256' });
+  // jwtid : chaque jeton est unique, même pour deux connexions dans la même seconde (lien jeton ↔ session).
+  return jwt.sign({ id: userId, role, ...extra }, JWT_SECRET, { expiresIn: role === 'admin' ? '12h' : '7d', algorithm: 'HS256', jwtid: randomUUID() });
 };
 const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);

@@ -59,7 +59,7 @@ export default function CampaignsPanel() {
   if (!quota) return <div className="ui-card"><div className="ui-loading">Chargement…</div></div>
 
   const locked = quota.limit === 0
-  const blocked = quota.suspended || quota.remaining === 0 || !!quota.next_allowed_at
+  const blocked = quota.suspended || quota.remaining === 0 || !!quota.next_allowed_at || quota.quiet_now
 
   return (
     <div className="pp2-stack">
@@ -73,7 +73,7 @@ export default function CampaignsPanel() {
             <li><Clock size={14} /> {quota.min_hours_between} h minimum entre deux campagnes</li>
             <li><Clock size={14} /> Un client reçoit au plus une campagne tous les {quota.client_cooldown_days} jours</li>
             <li><Clock size={14} /> Pas d'envoi entre {quota.quiet_hours.from} h et {quota.quiet_hours.to} h</li>
-            <li><CheckCircle2 size={14} /> Uniquement les clients ayant accepté de recevoir des offres</li>
+            <li><CheckCircle2 size={14} /> Uniquement les clients ayant accepté de recevoir des offres et ajouté leur carte au Wallet</li>
           </ul>
         </div>
         {locked && (
@@ -93,6 +93,7 @@ export default function CampaignsPanel() {
 
       <form className="ui-card" onSubmit={send}>
         <h2 className="ui-card-title"><span className="ui-icon sm"><Megaphone size={16} /></span> Nouvelle campagne</h2>
+        <p className="ui-hint pp2-gap">Le message apparaît en notification sur le téléphone de vos clients (écran verrouillé) et reste visible sur leur carte : au dos sur iPhone, dans les messages sur Android.</p>
         <div className="ui-field pp2-gap">
           <label className="ui-label">Titre <span className="ui-hint">{form.title.length}/60</span></label>
           <input className="ui-input" maxLength={60} required value={form.title} disabled={locked}

@@ -133,45 +133,6 @@ PASS TEMP : ${ent.temporary_password || 'Déjà changé'}
     }
   }
 
-  const handleCreateCompany = async (e) => {
-    e.preventDefault()
-    setError('')
-    setSuccess('')
-
-    if (!formData.nom || !formData.email) {
-      setError('Tous les champs sont requis')
-      return
-    }
-
-    setSubmitting(true)
-    try {
-      const response = await api.post('/admin/create-company', {
-        nom: formData.nom,
-        email: formData.email,
-        prenom: formData.prenom,
-        telephone: formData.telephone,
-        loyalty_type: formData.loyalty_type
-      })
-
-      setNewCompanyCredentials({
-        ...response.data,
-        nom: formData.nom
-      })
-
-      setSuccess('Entreprise créée avec succès!')
-      setFormData({ nom: '', email: '', prenom: '', telephone: '', loyalty_type: 'points' })
-
-      setTimeout(() => {
-        loadEnterprises()
-        setSuccess('')
-      }, 1500)
-    } catch (err) {
-      setError(err.response?.data?.error || 'Erreur lors de la création')
-    } finally {
-      setSubmitting(false)
-    }
-  }
-
   const handleSuspend = async (companyId) => {
     if (!window.confirm('Suspendre cette entreprise?')) return
     try {

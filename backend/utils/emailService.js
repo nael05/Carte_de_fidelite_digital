@@ -6,9 +6,10 @@ const escHtml = (str) => String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&
 class EmailService {
   constructor() {
     this.apiKey = process.env.BREVO_API_KEY;
+    // L'expéditeur doit appartenir à un domaine vérifié dans Brevo (SPF/DKIM), sinon les e-mails partent en spam.
     this.sender = {
-      name: 'Fidelyz Support',
-      email: process.env.MAIL_USER || 'nael80393@gmail.com'
+      name: process.env.MAIL_SENDER_NAME || 'Fidelyz',
+      email: process.env.MAIL_USER || 'no-reply@fidelyzapp.fr'
     };
     
     if (!this.apiKey) {
@@ -63,7 +64,7 @@ class EmailService {
 
     const loginUrl = `${frontendUrl}/pro/login`;
     const loyaltyLabel = loyaltyType === 'stamps' ? 'Tampons' : 'Points';
-    const prenomDisplay = prenom ? ` ${prenom}` : '';
+    const prenomDisplay = prenom ? ` ${escHtml(prenom)}` : '';
 
     try {
       await axios.post('https://api.brevo.com/v3/smtp/email', {

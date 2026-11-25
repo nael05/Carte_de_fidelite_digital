@@ -73,7 +73,7 @@ function ProDashboard() {
   const [proxSaving, setProxSaving] = useState(false)
   const [settingsPage, setSettingsPage] = useState(null)
   const [showCreateClientModal, setShowCreateClientModal] = useState(false)
-  const [createClientForm, setCreateClientForm] = useState({ nom: '', prenom: '', telephone: '', email: '', type_wallet: 'apple' })
+  const [createClientForm, setCreateClientForm] = useState({ nom: '', prenom: '', telephone: '', email: '', type_wallet: 'apple', marketing_optin: false })
   const [createClientLoading, setCreateClientLoading] = useState(false)
   const [expirationConfig, setExpirationConfig] = useState({ points_expiration_months: null })
   const [expirationSlider, setExpirationSlider] = useState(12)
@@ -107,7 +107,7 @@ function ProDashboard() {
       await api.post('/pro/clients/create-invite', createClientForm)
       addToast('Client créé et email d\'invitation envoyé !')
       setShowCreateClientModal(false)
-      setCreateClientForm({ nom: '', prenom: '', telephone: '', email: '', type_wallet: 'apple' })
+      setCreateClientForm({ nom: '', prenom: '', telephone: '', email: '', type_wallet: 'apple', marketing_optin: false })
       loadClients()
     } catch (err) {
       addToast(err.response?.data?.error || 'Erreur lors de la création du client', 'error')
@@ -514,7 +514,7 @@ function ProDashboard() {
     setProxSaving(true)
     try {
       await api.patch(`/pro/card-customization/${proInfo.id}/gps?loyaltyType=${proInfo.loyalty_type || 'points'}`, proxConfig)
-      addToast('GPS & Notifications enregistrés !')
+      addToast('Lieux enregistrés : les cartes de vos clients se mettent à jour.')
     } catch (err) {
       addToast('Erreur lors de la sauvegarde', 'error')
     } finally {
@@ -1225,6 +1225,7 @@ function ProDashboard() {
                     <label className="ui-label">Message sur l'écran verrouillé</label>
                     <input className="ui-input" type="text"
                       value={loc.relevantText || ''}
+                      maxLength={100}
                       onChange={e => handleProxLocationChange(index, 'relevantText', e.target.value)}
                       placeholder="Ex : Bienvenue ! N'oubliez pas votre carte." />
                   </div>
@@ -1470,8 +1471,8 @@ function ProDashboard() {
                   type="tel"
                   required
                   minLength={10}
-                  maxLength={14}
-                  inputMode="numeric"
+                  maxLength={20}
+                  inputMode="tel"
                   value={createClientForm.telephone}
                   onChange={e => setCreateClientForm(f => ({ ...f, telephone: e.target.value }))}
                   placeholder="06 12 34 56 78"
@@ -1502,6 +1503,11 @@ function ProDashboard() {
                   ))}
                 </div>
               </div>
+              <label className="pd-field" style={{ display: 'flex', gap: 10, alignItems: 'flex-start', cursor: 'pointer' }}>
+                <input type="checkbox" checked={createClientForm.marketing_optin}
+                  onChange={e => setCreateClientForm(f => ({ ...f, marketing_optin: e.target.checked }))} style={{ marginTop: 3 }} />
+                <span className="ui-hint">Le client accepte de recevoir les offres du commerce (notifications). À cocher uniquement s'il vous a donné son accord.</span>
+              </label>
             </div>
             <div className="ui-modal-foot">
               <button type="button" className="ui-btn secondary" onClick={() => setShowCreateClientModal(false)}>Annuler</button>

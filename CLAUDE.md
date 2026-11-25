@@ -27,8 +27,17 @@ npm run preview  # Preview production build
 
 ### Database
 ```bash
-mysql -u root -p < schema.sql              # Initial schema
-mysql -u root -p < SETUP_DATABASE.sql      # Full setup with seed data
+cd backend
+node scripts/run_migration.js schema.sql                            # Fresh install (complete schema)
+node scripts/run_migration.js migrations/09-mise-en-production.sql  # Upgrade an existing database
+node scripts/init-admin.mjs                                         # Create the Master Admin
+```
+
+### Tests (backend running on port 5000, test database)
+```bash
+cd backend
+DOTENV_CONFIG_PATH=.env.test node tests/audit-e2e.mjs   # cash desk, campaigns, expiration, passwords, uploads
+DOTENV_CONFIG_PATH=.env.test node tests/team-e2e.mjs    # Business plan: establishments and staff
 ```
 
 ## Architecture
@@ -36,7 +45,7 @@ mysql -u root -p < SETUP_DATABASE.sql      # Full setup with seed data
 ### Monorepo Structure
 - `backend/` — Express API server (port 5000), ES modules
 - `frontend/` — React 18 + Vite SPA (port 3000 in dev)
-- `schema.sql`, `SETUP_DATABASE.sql` — Database setup scripts
+- `backend/schema.sql` — complete database schema; `backend/migrations/` — historical and upgrade scripts
 
 ### Backend
 
@@ -67,7 +76,11 @@ mysql -u root -p < SETUP_DATABASE.sql      # Full setup with seed data
 
 **Database** (`backend/db.js`): MySQL 8+ connection pool (10 connections). Key tables: `entreprises`, `clients`, `loyalty_config`, `reward_tiers`, `wallet_cards`, `apple_pass_registrations`, `card_customization`, `sessions`, `transaction_history`.
 
-**Migrations** in `backend/migrations/` — run via admin endpoint `/api/setup/run-migration` or direct SQL.
+**Migrations** in `backend/migrations/` — run with `node scripts/run_migration.js <file>` (supports `DELIMITER`).
+
+**Scheduled jobs** (`backend/utils/cronJobs.js`, Europe/Paris): points expiration 02:00 (silent card update), cleanup 03:00, price changes 04:00, 7-day expiry warning 10:00. They run in the single process (or PM2 instance 0); `DISABLE_CRON=true` turns them off.
+
+**Stripe is optional**: without `STRIPE_SECRET_KEY` the server starts, only the free plan is offered and payment routes answer 503 `stripe_not_configured`. Prices are TTC (`tax_behavior: inclusive`); launch prices live in `DEFAULT_PRICES_CENTS` (`backend/utils/plans.js`): Pro 19 €, Business 39 € per month, yearly −20 %.
 
 ### Frontend
 
@@ -103,12 +116,12 @@ mysql -u root -p < SETUP_DATABASE.sql      # Full setup with seed data
 **Frontend** (`frontend/.env`):
 - `VITE_API_URL` — backend API base URL (defaults to `/api` in production)
 
-## Apple Wallet Sync Flow
+## Apple Wallet Sync Flow and notifications
 
-Apple Wallet periodically calls the `/api/wallet/v1/` endpoints to check for pass updates. The flow is:
+Apple Wallet ignores the content of push notifications: a push only means "this pass changed".
 1. Device registers via `POST /wallet/v1/devices/.../registrations/...`
-2. When points change, `apnService.js` sends a silent push to registered devices
-3. Apple calls `GET /wallet/v1/passes/:passTypeIdentifier/:serialNumber`
-4. `passGenerator.js` regenerates and returns the updated `.pkpass` file
+2. To show a message, the server writes it to `wallet_cards.notification_message`, bumps `last_updated` and sends an empty push (`apnService.sendBulkUpdateNotifications`)
+3. Apple calls `GET /wallet/v1/devices/...` then `GET /wallet/v1/passes/:passTypeIdentifier/:serialNumber`
+4. `utils/applePass.js` (`buildApplePass`) regenerates the `.pkpass`; the `notif_msg` back field has `changeMessage: '%@'`, so iOS shows the new text on the lock screen
 
-This is distinct from the frontend-triggered `POST /app/wallet/add-points` which also calls the sync service internally.
+Rules: only `notif_msg` may carry a `changeMessage` (other fields update silently), and its value must be stable between regenerations. Point changes go through `walletSyncService.syncClientWallet(clientId, companyId, delta, event)`; promotional campaigns only through `utils/campaignService.js` (`sendCampaign`: plan quota, 48 h between campaigns, quiet hours 21 h–8 h, marketing opt-in, 7-day cooldown per client). Google Wallet uses `addMessageToObject` (max 3 per card per 24 h).

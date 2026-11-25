@@ -22,17 +22,20 @@ Pour configurer et lancer le projet en environnement de développement local :
 
 ### 1. Base de données
 ```bash
-# Importer le schéma de base de données depuis la racine du projet
-mysql -u root -p < schema.sql
+cd backend
+cp .env.example .env          # puis renseigner l'accès MySQL et JWT_SECRET
+npm install
+node scripts/run_migration.js schema.sql   # schéma complet (installation neuve)
+node scripts/init-admin.mjs                # compte Master Admin
 ```
+Base existante : `node scripts/run_migration.js migrations/09-mise-en-production.sql`.
 
 ### 2. Backend
 ```bash
 cd backend
-npm install
-# Copiez .env.example vers .env et configurez vos accès MySQL, JWT_SECRET, etc.
 npm run dev
 # Le backend démarre sur http://localhost:5000
+# Sans clé Stripe, seule l'offre Gratuite est proposée (les paiements répondent « pas encore activé »).
 ```
 
 ### 3. Frontend
@@ -41,8 +44,12 @@ Dans un nouveau terminal :
 cd frontend
 npm install
 npm run dev
-# Le frontend démarre sur http://localhost:3000
+# Le frontend démarre sur http://localhost:3000 (/api est relayé vers le port 5000)
 ```
+
+## Mise en production
+Voir `deploy_setup.sh` (Nginx, HTTPS, PM2) et `backend/.env.production.example` (toutes les variables).
+Tarifs : Pro 19 € TTC / mois, Business 39 € TTC / mois, annuel -20 % (prix Stripe créés depuis l'admin, onglet Tarifs).
 
 ## Arborescence du Projet
 ```
@@ -57,6 +64,6 @@ Carte_de_fidelite_digital/
 │   └── src/            # Composants React, pages, et styles
 │       ├── pages/      # Pages de l'application (Admin, Pro, Public)
 │       └── api.js      # Instance Axios pour les appels API
-├── schema.sql          # Script SQL de création de la base de données (si présent)
+├── backend/schema.sql  # Schéma SQL complet (installation neuve)
 └── README.md           # Documentation du projet
 ```

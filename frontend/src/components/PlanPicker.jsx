@@ -68,6 +68,7 @@ export default function PlanPicker({ tier, interval, onChange, tiers = TIER_ORDE
           )
         })}
       </div>
+      <p className="pp-sub" style={{ textAlign: 'center', marginTop: 8 }}>Prix nets : TVA non applicable, art. 293 B du CGI.</p>
     </div>
   )
 }

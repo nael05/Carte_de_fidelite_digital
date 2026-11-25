@@ -19,3 +19,4 @@ frontend/node_modules/
 # Exports et fichiers temporaires
 pub_tiktok/
 *.timestamp-*.mjs
+marketing/tiktok-slides/*.zip

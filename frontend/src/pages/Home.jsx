@@ -879,6 +879,7 @@ export default function Home() {
 
         <p className="pricing-trust rv">
           <span><Lock size={13} /> Paiement sécurisé par Stripe</span>
+          <span>Prix nets : TVA non applicable, art. 293 B du CGI</span>
           <span><Repeat size={13} /> Résiliable à tout moment</span>
           <span><ShieldCheck size={13} /> Conforme au RGPD</span>
         </p>

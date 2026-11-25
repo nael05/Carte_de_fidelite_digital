@@ -24,8 +24,8 @@
   --blur: saturate(180%) blur(20px);
 
   --text-primary: #1d1d1f;
-  --text-secondary: #6e6e73;
-  --text-tertiary: #86868b;
+  --text-secondary: #636366;
+  --text-tertiary: #6e6e73;
   --text-inverse: #ffffff;
 
   /* Couleurs de marque */
@@ -99,7 +99,7 @@
 
   --text-primary: #f5f5f7;
   --text-secondary: #a1a1a6;
-  --text-tertiary: #6e6e73;
+  --text-tertiary: #8e8e93;
   --text-inverse: #000000;
 
   --accent: #0a84ff;

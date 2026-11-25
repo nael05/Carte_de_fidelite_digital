@@ -63,3 +63,14 @@
   .pp-interval { align-self: stretch; }
   .pp-interval button { flex: 1; justify-content: center; }
 }
+
+/* Trois offres sur deux colonnes : la dernière occupe toute la largeur
+   au lieu de rester orpheline à gauche. */
+.pp { container-type: inline-size; }
+@container (min-width: 432px) and (max-width: 653px) {
+  .pp-cards > .pp-card:nth-child(3):last-child { grid-column: 1 / -1; }
+}
+.pp-interval button { min-height: 40px; }
+@media (max-width: 560px) {
+  .pp-interval button { min-height: 44px; }
+}

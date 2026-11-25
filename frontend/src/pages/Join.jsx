@@ -410,7 +410,7 @@ function Join() {
           <div
             onClick={e => e.stopPropagation()}
             style={{
-              background: 'var(--bg-card, #1e2530)', borderRadius: '20px', maxWidth: '560px',
+              background: 'var(--bg-elevated, #ffffff)', color: 'var(--text-primary)', borderRadius: '20px', maxWidth: '560px',
               width: '100%', maxHeight: '80vh', overflow: 'hidden', display: 'flex', flexDirection: 'column',
               boxShadow: '0 25px 50px rgba(0,0,0,0.5)', border: '1px solid var(--border-light)'
             }}
@@ -418,9 +418,9 @@ function Join() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px 24px', borderBottom: '1px solid var(--border-light)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <Shield size={20} style={{ color: 'var(--accent)' }} />
-                <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '700' }}>Politique de confidentialité & CGU</h2>
+                <h2 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: 'var(--text-primary)' }}>Politique de confidentialité & CGU</h2>
               </div>
-              <button onClick={() => setShowRgpdModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', padding: '4px' }}>
+              <button onClick={() => setShowRgpdModal(false)} aria-label="Fermer" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', width: '44px', height: '44px', margin: '-10px -12px -10px 0', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <X size={20} />
               </button>
             </div>
@@ -455,7 +455,7 @@ function Join() {
                 type="button"
                 onClick={() => { setTermsAccepted(true); setShowRgpdModal(false); }}
                 style={{
-                  flex: 1, padding: '12px', borderRadius: '12px', border: 'none',
+                  flex: 1, padding: '12px', minHeight: '46px', borderRadius: '12px', border: 'none',
                   background: 'var(--accent, #6366f1)', color: '#fff', fontWeight: '700',
                   cursor: 'pointer', fontSize: '14px'
                 }}
@@ -466,8 +466,8 @@ function Join() {
                 type="button"
                 onClick={() => setShowRgpdModal(false)}
                 style={{
-                  padding: '12px 20px', borderRadius: '12px',
-                  border: '1px solid var(--border-light)', background: 'transparent',
+                  padding: '12px 20px', minHeight: '46px', borderRadius: '12px',
+                  border: '1px solid var(--border-medium)', background: 'transparent',
                   color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '14px'
                 }}
               >

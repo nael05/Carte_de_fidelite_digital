@@ -658,6 +658,11 @@
   color: var(--text-secondary);
 }
 .ui-row-sub span { display: inline-flex; align-items: center; gap: 5px; }
+/* Titre de ligne : le texte brut d'un conteneur flex ne prend pas les points de suspension */
+.ui-row-title:not(:has(> *)) { display: block; }
+.ui-row-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-row-title > .ui-badge { flex-shrink: 0; }
+.ui-row-sub span { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
 .ui-row-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 
 /* Hub (liste de navigation type Réglages iOS) */

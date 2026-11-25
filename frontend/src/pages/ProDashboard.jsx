@@ -814,7 +814,7 @@ function ProDashboard() {
                 <div className="ui-avatar">{client.prenom?.[0] || '?'}</div>
                 <div className="ui-row-main">
                   <span className="ui-row-title">
-                    {client.prenom} {client.nom}
+                    <span className="ui-row-name">{client.prenom} {client.nom}</span>
                     {!client.marketing_optin && (
                       <span className="ui-badge danger" title="Ce client n'a pas consenti aux communications marketing">Opt-in refusé</span>
                     )}

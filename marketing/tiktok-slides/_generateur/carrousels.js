@@ -116,7 +116,7 @@ const fan = (keys, { cx = 540, y = 860, w = 330, step = 12 }) => keys.map((k, i)
 }).join('')
 
 const door = `
-<div style="position:absolute;left:150px;top:800px;width:640px;height:760px;border-radius:24px 24px 0 0;background:#20140b;padding:34px 34px 0;box-shadow:0 60px 120px -40px #000">
+<div style="position:absolute;left:330px;top:790px;width:500px;height:560px;border-radius:24px 24px 0 0;background:#20140b;padding:34px 34px 0;box-shadow:0 60px 120px -40px #000">
   <div style="position:relative;width:100%;height:100%;border-radius:10px 10px 0 0;overflow:hidden;background:linear-gradient(180deg,#5b6f8a,#2b3442 60%,#1a1f27)">
     ${[[90, 160, 70, '#ffd27a'], [300, 120, 50, '#ff9f6e'], [460, 220, 80, '#9fd0ff'], [180, 380, 110, '#ffcf8a'], [420, 440, 60, '#fff'], [60, 520, 90, '#6fa8ff']].map(([x, y, r, c]) => `<div style="position:absolute;left:${x - r}px;top:${y - r}px;width:${r * 2}px;height:${r * 2}px;border-radius:50%;background:${c};opacity:.35;filter:blur(18px)"></div>`).join('')}
     <div style="position:absolute;left:0;right:0;bottom:0;height:200px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.5))"></div>
@@ -177,10 +177,10 @@ const ticket = (code = 'TIKTOK') => `
   <div style="width:230px;display:grid;place-items:center"><img src="${L.A.logo}" style="width:130px;height:130px"></div>
   <div style="flex:1;text-align:center;font-family:'DejaVu Sans Mono',monospace;font-weight:700;font-size:118px;letter-spacing:.06em;color:#fff">${code}</div></div>`
 
-const planCard = ({ name, price, per = 'TTC / mois', w = 560, accent = false }) => `
+const planCard = ({ name, price, per = 'TTC / mois', w = 680, accent = false }) => `
 <div class="tile" style="width:${w}px;padding:44px 50px;${accent ? 'border-color:rgba(41,151,255,.6);background:linear-gradient(180deg,rgba(41,151,255,.2),rgba(41,151,255,.04));box-shadow:0 0 140px -40px rgba(41,151,255,.7)' : ''}">
   <div style="font-size:46px;font-weight:700">${name}</div>
-  <div style="display:flex;align-items:baseline;gap:16px;margin-top:20px"><span class="price" style="font-size:170px">${price}</span><span class="ttc" style="font-size:36px">${per}</span></div></div>`
+  <div style="display:flex;align-items:baseline;gap:16px;margin-top:20px"><span class="price" style="font-size:170px">${price}</span><span class="ttc" style="font-size:36px;white-space:nowrap">${per}</span></div></div>`
 
 const formMock = `
 <div class="tile" style="position:absolute;left:150px;top:880px;width:640px;padding:44px 46px;display:flex;flex-direction:column;gap:26px">
@@ -238,9 +238,12 @@ ${lockPhone({ x: 520, y: 900, w: 380, time: '12:40', notifs: `<div style="border
   <div><div style="font-size:22px;font-weight:700">Atelier Nord</div><div style="font-size:19px;color:rgba(245,245,247,.7);margin-top:2px">À proximité · 80 points</div></div></div>` })}`
 
 const toggle = `
-<div style="position:absolute;left:110px;top:920px;width:720px;height:150px;border-radius:999px;background:#1c1c1f;border:1px solid rgba(255,255,255,.1);padding:12px;display:flex">
-  <div style="flex:1;display:grid;place-items:center;font-size:40px;font-weight:600;color:rgba(245,245,247,.5)">Mensuel</div>
-  <div style="flex:1.2;display:flex;align-items:center;justify-content:center;gap:16px;border-radius:999px;background:#2997ff;font-size:40px;font-weight:700">Annuel <span style="padding:6px 16px;border-radius:999px;background:#fff;color:#0b3a8f;font-size:32px">−20 %</span></div></div>`
+<div style="position:absolute;left:100px;top:900px;width:780px;height:160px;border-radius:999px;background:#1c1c1f;border:1px solid rgba(255,255,255,.1);padding:12px;display:flex">
+  <div style="flex:1;display:grid;place-items:center;font-size:42px;font-weight:600;color:rgba(245,245,247,.5)">Mensuel</div>
+  <div style="flex:1.25;display:flex;align-items:center;justify-content:center;gap:16px;border-radius:999px;background:#2997ff;font-size:42px;font-weight:700;box-shadow:0 20px 60px -10px rgba(41,151,255,.7)">Annuel <span style="padding:6px 16px;border-radius:999px;background:#fff;color:#0b3a8f;font-size:34px">−20 %</span></div></div>
+<div style="position:absolute;left:100px;top:1150px;width:780px;height:260px;display:flex;align-items:flex-end;gap:14px">
+  ${Array.from({ length: 12 }, (_, i) => `<div style="flex:1;height:${150 + i * 9}px;border-radius:14px;${i < 10 ? 'background:linear-gradient(180deg,#5e9cff,#2997ff)' : 'background:transparent;border:3px dashed rgba(227,201,164,.6)'}"></div>`).join('')}
+</div>`
 
 const coffee = `<svg width="360" height="360" viewBox="0 0 360 360"><defs><radialGradient id="cfe" cx="50%" cy="45%" r="55%"><stop offset="0" stop-color="#d9a46a"/><stop offset=".6" stop-color="#8a4f22"/><stop offset="1" stop-color="#3d1f0b"/></radialGradient></defs>
   <ellipse cx="180" cy="300" rx="160" ry="40" fill="#e9e4dd"/><ellipse cx="180" cy="292" rx="120" ry="26" fill="#cfc7bb"/>
@@ -248,14 +251,14 @@ const coffee = `<svg width="360" height="360" viewBox="0 0 360 360"><defs><radia
   <path d="M286 160 Q340 165 330 210 Q322 245 276 240" stroke="#f4f1ec" stroke-width="20" fill="none"/>
   <g stroke="#fff" stroke-opacity=".35" stroke-width="7" fill="none" stroke-linecap="round"><path d="M150 90 q-14 -24 0 -44 q14 -20 0 -40"/><path d="M200 90 q-14 -24 0 -44 q14 -20 0 -40"/></g></svg>`
 
-const miniShops = `<div style="position:absolute;left:110px;top:1210px;display:flex;gap:30px">${[0, 1, 2].map(i => `
+const miniShops = `<div style="position:absolute;left:130px;top:1250px;display:flex;gap:30px">${[0, 1, 2].map(i => `
   <div style="width:150px;height:150px;position:relative"><div style="height:40px;border-radius:8px 8px 0 0;background:repeating-linear-gradient(90deg,#2997ff 0 18px,#e9f3ff 18px 36px)"></div>
   <div style="height:110px;background:#1b2a40;border:4px solid #2d4a70;position:relative"><div style="position:absolute;left:12px;right:12px;top:12px;height:46px;border-radius:4px;background:linear-gradient(180deg,#ffe2a8,#f5b25f)"></div>
   <div style="position:absolute;left:50%;margin-left:-18px;bottom:0;width:36px;height:42px;background:#3a5e8f"></div></div></div>`).join('')}</div>
-${abs(660, 1220, `<div style="display:flex;flex-direction:column;gap:16px">${[0, 1, 2].map(i => `<div style="width:70px;height:70px;border-radius:50%;background:${['#5e9cff', '#e3c9a4', '#a9cdf2'][i]};margin-left:${i * 40}px;border:4px solid #0e0e13"></div>`).join('')}</div>`)}`
+${abs(660, 1290, `<div style="display:flex">${[0, 1, 2].map(i => `<div style="width:84px;height:84px;border-radius:50%;background:${['#5e9cff', '#e3c9a4', '#a9cdf2'][i]};margin-left:${i ? -22 : 0}px;border:5px solid #0e0e13"></div>`).join('')}</div>`)}`
 
 const comments = `
-<div style="position:absolute;left:80px;top:900px;display:flex;flex-direction:column;gap:26px;width:780px">
+<div style="position:absolute;left:80px;top:820px;display:flex;flex-direction:column;gap:22px;width:780px">
   ${[['Karim', 'coiffeur ?', 0], ['Julie', 'fleuriste ?', 120], ['Sam', 'boulangerie ?', 40]].map(([n, t, dx], i) => `
   <div style="margin-left:${dx}px;display:flex;gap:20px;align-items:flex-start;opacity:${1 - i * 0.12}">
     <span style="width:84px;height:84px;border-radius:50%;flex-shrink:0;background:${['#5e9cff', '#e3c9a4', '#9b7fd1'][i]};display:grid;place-items:center;font-size:36px;font-weight:700;color:#0e0e13">${n[0]}</span>
@@ -282,24 +285,24 @@ ${abs(420, 1000, `<div style="display:grid;place-items:center;width:150px;height
     { body: `${VS({ p: 'oubliée à la maison.', w: 'toujours dans le téléphone.' })}
 ${abs(40, 1020, emptyWallet, 'transform:rotate(-6deg)')}
 ${phone({ x: 500, y: 940, w: 380, inner: walletScreen(pass({ w: 306 })) })}` },
-    { body: `${VS({ p: 'perdue au 9e tampon.', w: 'impossible à perdre.' })}
+    { body: `${VS({ p: 'perdue au 9<sup>e</sup> tampon.', w: 'impossible à perdre.' })}
 ${paperCard({ x: 30, y: 980, rot: 24, on: 9, w: 440, style: 'opacity:.75;filter:blur(1.5px)' })}
 ${abs(10, 940, `<svg width="420" height="200" viewBox="0 0 420 200"><g stroke="#fff" stroke-opacity=".25" stroke-width="6" stroke-linecap="round" fill="none"><path d="M10 60 Q120 20 220 60"/><path d="M40 120 Q150 80 260 120"/><path d="M10 180 Q110 150 200 170"/></g></svg>`)}
-${abs(510, 930, card('cafe', { w: 360, points: 90 }).replace('CAFÉS', 'POINTS'), 'transform:rotate(4deg)')}` },
+${abs(490, 940, card('cafe', { w: 360, points: 90 }).replace('CAFÉS', 'POINTS'), 'transform:rotate(4deg)')}` },
     { body: `${VS({ p: 'un tampon, ça se triche.', w: 'points ajoutés au scan.' })}
 ${abs(40, 990, rubberStamp)}
-${abs(500, 940, pass({ w: 360, points: 490 }))}
-${abs(600, 900, chip('+10 pts', 50), 'z-index:5')}` },
+${abs(480, 950, pass({ w: 360, points: 490 }))}
+${abs(560, 890, chip('+10 pts', 50), 'z-index:5')}` },
     { body: `${VS({ p: 'muette.', w: 'un message sur l\'écran verrouillé.' })}
 ${lockPhone({ x: 300, y: 900, w: 480, time: '10:12', notifs: N('Maison Lumière', 'Plus que 10 points avant ton café', 'maintenant', 'boulangerie') })}` },
     { body: `${VS({ p: 'rien à analyser.', w: 'tu vois qui revient.' })}
 ${abs(80, 980, curve)}` },
     { body: `${T({ t: 'Zéro appli <span class="grad">pour tes clients.</span>', s: 'Gratuit jusqu\'à 15 clients.' })}
-${fan(['skin:ivory', 'skin:champagne', 'skin:azur', 'skin:graphite'], { y: 900, w: 330, step: 13 })}` },
-    { logo: true, body: `${T({ t: 'Crée ta carte <span class="grad">en 5 minutes.</span>', ts: 108 })}
+${fan(['skin:ivory', 'skin:champagne', 'skin:azur', 'skin:graphite'], { cx: 500, y: 900, w: 330, step: 13 })}` },
+    { logo: true, body: `${T({ t: 'Crée ta carte <span class="grad">en&nbsp;5&nbsp;minutes.</span>', ts: 108 })}
 ${abs(80, 760, `<div style="display:inline-flex;align-items:center;gap:22px;padding:34px 56px;border-radius:999px;background:#2997ff;font-size:60px;font-weight:700;box-shadow:0 30px 80px -20px rgba(41,151,255,.8)">Lien en bio
   <svg width="56" height="56" viewBox="0 0 24 24" fill="none"><path d="M12 19V5M6 11l6-6 6 6" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`)}
-${abs(520, 960, pass({ w: 360 }), 'transform:rotate(8deg)')}` },
+${abs(490, 960, pass({ w: 360 }), 'transform:rotate(8deg)')}` },
   ],
 },
 
@@ -319,11 +322,11 @@ ${paperCard({ x: 150, y: 1000, rot: -4, on: 3, total: 20, cols: 5, w: 620, sub: 
     { body: `${T({ t: '<span class="grad">3.</span> Ta récompense ne fait envie à personne.' })}${voucher}` },
     { body: `${T({ t: '<span class="grad">4.</span> Ta carte est restée dans un autre portefeuille.', ts: 92 })}${drawer}` },
     { body: `${T({ t: '<span class="grad">5.</span> Le concurrent d\'à côté leur envoie des offres.', s: 'Toi non.', ts: 92 })}
-${shopfront({ x: 80, lit: false })}${shopfront({ x: 500, lit: true })}` },
+${shopfront({ x: 70, lit: false })}${shopfront({ x: 480, lit: true })}` },
     { body: `${T({ t: 'La solution :', s: 'une carte dans leur téléphone <b>qui leur rappelle de revenir.</b>', ts: 100 })}
 ${lockPhone({ x: 300, y: 880, w: 480, time: '11:30', notifs: N('Maison Lumière', 'Ta carte : plus que 10 points avant ton café', 'maintenant', 'boulangerie') + `<div style="transform:scale(.92);transform-origin:50% 0;margin-top:6px">${pass({ w: 400 })}</div>` })}` },
-    { logo: true, body: `${T({ t: 'Enregistre <span class="grad">ce post.</span>', s: 'Ta carte gratuite : lien en bio.', ts: 120 })}
-${abs(560, 900, bookmark)}` },
+    { logo: true, body: `${T({ t: 'Enregistre <span class="grad">ce&nbsp;post.</span>', s: 'Ta carte gratuite : lien en bio.', ts: 120 })}
+${abs(500, 880, bookmark, 'transform:scale(1.25);transform-origin:0 0')}` },
   ],
 },
 
@@ -347,13 +350,13 @@ ${phone({ x: 560, y: 940, w: 360, inner: walletScreen(card('barbier', { w: 290 }
     { body: `${T({ t: '<span class="grad">Étape 3 :</span> pose le QR code en caisse.', ts: 100 })}${easel}` },
     { body: `${T({ t: 'Ton client scanne.', s: 'La carte s\'ajoute <b>à son Wallet.</b>', ts: 104 })}${scanPhone}` },
     { body: `${T({ t: 'Tu scannes sa carte à chaque passage.', s: 'Les points <b>tombent.</b>', ts: 92 })}
-${shot({ name: 'caisse-points', x: 150, y: 920, w: 620, y0: 380, y1: 700, fade: false })}
-${abs(560, 860, chip('+10 pts', 52), 'z-index:6')}` },
+${shot({ name: 'caisse-points', x: 150, y: 900, w: 620, y0: 445, y1: 844, fade: false })}
+${abs(520, 840, chip('+10 pts', 52), 'z-index:6')}` },
     { body: `${T({ t: 'iPhone et Android.', s: 'Aucune appli <b>à installer.</b>', ts: 108 })}
 ${phone({ x: 80, y: 860, w: 380, inner: walletScreen(card('barbier', { w: 306 })) })}
-${phone({ x: 500, y: 900, w: 380, android: true, inner: `<div style="position:absolute;inset:0;background:#0f1115">${L.sbar()}<div style="position:absolute;top:96px;left:34px;font-size:32px;font-weight:500">Wallet</div><div style="position:absolute;top:168px;left:26px">${L.gpass({ w: 296, bg: '#1c1c1e' }).replace('Maison Lumière', 'Atelier Nord').replace('>L<', '>N<')}</div></div>` })}` },
-    { logo: true, body: `${T({ t: '1er mois Pro offert <span class="grad">avec le code TIKTOK.</span>', s: 'Lien en bio.', ts: 96 })}
-${abs(110, 990, ticket())}` },
+${phone({ x: 500, y: 900, w: 380, android: true, inner: `<div style="position:absolute;inset:0;background:#0f1115">${L.sbar()}<div style="position:absolute;top:96px;left:34px;font-size:32px;font-weight:500">Wallet</div><div style="position:absolute;top:168px;left:26px">${L.gpass({ w: 296, bg: '#1c1c1e', points: 80 }).replace('Camille R.', 'Yanis').replace('Maison Lumière', 'Atelier Nord').replace('>L<', '>N<')}</div></div>` })}` },
+    { logo: true, body: `${T({ t: '1<sup>er</sup> mois Pro offert <span class="grad">avec le code TIKTOK.</span>', s: 'Lien en bio.', ts: 96 })}
+${abs(110, 980, ticket(), 'transform:scale(.88);transform-origin:0 50%')}` },
   ],
 },
 
@@ -367,19 +370,19 @@ Un message par jour maximum, jamais la nuit. Messages illimités avec l'offre Pr
 #notification #iphone #commerçant #marketinglocal`,
   slides: [
     { logo: true, body: `${T({ t: 'Ce que voit ton client <span class="grad">quand tu lui envoies un message.</span>', ts: 96 })}
-${lockPhone({ x: 310, y: 840, w: 480, time: '11:30', style: 'filter:blur(5px);opacity:.9', notifs: N('Le Comptoir', 'Plus que 10 points avant ton café offert.', 'maintenant', 'cafe') })}` },
+${lockPhone({ x: 430, y: 840, w: 470, time: '11:30', style: 'filter:blur(5px);opacity:.9', notifs: N('Le Comptoir', 'Plus que 10 points avant ton café offert.', 'maintenant', 'cafe') })}` },
     { body: `${T({ t: 'Pas un SMS. Pas un e-mail.', s: '<b>Sa carte de fidélité.</b>', ts: 100, sFirst: false })}
 ${lockPhone({ x: 300, y: 860, w: 480, time: '11:30', notifs: N('Le Comptoir', 'Plus que 10 points avant ton café offert.', 'maintenant', 'cafe') })}` },
     { body: `${T({ t: '« Plus que 10 points <span class="grad">avant ton café offert.</span> »', ts: 100 })}
-${abs(90, 960, bigNotif({ title: 'Le Comptoir', body: 'Plus que 10 points avant ton café offert.', key: 'cafe', scale: 1.5 }))}` },
+${abs(90, 960, bigNotif({ title: 'Le Comptoir', body: 'Plus que 10 points avant ton café offert.', key: 'cafe', scale: 1.4 }))}` },
     { body: `${T({ t: '« Créneaux libres cet après-midi : <span class="grad">−20 % sur ta coupe.</span> »', ts: 92 })}
 ${lockPhone({ x: 300, y: 900, w: 480, time: '13:05', notifs: N('Atelier Nord', 'Créneaux libres cet après-midi : −20 % sur ta coupe.', 'maintenant', 'barbier') })}` },
     { body: `${T({ t: 'ta carte remonte <span class="grad">sur son écran.</span>', s: 'Et quand il passe devant ta boutique,', ts: 100, sFirst: true })}${streetMap}` },
     { body: `${T({ t: 'Un message par jour maximum. <span class="grad">Jamais la nuit.</span>', s: 'Tes clients ne sont pas spammés.', ts: 92 })}${calendar}` },
     { body: `${T({ t: 'Messages illimités <span class="grad">avec l\'offre Pro :</span>', s: '19 € TTC par mois, sans engagement.', ts: 96 })}
-${abs(190, 960, planCard({ name: 'Pro', price: '19 €', accent: true }))}` },
+${abs(130, 960, planCard({ name: 'Pro', price: '19 €', accent: true }))}` },
     { logo: true, body: `${T({ t: 'Essaie la carte de démo <span class="grad">dans ton Wallet.</span>', s: 'Lien en bio.', ts: 100 })}
-${abs(500, 900, card('demo', { w: 380 }), 'transform:rotate(5deg)')}` },
+${abs(470, 900, card('demo', { w: 380 }), 'transform:rotate(5deg)')}` },
   ],
 },
 
@@ -398,21 +401,21 @@ Code TIKTOK : ton premier mois Pro offert. Lien en bio.
 #prix #tpe #entrepreneur #commerçant`,
   slides: [
     { logo: true, body: `${T({ t: 'Une carte de fidélité dans le Wallet, <span class="grad">ça coûte combien ?</span>', ts: 96 })}
-${abs(420, 880, pass({ w: 400 }), 'transform:rotate(8deg);opacity:.45;filter:blur(2px)')}
-${abs(170, 760, `<div class="price grad" style="font-size:640px;line-height:1">?</div>`, 'z-index:3')}` },
+${abs(470, 860, pass({ w: 400 }), 'transform:rotate(8deg);opacity:.45;filter:blur(2px)')}
+${abs(330, 740, `<div class="price grad" style="font-size:620px;line-height:1">?</div>`, 'z-index:3')}` },
     { body: `${T({ t: 'Gratuit : <span class="grad">jusqu\'à 15 clients.</span>', s: 'Pour essayer sans risque.' })}
-${abs(190, 960, planCard({ name: 'Gratuit', price: '0 €', per: '' }))}` },
+${abs(130, 960, planCard({ name: 'Gratuit', price: '0 €', per: '' }))}` },
     { body: `${T({ t: 'Pro : <span class="grad">19 € TTC par mois.</span>', s: 'Clients illimités.' })}
-${abs(190, 960, planCard({ name: 'Pro', price: '19 €', accent: true }))}` },
+${abs(130, 960, planCard({ name: 'Pro', price: '19 €', accent: true }))}` },
     { body: `${T({ t: 'Pro : messages sur l\'écran verrouillé, <span class="grad">un par jour.</span>', ts: 92 })}
 ${lockPhone({ x: 300, y: 900, w: 480, time: '15:20', notifs: N('Studio Nacre', 'Un créneau vient de se libérer à 16 h.', 'maintenant', 'ongles') })}` },
     { body: `${T({ t: 'Business : <span class="grad">39 € TTC par mois.</span>', s: 'Jusqu\'à 10 boutiques et ton équipe.' })}
-${abs(190, 900, planCard({ name: 'Business', price: '39 €' }))}${miniShops}` },
+${abs(130, 880, planCard({ name: 'Business', price: '39 €' }))}${miniShops}` },
     { body: `${T({ t: 'Annuel : <span class="grad">−20 %.</span>', s: 'Sans engagement, résiliable en deux clics.', ts: 120 })}${toggle}` },
     { body: `${T({ t: 'Moins qu\'un café par jour <span class="grad">pour faire revenir tes clients.</span>', ts: 92 })}
 ${abs(70, 1020, coffee)}${abs(500, 920, card('cafe', { w: 360 }), 'transform:rotate(6deg)')}` },
     { logo: true, body: `${T({ t: 'Code TIKTOK : <span class="grad">ton premier mois Pro offert.</span>', s: 'Lien en bio.', ts: 96 })}
-${abs(110, 990, ticket())}` },
+${abs(110, 980, ticket(), 'transform:scale(.88);transform-origin:0 50%')}` },
   ],
 },
 
@@ -425,15 +428,15 @@ Commente ton métier : je crée ta carte en vidéo.
 
 #barbier #onglerie #boulangerie #commerçant`,
   slides: [
-    { logo: true, body: `${T({ t: 'Ta carte de fidélité <span class="grad">peut ressembler à ça.</span>', s: 'Trouve ton métier.', ts: 100 })}
-${fan(['fleurs', 'resto', 'cafe', 'boulangerie', 'ongles', 'barbier'], { y: 930, w: 300, step: 11 })}` },
+    { logo: true, body: `${T({ t: 'Ta carte de fidélité <span class="grad">peut ressembler à&nbsp;ça.</span>', s: 'Trouve ton métier.', ts: 100 })}
+${fan(['fleurs', 'resto', 'cafe', 'boulangerie', 'ongles', 'barbier'], { cx: 600, y: 880, w: 290, step: 9 })}` },
     ...[
-      ['barbier', '<span class="grad">Barbier :</span> 10e coupe offerte.'],
-      ['ongles', '<span class="grad">Onglerie :</span> une pose offerte toutes les 8 visites.'],
-      ['boulangerie', '<span class="grad">Boulangerie :</span> la 10e baguette est pour nous.'],
-      ['cafe', '<span class="grad">Café :</span> le 10e café offert.'],
-      ['resto', '<span class="grad">Restaurant :</span> ton dessert offert au 5e déjeuner.'],
-    ].map(([k, t]) => ({ body: `${T({ t, ts: 100 })}${abs(300, 860, card(k, { w: 460 }), 'transform:rotate(-3deg)')}`, glow: [[900, 420, 560, 0.22], [160, 1300, 520, 0.16]] })),
+      ['barbier', '<span class="grad">Barbier :</span> 10<sup>e</sup> coupe offerte.'],
+      ['ongles', '<span class="grad">Onglerie :</span> une pose offerte toutes les 8&nbsp;visites.'],
+      ['boulangerie', '<span class="grad">Boulangerie :</span> la 10<sup>e</sup>&nbsp;baguette est pour nous.'],
+      ['cafe', '<span class="grad">Café :</span> le 10<sup>e</sup> café offert.'],
+      ['resto', '<span class="grad">Restaurant :</span> ton dessert offert au 5<sup>e</sup> déjeuner.'],
+    ].map(([k, t]) => ({ body: `${T({ t, ts: 100 })}${abs(320, 830, card(k, { w: 420 }), 'transform:rotate(-3deg)')}`, glow: [[900, 420, 560, 0.22], [160, 1300, 520, 0.16]] })),
     { body: `${T({ t: 'Ton logo. Tes couleurs.', s: 'Dans le Wallet <b>de tes clients.</b>', ts: 104 })}
 ${phone({ x: 300, y: 860, w: 480, inner: `<div style="position:absolute;inset:0;background:#000">${L.sbar()}
 <div style="position:absolute;top:88px;left:36px;font-family:'Inter Display';font-weight:700;font-size:44px">Cartes</div>

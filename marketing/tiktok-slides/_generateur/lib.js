@@ -30,7 +30,7 @@ body{font-family:"Inter",sans-serif;color:#f5f5f7;-webkit-font-smoothing:antiali
 .hd{position:absolute;top:300px;left:80px;right:180px;display:flex;align-items:center;justify-content:space-between;z-index:20}
 .brand{display:flex;align-items:center;gap:14px;font-family:"Inter Display";font-weight:700;font-size:30px;letter-spacing:-.01em}
 .brand img{width:52px;height:52px}
-.num{font-size:24px;font-weight:600;color:rgba(245,245,247,.4);font-variant-numeric:tabular-nums;letter-spacing:.06em}
+.num{font-size:30px;font-weight:600;color:rgba(245,245,247,.4);font-variant-numeric:tabular-nums;letter-spacing:.06em}
 .c{position:absolute;left:80px;right:180px;z-index:5}
 .eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:28px;font-weight:600;color:#2997ff;letter-spacing:.01em;margin-bottom:22px}
 .eyebrow .step{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:#2997ff;color:#fff;font-weight:800;font-size:24px}
@@ -60,12 +60,12 @@ h2{font-size:96px}
 .phone{position:absolute;border-radius:76px;background:#0b0b0d;padding:16px;
   box-shadow:inset 0 0 0 2px #2a2a2e,inset 0 0 0 7px #121214,0 80px 140px -50px rgba(0,0,0,1),0 0 120px -30px rgba(41,151,255,.35)}
 .phone .scr{position:relative;width:100%;height:100%;border-radius:60px;overflow:hidden;background:#000}
-.phone .cam{position:absolute;top:22px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#000;z-index:9}
+.phone .cam{position:absolute;top:22px;left:50%;transform:translateX(-50%);width:30%;height:34px;border-radius:20px;background:#000;z-index:9}
 .phone.android{border-radius:58px}
 .phone.android .scr{border-radius:44px}
 .phone.android .cam{width:26px;height:26px;border-radius:50%;top:24px;background:#050505;box-shadow:inset 0 0 0 3px #16161a}
-.sbar{position:absolute;top:28px;left:48px;right:48px;display:flex;justify-content:space-between;font-size:22px;font-weight:600;color:#fff;z-index:8}
-.sbar .r{display:flex;gap:8px;align-items:center}
+.sbar{position:absolute;top:28px;left:44px;right:30px;display:flex;justify-content:space-between;font-size:22px;font-weight:600;color:#fff;z-index:8}
+.sbar .r{display:flex;gap:5px;align-items:flex-end;height:22px}
 .sbar .r span{display:block;background:#fff;border-radius:3px}
 
 /* ── Écran verrouillé générique ── */
@@ -82,10 +82,10 @@ h2{font-size:96px}
   backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.1);box-shadow:0 30px 60px -20px rgba(0,0,0,.8);color:#f5f5f7}
 .notif .ico{width:62px;height:62px;border-radius:16px;flex-shrink:0;display:grid;place-items:center;font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:32px}
 .notif .tx{flex:1;min-width:0}
-.notif .top{display:flex;justify-content:space-between;gap:10px;font-size:24px}
+.notif .top{display:flex;justify-content:space-between;gap:10px;font-size:27px}
 .notif .top b{font-weight:700}
-.notif .top span{color:rgba(245,245,247,.5);font-size:21px;white-space:nowrap}
-.notif p{font-size:24px;line-height:1.3;margin-top:4px;color:rgba(245,245,247,.9)}
+.notif .top span{color:rgba(245,245,247,.5);font-size:22px;white-space:nowrap}
+.notif p{font-size:27px;line-height:1.28;margin-top:4px;color:rgba(245,245,247,.9)}
 
 /* ── Pass style Apple Wallet (repris de Home.css / pass.css) ── */
 .c3{--cw:var(--card-w,300px);position:relative;width:var(--cw);aspect-ratio:1/1.58;border-radius:calc(var(--cw)*.05);font-size:calc(var(--cw)*.0533)}
@@ -152,6 +152,7 @@ h2{font-size:96px}
 .paper .stamps span.on::after{content:"";width:70%;height:70%;border-radius:50%;background:rgba(150,40,30,.75);transform:rotate(-12deg)}
 
 /* ── Tarifs ── */
+sup{font-size:.55em;vertical-align:.75em;line-height:0;margin-left:.02em}
 .price{font-family:"Inter Display";font-weight:800;letter-spacing:-.05em;line-height:.9}
 .ttc{font-size:30px;color:rgba(245,245,247,.6);font-weight:500}
 `

@@ -1135,3 +1135,7 @@
   .prox-coord-row { flex-direction: column; }
   .prox-section { padding: 14px; gap: 12px; }
 }
+
+@media (max-width: 1024px) and (pointer: coarse), (max-width: 800px) {
+  .customizer-tab { min-height: 44px; }
+}

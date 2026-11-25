@@ -552,3 +552,7 @@
   .hist-stats-bar { padding: 6px 12px; }
   .hist-stats-count { font-size: 12px; }
 }
+
+@media (max-width: 1024px) and (pointer: coarse), (max-width: 800px) {
+  .hist-back-btn, .hist-filter-toggle, .hist-delete-top-btn { width: 44px; height: 44px; }
+}

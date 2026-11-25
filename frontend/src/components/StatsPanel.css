@@ -231,3 +231,7 @@
   .st-retention-label { width: 110px; font-size: 13px; }
   .st-tab { padding: 8px 12px; font-size: 13px; }
 }
+
+@media (max-width: 1024px) and (pointer: coarse), (max-width: 800px) {
+  .st-tab { min-height: 40px; }
+}

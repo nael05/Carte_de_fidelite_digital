@@ -955,3 +955,16 @@
 .plan-banner > span { flex: 1; line-height: 1.45; }
 .plan-banner .ui-btn { flex-shrink: 0; }
 @media (max-width: 640px) { .plan-banner { flex-wrap: wrap; } .plan-banner .ui-btn { width: 100%; } }
+
+/* ═══════════ CIBLES TACTILES (téléphone / tablette) ═══════════
+   Recommandation Apple / WCAG 2.5.5 : 44 px minimum pour tout ce qui se touche.
+   Les tailles visuelles restent compactes sur ordinateur. */
+@media (max-width: 1024px) and (pointer: coarse), (max-width: 800px) {
+  .icon-btn { width: 44px; height: 44px; }
+  .ui-btn, .ui-btn.sm { min-height: 44px; height: auto; }
+  .page-back { min-height: 40px; padding-top: 8px; padding-bottom: 8px; }
+  .ui-seg button { min-height: 40px; }
+  /* l'interrupteur garde son dessin iOS, la zone de toucher est élargie */
+  .ui-switch::before { content: ''; position: absolute; inset: -7px -4px; }
+  .app-tab { min-height: 48px; }
+}

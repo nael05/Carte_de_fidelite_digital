@@ -536,3 +536,11 @@
   .auth-brand-mobile { margin-bottom: 36px; }
   .luxe-auth-header { margin-bottom: 26px; }
 }
+
+/* Cibles tactiles sur téléphone */
+@media (max-width: 1024px) and (pointer: coarse), (max-width: 800px) {
+  .password-toggle-btn { width: 44px; height: 44px; right: 4px; bottom: 4px; }
+  .auth-link { display: inline-flex; align-items: center; min-height: 44px; }
+  .back-link { min-height: 44px; }
+  .auth-brand-mobile { min-height: 44px; align-items: center; }
+}

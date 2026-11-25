@@ -263,3 +263,10 @@
   .ad-editor textarea { min-height: 380px; }
   .page-actions .ui-btn { flex: 1; }
 }
+
+/* Cibles tactiles sur téléphone / tablette */
+@media (max-width: 1024px) and (pointer: coarse), (max-width: 800px) {
+  .ux-btn-primary.small, .ux-btn-outline.small, .ux-btn-secondary.small { height: 40px; }
+  .ux-btn-icon { width: 44px; height: 44px; }
+  .ad-field { min-height: 44px; }
+}

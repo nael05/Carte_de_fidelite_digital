@@ -35,11 +35,11 @@ function OverviewTab() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    api.get('/pro/stats/overview').then(r => setData(r.data)).finally(() => setLoading(false))
+    api.get('/pro/stats/overview').then(r => setData(r.data)).catch(() => setData(null)).finally(() => setLoading(false))
   }, [])
 
   if (loading) return <LoadingState />
-  if (!data) return null
+  if (!data) return <p className="ui-hint" role="alert">Statistiques momentanément indisponibles. Réessayez dans un instant.</p>
 
   const redemptionRate = data.pointsDistributedThisMonth > 0
     ? Math.round((data.pointsRedeemedThisMonth / data.pointsDistributedThisMonth) * 100)
@@ -105,11 +105,11 @@ function ActivityTab() {
 
   useEffect(() => {
     setLoading(true)
-    api.get(`/pro/stats/activity?period=${period}`).then(r => setData(r.data)).finally(() => setLoading(false))
+    api.get(`/pro/stats/activity?period=${period}`).then(r => setData(r.data)).catch(() => setData(null)).finally(() => setLoading(false))
   }, [period])
 
   if (loading) return <LoadingState />
-  if (!data) return null
+  if (!data) return <p className="ui-hint" role="alert">Statistiques momentanément indisponibles. Réessayez dans un instant.</p>
 
   const dowData = DOW_LABELS.slice(1).map((label, i) => {
     const found = data.byDayOfWeek.find(d => d.dow === i + 1)
@@ -180,11 +180,11 @@ function ClientsTab() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    api.get('/pro/stats/clients').then(r => setData(r.data)).finally(() => setLoading(false))
+    api.get('/pro/stats/clients').then(r => setData(r.data)).catch(() => setData(null)).finally(() => setLoading(false))
   }, [])
 
   if (loading) return <LoadingState />
-  if (!data) return null
+  if (!data) return <p className="ui-hint" role="alert">Statistiques momentanément indisponibles. Réessayez dans un instant.</p>
 
   const { retention } = data
   const retentionItems = [
@@ -254,11 +254,11 @@ function RewardsTab() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    api.get('/pro/stats/rewards').then(r => setData(r.data)).finally(() => setLoading(false))
+    api.get('/pro/stats/rewards').then(r => setData(r.data)).catch(() => setData(null)).finally(() => setLoading(false))
   }, [])
 
   if (loading) return <LoadingState />
-  if (!data) return null
+  if (!data) return <p className="ui-hint" role="alert">Statistiques momentanément indisponibles. Réessayez dans un instant.</p>
 
   const monthLabels = { '01': 'Jan', '02': 'Fév', '03': 'Mar', '04': 'Avr', '05': 'Mai', '06': 'Jui', '07': 'Jul', '08': 'Aoû', '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Déc' }
   const monthlyData = data.monthly.map(m => ({

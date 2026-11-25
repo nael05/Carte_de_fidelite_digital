@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import usePlans from '../utils/usePlans'
 import {
   ArrowRight, ChevronRight, CheckCircle2, Check, Plus, Search, Loader2, X,
-  Play, Bell, MapPin, ShieldCheck, Lock, Repeat, Fingerprint, Store, Palette, Send
+  Bell, MapPin, ShieldCheck, Lock, Repeat, Fingerprint, Store, Palette, Send
 } from 'lucide-react'
 import api from '../api'
 import Footer from '../components/Footer'
@@ -592,7 +592,7 @@ const FAQS = [
   },
   {
     q: "Mes données clients sont-elles sécurisées ?",
-    a: "Chiffrement des données, authentification sécurisée. Conformité RGPD complète avec export et suppression à la demande.",
+    a: "Connexions chiffrées (HTTPS), mots de passe protégés, données de chaque commerce isolées. Vos clients choisissent s'ils reçoivent vos offres et peuvent se désinscrire depuis leur carte.",
   },
 ]
 
@@ -708,8 +708,8 @@ export default function Home() {
             <button className="fz-btn" onClick={goSignup}>
               Commencer gratuitement
             </button>
-            <a href="#film" className="fz-link">
-              Regarder le film <ChevronRight size={16} />
+            <a href="#features" className="fz-link">
+              Voir les fonctionnalités <ChevronRight size={16} />
             </a>
           </div>
           <div className="hero-trust">
@@ -726,8 +726,8 @@ export default function Home() {
       <section className="stats">
         <div className="stats-w rv">
           {[
-            { n: 2400, s: '+', l: 'cartes actives' },
-            { n: 98, s: ' %', l: 'de clients satisfaits' },
+            { n: 2, s: '', l: 'Wallets : Apple et Google' },
+            { n: 1, s: ' / jour', l: 'notification possible (Pro et Business)' },
             { n: 5, s: ' min', l: 'pour lancer sa carte' },
             { n: 0, s: '', l: 'application à installer', fixed: '0' },
           ].map((st, i) => (
@@ -767,7 +767,7 @@ export default function Home() {
             <div className="tile-copy">
               <span className="tile-k">Notifications push</span>
               <h3>Sur l'écran verrouillé.</h3>
-              <p>Gratuites et illimitées. Aucun SMS, aucun email perdu.</p>
+              <p>Illimitées avec les offres Pro et Business, une par jour. Aucun SMS, aucun e-mail perdu.</p>
             </div>
           </article>
 
@@ -785,8 +785,8 @@ export default function Home() {
               <span className="tile-k">Statistiques</span>
               <h3>Voyez qui revient.</h3>
             </div>
-            <div className="tile-big t-grad">+38 %</div>
-            <p className="tile-note">de visites récurrentes en moyenne après 3 mois</p>
+            <div className="tile-big t-grad">En direct</div>
+            <p className="tile-note">passages, points distribués et récompenses, jour après jour</p>
             <ChartVis />
           </article>
 
@@ -832,27 +832,6 @@ export default function Home() {
       </section>
 
       {/* ── FILM ── */}
-      <section className="film-sec" id="film">
-        <div className="sec-head rv">
-          <span className="eyebrow">Le film</span>
-          <h2 className="sec-title">Deux minutes pour<br /><span className="t-dim">tout comprendre.</span></h2>
-        </div>
-        <div className="film rv">
-          <div className="film-glow" aria-hidden />
-          <div className="film-frame">
-            {/* <video autoPlay muted loop playsInline src="/video/fidelyz-film.mp4" /> */}
-            <div className="film-poster" aria-hidden>
-              <span className="film-ring" />
-              <span className="film-ring r2" />
-            </div>
-            <button className="film-play" aria-label="Lire le film">
-              <Play size={26} fill="currentColor" />
-            </button>
-            <span className="film-label">Bientôt disponible · 2 min 30</span>
-          </div>
-        </div>
-      </section>
-
       {/* ── TARIFS ── */}
       <section className="pricing-sec" id="pricing">
         <div className="sec-head rv">

@@ -9,8 +9,8 @@ export const MESSAGE_MAX = 200;
 
 /**
  * Envoi d'une campagne (notification promotionnelle) : point d'entrée unique.
- * Applique les garde-fous (offre, quota mensuel, 48 h entre deux envois, heures calmes, accord marketing,
- * 7 jours sans campagne par client) puis affiche le message sur les cartes Apple et Google.
+ * Applique les garde-fous (offre payante, une campagne par jour et par entreprise, heures calmes,
+ * accord marketing, carte au Wallet) puis affiche le message sur les cartes Apple et Google.
  *
  * Retourne { status, body } prêt à être renvoyé au client HTTP.
  */
@@ -33,7 +33,7 @@ export const sendCampaign = async (entrepriseId, { title, message, clientIds = n
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
-    // Verrou par commerce : deux envois simultanés ne peuvent pas dépasser le quota.
+    // Verrou par commerce : deux envois simultanés ne peuvent pas dépasser la limite d'une par jour.
     await conn.query('SELECT id FROM entreprises WHERE id = ? FOR UPDATE', [entrepriseId]);
     const campaign = await prepareCampaign(entrepriseId, { clientIds, segment: segment === 'all' ? null : segment });
     if (campaign.error) {

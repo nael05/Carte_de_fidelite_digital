@@ -26,9 +26,8 @@ export const DEFAULT_PRICES_CENTS = {
 
 // Garde-fous des notifications promotionnelles (voir utils/pushGuard.js).
 export const PUSH_RULES = {
-  monthlyQuota: { free: 0, pro: 4, business: 8 },
-  minHoursBetween: 48,
-  clientCooldownDays: 7,
+  // Campagnes illimitées sur les offres payantes, dans la limite d'UNE par jour (heure de Paris) et par entreprise.
+  dailyLimit: { free: 0, pro: 1, business: 1 },
   quietHours: { from: 21, to: 8, timeZone: 'Europe/Paris' }
 };
 

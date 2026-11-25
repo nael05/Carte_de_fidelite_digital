@@ -32,7 +32,7 @@ export const getPublicPlans = async (req, res) => {
   res.json({
     tax_included: true,
     free_client_limit: FREE_CLIENT_LIMIT,
-    push_monthly_quota: PUSH_RULES.monthlyQuota,
+    push_daily_limit: PUSH_RULES.dailyLimit,
     prices: {
       pro: { monthly: prices.monthly || null, yearly: prices.yearly || null },
       business: { monthly: prices.business_monthly || null, yearly: prices.business_yearly || null }

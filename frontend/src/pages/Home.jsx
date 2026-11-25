@@ -609,7 +609,7 @@ const PLANS = [
     tier: 'pro',
     name: 'Pro',
     tagline: 'Pour les commerçants actifs',
-    feats: ['Clients illimités', 'Campagnes de notifications (4 par mois)', 'Statistiques et historique complets', 'Apple & Google Wallet', 'Sans engagement'],
+    feats: ['Clients illimités', 'Notifications illimitées (1 par jour)', 'Statistiques et historique complets', 'Apple & Google Wallet', 'Sans engagement'],
     cta: 'Choisir Pro',
     featured: true,
   },
@@ -617,7 +617,7 @@ const PLANS = [
     tier: 'business',
     name: 'Business',
     tagline: 'Pour aller plus loin',
-    feats: ['Tout Pro, et :', 'Campagnes de notifications (8 par mois)', 'Statistiques avancées et export CSV', 'Liste des clients à relancer', "Plusieurs établissements (jusqu'à 10)", 'Comptes équipe : caissiers et managers'],
+    feats: ['Tout Pro, et :', 'Statistiques avancées et export CSV', 'Liste des clients à relancer', "Plusieurs établissements (jusqu'à 10)", 'Comptes équipe : caissiers et managers'],
     cta: 'Choisir Business',
   },
 ]

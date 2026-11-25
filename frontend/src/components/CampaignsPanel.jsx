@@ -36,7 +36,7 @@ export default function CampaignsPanel() {
 
   const send = async (e) => {
     e.preventDefault()
-    if (!window.confirm('Envoyer cette campagne ? Elle comptera dans votre quota du mois.')) return
+    if (!window.confirm("Envoyer cette campagne ? C'est votre campagne du jour (une par jour maximum).")) return
     setSending(true)
     setFb(null)
     try {
@@ -58,20 +58,19 @@ export default function CampaignsPanel() {
 
   if (!quota) return <div className="ui-card"><div className="ui-loading">Chargement…</div></div>
 
-  const locked = quota.limit === 0
-  const blocked = quota.suspended || quota.remaining === 0 || !!quota.next_allowed_at || quota.quiet_now
+  const locked = quota.daily_limit === 0
+  const blocked = quota.suspended || quota.remaining_today === 0 || quota.quiet_now
 
   return (
     <div className="pp2-stack">
       <section className="ui-card">
         <div className="pp2-quota">
           <div>
-            <span className="page-eyebrow">Ce mois-ci</span>
-            <div className="pp2-big">{quota.used} <span>/ {quota.limit} campagne{quota.limit > 1 ? 's' : ''}</span></div>
+            <span className="page-eyebrow">Aujourd'hui</span>
+            <div className="pp2-big">{quota.sent_today} <span>/ {quota.daily_limit} campagne · {quota.used_this_month} ce mois-ci</span></div>
           </div>
           <ul className="pp2-rules">
-            <li><Clock size={14} /> {quota.min_hours_between} h minimum entre deux campagnes</li>
-            <li><Clock size={14} /> Un client reçoit au plus une campagne tous les {quota.client_cooldown_days} jours</li>
+            <li><CheckCircle2 size={14} /> Campagnes illimitées, une par jour maximum</li>
             <li><Clock size={14} /> Pas d'envoi entre {quota.quiet_hours.from} h et {quota.quiet_hours.to} h</li>
             <li><CheckCircle2 size={14} /> Uniquement les clients ayant accepté de recevoir des offres et ajouté leur carte au Wallet</li>
           </ul>
@@ -83,8 +82,8 @@ export default function CampaignsPanel() {
             <button type="button" className="ui-btn sm" onClick={() => navigate('/pro/account')}>Voir les offres</button>
           </div>
         )}
-        {!locked && quota.next_allowed_at && (
-          <div className="ui-note pp2-gap"><Clock size={15} /><span>Prochaine campagne possible à partir du {fmt(quota.next_allowed_at)}.</span></div>
+        {!locked && quota.remaining_today === 0 && (
+          <div className="ui-note pp2-gap"><Clock size={15} /><span>Campagne du jour envoyée : prochaine possible demain à partir de {quota.quiet_hours.to} h.</span></div>
         )}
         {!locked && quota.quiet_now && (
           <div className="ui-note pp2-gap"><Clock size={15} /><span>Envoi impossible la nuit : réessayez après {quota.quiet_hours.to} h (heure de Paris).</span></div>

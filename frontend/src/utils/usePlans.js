@@ -4,7 +4,7 @@ import api from '../api'
 // Tarifs TTC de repli tant que /plans n'a pas répondu : Pro 19 €, Business 39 € ; annuel = 12 mois -20 %.
 const FALLBACK = {
   free_client_limit: 15,
-  push_monthly_quota: { free: 0, pro: 4, business: 8 },
+  push_daily_limit: { free: 0, pro: 1, business: 1 },
   prices: {
     pro: { monthly: { amount: 19 }, yearly: { amount: 182.4 } },
     business: { monthly: { amount: 39 }, yearly: { amount: 374.4 } }
@@ -27,12 +27,11 @@ export const TIER_FEATURES = {
   ],
   pro: (plans) => [
     'Clients illimités',
-    `Campagnes de notifications (${plans.push_monthly_quota.pro} par mois)`,
+    'Notifications illimitées (1 par jour)',
     'Statistiques et historique complets'
   ],
   business: (plans) => [
     'Tout Pro, et :',
-    `Campagnes de notifications (${plans.push_monthly_quota.business} par mois)`,
     'Statistiques avancées et export CSV',
     'Liste des clients à relancer',
     "Plusieurs établissements (jusqu'à 10)",

@@ -118,7 +118,7 @@ check('carte : message « + 10 points » et solde à jour', /^\+ 10 points : Enc
 
 // ── Campagnes
 r = await call(pro, 'GET', '/pro/notifications/quota');
-check('quota Pro : 4 campagnes par mois', r.data?.limit === 4, JSON.stringify(r.data));
+check('Pro : campagnes illimitées, 1 par jour', r.data?.daily_limit === 1 && r.data?.unlimited === true, JSON.stringify(r.data));
 const quiet = r.data?.quiet_now;
 r = await call(pro, 'POST', '/pro/notifications/send', { title: 'x'.repeat(61), message: 'test' });
 check('campagne : titre trop long refusé', r.status === 400);
@@ -130,11 +130,10 @@ if (quiet) {
   [[card]] = await pool.query('SELECT notification_message FROM wallet_cards WHERE client_id = ?', [clientA]);
   check('campagne : message écrit sur la carte Apple', card?.notification_message === 'Soldes : -20 % ce week-end', JSON.stringify(card));
   r = await call(pro, 'POST', '/pro/notifications/send', { title: 'Encore', message: 'Deuxième envoi' });
-  check('campagne : 48 h minimum entre deux envois', r.status === 429 && r.data?.code === 'too_soon', JSON.stringify(r));
-  await pool.query('UPDATE push_notifications_sent SET created_at = DATE_SUB(NOW(), INTERVAL 3 DAY) WHERE entreprise_id = ?', [ent.id]);
-  await pool.query('UPDATE push_notifications_sent SET created_at = DATE_SUB(NOW(), INTERVAL 3 DAY) WHERE entreprise_id = ?', [ent.id]);
-  r = await call(pro, 'POST', '/pro/push/send', { clientIds: [clientA, clientB], title: 'Encore', message: 'Deuxième envoi' });
-  check('campagne : client déjà sollicité < 7 jours exclu', r.status === 422 || r.data?.recipientsCount === 0, JSON.stringify(r));
+  check('campagne : une seule par jour', r.status === 429 && r.data?.code === 'daily_limit', JSON.stringify(r));
+  await pool.query('UPDATE push_notifications_sent SET created_at = DATE_SUB(NOW(), INTERVAL 1 DAY) WHERE entreprise_id = ?', [ent.id]);
+  r = await call(pro, 'POST', '/pro/push/send', { clientIds: [clientA, clientB], title: 'Lendemain', message: 'Nouvelle campagne' });
+  check('campagne : le lendemain, envoi possible (seuls les clients consentants)', r.status === 200 && r.data?.recipientsCount === 1, JSON.stringify(r));
 }
 r = await call(pro, 'PUT', `/pro/card-customization/${ent.id}?loyaltyType=points`, { relevant_text: 'Happy hour 17 h', primary_color: '#112233' });
 check('personnalisation enregistrée', r.status === 200, JSON.stringify(r));
@@ -143,7 +142,7 @@ check('personnalisation : image externe refusée (SSRF)', r.status === 400, JSON
 r = await call(pro, 'PUT', `/pro/card-customization/${ent.id}?loyaltyType=points`, { apple_review_url: "javascript:alert(1)'" });
 check('personnalisation : lien dangereux refusé', r.status === 400, JSON.stringify(r));
 const [[{ n: campaigns }]] = await pool.query('SELECT COUNT(*) AS n FROM push_notifications_sent WHERE entreprise_id = ?', [ent.id]);
-check("changer l'offre en cours n'envoie pas de campagne cachée", campaigns <= 1, String(campaigns));
+check("changer l'offre en cours n'envoie pas de campagne cachée", campaigns <= 2, String(campaigns));
 
 // ── Expiration : alerte J-7 une seule fois, points échus retirés
 const months = 6;

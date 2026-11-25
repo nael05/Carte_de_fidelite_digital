@@ -309,7 +309,7 @@ function Join() {
                 style={{ marginTop: '3px', accentColor: 'var(--accent)', width: '16px', height: '16px', flexShrink: 0 }}
               />
               <span style={{ fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
-                J'accepte de recevoir les offres du commerçant : notifications sur ma carte (une par semaine au maximum) et, de sa part, e-mail ou SMS. Je peux changer d'avis à tout moment auprès du commerçant.
+                J'accepte de recevoir les offres du commerçant : notifications sur ma carte (une par jour au maximum) et, de sa part, e-mail ou SMS. Je peux changer d'avis à tout moment auprès du commerçant.
               </span>
             </label>
           </div>
@@ -438,7 +438,7 @@ function Join() {
               </ul>
 
               <h3 style={{ color: 'var(--text-primary)' }}>3. Consentement marketing (optionnel)</h3>
-              <p>Si vous cochez la case correspondante, votre carte pourra recevoir des notifications promotionnelles (une par semaine au maximum) et votre e-mail et téléphone pourront être utilisés par le commerçant pour vous envoyer des offres promotionnelles. Ce consentement est strictement facultatif et n'affecte pas votre accès au programme de fidélité. Vous pouvez le retirer à tout moment en contactant le commerçant.</p>
+              <p>Si vous cochez la case correspondante, votre carte pourra recevoir des notifications promotionnelles (une par jour au maximum) et votre e-mail et téléphone pourront être utilisés par le commerçant pour vous envoyer des offres promotionnelles. Ce consentement est strictement facultatif et n'affecte pas votre accès au programme de fidélité. Vous pouvez le retirer à tout moment en contactant le commerçant.</p>
 
               <h3 style={{ color: 'var(--text-primary)' }}>4. Conservation des données</h3>
               <p>Vos données sont conservées pendant toute la durée de votre participation au programme de fidélité, puis supprimées dans un délai de 3 ans après votre dernière interaction.</p>

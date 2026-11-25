@@ -10,8 +10,8 @@
     "setup-oauth": "node setup-oauth.js"
   },
   "dependencies": {
+    "@parse/node-apn": "^8.1.1",
     "@walletpass/pass-js": "^6.9.1",
-    "apn": "^2.2.0",
     "axios": "^1.14.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",

@@ -1,7 +1,7 @@
 import pool from '../db.js';
 import { stripe } from '../utils/stripeConfig.js';
 import { PLANS, getPriceId } from '../utils/pricing.js';
-import { parsePlanKey } from '../utils/plans.js';
+import { parsePlanKey, DEFAULT_PRICES_CENTS } from '../utils/plans.js';
 import { logEmail } from '../utils/stripeService.js';
 import emailService from '../utils/emailService.js';
 import logger from '../utils/logger.js';
@@ -34,7 +34,8 @@ const readPlan = async (plan) => {
     const price = await stripe.prices.retrieve(priceId);
     return {
       plan, configured: true, price_id: price.id, product_id: price.product,
-      amount: price.unit_amount / 100, currency: price.currency, active: price.active
+      amount: price.unit_amount / 100, currency: price.currency, active: price.active,
+      tax_behavior: price.tax_behavior
     };
   } catch (err) {
     logger.warn('Prix Stripe illisible', { plan, priceId, error: err.message });
@@ -60,7 +61,8 @@ export const getPricing = async (req, res) => {
         subscribers: (await subscribersOf(c.plan)).length
       });
     }
-    res.json({ plans, labels: PLAN_LABELS, pending_changes: pending, notice_days: NOTICE_DAYS });
+    const defaults = Object.fromEntries(Object.entries(DEFAULT_PRICES_CENTS).map(([k, v]) => [k, v / 100]));
+    res.json({ plans, labels: PLAN_LABELS, defaults, pending_changes: pending, notice_days: NOTICE_DAYS });
   } catch (err) {
     logger.error('Get pricing error', { error: err.message });
     res.status(500).json({ error: 'Erreur lors de la lecture des tarifs' });
@@ -106,6 +108,11 @@ export const updatePricing = async (req, res) => {
       const currentId = await getPriceId(plan);
       const current = currentId ? await stripe.prices.retrieve(currentId) : null;
       if (current && current.unit_amount === amounts[plan]) {
+        // Prix créé sans indication de taxe : on le déclare TTC (possible une seule fois dans Stripe).
+        if (current.tax_behavior === 'unspecified') {
+          await stripe.prices.update(current.id, { tax_behavior: 'inclusive' }).catch((e) =>
+            logger.warn('tax_behavior non modifiable', { price: current.id, error: e.message }));
+        }
         results.push({ plan, unchanged: true });
         continue;
       }
@@ -115,6 +122,7 @@ export const updatePricing = async (req, res) => {
         product: productId,
         currency: current?.currency || 'eur',
         unit_amount: amounts[plan],
+        tax_behavior: 'inclusive', // tarifs affichés et facturés TTC
         recurring: { interval: INTERVALS[parsePlanKey(plan).interval] },
         lookup_key: `fidelyz_${parsePlanKey(plan).tier}_${parsePlanKey(plan).interval}`,
         transfer_lookup_key: true,

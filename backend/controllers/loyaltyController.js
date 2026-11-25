@@ -1,10 +1,10 @@
 import { randomUUID } from 'crypto';
 import pool from '../db.js';
 import logger from '../utils/logger.js';
-import apnService from '../utils/apnService.js';
-import googleWalletGenerator from '../utils/googleWalletGenerator.js';
 import walletSyncService from '../utils/walletSyncService.js';
-import { prepareCampaign, getQuota } from '../utils/pushGuard.js';
+import { getQuota } from '../utils/pushGuard.js';
+import { sendCampaign } from '../utils/campaignService.js';
+
 
 /**
  * Obtenir la configuration de fidélité et les paliers d'une entreprise
@@ -20,7 +20,8 @@ export const getLoyaltyConfig = async (req, res) => {
 
     if (config.length === 0) {
       return res.status(404).json({ error: 'Configuration de fidélité non trouvée' });
-    }
+    }
+
     const [tiers] = await pool.query(
       `SELECT * FROM reward_tiers WHERE entreprise_id = ? ORDER BY points_required ASC`,
       [empresaId]
@@ -64,17 +65,25 @@ export const updateLoyaltyConfig = async (req, res) => {
       [empresaId]
     );
 
-    if (existing.length > 0) {
+    if (existing.length > 0) {
+
       const updates = [];
       const params = [];
 
       if (points_adding_mode !== undefined) {
+        if (!['automatic', 'manual'].includes(points_adding_mode)) {
+          return res.status(400).json({ error: "Mode d'ajout des points invalide (automatic ou manual)" });
+        }
         updates.push('points_adding_mode = ?');
         params.push(points_adding_mode);
       }
       if (points_per_purchase !== undefined) {
+        const n = Number(points_per_purchase);
+        if (!Number.isInteger(n) || n < 1 || n > 100000) {
+          return res.status(400).json({ error: 'Points par achat : entier entre 1 et 100 000' });
+        }
         updates.push('points_per_purchase = ?');
-        params.push(points_per_purchase);
+        params.push(n);
       }
       if (apple_wallet_key !== undefined) {
         updates.push('apple_wallet_key = ?');
@@ -89,12 +98,14 @@ export const updateLoyaltyConfig = async (req, res) => {
         params.push(push_notifications_enabled ? 1 : 0);
       }
       if (max_points_balance !== undefined) {
-        updates.push('max_points_balance = ?');
-        params.push(max_points_balance === null ? null : Math.max(1, parseInt(max_points_balance) || 1));
+        updates.push('max_points_balance = ?');
+
+        params.push(max_points_balance === null || max_points_balance === '' ? null : Math.min(10_000_000, Math.max(1, parseInt(max_points_balance) || 1)));
       }
       if (points_shortcuts !== undefined) {
-        updates.push('points_shortcuts = ?');
-        const arr = Array.isArray(points_shortcuts) ? points_shortcuts.filter(n => Number.isInteger(n) && n > 0) : [];
+        updates.push('points_shortcuts = ?');
+
+        const arr = Array.isArray(points_shortcuts) ? points_shortcuts.filter(n => Number.isInteger(n) && n > 0 && n <= 100000).slice(0, 12) : [];
         params.push(arr.length > 0 ? JSON.stringify(arr) : null);
       }
 
@@ -114,14 +125,15 @@ export const updateLoyaltyConfig = async (req, res) => {
         [
           configId, 
           empresaId, 
-          points_adding_mode || 'automatic', 
-          points_per_purchase || 10,
+          points_adding_mode === 'automatic' ? 'automatic' : 'manual',
+          Number.isInteger(Number(points_per_purchase)) && Number(points_per_purchase) > 0 ? Number(points_per_purchase) : 10,
           apple_wallet_key || '', 
           google_wallet_key || '',
           push_notifications_enabled !== false ? 1 : 0
         ]
       );
-    }
+    }
+
     walletSyncService.syncCompanyWallets(empresaId).catch(err => 
       logger.error('Global synchronization failed after loyalty config update', err)
     );
@@ -131,10 +143,12 @@ export const updateLoyaltyConfig = async (req, res) => {
     logger.error('Update loyalty config error for enterprise: ' + empresaId, { 
       error: err.message, 
       stack: err.stack 
-    });
+    });
+
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
+};
+
 
 export const getRewardTiers = async (req, res) => {
   const empresaId = req.user.id;
@@ -154,8 +168,11 @@ export const createRewardTier = async (req, res) => {
   const empresaId = req.user.id;
   const { points_required, title, description } = req.body;
 
-  if (!title || !Number.isInteger(Number(points_required)) || Number(points_required) <= 0) {
+  if (!title || typeof title !== 'string' || !Number.isInteger(Number(points_required)) || Number(points_required) <= 0) {
     return res.status(400).json({ error: 'points_required doit être un entier positif et title est obligatoire' });
+  }
+  if (title.length > 100 || (description && String(description).length > 500)) {
+    return res.status(400).json({ error: 'Titre (100 caractères max) ou description (500 max) trop long' });
   }
 
   try {
@@ -163,7 +180,8 @@ export const createRewardTier = async (req, res) => {
     await pool.query(
       `INSERT INTO reward_tiers (id, entreprise_id, points_required, title, description) VALUES (?, ?, ?, ?, ?)`,
       [id, empresaId, points_required, title, description || '']
-    );
+    );
+
     walletSyncService.syncCompanyWallets(empresaId).catch(err => logger.error('Sync failed tier create', err));
 
     res.status(201).json({ success: true, id, message: 'Palier ajouté' });
@@ -181,12 +199,16 @@ export const updateRewardTier = async (req, res) => {
   if (points_required !== undefined && (!Number.isInteger(Number(points_required)) || Number(points_required) <= 0)) {
     return res.status(400).json({ error: 'points_required doit être un entier positif' });
   }
+  if ((title !== undefined && (typeof title !== 'string' || !title.trim() || title.length > 100)) || (description && String(description).length > 500)) {
+    return res.status(400).json({ error: 'Titre (1 à 100 caractères) ou description (500 max) invalide' });
+  }
 
   try {
     await pool.query(
       `UPDATE reward_tiers SET points_required = COALESCE(?, points_required), title = COALESCE(?, title), description = COALESCE(?, description) WHERE id = ? AND entreprise_id = ?`,
       [points_required, title, description, tierId, empresaId]
-    );
+    );
+
     walletSyncService.syncCompanyWallets(empresaId).catch(err => logger.error('Sync failed tier update', err));
 
     res.json({ success: true, message: 'Palier mis à jour' });
@@ -204,7 +226,8 @@ export const deleteRewardTier = async (req, res) => {
     await pool.query(
       `DELETE FROM reward_tiers WHERE id = ? AND entreprise_id = ?`,
       [tierId, empresaId]
-    );
+    );
+
     walletSyncService.syncCompanyWallets(empresaId).catch(err => logger.error('Sync failed tier delete', err));
 
     res.json({ success: true, message: 'Palier supprimé' });
@@ -212,79 +235,14 @@ export const deleteRewardTier = async (req, res) => {
     logger.error('Delete reward tier error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
+};
+
 
 export const sendPushNotification = async (req, res) => {
-  const empresaId = req.user.id;
-  const { title, message, target_type = 'all', target_segment = null } = req.body;
-
-  if (!title || !message) {
-    return res.status(400).json({ error: 'Titre et message requis' });
-  }
-
-  if (String(title).length > 60 || String(message).length > 200) {
-    return res.status(400).json({ error: 'Titre (60 caractères max) ou message (200 caractères max) trop long' });
-  }
-
+  const { title, message, target_segment = null } = req.body;
   try {
-    const campaign = await prepareCampaign(empresaId, { segment: target_segment });
-    if (campaign.error) return res.status(campaign.error.status).json(campaign.error.body);
-    const clientIds = campaign.clientIds;
-
-    const notificationId = randomUUID();
-    const sentAt = new Date();
-
-    await pool.query(
-      `INSERT INTO push_notifications_sent
-       (id, entreprise_id, title, message, target_type, target_segment, status, sent_at)
-       VALUES (?, ?, ?, ?, ?, ?, 'sent', ?)`,
-      [notificationId, empresaId, title, message, target_type, target_segment, sentAt]
-    );
-
-    if (clientIds.length > 0) {
-      const values = clientIds.map(cid => [randomUUID(), cid, notificationId, 'pending']);
-      await pool.query(
-        `INSERT INTO client_push_notifications (id, client_id, notification_id, status) VALUES ?`,
-        [values]
-      );
-      const [appleRegs] = await pool.query(
-        `SELECT DISTINCT r.push_token
-         FROM apple_pass_registrations r
-         JOIN wallet_cards w ON r.pass_serial_number = w.pass_serial_number
-         WHERE w.client_id IN (?) AND w.company_id = ?`,
-        [clientIds, empresaId]
-      );
-      if (appleRegs.length > 0) {
-        const pushTokens = appleRegs.map(r => r.push_token);
-        apnService.sendBulkAlertNotifications(pushTokens, title, message).catch(err =>
-          logger.error('Broadcast Apple push failed', { error: err.message })
-        );
-      }
-      const [googleCards] = await pool.query(
-        `SELECT DISTINCT w.client_id
-         FROM wallet_cards w
-         WHERE w.client_id IN (?) AND w.company_id = ? AND w.pass_serial_number LIKE 'GOOGLE_%'`,
-        [clientIds, empresaId]
-      );
-      googleCards.forEach(c =>
-        googleWalletGenerator.addMessageToObject(c.client_id, title, message).catch(err =>
-          logger.error('Broadcast Google push failed', { error: err.message })
-        )
-      );
-    }
-
-    await pool.query(
-      'UPDATE push_notifications_sent SET recipients_count = ? WHERE id = ?',
-      [clientIds.length, notificationId]
-    );
-
-    res.json({
-      success: true,
-      notificationId,
-      recipientsCount: clientIds.length,
-      status: 'sent',
-      message: `Notification envoyée à ${clientIds.length} client(s)`
-    });
+    const result = await sendCampaign(req.user.id, { title, message, segment: target_segment });
+    res.status(result.status).json(result.body);
   } catch (err) {
     logger.error('Send push notification error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
@@ -347,31 +305,35 @@ export const getPushNotificationDetails = async (req, res) => {
     logger.error('Get push notification details error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
-};
+};
+
 
 /**
- * Calcule via FIFO combien de points d'un client ont expiré (non encore déduits).
- * Returns { toExpire: number, soonPoints: number } where soonPoints expire dans <= 7 jours.
+ * Points d'un client par date d'acquisition (FIFO : les points utilisés consomment les plus anciens).
+ * Retourne :
+ *  - toExpire   : points arrivés à échéance (non encore retirés) ;
+ *  - soonPoints : points qui expirent dans les 7 prochains jours ;
+ *  - warnPoints : points qui expirent dans exactement 6 à 7 jours (alerte envoyée une seule fois,
+ *                 par le passage quotidien de 10 h).
  */
 export const computeClientExpiration = async (clientId, expirationMonths) => {
   const now = new Date();
   const cutoff = new Date(now);
   cutoff.setMonth(cutoff.getMonth() - expirationMonths);
-
-  const soonCutoff = new Date(now);
-  soonCutoff.setMonth(soonCutoff.getMonth() - expirationMonths);
-  soonCutoff.setDate(soonCutoff.getDate() + 7); // points gagnés avant cette date expirent dans <= 7 jours
+  const day = 24 * 60 * 60 * 1000;
+  const soonCutoff = new Date(cutoff.getTime() + 7 * day);
+  const warnStart = new Date(cutoff.getTime() + 6 * day);
 
   const [txns] = await pool.query(
-    `SELECT points_change, type, created_at FROM transaction_history
-     WHERE client_id = ? ORDER BY created_at ASC`,
+    `SELECT points_change, created_at FROM transaction_history
+     WHERE client_id = ? AND points_change <> 0 ORDER BY created_at ASC, id ASC`,
     [clientId]
-  );
-  const batches = []; // { amount, date }
+  );
+  const batches = [];
   for (const t of txns) {
     if (t.points_change > 0) {
       batches.push({ amount: t.points_change, date: new Date(t.created_at) });
-    } else if (t.points_change < 0) {
+    } else {
       let consume = Math.abs(t.points_change);
       while (consume > 0 && batches.length > 0) {
         if (batches[0].amount <= consume) {
@@ -387,63 +349,97 @@ export const computeClientExpiration = async (clientId, expirationMonths) => {
 
   let toExpire = 0;
   let soonPoints = 0;
+  let warnPoints = 0;
   for (const b of batches) {
     if (b.date <= cutoff) toExpire += b.amount;
-    else if (b.date <= soonCutoff) soonPoints += b.amount;
+    else if (b.date <= soonCutoff) {
+      soonPoints += b.amount;
+      if (b.date > warnStart) warnPoints += b.amount;
+    }
   }
-
-  return { toExpire, soonPoints };
+  return { toExpire, soonPoints, warnPoints };
 };
 
 /**
- * Expire les points d'un seul client. Retourne le nombre de points déduits.
+ * Retire les points arrivés à échéance d'un client (mise à jour atomique) et met sa carte à jour
+ * sans notification. Retourne le nombre de points retirés.
  */
-const expireClientPoints = async (client, expirationMonths, conn) => {
-  const db = conn || pool;
+const expireClientPoints = async (client, expirationMonths) => {
   const { toExpire } = await computeClientExpiration(client.id, expirationMonths);
   if (toExpire <= 0) return 0;
 
-  const newBalance = Math.max(0, (client.points || 0) - toExpire);
-  await db.query(
-    `UPDATE wallet_cards SET points_balance = ?, points_expired_up_to = CURDATE(), last_updated = NOW()
-     WHERE client_id = ?`,
-    [newBalance, client.id]
-  );
-  await db.query(
-    `UPDATE clients SET points = ? WHERE id = ?`,
-    [newBalance, client.id]
-  );
-  await db.query(
-    `INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, stamps_change, description)
-     VALUES (?, ?, ?, 'points_expired', ?, 0, ?)`,
-    [
-      randomUUID(), client.id, client.entreprise_id,
-      -toExpire,
-      `Expiration automatique — ${toExpire} point(s) arrivé(s) à échéance`
-    ]
-  );
-  logger.info(`⏰ Expiration: ${toExpire} pts déduits pour client ${client.id}`);
+  const conn = await pool.getConnection();
+  let removed = 0;
+  try {
+    await conn.beginTransaction();
+    const [[fresh]] = await conn.query('SELECT points FROM clients WHERE id = ? FOR UPDATE', [client.id]);
+    removed = Math.min(Number(fresh?.points) || 0, toExpire);
+    if (removed > 0) {
+      await conn.query('UPDATE clients SET points = points - ? WHERE id = ?', [removed, client.id]);
+    }
+    // L'opération est toujours tracée pour que les points échus ne soient pas recomptés.
+    await conn.query(
+      `INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, stamps_change, description)
+       VALUES (?, ?, ?, 'points_expired', ?, 0, ?)`,
+      [randomUUID(), client.id, client.entreprise_id, -toExpire, `Expiration automatique — ${toExpire} point(s) arrivé(s) à échéance`]
+    );
+    await conn.query('UPDATE wallet_cards SET points_expired_up_to = CURDATE() WHERE client_id = ?', [client.id]);
+    await conn.commit();
+  } catch (err) {
+    await conn.rollback().catch(() => {});
+    throw err;
+  } finally {
+    conn.release();
+  }
+
+  walletSyncService.syncClientWallet(client.id, client.entreprise_id, -removed, { type: 'silent' })
+    .catch((err) => logger.warn(`[EXPIRATION] Carte non synchronisée ${client.id}`, { error: err.message }));
+  logger.info(`⏰ Expiration: ${toExpire} pts échus pour le client ${client.id}`);
   return toExpire;
 };
 
 /**
- * Lance l'expiration pour toute une entreprise.
- * Appelé par le cron ET immédiatement quand le pro change la config.
+ * Expiration pour toute une entreprise : appelée par la tâche de nuit et quand le pro change la durée.
  */
 export const runExpirationForEnterprise = async (entrepriseId, expirationMonths) => {
   const [clients] = await pool.query(
-    `SELECT c.id, c.entreprise_id, c.points, wc.points_balance
-     FROM clients c
-     JOIN wallet_cards wc ON wc.client_id = c.id
-     WHERE c.entreprise_id = ? AND wc.points_balance > 0`,
+    'SELECT id, entreprise_id FROM clients WHERE entreprise_id = ? AND points > 0',
     [entrepriseId]
   );
-
   let totalExpired = 0;
   for (const client of clients) {
-    totalExpired += await expireClientPoints(client, expirationMonths, null);
+    try {
+      totalExpired += await expireClientPoints(client, expirationMonths);
+    } catch (err) {
+      logger.error(`[EXPIRATION] Échec pour le client ${client.id}`, { error: err.message });
+    }
   }
   return totalExpired;
+};
+
+/**
+ * Alerte « vos points expirent dans 7 jours » : une seule fois par lot de points (tâche quotidienne de 10 h).
+ */
+export const sendExpiryWarningsForEnterprise = async (entrepriseId, expirationMonths) => {
+  const [clients] = await pool.query(
+    `SELECT c.id FROM clients c
+     WHERE c.entreprise_id = ? AND c.points > 0
+       AND EXISTS (SELECT 1 FROM wallet_cards w WHERE w.client_id = c.id)`,
+    [entrepriseId]
+  );
+  let warned = 0;
+  for (const client of clients) {
+    try {
+      const { warnPoints } = await computeClientExpiration(client.id, expirationMonths);
+      if (warnPoints > 0) {
+        await walletSyncService.syncClientWallet(client.id, entrepriseId, 0, { type: 'expiry_warning', points: warnPoints });
+        warned++;
+      }
+    } catch (err) {
+      logger.warn(`[EXPIRATION] Alerte J-7 non envoyée au client ${client.id}`, { error: err.message });
+    }
+  }
+  return warned;
 };
 
 export const getExpirationConfig = async (req, res) => {
@@ -462,7 +458,8 @@ export const getExpirationConfig = async (req, res) => {
 
 export const updateExpirationConfig = async (req, res) => {
   const empresaId = req.user.id;
-  const { points_expiration_months } = req.body;
+  const { points_expiration_months } = req.body;
+
   if (points_expiration_months !== null &&
       (!Number.isInteger(points_expiration_months) ||
        points_expiration_months < 1 || points_expiration_months > 36)) {
@@ -473,7 +470,8 @@ export const updateExpirationConfig = async (req, res) => {
     await pool.query(
       `UPDATE loyalty_config SET points_expiration_months = ? WHERE entreprise_id = ?`,
       [points_expiration_months, empresaId]
-    );
+    );
+
     let expired = 0;
     if (points_expiration_months !== null) {
       expired = await runExpirationForEnterprise(empresaId, points_expiration_months);

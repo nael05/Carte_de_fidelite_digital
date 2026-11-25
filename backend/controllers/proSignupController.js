@@ -1,7 +1,7 @@
 import pool from '../db.js';
 import bcrypt from 'bcryptjs';
 import { randomUUID } from 'crypto';
-import { stripe, STRIPE_PUBLISHABLE_KEY } from '../utils/stripeConfig.js';
+import { stripe, STRIPE_PUBLISHABLE_KEY, isStripeConfigured } from '../utils/stripeConfig.js';
 import { validatePassword } from '../utils/passwordValidator.js';
 import { getTierPriceId, getPromoTarget } from '../utils/pricing.js';
 import logger from '../utils/logger.js';
@@ -56,7 +56,8 @@ const insertAccount = async (account) => {
 
 // POST /api/pro/signup — tier : free (sans paiement), pro ou business (Stripe Checkout).
 export const proSignup = async (req, res) => {
-  const { nom, raison_sociale, email, mot_de_passe, siret_tva, adresse, plan, code_promo } = req.body;
+  const { nom, raison_sociale, mot_de_passe, siret_tva, adresse, plan, code_promo } = req.body;
+  const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
   const tier = req.body.tier || 'pro';
   const paid = tier !== 'free';
 
@@ -69,12 +70,18 @@ export const proSignup = async (req, res) => {
   if (paid && !['monthly', 'yearly'].includes(plan)) {
     return res.status(400).json({ error: 'Plan invalide' });
   }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 255) {
     return res.status(400).json({ error: 'Email invalide' });
+  }
+  if ([nom, raison_sociale, siret_tva, adresse].some((v) => v !== undefined && v !== null && (typeof v !== 'string' || v.length > 255))) {
+    return res.status(400).json({ error: 'Champs invalides (255 caractères maximum)' });
   }
   const pwd = validatePassword(mot_de_passe);
   if (!pwd.isValid) {
     return res.status(400).json({ error: pwd.errors.join(', ') });
+  }
+  if (paid && !isStripeConfigured()) {
+    return res.status(503).json({ error: "Le paiement en ligne n'est pas encore activé : choisissez l'offre Gratuite pour commencer, vous pourrez passer à une offre payante plus tard.", code: 'stripe_not_configured' });
   }
   const priceId = paid ? await getTierPriceId(tier, plan) : null;
   if (paid && !priceId) {
@@ -87,7 +94,10 @@ export const proSignup = async (req, res) => {
       'SELECT id, subscription_status, stripe_subscription_id FROM entreprises WHERE email = ?',
       [email]
     );
+    const [staffWithEmail] = await pool.query('SELECT id FROM staff_accounts WHERE email = ?', [email]);
+    if (staffWithEmail.length > 0) return res.status(400).json({ error: 'Cet email est déjà utilisé' });
     if (existing.length > 0) {
+      // Inscription payante abandonnée avant le paiement : on peut recommencer.
       const stale = existing[0].subscription_status === 'unpaid' && !existing[0].stripe_subscription_id;
       if (!stale) return res.status(400).json({ error: 'Cet email est déjà utilisé' });
       await pool.query('DELETE FROM entreprises WHERE id = ?', [existing[0].id]);

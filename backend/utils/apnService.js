@@ -1,209 +1,103 @@
 /**
  * APNService.js
- * Service pour envoyer les notifications Push Apple Wallet
- * Utilise le package 'apn' officiel
+ * Push Apple Wallet : signal « une carte a changé ».
+ *
+ * Apple Wallet ignore le contenu des notifications : la charge utile doit être vide ({ aps: {} }).
+ * À réception, l'iPhone interroge le Web Service (/api/wallet/v1/...) et télécharge la carte à jour.
+ * Les messages visibles passent par le champ de la carte qui change (voir walletSyncService.js).
  */
 
 import 'dotenv/config';
-import apn from 'apn';
+import apn from '@parse/node-apn';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import logger from './logger.js';
+import db from '../db.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Réponses APNs qui signifient que le jeton n'est plus valable (carte supprimée, appareil réinitialisé...).
+const DEAD_TOKEN_REASONS = new Set(['BadDeviceToken', 'Unregistered', 'DeviceTokenNotForTopic']);
 
 export class APNService {
-  constructor() {
-    const rawPath = (process.env.APPLE_APN_KEY_PATH || '').trim();
-    this.apnKeyPath = rawPath 
-      ? (path.isAbsolute(rawPath) ? rawPath : path.resolve(__dirname, '..', rawPath))
-      : null;
-      
+  constructor() {
+    const rawPath = (process.env.APPLE_APN_KEY_PATH || '').trim();
+    this.apnKeyPath = rawPath ? (path.isAbsolute(rawPath) ? rawPath : path.resolve(__dirname, '..', rawPath)) : null;
     this.apnKeyId = (process.env.APPLE_APN_KEY_ID || '').trim();
-    this.apnTeamId = (process.env.APPLE_APN_TEAM_ID || '').trim();
-    this.environment = (process.env.APPLE_APN_ENVIRONMENT || 'development').trim();
+    this.apnTeamId = (process.env.APPLE_APN_TEAM_ID || process.env.APPLE_TEAM_ID || '').trim();
+    this.topic = (process.env.APPLE_PASS_TYPE_ID || '').trim();
     this.provider = null;
-
     this.initializeProvider();
   }
 
-  /**
-   * Initialise le provider APNs
-   */
   initializeProvider() {
     try {
-      if (!this.apnKeyPath || !this.apnKeyId || !this.apnTeamId) {
-        logger.warn('⚠️ Configuration APNs incomplète - Notifications push désactivées');
-        return;
-      }
-      if (!fs.existsSync(this.apnKeyPath)) {
-        logger.error(`❌ Fichier de clé Apple (.p8) introuvable au chemin ABSOLU: ${this.apnKeyPath}`);
+      if (!this.apnKeyPath || !this.apnKeyId || !this.apnTeamId || !this.topic) {
+        logger.warn('⚠️ Configuration APNs incomplète (APPLE_APN_KEY_PATH, APPLE_APN_KEY_ID, APPLE_APN_TEAM_ID, APPLE_PASS_TYPE_ID) : mises à jour Apple Wallet désactivées');
         return;
       }
-
+      if (!fs.existsSync(this.apnKeyPath)) {
+        logger.error(`❌ Clé APNs (.p8) introuvable : ${this.apnKeyPath}`);
+        return;
+      }
+      // Les push Wallet passent toujours par la passerelle de production d'Apple.
       this.provider = new apn.Provider({
-        token: {
-          key: this.apnKeyPath,
-          keyId: this.apnKeyId,
-          teamId: this.apnTeamId,
-        },
-        production: true, // Toujours TRUE pour Apple Wallet
+        token: { key: this.apnKeyPath, keyId: this.apnKeyId, teamId: this.apnTeamId },
+        production: true
       });
-
-      this.provider.on('error', (error) => {
-        logger.error(`❌ Erreur APNs (Provider): ${error.message}`);
-      });
-
-      logger.info(`✅ Provider APNs initialisé avec succès (${this.environment})`);
+      logger.info('✅ Provider APNs initialisé');
     } catch (error) {
       logger.error(`❌ Échec initialisation APNs: ${error.message}`);
       this.provider = null;
     }
   }
 
-  /**
-   * Envoie une notification SILENCIEUSE à Apple Wallet
-   * Cette notification n'a pas de titre/body - c'est juste un signal de réveil
-   * Apple Wallet recevra cette notification et saura qu'il faut se synchroniser
-   *
-   * @param {string} pushToken - Token APNs du device (fourni par Apple)
-   * @param {Object} options - Options additionnelles (optionnel)
-   * @returns {Promise<Object>} - Résultat de l'envoi
-   */
-  async sendUpdateNotification(pushToken, options = {}) {
-    if (!this.provider) {
-      logger.warn('⚠️ APNs non configuré - notification non envoyée');
-      return { sent: false, reason: 'APNs not configured' };
-    }
-
-    try {
-      const notification = new apn.Notification();
-      notification.rawPayload = { aps: {} };
-      notification.pushType = 'pass';
-      notification.priority = 10;
-      const topic = (process.env.APPLE_PASS_TYPE_ID || '').trim();
-      notification.topic = topic;
-      const result = await this.provider.send(notification, pushToken);
-      if (result.failed && result.failed.length > 0) {
-        const failure = result.failed[0];
-        logger.warn(
-          `⚠️ Apple Push Échoué [Token: ${pushToken.substring(0, 10)}...]: ${failure.error || 'Statut ' + failure.status}`
-        );
-        if (failure.response) {
-          logger.error(`   ❌ Détails de la réponse Apple: ${JSON.stringify(failure.response)}`);
-        }
-        return { sent: false, error: failure.error, status: failure.status, token: pushToken };
-      }
-
-      logger.info(`✅ Apple Push Envoyé avec succès au device (Topic: ${notification.topic})`);
-      return { sent: true, token: pushToken };
-    } catch (error) {
-      logger.error(`❌ Erreur envoi notification: ${error.message}`);
-      return { sent: false, error: error.message };
-    }
+  isConfigured() {
+    return !!this.provider;
   }
 
   /**
-   * Envoie une notification VISIBLE (Alerte)
-   * @param {string} pushToken - Token APNs
-   * @param {string} title - Titre de la notification
-   * @param {string} body - Message de la notification
-   * @returns {Promise<Object>}
-   */
-  async sendAlertNotification(pushToken, title, body) {
-    if (!this.provider) {
-      logger.warn('⚠️ APNs non configuré - notification non envoyée');
-      return { sent: false, reason: 'APNs not configured' };
-    }
-
-    try {
-      const notification = new apn.Notification({
-        alert: {
-          title,
-          body
-        },
-        sound: 'default',
-        badge: 1,
-        topic: process.env.APPLE_PASS_TYPE_ID,
-        payload: {
-          click_action: 'APPLE_WALLET' // Aide le device à savoir quoi ouvrir
-        }
-      });
-
-      const result = await this.provider.send(notification, pushToken);
-
-      if (result.failed && result.failed.length > 0) {
-        const failure = result.failed[0];
-        logger.warn(`⚠️ Notification alerte échouée: ${failure.error || 'Statut: ' + failure.status}`);
-        if (failure.response) {
-          logger.debug(`Détails échec alerte APNs: ${JSON.stringify(failure.response)}`);
-        }
-        return { sent: false, error: failure.error || 'Status ' + failure.status, token: pushToken };
-      }
-
-      logger.info(`✅ Alert push envoyée (token: ${pushToken.substring(0, 10)}...)`);
-      return { sent: true, token: pushToken };
-    } catch (error) {
-      logger.error(`❌ Erreur envoi alert push: ${error.message}`);
-      return { sent: false, error: error.message };
-    }
-  }
-
-  /**
-   * Envoie des notifications de mise à jour à plusieurs devices (Silencieux)
-   * @param {string[]} pushTokens - Liste des tokens
-   * @returns {Promise<Object>}
+   * Envoie le signal de mise à jour à une liste de jetons. Les jetons morts sont supprimés de la base.
+   * @returns {Promise<{ sent: number, failed: number }>}
    */
   async sendBulkUpdateNotifications(pushTokens) {
-    if (!Array.isArray(pushTokens) || pushTokens.length === 0) {
-      return { sent: 0, failed: 0, results: [] };
+    const tokens = [...new Set((pushTokens || []).filter(Boolean))];
+    if (tokens.length === 0) return { sent: 0, failed: 0 };
+    if (!this.provider) {
+      logger.warn(`⚠️ APNs non configuré : ${tokens.length} mise(s) à jour Apple non envoyée(s)`);
+      return { sent: 0, failed: tokens.length };
     }
 
-    const results = await Promise.all(
-      pushTokens.map((token) => this.sendUpdateNotification(token))
-    );
+    const notification = new apn.Notification();
+    notification.rawPayload = { aps: {} };
+    notification.pushType = 'pass';
+    notification.priority = 10;
+    notification.topic = this.topic;
 
-    const sent = results.filter((r) => r.sent).length;
-    const failed = results.filter((r) => !r.sent).length;
-
-    return { sent, failed, results };
-  }
-
-  /**
-   * Envoie des notifications d'alerte à plusieurs devices
-   * @param {string[]} pushTokens - Liste des tokens
-   * @param {string} title - Titre
-   * @param {string} body - Message
-   * @returns {Promise<Object>}
-   */
-  async sendBulkAlertNotifications(pushTokens, title, body) {
-    if (!Array.isArray(pushTokens) || pushTokens.length === 0) {
-      return { sent: 0, failed: 0, results: [] };
+    try {
+      const result = await this.provider.send(notification, tokens);
+      const dead = (result.failed || [])
+        .filter((f) => DEAD_TOKEN_REASONS.has(f.response?.reason) || f.status === 410 || f.status === '410')
+        .map((f) => f.device);
+      for (const f of result.failed || []) {
+        logger.warn(`⚠️ Push Apple refusé [${String(f.device).slice(0, 10)}…] : ${f.response?.reason || f.error?.message || f.status}`);
+      }
+      if (dead.length > 0) {
+        await db.query('DELETE FROM apple_pass_registrations WHERE push_token IN (?)', [dead])
+          .catch((err) => logger.warn('Nettoyage des jetons APNs impossible', { error: err.message }));
+      }
+      return { sent: (result.sent || []).length, failed: (result.failed || []).length };
+    } catch (error) {
+      logger.error(`❌ Erreur envoi APNs: ${error.message}`);
+      return { sent: 0, failed: tokens.length };
     }
-
-    logger.info(`📤 Envoi de ${pushTokens.length} alertes push`);
-
-    const results = await Promise.all(
-      pushTokens.map((token) => this.sendAlertNotification(token, title, body))
-    );
-
-    const sent = results.filter((r) => r.sent).length;
-    const failed = results.filter((r) => !r.sent).length;
-
-    return { sent, failed, results };
   }
 
-  /**
-   * Ferme la connexion APNs gracieusement
-   */
   async close() {
-    if (this.provider) {
-      await this.provider.shutdown();
-      logger.info('✅ Connexion APNs fermée');
-    }
+    if (this.provider) await this.provider.shutdown();
   }
-}
+}
+
 export const apnService = new APNService();
 export default apnService;

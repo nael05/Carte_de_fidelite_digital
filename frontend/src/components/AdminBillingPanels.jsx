@@ -28,7 +28,8 @@ export function AdminPricingPanel() {
     try {
       const { data: d } = await api.get('/admin/pricing')
       setData(d)
-      setForm(Object.fromEntries(PLAN_KEYS.map((k) => [k, d.plans[k]?.amount ?? ''])))
+      // Un prix pas encore créé dans Stripe est proposé au tarif de lancement (19 € / 39 € TTC, annuel -20 %).
+      setForm(Object.fromEntries(PLAN_KEYS.map((k) => [k, d.plans[k]?.configured ? d.plans[k].amount : (d.defaults?.[k] ?? '')])))
     } catch (e) {
       setNotice({ type: 'err', text: errMsg(e) })
     }
@@ -90,7 +91,8 @@ export function AdminPricingPanel() {
           return (
             <div className="abp-card" key={plan}>
               <span className="abp-label">{PLAN_LABEL[plan]}</span>
-              <div className="abp-price">{p.configured ? money(p.amount, p.currency) : 'Non configuré'}</div>
+              <div className="abp-price">{p.configured ? <>{money(p.amount, p.currency)} <small>TTC</small></> : 'Non configuré'}</div>
+              {p.configured && p.tax_behavior !== 'inclusive' && <span className="abp-error">Prix créé sans mention TTC : enregistrez-le à nouveau pour le corriger.</span>}
               {p.price_id && <code className="abp-code">{p.price_id}</code>}
               {p.error && <span className="abp-error">{p.error}</span>}
             </div>
@@ -100,10 +102,10 @@ export function AdminPricingPanel() {
 
       <form className="abp-card" onSubmit={save}>
         <h3>Modifier les tarifs</h3>
-        <p className="abp-muted">Un prix non configuré sera créé dans Stripe à l'enregistrement. L'annuel = 12 mois -20 % (Pro 278,40 €, Business 566,40 €).</p>
+        <p className="abp-muted">Montants TTC. Un prix non configuré sera créé dans Stripe à l'enregistrement (clé Stripe requise). Tarifs de lancement : Pro 19 € / mois ou 182,40 € / an, Business 39 € / mois ou 374,40 € / an (annuel = 12 mois -20 %).</p>
         <div className="abp-form-row">
           {PLAN_KEYS.map((plan) => (
-            <label key={plan}>{PLAN_LABEL[plan]} (€)
+            <label key={plan}>{PLAN_LABEL[plan]} (€ TTC)
               <input type="number" min="1" max="10000" step="0.01" value={form[plan]} onChange={(e) => setForm({ ...form, [plan]: e.target.value })} />
             </label>
           ))}

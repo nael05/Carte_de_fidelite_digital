@@ -14,6 +14,16 @@ export const parsePlanKey = (key) => {
 };
 export const planKey = (tier, interval) => (tier === 'business' ? `business_${interval}` : interval);
 
+// Tarifs de lancement, TTC, en centimes : Pro 19 €/mois, Business 39 €/mois ; annuel = 12 mois -20 %.
+// Utilisés pour l'affichage tant que les prix Stripe ne sont pas configurés, et comme valeurs proposées
+// dans l'admin à la création des prix. Les prix Stripe sont créés « TTC » (tax_behavior: inclusive).
+export const DEFAULT_PRICES_CENTS = {
+  monthly: 1900,
+  yearly: 18240,
+  business_monthly: 3900,
+  business_yearly: 37440
+};
+
 // Garde-fous des notifications promotionnelles (voir utils/pushGuard.js).
 export const PUSH_RULES = {
   monthlyQuota: { free: 0, pro: 4, business: 8 },

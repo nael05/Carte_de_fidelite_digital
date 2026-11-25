@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
 import api from '../api'
 
-// Tarifs de repli tant que /plans n'a pas répondu : annuel = 12 mois -20 %.
+// Tarifs TTC de repli tant que /plans n'a pas répondu : Pro 19 €, Business 39 € ; annuel = 12 mois -20 %.
 const FALLBACK = {
   free_client_limit: 15,
   push_monthly_quota: { free: 0, pro: 4, business: 8 },
   prices: {
-    pro: { monthly: { amount: 29 }, yearly: { amount: 278.4 } },
-    business: { monthly: { amount: 59 }, yearly: { amount: 566.4 } }
+    pro: { monthly: { amount: 19 }, yearly: { amount: 182.4 } },
+    business: { monthly: { amount: 39 }, yearly: { amount: 374.4 } }
   }
 }
 
+// 19 → « 19 € » ; 15.2 → « 15,20 € »
 export const fmtEuro = (amount) =>
   `${Number(amount).toLocaleString('fr-FR', { minimumFractionDigits: Number.isInteger(Number(amount)) ? 0 : 2, maximumFractionDigits: 2 })} €`
 

@@ -49,11 +49,14 @@ class MySQLRateLimitStore {
   }
 }
 
+// Connexion / mot de passe oublié : 10 échecs par 15 min et par IP (les connexions réussies ne comptent pas,
+// pour qu'une équipe derrière la même box puisse se connecter).
 export const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 10,
+  skipSuccessfulRequests: true,
   store: new MySQLRateLimitStore(15 * 60 * 1000, 'login'),
-  message: 'Trop de tentatives de connexion, réessayez plus tard',
+  handler: (req, res) => res.status(429).json({ error: 'Trop de tentatives, réessayez dans 15 minutes.' }),
   standardHeaders: true,
   legacyHeaders: false,
   skip: (req) => process.env.NODE_ENV === 'development',
@@ -63,13 +66,20 @@ export const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000,
   max: 300,
   store: new MySQLRateLimitStore(1 * 60 * 1000, 'api'),
+  handler: (req, res) => res.status(429).json({ error: 'Trop de requêtes, réessayez dans une minute.' }),
+  standardHeaders: true,
+  legacyHeaders: false,
   skip: (req) => process.env.NODE_ENV === 'development',
 });
 
+// Actions coûteuses ou sensibles au spam (inscription, codes promo, envoi d'e-mails) : 20 par heure et par IP.
 export const strictLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 10,
+  max: 20,
   store: new MySQLRateLimitStore(60 * 60 * 1000, 'strict'),
+  handler: (req, res) => res.status(429).json({ error: 'Trop de demandes, réessayez dans une heure.' }),
+  standardHeaders: true,
+  legacyHeaders: false,
   skip: (req) => process.env.NODE_ENV === 'development',
 });
 

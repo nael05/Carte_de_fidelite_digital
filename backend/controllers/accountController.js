@@ -40,10 +40,10 @@ export const getAccountInfo = async (req, res) => {
 
 // PUT /api/pro/account/email - Request email change (sends confirmation link)
 export const requestEmailChange = async (req, res) => {
-  const { new_email } = req.body;
+  const new_email = typeof req.body.new_email === 'string' ? req.body.new_email.trim().toLowerCase() : '';
   const entrepriseId = req.user.id;
 
-  if (!new_email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(new_email)) {
+  if (!new_email || new_email.length > 255 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(new_email)) {
     return res.status(400).json({ error: 'Email invalide' });
   }
 
@@ -54,9 +54,11 @@ export const requestEmailChange = async (req, res) => {
       [new_email, entrepriseId]
     );
 
-    if (existing.length > 0) {
+    const [staffWithEmail] = await pool.query('SELECT id FROM staff_accounts WHERE email = ?', [new_email]);
+    if (existing.length > 0 || staffWithEmail.length > 0) {
       return res.status(400).json({ error: 'Cet email est déjà utilisé' });
     }
+    const [[current]] = await pool.query('SELECT email FROM entreprises WHERE id = ?', [entrepriseId]);
 
     // Generate secure token
     const token = crypto.randomBytes(32).toString('hex');
@@ -74,7 +76,7 @@ export const requestEmailChange = async (req, res) => {
     // Send confirmation email
     const confirmUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/pro/confirm-email?token=${token}`;
     emailService.sendEmailConfirmationLink({
-      current_email: req.user.email,
+      current_email: current?.email,
       new_email: new_email,
       confirm_url: confirmUrl
     }).catch(err => {
@@ -122,6 +124,14 @@ export const confirmEmailChange = async (req, res) => {
     const isValid = await bcrypt.compare(token, email_change_token);
     if (!isValid) {
       return res.status(400).json({ error: 'Token invalide' });
+    }
+
+    const [taken] = await pool.query(
+      'SELECT id FROM entreprises WHERE email = ? AND id <> ? UNION SELECT id FROM staff_accounts WHERE email = ?',
+      [email_change_new_email, entrepriseId, email_change_new_email]
+    );
+    if (taken.length > 0) {
+      return res.status(400).json({ error: 'Cet email est déjà utilisé' });
     }
 
     // Update email
@@ -183,9 +193,11 @@ export const changePassword = async (req, res) => {
 
     // Update password
     await pool.query(
-      'UPDATE entreprises SET mot_de_passe = ? WHERE id = ?',
+      'UPDATE entreprises SET mot_de_passe = ?, must_change_password = 0, temporary_password = NULL WHERE id = ?',
       [hashedPassword, entrepriseId]
     );
+    // Les autres appareils (et comptes équipe) doivent se reconnecter.
+    await pool.query('DELETE FROM sessions WHERE entreprise_id = ? AND device_id <> ?', [entrepriseId, req.user.deviceId || '']);
 
     logger.info('Password changed successfully', { entreprise_id: entrepriseId });
     res.json({

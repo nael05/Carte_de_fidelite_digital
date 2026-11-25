@@ -1,17 +1,13 @@
 import logger from './logger.js';
+import walletSyncService from './walletSyncService.js';
 
-export const sendLoyaltyUpdateNotification = async (clientId, empresaId, pointsChange, _isRedemption = false) => {
-  try {
-    const walletSyncModule = await import('./walletSyncService.js');
-    const walletSyncService = walletSyncModule.default;
-    walletSyncService.syncClientWallet(clientId, empresaId, pointsChange)
-      .catch(err => logger.error('Notification parallel error', err));
-    logger.info(`✅ Flux de notification lancé en tâche de fond pour ${clientId}`);
-  } catch (err) {
-    logger.error(`❌ Erreur service notification fidélité: ${err.message}`);
-  }
+/**
+ * Met à jour la carte Wallet d'un client après une opération de caisse, en tâche de fond.
+ * event (facultatif) : voir describeEvent() dans walletSyncService.js — par défaut « + N points » / « N points retirés ».
+ */
+export const sendLoyaltyUpdateNotification = async (clientId, empresaId, pointsChange, event = null) => {
+  walletSyncService.syncClientWallet(clientId, empresaId, Number(pointsChange) || 0, event)
+    .catch((err) => logger.error('Mise à jour de la carte Wallet échouée', { clientId, error: err.message }));
 };
 
-export default {
-  sendLoyaltyUpdateNotification
-};
+export default { sendLoyaltyUpdateNotification };

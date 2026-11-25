@@ -15,9 +15,9 @@ export default function PlanPicker({ tier, interval, onChange, tiers = TIER_ORDE
     const monthly = plans.prices[t].monthly.amount
     const yearly = plans.prices[t].yearly.amount
     if (interval === 'yearly') {
-      return { main: fmtEuro(yearly), unit: '/ an', sub: `soit ${fmtEuro(Math.round((yearly / 12) * 100) / 100)} / mois` }
+      return { main: fmtEuro(yearly), unit: 'TTC / an', sub: `soit ${fmtEuro(Math.round((yearly / 12) * 100) / 100)} TTC / mois` }
     }
-    return { main: fmtEuro(monthly), unit: '/ mois', sub: 'Sans engagement' }
+    return { main: fmtEuro(monthly), unit: 'TTC / mois', sub: 'Sans engagement' }
   }
 
   return (

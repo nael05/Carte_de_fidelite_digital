@@ -1,15 +1,20 @@
 node_modules/
 .env
+.env.*
+!.env.example
+!.env.production.example
 backend/certs/*.json
 backend/certs/*.pem
 backend/certs/*.p8
+backend/certs/*.p12
 backend/uploads/
-backend/logs/*.log
+backend/logs/
+logs/
+*.log
 frontend/dist/
 frontend/node_modules/
 .DS_Store
 *.local
-.env.test
 
 # Exports et fichiers temporaires
 pub_tiktok/

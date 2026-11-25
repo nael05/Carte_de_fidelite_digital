@@ -9,8 +9,6 @@ import pool from '../db.js';
 import { validatePassword, validatePasswordChange } from '../utils/passwordValidator.js';
 import logger from '../utils/logger.js';
 import { validateLoginInput } from '../utils/inputValidator.js';
-import apnService from '../utils/apnService.js';
-import googleWalletGenerator from '../utils/googleWalletGenerator.js';
 import { sendLoyaltyUpdateNotification } from '../utils/notificationService.js';
 import walletSyncService from '../utils/walletSyncService.js';
 import emailService from '../utils/emailService.js';
@@ -18,6 +16,15 @@ import { withClientQuota, FreeLimitError, FREE_CLIENT_LIMIT, getAccess } from '.
 import { staffLogin } from './teamController.js';
 import { resolveEstablishmentId, findEstablishment } from '../utils/establishments.js';
 import crypto from 'crypto';
+import { stripe } from '../utils/stripeConfig.js';
+
+// Limites des opérations de caisse (protège contre les fautes de frappe et les requêtes forgées).
+const MAX_POINTS_PER_OPERATION = 100000;
+const isPointsAmount = (n) => Number.isInteger(n) && n >= 0 && n <= MAX_POINTS_PER_OPERATION;
+const normalizePhone = (phone) => String(phone || '').replace(/[\s.\-()]/g, '');
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const sha256 = (value) => crypto.createHash('sha256').update(String(value)).digest('hex');
+
 const maskPhone = (phone) => {
   if (!phone) return null;
   const digits = phone.replace(/\D/g, '');
@@ -36,6 +43,9 @@ const maskEmail = (email) => {
 
 export const adminLogin = async (req, res) => {
   const { identifiant, mot_de_passe } = req.body;
+  if (typeof identifiant !== 'string' || typeof mot_de_passe !== 'string' || !identifiant || !mot_de_passe) {
+    return res.status(400).json({ error: 'Identifiant et mot de passe requis' });
+  }
 
   try {
     const [rows] = await pool.query(
@@ -98,87 +108,6 @@ export const getPublicEnterprises = async (req, res) => {
   }
 };
 
-export const createCompany = async (req, res) => {
-  const { nom, email, prenom, telephone, loyalty_type = 'points' } = req.body;
-
-  if (!nom || !email) {
-    return res.status(400).json({ error: 'Nom et email requis' });
-  }
-
-  if (!['points', 'stamps'].includes(loyalty_type)) {
-    return res.status(400).json({ error: 'Type de fidélité invalide (points ou stamps)' });
-  }
-
-  const companyId = randomUUID();
-  const tempPassword = randomBytes(12).toString('base64url').substring(0, 16);
-  const hashedPassword = await bcrypt.hash(tempPassword, 10);
-  const connection = await pool.getConnection();
-  try {
-    await connection.beginTransaction();
-
-    await connection.query(
-      'INSERT INTO entreprises (id, nom, email, prenom, telephone, mot_de_passe, temporary_password, must_change_password, statut, loyalty_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [companyId, nom, email, prenom || null, telephone || null, hashedPassword, tempPassword, true, 'actif', loyalty_type]
-    );
-
-    const configId = randomUUID();
-    await connection.query(
-      `INSERT INTO loyalty_config (
-        id, entreprise_id, loyalty_type, reward_title, reward_description,
-        points_per_purchase, points_for_reward, points_adding_mode
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        configId, companyId, loyalty_type,
-        'Récompense spéciale',
-        loyalty_type === 'points'
-          ? 'Vous avez atteint le nombre de points requis!'
-          : 'Tous vos tampons sont remplis!',
-        10, 100, 'manual'
-      ]
-    );
-
-    const customizationId = randomUUID();
-    await connection.query(
-      `INSERT INTO card_customization
-       (id, company_id, loyalty_type, primary_color, text_color, accent_color, secondary_color)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [customizationId, companyId, loyalty_type, '#1f2937', '#ffffff', '#3b82f6', '#374151']
-    );
-
-    await connection.commit();
-
-    emailService.sendWelcomeEmail({
-      email,
-      nom,
-      prenom: prenom || null,
-      telephone: telephone || null,
-      tempPassword,
-      loyaltyType: loyalty_type,
-      frontendUrl: process.env.FRONTEND_URL || 'https://fidelyzapp.fr'
-    }).catch(err => {
-      logger.error('Échec envoi email bienvenue (non bloquant)', { error: err.message });
-    });
-
-    res.json({
-      success: true,
-      companyId,
-      email,
-      temporaryPassword: tempPassword,
-      loyalty_type: loyalty_type,
-      message: `Entreprise créée avec succès (Mode: ${loyalty_type})`
-    });
-  } catch (err) {
-    await connection.rollback();
-    logger.error('Create company error', { error: err.message });
-    if (err.code === 'ER_DUP_ENTRY') {
-      return res.status(400).json({ error: 'Email déjà utilisé' });
-    }
-    res.status(500).json({ error: 'Erreur serveur' });
-  } finally {
-    connection.release();
-  }
-};
-
 export const suspendCompany = async (req, res) => {
   const { companyId } = req.params;
 
@@ -228,6 +157,21 @@ export const deleteCompany = async (req, res) => {
   const { companyId } = req.params;
 
   try {
+    const [[company]] = await pool.query('SELECT stripe_subscription_id FROM entreprises WHERE id = ?', [companyId]);
+    if (!company) {
+      return res.status(404).json({ error: 'Entreprise non trouvée' });
+    }
+    // Un abonnement encore actif continuerait d'être prélevé : il est résilié avant la suppression.
+    if (company.stripe_subscription_id) {
+      try {
+        await stripe.subscriptions.cancel(company.stripe_subscription_id);
+      } catch (stripeErr) {
+        if (stripeErr.code !== 'resource_missing') {
+          logger.error('Résiliation Stripe impossible avant suppression', { error: stripeErr.message });
+          return res.status(502).json({ error: "Impossible de résilier l'abonnement Stripe : suppression annulée." });
+        }
+      }
+    }
     const [result] = await pool.query(
       'DELETE FROM entreprises WHERE id = ?',
       [companyId]
@@ -248,11 +192,14 @@ export const deleteCompany = async (req, res) => {
 export const updateCompany = async (req, res) => {
   const { companyId } = req.params;
   const { nom, email, prenom, telephone } = req.body;
+  if (typeof nom !== 'string' || !nom.trim() || nom.length > 255 || typeof email !== 'string' || !EMAIL_RE.test(email)) {
+    return res.status(400).json({ error: 'Nom et adresse e-mail valides requis' });
+  }
 
   try {
     const [result] = await pool.query(
       'UPDATE entreprises SET nom = ?, email = ?, prenom = ?, telephone = ? WHERE id = ?',
-      [nom, email, prenom, telephone, companyId]
+      [nom.trim(), email.trim().toLowerCase(), prenom || null, telephone || null, companyId]
     );
 
     if (result.affectedRows === 0) {
@@ -271,7 +218,12 @@ export const updateCompany = async (req, res) => {
 };
 
 export const proLogin = async (req, res) => {
-  const { email, mot_de_passe } = req.body;
+  const { mot_de_passe } = req.body;
+  const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+  if (!email || typeof mot_de_passe !== 'string' || !mot_de_passe) {
+    return res.status(400).json({ error: 'Email et mot de passe requis' });
+  }
+  req.body.email = email;
 
   try {
     const [rows] = await pool.query(
@@ -286,14 +238,13 @@ export const proLogin = async (req, res) => {
 
     const company = rows[0];
 
-    if (company.statut === 'suspendu') {
-      return res.status(403).json({ error: 'Votre compte est suspendu' });
-    }
-
     const isPasswordValid = await bcrypt.compare(mot_de_passe, company.mot_de_passe);
 
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
+    }
+    if (company.statut === 'suspendu') {
+      return res.status(403).json({ error: 'Votre compte est suspendu' });
     }
 
     const token = generateToken(company.id, 'pro');
@@ -305,7 +256,7 @@ export const proLogin = async (req, res) => {
     }
     try {
       await createSession(company.id, deviceFingerprint, deviceName, token, '24h');
-      logger.debug('Session created successfully');
+      await pool.query('UPDATE entreprises SET last_login = NOW() WHERE id = ?', [company.id]).catch(() => {});
     } catch (sessionErr) {
       logger.error('Session creation failed', { error: sessionErr.message });
       return res.status(500).json({ error: 'Unable to create session' });
@@ -350,7 +301,8 @@ export const changePassword = async (req, res) => {
         error: 'Exigences du mot de passe non respectées',
         details: complexityCheck.errors
       });
-    }
+    }
+
     const isSamePassword = await bcrypt.compare(newPassword, company.mot_de_passe);
     if (isSamePassword) {
       return res.status(400).json({
@@ -569,9 +521,10 @@ export const getClients = async (req, res) => {
 
 export const getTransactionHistory = async (req, res) => {
   const empresaId = req.user.id;
-  const { dateFrom, dateTo, clientName, type, page = 1 } = req.query;
+  const { dateFrom, dateTo, clientName, type } = req.query;
+  const page = Math.max(1, parseInt(req.query.page, 10) || 1);
   const limit = 100;
-  const offset = (parseInt(page) - 1) * limit;
+  const offset = (page - 1) * limit;
 
   try {
     let where = 'WHERE th.entreprise_id = ?';
@@ -581,8 +534,8 @@ export const getTransactionHistory = async (req, res) => {
     if (dateTo)   { where += ' AND DATE(th.created_at) <= ?'; params.push(dateTo); }
     if (type)     { where += ' AND th.type = ?'; params.push(type); }
     if (clientName) {
-      where += ' AND CONCAT(c.prenom, " ", c.nom) LIKE ?';
-      params.push(`%${clientName}%`);
+      where += " AND CONCAT(c.prenom, ' ', c.nom) LIKE ?";
+      params.push(`%${String(clientName).slice(0, 100).replace(/[\\%_]/g, '\\$&')}%`);
     }
 
     const [rows] = await pool.query(
@@ -601,7 +554,7 @@ export const getTransactionHistory = async (req, res) => {
       params
     );
 
-    res.json({ transactions: rows, total: countRows[0].total, page: parseInt(page), limit });
+    res.json({ transactions: rows, total: countRows[0].total, page, limit });
   } catch (err) {
     logger.error('getTransactionHistory error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
@@ -654,6 +607,9 @@ export const handleScan = async (req, res) => {
   if (!clientId) {
     return res.status(400).json({ error: 'clientId requis' });
   }
+  if (points_to_add !== undefined && points_to_add !== null && points_to_add !== '' && !isPointsAmount(bodyPoints)) {
+    return res.status(400).json({ error: `Nombre de points invalide (entier entre 0 et ${MAX_POINTS_PER_OPERATION})` });
+  }
 
   try {
     const [clientRows] = await pool.query(
@@ -691,6 +647,7 @@ export const handleScan = async (req, res) => {
         'SELECT points FROM clients WHERE id = ? AND entreprise_id = ? FOR UPDATE',
         [clientId, empresaId]
       );
+      if (!freshClient) throw Object.assign(new Error('Client supprimé'), { statusCode: 404 });
       const currentPoints = Number(freshClient.points) || 0;
       newPoints = currentPoints + pointsToAdd;
       if (maxBalance !== null && maxBalance !== undefined && newPoints > maxBalance) {
@@ -701,10 +658,12 @@ export const handleScan = async (req, res) => {
         'UPDATE clients SET points = ? WHERE id = ? AND entreprise_id = ?',
         [newPoints, clientId, empresaId]
       );
-      await scanConn.query(
-        "INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, description, establishment_id) VALUES (?, ?, ?, 'add_points', ?, ?, ?)",
-        [randomUUID(), clientId, empresaId, pointsToAdd, pointsToAdd + ' point(s) ajouté(s)', establishmentId]
-      );
+      if (pointsToAdd > 0) {
+        await scanConn.query(
+          "INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, description, establishment_id) VALUES (?, ?, ?, 'add_points', ?, ?, ?)",
+          [randomUUID(), clientId, empresaId, pointsToAdd, pointsToAdd + ' point(s) ajouté(s)', establishmentId]
+        );
+      }
       await scanConn.commit();
     } catch (txErr) {
       await scanConn.rollback();
@@ -713,9 +672,11 @@ export const handleScan = async (req, res) => {
       scanConn.release();
     }
 
-    sendLoyaltyUpdateNotification(clientId, empresaId, pointsToAdd, false).catch(e =>
-      logger.warn('Push scan notification failed', e.message)
-    );
+    if (pointsToAdd > 0) {
+      sendLoyaltyUpdateNotification(clientId, empresaId, pointsToAdd).catch(e =>
+        logger.warn('Push scan notification failed', { error: e.message })
+      );
+    }
     res.json({
       success: true,
       clientId,
@@ -724,7 +685,8 @@ export const handleScan = async (req, res) => {
       newPoints: newPoints
     });
   } catch (err) {
-    logger.error('Handle scan error', err);
+    if (err.statusCode === 404) return res.status(404).json({ error: 'Client non trouvé' });
+    logger.error('Handle scan error', { error: err.message });
     res.status(500).json({ error: 'Erreur serveur' });
   }
 };
@@ -777,6 +739,10 @@ export const finalizeFullTransaction = async (req, res) => {
   const { clientId, pointsToAdd, rewardTierId } = req.body;
   const empresaId = req.user.id;
   const establishmentId = await resolveEstablishmentId(req);
+  const requestedPoints = pointsToAdd === undefined || pointsToAdd === null || pointsToAdd === '' ? 0 : Number(pointsToAdd);
+  if (!isPointsAmount(requestedPoints)) {
+    return res.status(400).json({ error: `Nombre de points invalide (entier entre 0 et ${MAX_POINTS_PER_OPERATION})` });
+  }
 
   try {
     const [clientCheck] = await pool.query(
@@ -797,7 +763,8 @@ export const finalizeFullTransaction = async (req, res) => {
         'SELECT id, title, points_required FROM reward_tiers WHERE id = ? AND entreprise_id = ?',
         [rewardTierId, empresaId]
       );
-      if (tierRows.length > 0) tier = tierRows[0];
+      if (tierRows.length === 0) return res.status(404).json({ error: 'Récompense invalide' });
+      tier = tierRows[0];
     }
 
     let currentPoints;
@@ -813,6 +780,7 @@ export const finalizeFullTransaction = async (req, res) => {
         'SELECT points FROM clients WHERE id = ? AND entreprise_id = ? FOR UPDATE',
         [clientId, empresaId]
       );
+      if (!freshClient) throw Object.assign(new Error('Client supprimé'), { statusCode: 404 });
       currentPoints = Number(freshClient.points) || 0;
 
       if (tier) {
@@ -830,7 +798,7 @@ export const finalizeFullTransaction = async (req, res) => {
         }
       }
 
-      let ptsToAdd = Number(pointsToAdd) || 0;
+      let ptsToAdd = requestedPoints;
       if (maxBalance !== null && maxBalance !== undefined && ptsToAdd > 0) {
         const roomLeft = Math.max(0, maxBalance - currentPoints);
         ptsToAdd = Math.min(ptsToAdd, roomLeft);
@@ -861,10 +829,12 @@ export const finalizeFullTransaction = async (req, res) => {
       ftConn.release();
     }
 
-    const { sendLoyaltyUpdateNotification } = await import('../utils/notificationService.js');
-    sendLoyaltyUpdateNotification(clientId, empresaId, totalChange, rewardTierId ? true : false).catch(e =>
-      logger.warn('Push transaction notification failed', e.message)
-    );
+    const added = totalChange + (tier ? tier.points_required : 0);
+    if (tier || added > 0) {
+      sendLoyaltyUpdateNotification(clientId, empresaId, totalChange,
+        tier ? { type: 'redeem', points: tier.points_required, title: tier.title, added } : null
+      ).catch(e => logger.warn('Push transaction notification failed', { error: e.message }));
+    }
 
     res.json({
       success: true,
@@ -873,7 +843,8 @@ export const finalizeFullTransaction = async (req, res) => {
     });
 
   } catch (err) {
-    logger.error('Error in finalizeFullTransaction', err);
+    if (err.statusCode === 404) return res.status(404).json({ error: 'Client non trouvé' });
+    logger.error('Error in finalizeFullTransaction', { error: err.message });
     res.status(500).json({ error: 'Erreur lors de la finalisation de la transaction' });
   }
 };
@@ -884,8 +855,9 @@ export const adjustPoints = async (req, res) => {
   const empresaId = req.user.id;
   const establishmentId = await resolveEstablishmentId(req);
 
-  if (isNaN(Number(adjustment))) {
-    return res.status(400).json({ error: 'Ajustement numérique requis' });
+  const adj = Number(adjustment);
+  if (!Number.isInteger(adj) || adj === 0 || Math.abs(adj) > MAX_POINTS_PER_OPERATION) {
+    return res.status(400).json({ error: `Ajustement invalide (entier non nul, ${MAX_POINTS_PER_OPERATION} maximum)` });
   }
 
   try {
@@ -898,8 +870,8 @@ export const adjustPoints = async (req, res) => {
       return res.status(404).json({ error: 'Client non trouvé ou non autorisé' });
     }
 
-    const adj = Number(adjustment);
     let newPoints;
+    let applied = 0;
     const adjConn = await pool.getConnection();
     try {
       await adjConn.beginTransaction();
@@ -907,7 +879,9 @@ export const adjustPoints = async (req, res) => {
         'SELECT points FROM clients WHERE id = ? AND entreprise_id = ? FOR UPDATE',
         [clientId, empresaId]
       );
+      if (!freshClient) throw Object.assign(new Error('Client supprimé'), { statusCode: 404 });
       newPoints = Math.max(0, Number(freshClient.points || 0) + adj);
+      applied = newPoints - Number(freshClient.points || 0);
       await adjConn.query(
         'UPDATE clients SET points = ? WHERE id = ? AND entreprise_id = ?',
         [newPoints, clientId, empresaId]
@@ -915,9 +889,9 @@ export const adjustPoints = async (req, res) => {
       await adjConn.query(
         "INSERT INTO transaction_history (id, client_id, entreprise_id, type, points_change, description, establishment_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
         [randomUUID(), clientId, empresaId,
-         adj >= 0 ? 'add_points' : 'remove_points',
-         adj,
-         adj >= 0 ? `${adj} point(s) ajouté(s) manuellement` : `${Math.abs(adj)} point(s) retiré(s)`, establishmentId
+         applied >= 0 ? 'add_points' : 'remove_points',
+         applied,
+         applied >= 0 ? `${applied} point(s) ajouté(s) manuellement` : `${Math.abs(applied)} point(s) retiré(s)`, establishmentId
         ]
       );
       await adjConn.commit();
@@ -928,12 +902,15 @@ export const adjustPoints = async (req, res) => {
       adjConn.release();
     }
 
-    sendLoyaltyUpdateNotification(clientId, empresaId, adjustment, false).catch(e =>
-      logger.warn('Push adjust notification failed', e.message)
-    );
+    if (applied !== 0) {
+      sendLoyaltyUpdateNotification(clientId, empresaId, applied).catch(e =>
+        logger.warn('Push adjust notification failed', { error: e.message })
+      );
+    }
 
     res.json({ success: true, newPoints });
   } catch (err) {
+    if (err.statusCode === 404) return res.status(404).json({ error: 'Client non trouvé' });
     logger.error('Adjust points error', { error: err.message, stack: err.stack });
     res.status(500).json({ error: 'Erreur serveur' });
   }
@@ -946,15 +923,20 @@ export const getCompanyInfo = async (req, res) => {
 
   try {
     const [rows] = await pool.query(
-      'SELECT id, nom, email, statut FROM entreprises WHERE id = ?',
+      `SELECT e.id, e.nom, e.statut,
+              (SELECT COALESCE(NULLIF(cc.apple_logo_url, ''), NULLIF(cc.logo_url, ''), NULLIF(cc.google_logo_url, ''))
+               FROM card_customization cc WHERE cc.company_id = e.id ORDER BY cc.updated_at DESC LIMIT 1) AS logo_url
+       FROM entreprises e WHERE e.id = ?`,
       [companyId]
     );
 
-    if (rows.length === 0) {
+    if (rows.length === 0 || rows[0].statut !== 'actif') {
       return res.status(404).json({ error: 'Entreprise non trouvée' });
     }
 
-    res.json(rows[0]);
+    const { logo_url, ...company } = rows[0];
+    const file = logo_url && logo_url.includes('uploads/') ? logo_url.substring(logo_url.indexOf('uploads/')) : null;
+    res.json({ ...company, logo: file ? `/api/${file}` : null });
   } catch (err) {
     logger.error('Get company info error', { error: err.message, stack: err.stack });
     res.status(500).json({ error: 'Erreur serveur' });
@@ -981,11 +963,12 @@ export const registerClientAndGeneratePass = async (req, res) => {
       (email && (typeof email !== 'string' || email.length > 100))) {
     return res.status(400).json({ error: 'Données invalides (longueur maximale dépassée)' });
   }
-  if (!/^\+?[0-9]{8,15}$/.test(String(telephone).replace(/[ .-]/g, ''))) {
+  const phone = normalizePhone(telephone);
+  if (!/^\+?[0-9]{8,15}$/.test(phone)) {
     return res.status(400).json({ error: 'Numéro de téléphone invalide' });
   }
 
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (email && !EMAIL_RE.test(email)) {
     return res.status(400).json({ error: 'Adresse email invalide' });
   }
 
@@ -1005,10 +988,10 @@ export const registerClientAndGeneratePass = async (req, res) => {
 
     const [dupRows] = await pool.query(
       'SELECT id FROM clients WHERE telephone = ? AND entreprise_id = ?',
-      [telephone, entrepriseId]
+      [phone, entrepriseId]
     );
     if (dupRows.length > 0) {
-      return res.status(409).json({ error: 'Numéro déjà inscrit ici.' });
+      return res.status(409).json({ error: 'Ce numéro est déjà inscrit dans ce programme de fidélité.' });
     }
 
     const clientId = randomUUID();
@@ -1016,10 +999,10 @@ export const registerClientAndGeneratePass = async (req, res) => {
     const marketingOptinValue = marketing_optin === true || marketing_optin === 'true' ? 1 : 0;
     await withClientQuota(entrepriseId, (conn) => conn.query(
       'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin, establishment_id) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?)',
-      [clientId, entrepriseId, nom, prenom, telephone, email, type_wallet, marketingOptinValue, clientEstablishment]
+      [clientId, entrepriseId, nom.trim(), prenom.trim(), phone, email ? email.trim().toLowerCase() : null, type_wallet, marketingOptinValue, clientEstablishment]
     ));
 
-    logger.info(`✅ Client créé avec succès: ${clientId} (${prenom} ${nom}), marketing_optin=${marketingOptinValue}`);
+    logger.info(`✅ Client inscrit: ${clientId}, marketing_optin=${marketingOptinValue}`);
     return res.status(201).json({
       success: true,
       clientId: clientId,
@@ -1029,6 +1012,9 @@ export const registerClientAndGeneratePass = async (req, res) => {
     if (err instanceof FreeLimitError) {
       return res.status(403).json({ error: "Les inscriptions sont momentanément fermées pour ce commerce.", code: 'registrations_closed' });
     }
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ error: 'Ce numéro est déjà inscrit dans ce programme de fidélité.' });
+    }
     logger.error('Erreur lors de la création du client (SQL/Logic):', { error: err.message });
     return res.status(500).json({ error: 'Erreur lors de la création de la carte' });
   }
@@ -1037,16 +1023,19 @@ export const registerClientAndGeneratePass = async (req, res) => {
 export const createClientAndInvite = async (req, res) => {
   const entrepriseId = req.user.id; // always from JWT, never from body
   const { nom, prenom, telephone, email, type_wallet } = req.body;
+  // Le consentement marketing doit être recueilli auprès du client : jamais coché par défaut.
+  const marketingOptin = req.body.marketing_optin === true || req.body.marketing_optin === 'true' ? 1 : 0;
 
   if (!nom || !prenom || !telephone || !email || !type_wallet) {
     return res.status(400).json({ error: 'Tous les champs sont requis (nom, prénom, téléphone, email, type_wallet)' });
   }
+  const phone = normalizePhone(telephone);
   if (typeof nom !== 'string' || nom.length > 50 ||
       typeof prenom !== 'string' || prenom.length > 50 ||
-      typeof telephone !== 'string' || telephone.length < 10 || telephone.length > 14) {
-    return res.status(400).json({ error: 'Données invalides (longueur maximale dépassée)' });
+      !/^\+?[0-9]{8,15}$/.test(phone)) {
+    return res.status(400).json({ error: 'Données invalides (nom, prénom ou téléphone)' });
   }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 100) {
+  if (typeof email !== 'string' || !EMAIL_RE.test(email) || email.length > 100) {
     return res.status(400).json({ error: 'Adresse email invalide' });
   }
   if (!['apple', 'google'].includes(type_wallet)) {
@@ -1065,7 +1054,7 @@ export const createClientAndInvite = async (req, res) => {
 
     const [dupPhone] = await pool.query(
       'SELECT id FROM clients WHERE telephone = ? AND entreprise_id = ?',
-      [telephone, entrepriseId]
+      [phone, entrepriseId]
     );
     if (dupPhone.length > 0) {
       return res.status(409).json({ error: 'Ce numéro de téléphone est déjà inscrit.' });
@@ -1081,8 +1070,8 @@ export const createClientAndInvite = async (req, res) => {
 
     const clientId = randomUUID();
     await withClientQuota(entrepriseId, async (conn) => conn.query(
-      'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin, establishment_id) VALUES (?, ?, ?, ?, ?, ?, 0, ?, 1, ?)',
-      [clientId, entrepriseId, nom, prenom, telephone, email, type_wallet, await resolveEstablishmentId(req)]
+      'INSERT INTO clients (id, entreprise_id, nom, prenom, telephone, email, points, type_wallet, marketing_optin, establishment_id) VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?, ?)',
+      [clientId, entrepriseId, nom.trim(), prenom.trim(), phone, email.trim().toLowerCase(), type_wallet, marketingOptin, await resolveEstablishmentId(req)]
     ));
 
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
@@ -1100,6 +1089,9 @@ export const createClientAndInvite = async (req, res) => {
   } catch (err) {
     if (err instanceof FreeLimitError) {
       return res.status(403).json({ error: `Limite de ${FREE_CLIENT_LIMIT} clients atteinte avec l'offre gratuite : passez à Pro ou supprimez des clients.`, code: 'free_limit_reached', status: 'limit_exceeded' });
+    }
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ error: 'Ce numéro de téléphone est déjà inscrit.' });
     }
     logger.error('Erreur createClientAndInvite:', { error: err.message });
     return res.status(500).json({ error: 'Erreur lors de la création du client' });
@@ -1225,208 +1217,115 @@ export const getCardCustomization = async (req, res) => {
   }
 };
 
+// Champs de personnalisation acceptés : [nom, type, longueur max]. Les autres sont ignorés.
+// color : #RRGGBB ou rgb(...) ; image : fichier téléversé (uploads/...) ; url : lien http(s) ; text : texte libre.
+const CUSTOMIZATION_FIELDS = [
+  ['primary_color', 'color'], ['text_color', 'color'], ['accent_color', 'color'], ['secondary_color', 'color'],
+  ['logo_url', 'image'], ['icon_url', 'image'], ['strip_image_url', 'image'],
+  ['logo_text', 'text', 40], ['card_subtitle', 'text', 255], ['card_title', 'text', 255],
+  ['back_fields_info', 'text', 2000], ['back_fields_terms', 'text', 2000], ['back_fields_website', 'text', 255],
+  ['back_fields_phone', 'text', 30], ['back_fields_address', 'text', 255],
+  ['back_fields_instagram', 'text', 255], ['back_fields_facebook', 'text', 255], ['back_fields_tiktok', 'text', 255],
+  ['apple_organization_name', 'text', 100], ['apple_pass_description', 'text', 255],
+  ['apple_background_color', 'color'], ['apple_text_color', 'color'], ['apple_label_color', 'color'],
+  ['apple_logo_url', 'image'], ['apple_icon_url', 'image'], ['apple_strip_image_url', 'image'],
+  ['latitude', 'lat'], ['longitude', 'lng'], ['relevant_text', 'text', 100],
+  ['google_primary_color', 'color'], ['google_text_color', 'color'],
+  ['google_logo_url', 'image'], ['google_hero_image_url', 'image'],
+  ['google_card_title', 'text', 255], ['google_card_subtitle', 'text', 255],
+  ['google_back_phone', 'text', 30], ['google_back_website', 'text', 255], ['google_back_address', 'text', 255],
+  ['google_back_instagram', 'text', 255], ['google_back_facebook', 'text', 255], ['google_back_tiktok', 'text', 255],
+  ['apple_review_url', 'url', 500], ['google_review_url', 'url', 500]
+];
+const DEFAULT_COLORS = { primary_color: '#1f2937', text_color: '#ffffff', accent_color: '#3b82f6', secondary_color: '#374151', google_primary_color: '#1f2937', google_text_color: '#ffffff' };
+const COLOR_RE = /^(#[0-9a-f]{6}|rgb\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*\))$/i;
+const IMAGE_RE = /^(api\/)?uploads\/[\w.-]+\.(png|jpe?g|webp)$/i;
+
+const cleanField = (name, type, max, value) => {
+  if (value === undefined || value === null) return { value: DEFAULT_COLORS[name] ?? null };
+  const v = String(value).trim();
+  if (v === '') return { value: DEFAULT_COLORS[name] ?? (type === 'text' && ['card_title', 'card_subtitle', 'google_card_title', 'google_card_subtitle'].includes(name) ? '' : null) };
+  switch (type) {
+    case 'color':
+      return COLOR_RE.test(v) ? { value: v } : { error: `Couleur invalide (${name})` };
+    case 'image': {
+      const local = v.includes('uploads/') ? v.substring(v.indexOf('uploads/')) : v;
+      return IMAGE_RE.test(local) ? { value: local } : { error: `Image invalide (${name}) : utilisez le bouton de téléversement` };
+    }
+    case 'url': {
+      const link = /^https?:\/\//i.test(v) ? v : `https://${v}`;
+      return /^https?:\/\/[^\s<>"']+\.[^\s<>"']+$/i.test(link) && link.length <= max ? { value: link } : { error: 'Lien invalide (exemple : https://g.page/r/...)' };
+    }
+    case 'lat':
+    case 'lng': {
+      const n = Number(v);
+      const limit = type === 'lat' ? 90 : 180;
+      return Number.isFinite(n) && Math.abs(n) <= limit ? { value: n } : { error: 'Coordonnées GPS invalides' };
+    }
+    default:
+      return { value: v.slice(0, max) };
+  }
+};
+
+// Emplacements GPS (10 au maximum pour Apple Wallet) : { latitude, longitude, relevantText }.
+const cleanLocations = (locations) => {
+  if (!Array.isArray(locations)) return null;
+  const list = locations.slice(0, 10).map((l) => ({
+    latitude: Number(l?.latitude),
+    longitude: Number(l?.longitude),
+    relevantText: typeof l?.relevantText === 'string' ? l.relevantText.trim().slice(0, 100) : '',
+    ...(typeof l?.name === 'string' && { name: l.name.trim().slice(0, 100) }),
+    ...(typeof l?.address === 'string' && { address: l.address.trim().slice(0, 255) })
+  })).filter((l) => Number.isFinite(l.latitude) && Number.isFinite(l.longitude) && Math.abs(l.latitude) <= 90 && Math.abs(l.longitude) <= 180);
+  return JSON.stringify(list);
+};
+
+/**
+ * PUT /api/pro/card-customization/:empresaId?loyaltyType=points
+ * La mise à jour des cartes déjà installées est silencieuse : les messages aux clients passent par les campagnes.
+ */
 export const updateCardCustomization = async (req, res) => {
   const { empresaId } = req.params;
   const { loyaltyType } = req.query;
-  const {
-    primary_color,
-    text_color,
-    accent_color,
-    secondary_color,
-    logo_url,
-    icon_url,
-    strip_image_url,
-    logo_text,
-    card_subtitle,
-    card_title,
-    back_fields_info,
-    back_fields_terms,
-    back_fields_website,
-    back_fields_phone,
-    back_fields_address,
-    back_fields_instagram,
-    back_fields_facebook,
-    back_fields_tiktok,
-    apple_organization_name,
-    apple_pass_description,
-    apple_background_color,
-    apple_text_color,
-    apple_label_color,
-    apple_logo_url,
-    apple_icon_url,
-    apple_strip_image_url,
-    latitude,
-    longitude,
-    relevant_text,
-    google_primary_color,
-    google_text_color,
-    google_logo_url,
-    google_hero_image_url,
-    google_card_title,
-    google_card_subtitle,
-    google_back_phone,
-    google_back_website,
-    google_back_address,
-    google_back_instagram,
-    google_back_facebook,
-    google_back_tiktok,
-    apple_review_url,
-    google_review_url,
-    locations
-  } = req.body;
 
   try {
     if (empresaId !== req.user.id) {
       return res.status(403).json({ error: 'Accès non autorisé' });
     }
-
     if (!loyaltyType || !['points', 'stamps'].includes(loyaltyType)) {
       return res.status(400).json({ error: 'loyaltyType invalide' });
     }
 
+    const values = {};
+    for (const [name, type, max] of CUSTOMIZATION_FIELDS) {
+      const { value, error } = cleanField(name, type, max, req.body[name]);
+      if (error) return res.status(400).json({ error });
+      values[name] = value;
+    }
+    values.locations = cleanLocations(req.body.locations);
+
+    const columns = Object.keys(values);
     const [existing] = await pool.query(
-      'SELECT id, relevant_text AS prev_relevant_text FROM card_customization WHERE company_id = ? AND loyalty_type = ?',
+      'SELECT id FROM card_customization WHERE company_id = ? AND loyalty_type = ?',
       [empresaId, loyaltyType]
     );
 
     if (existing.length === 0) {
-      const customizationId = randomUUID();
       await pool.query(
-        `INSERT INTO card_customization 
-         (id, company_id, loyalty_type, primary_color, text_color, accent_color, secondary_color,
-          logo_url, icon_url, strip_image_url, logo_text, card_subtitle, card_title,
-          back_fields_info, back_fields_terms, back_fields_website, 
-          back_fields_phone, back_fields_address, back_fields_instagram, back_fields_facebook, back_fields_tiktok,
-          apple_organization_name, apple_pass_description,
-          apple_background_color, apple_text_color, apple_label_color, apple_logo_url, apple_icon_url, apple_strip_image_url,
-          latitude, longitude, relevant_text,
-          google_primary_color, google_text_color, google_logo_url,
-          google_hero_image_url, google_card_title, google_card_subtitle,
-          google_back_phone, google_back_website, google_back_address,
-          google_back_instagram, google_back_facebook, google_back_tiktok,
-          apple_review_url, google_review_url,
-          locations)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          customizationId, empresaId, loyaltyType,
-          primary_color || '#1f2937', text_color || '#ffffff', accent_color || '#3b82f6', secondary_color || '#374151',
-          logo_url || null, icon_url || null, strip_image_url || null, logo_text || null,
-          card_subtitle || '', card_title || '',
-          back_fields_info || null, back_fields_terms || null, back_fields_website || null,
-          back_fields_phone || null, back_fields_address || null, back_fields_instagram || null, back_fields_facebook || null, back_fields_tiktok || null,
-          apple_organization_name || null, apple_pass_description || null,
-          apple_background_color || null, apple_text_color || null, apple_label_color || null,
-          apple_logo_url || null, apple_icon_url || null, apple_strip_image_url || null,
-          latitude || null, longitude || null, relevant_text || null,
-          google_primary_color || '#1f2937', google_text_color || '#ffffff', google_logo_url || null,
-          google_hero_image_url || null, google_card_title || '', google_card_subtitle || '',
-          google_back_phone || null, google_back_website || null, google_back_address || null,
-          google_back_instagram || null, google_back_facebook || null, google_back_tiktok || null,
-          apple_review_url || null, google_review_url || null,
-          Array.isArray(locations) ? JSON.stringify(locations.slice(0, 50)) : null
-        ]
+        `INSERT INTO card_customization (id, company_id, loyalty_type, ${columns.join(', ')})
+         VALUES (?, ?, ?, ${columns.map(() => '?').join(', ')})`,
+        [randomUUID(), empresaId, loyaltyType, ...columns.map((c) => values[c])]
       );
     } else {
       await pool.query(
-        `UPDATE card_customization SET 
-         primary_color = ?, text_color = ?, accent_color = ?, secondary_color = ?,
-         logo_url = ?, icon_url = ?, strip_image_url = ?, logo_text = ?, 
-         card_subtitle = ?, card_title = ?, 
-         back_fields_info = ?, back_fields_terms = ?, back_fields_website = ?,
-         back_fields_phone = ?, back_fields_address = ?, back_fields_instagram = ?, back_fields_facebook = ?, back_fields_tiktok = ?,
-         apple_organization_name = ?, apple_pass_description = ?,
-         apple_background_color = ?, apple_text_color = ?, apple_label_color = ?,
-         apple_logo_url = ?, apple_icon_url = ?, apple_strip_image_url = ?,
-         latitude = ?, longitude = ?, relevant_text = ?,
-         google_primary_color = ?, google_text_color = ?, google_logo_url = ?,
-         google_hero_image_url = ?, google_card_title = ?, google_card_subtitle = ?,
-         google_back_phone = ?, google_back_website = ?, google_back_address = ?,
-         google_back_instagram = ?, google_back_facebook = ?, google_back_tiktok = ?,
-         apple_review_url = ?, google_review_url = ?,
-         locations = ?, updated_at = NOW()
+        `UPDATE card_customization SET ${columns.map((c) => `${c} = ?`).join(', ')}, updated_at = NOW()
          WHERE company_id = ? AND loyalty_type = ?`,
-        [
-          primary_color || '#1f2937',
-          text_color || '#ffffff',
-          accent_color || '#3b82f6',
-          secondary_color || '#374151',
-          logo_url || null,
-          icon_url || null,
-          strip_image_url || null,
-          logo_text || null,
-          card_subtitle || '',
-          card_title || '',
-          back_fields_info || null,
-          back_fields_terms || null,
-          back_fields_website || null,
-          back_fields_phone || null,
-          back_fields_address || null,
-          back_fields_instagram || null,
-          back_fields_facebook || null,
-          back_fields_tiktok || null,
-          apple_organization_name || null,
-          apple_pass_description || null,
-          apple_background_color || null,
-          apple_text_color || null,
-          apple_label_color || null,
-          apple_logo_url || null,
-          apple_icon_url || null,
-          apple_strip_image_url || null,
-          latitude || null,
-          longitude || null,
-          relevant_text || null,
-          google_primary_color || '#1f2937',
-          google_text_color || '#ffffff',
-          google_logo_url || null,
-          google_hero_image_url || null,
-          google_card_title || '',
-          google_card_subtitle || '',
-          google_back_phone || null,
-          google_back_website || null,
-          google_back_address || null,
-          google_back_instagram || null,
-          google_back_facebook || null,
-          google_back_tiktok || null,
-          apple_review_url || null,
-          google_review_url || null,
-          Array.isArray(locations) ? JSON.stringify(locations.slice(0, 50)) : null,
-          empresaId,
-          loyaltyType
-        ]
+        [...columns.map((c) => values[c]), empresaId, loyaltyType]
       );
     }
-    const prevOffer = existing[0]?.prev_relevant_text || '';
-    if (relevant_text && relevant_text.trim() !== prevOffer) {
-      const offerText = relevant_text.trim();
-      const [pushRegs] = await pool.query(
-        `SELECT DISTINCT r.push_token
-         FROM apple_pass_registrations r
-         JOIN wallet_cards w ON r.pass_serial_number = w.pass_serial_number
-         WHERE w.company_id = ?`,
-        [empresaId]
-      );
-      if (pushRegs.length > 0) {
-        apnService.sendBulkAlertNotifications(
-          pushRegs.map(r => r.push_token),
-          'Nouvelle offre !',
-          offerText
-        ).catch(err => logger.error('Offer push Apple failed', err.message));
-      }
-      const [googleWallets] = await pool.query(
-        `SELECT client_id FROM wallet_cards WHERE company_id = ? AND pass_serial_number LIKE 'GOOGLE_%'`,
-        [empresaId]
-      );
-      if (googleWallets.length > 0) {
-        Promise.all(
-          googleWallets.map(w =>
-            googleWalletGenerator.addMessageToObject(w.client_id, 'Nouvelle offre !', offerText)
-              .catch(err => logger.error(`Offer push Google client ${w.client_id} failed`, err.message))
-          )
-        ).catch(() => {});
-      }
-    }
+
     walletSyncService.syncCompanyWallets(empresaId).catch(err =>
-      logger.error('Global synchronization failed after customization update', err)
+      logger.error('Global synchronization failed after customization update', { error: err.message })
     );
 
     res.json({
@@ -1439,63 +1338,26 @@ export const updateCardCustomization = async (req, res) => {
   }
 };
 
+/**
+ * PATCH /api/pro/card-customization/:empresaId/gps — emplacements et texte de proximité (écran verrouillé).
+ */
 export const updateCardCustomizationGPS = async (req, res) => {
   const empresaId = req.params.empresaId;
-  const { relevant_text, locations } = req.body;
-  const loyaltyType = req.query.loyaltyType || 'points';
+  const loyaltyType = ['points', 'stamps'].includes(req.query.loyaltyType) ? req.query.loyaltyType : 'points';
 
   if (empresaId !== req.user.id) {
     return res.status(403).json({ error: 'Accès non autorisé' });
   }
+  const relevant = cleanField('relevant_text', 'text', 100, req.body.relevant_text).value;
 
   try {
-    const [existing] = await pool.query(
-      'SELECT relevant_text AS prev_relevant_text FROM card_customization WHERE company_id = ? AND loyalty_type = ?',
-      [empresaId, loyaltyType]
-    );
-
     await pool.query(
       'UPDATE card_customization SET relevant_text = ?, locations = ?, updated_at = NOW() WHERE company_id = ? AND loyalty_type = ?',
-      [
-        relevant_text || null,
-        Array.isArray(locations) ? JSON.stringify(locations.slice(0, 50)) : null,
-        empresaId,
-        loyaltyType
-      ]
+      [relevant, cleanLocations(req.body.locations), empresaId, loyaltyType]
     );
 
-    const prevOffer = existing[0]?.prev_relevant_text || '';
-    if (relevant_text && relevant_text.trim() !== prevOffer) {
-      const offerText = relevant_text.trim();
-
-      const [pushRegs] = await pool.query(
-        `SELECT DISTINCT r.push_token
-         FROM apple_pass_registrations r
-         JOIN wallet_cards w ON r.pass_serial_number = w.pass_serial_number
-         WHERE w.company_id = ?`,
-        [empresaId]
-      );
-      if (pushRegs.length > 0) {
-        apnService.sendBulkAlertNotifications(pushRegs.map(r => r.push_token), 'Nouvelle offre !', offerText)
-          .catch(err => logger.error('Offer push Apple failed', err.message));
-      }
-
-      const [googleWallets] = await pool.query(
-        `SELECT client_id FROM wallet_cards WHERE company_id = ? AND pass_serial_number LIKE 'GOOGLE_%'`,
-        [empresaId]
-      );
-      if (googleWallets.length > 0) {
-        Promise.all(
-          googleWallets.map(w =>
-            googleWalletGenerator.addMessageToObject(w.client_id, 'Nouvelle offre !', offerText)
-              .catch(err => logger.error(`Offer push Google client ${w.client_id} failed`, err.message))
-          )
-        ).catch(() => {});
-      }
-    }
-
     walletSyncService.syncCompanyWallets(empresaId).catch(err =>
-      logger.error('Sync failed after GPS update', err)
+      logger.error('Sync failed after GPS update', { error: err.message })
     );
 
     res.json({ success: true });
@@ -1506,44 +1368,42 @@ export const updateCardCustomizationGPS = async (req, res) => {
 };
 
 export const uploadLogo = async (req, res) => {
-  const { imageType, platform } = req.query; // 'logo', 'icon', 'strip', 'hero' + 'apple'/'google'
+  const { imageType, platform } = req.query; // 'logo', 'icon', 'strip', 'hero', 'notification_icon' + 'apple'/'google'
+  const tempPath = req.file?.path;
 
   try {
     if (!req.file) {
-      return res.status(400).json({ error: 'Aucun fichier uploadé' });
+      return res.status(400).json({ error: 'Aucun fichier envoyé' });
     }
 
-    const tempPath = req.file.path;
-    const finalFilename = req.file.filename + '-resized.png';
-    const finalPath = path.join(req.file.destination, finalFilename);
-    let resizeOpts = { height: 50, width: 160, fit: 'inside' };
-
+    let resizeOpts = { height: 150, width: 480, fit: 'inside' }; // logo Apple (@3x)
     if (platform === 'google') {
       if (imageType === 'logo') {
         resizeOpts = { width: 660, height: 660, fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 0 } };
       } else if (imageType === 'hero') {
         resizeOpts = { width: 1032, height: 336, fit: 'cover' };
       }
-    } else {
-      if (imageType === 'icon' || imageType === 'notification_icon') {
-        resizeOpts = { width: 58, height: 58, fit: 'cover' }; // @2x size for clarity
-      } else if (imageType === 'strip') {
-        resizeOpts = { width: 375, height: 123, fit: 'cover' };
-      }
+    } else if (imageType === 'icon' || imageType === 'notification_icon') {
+      resizeOpts = { width: 87, height: 87, fit: 'cover' };
+    } else if (imageType === 'strip') {
+      resizeOpts = { width: 1125, height: 369, fit: 'cover' };
     }
-    await sharp(tempPath)
-      .rotate() // Gère l'orientation automatique (photos smartphone)
-      .resize(resizeOpts) // On a retiré withoutEnlargement pour forcer la taille minimale
+
+    // Le fichier final est toujours un PNG ré-encodé par sharp (un fichier qui n'est pas une image est refusé).
+    const finalFilename = `${req.user.id}-${Date.now()}-${randomBytes(4).toString('hex')}.png`;
+    const finalPath = path.join(req.file.destination, finalFilename);
+    await sharp(tempPath, { limitInputPixels: 40_000_000 })
+      .rotate()
+      .resize(resizeOpts)
       .png()
       .toFile(finalPath);
 
-    fs.unlinkSync(tempPath);
-    const fileUrl = `uploads/${finalFilename}`;
-
-    res.json({ success: true, url: fileUrl });
+    res.json({ success: true, url: `uploads/${finalFilename}` });
   } catch (err) {
-    logger.error('Upload image error', { error: err.message });
-    res.status(500).json({ error: 'Erreur serveur' });
+    logger.warn('Upload image refusé', { error: err.message });
+    res.status(400).json({ error: "Ce fichier n'est pas une image valide (PNG, JPEG ou WebP)." });
+  } finally {
+    if (tempPath) fs.promises.unlink(tempPath).catch(() => {});
   }
 };
 
@@ -1551,6 +1411,9 @@ export const redeemReward = async (req, res) => {
   const { clientId, rewardTierId } = req.body;
   const empresaId = req.user.id;
   const establishmentId = await resolveEstablishmentId(req);
+  if (!clientId || !rewardTierId) {
+    return res.status(400).json({ error: 'clientId et rewardTierId requis' });
+  }
   try {
     const [tiers] = await pool.query('SELECT * FROM reward_tiers WHERE id = ? AND entreprise_id = ?', [rewardTierId, empresaId]);
     if (tiers.length === 0) return res.status(404).json({ error: 'Récompense invalide' });
@@ -1586,9 +1449,9 @@ export const redeemReward = async (req, res) => {
       conn.release();
     }
 
-    sendLoyaltyUpdateNotification(clientId, empresaId, -tier.points_required, true).catch(pushErr =>
-      logger.warn('Push redeem notification failed', pushErr.message)
-    );
+    sendLoyaltyUpdateNotification(clientId, empresaId, -tier.points_required,
+      { type: 'redeem', points: tier.points_required, title: tier.title }
+    ).catch(pushErr => logger.warn('Push redeem notification failed', { error: pushErr.message }));
 
     res.json({ success: true, message: 'Cadeau validé ! (-' + tier.points_required + ' pts)', newPoints });
   } catch (err) {
@@ -1598,42 +1461,33 @@ export const redeemReward = async (req, res) => {
 };
 
 /**
- * Demande de réinitialisation de mot de passe
+ * Demande de réinitialisation de mot de passe (propriétaire du compte).
+ * Réponse identique que l'adresse existe ou non ; seul le hachage du jeton est stocké.
  */
 export const forgotPassword = async (req, res) => {
-  const { email } = req.body;
-
+  const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+  const genericResponse = {
+    success: true,
+    message: 'Si cet email est enregistré, vous recevrez un lien de réinitialisation sous peu.'
+  };
   if (!email) {
     return res.status(400).json({ error: 'Email requis' });
   }
 
   try {
-    const [rows] = await pool.query(
-      'SELECT id, nom FROM entreprises WHERE email = ?',
-      [email]
-    );
+    const [rows] = await pool.query("SELECT id FROM entreprises WHERE email = ? AND statut = 'actif'", [email]);
+    if (rows.length === 0) return res.json(genericResponse);
 
-    if (rows.length === 0) {
-      return res.json({
-        success: true,
-        message: 'Si cet email est enregistré, vous recevrez un lien de réinitialisation sous peu.'
-      });
-    }
     const token = crypto.randomBytes(32).toString('hex');
-    const expiresAt = new Date(Date.now() + 3600000); // 1 heure de validité
+    const expiresAt = new Date(Date.now() + 3600000); // 1 heure
     await pool.query('DELETE FROM password_resets WHERE email = ?', [email]);
-    await pool.query(
-      'INSERT INTO password_resets (email, token, expires_at) VALUES (?, ?, ?)',
-      [email, token, expiresAt]
-    );
-    const frontendUrl = process.env.FRONTEND_URL || 'https://fidelyzapp.fr';
-    const resetUrl = `${frontendUrl}/password-recovery?token=${token}`;
-    await emailService.sendPasswordResetEmail(email, resetUrl);
+    await pool.query('INSERT INTO password_resets (email, token, expires_at) VALUES (?, ?, ?)', [email, sha256(token), expiresAt]);
 
-    res.json({
-      success: true,
-      message: 'Si cet email est enregistré, vous recevrez un lien de réinitialisation sous peu.'
-    });
+    const frontendUrl = (process.env.FRONTEND_URL || 'https://fidelyzapp.fr').replace(/\/$/, '');
+    emailService.sendPasswordResetEmail(email, `${frontendUrl}/password-recovery?token=${token}`)
+      .catch((err) => logger.error('Envoi e-mail de réinitialisation échoué', { error: err.message }));
+
+    res.json(genericResponse);
   } catch (err) {
     logger.error('Forgot password error', { error: err.message });
     res.status(500).json({ error: 'Erreur lors de la demande de réinitialisation' });
@@ -1641,59 +1495,46 @@ export const forgotPassword = async (req, res) => {
 };
 
 /**
- * Exécution de la réinitialisation de mot de passe
+ * Exécution de la réinitialisation de mot de passe.
  */
 export const resetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
 
-  if (!token || !newPassword) {
-    return res.status(400).json({ error: 'Token et nouveau mot de passe requis' });
+  if (typeof token !== 'string' || !/^[a-f0-9]{64}$/.test(token) || typeof newPassword !== 'string') {
+    return res.status(400).json({ error: 'Lien invalide ou expiré' });
+  }
+
+  // Le mot de passe est vérifié AVANT de consommer le jeton : une erreur de saisie ne grille pas le lien.
+  const complexityCheck = validatePassword(newPassword);
+  if (!complexityCheck.isValid) {
+    return res.status(400).json({ error: 'Exigences du mot de passe non respectées', details: complexityCheck.errors });
   }
 
   try {
+    const tokenHash = sha256(token);
     const [resetRows] = await pool.query(
       'SELECT email FROM password_resets WHERE token = ? AND expires_at > NOW()',
-      [token]
+      [tokenHash]
     );
-
     if (resetRows.length === 0) {
-      return res.status(400).json({ error: 'Jeton invalide ou expiré' });
+      return res.status(400).json({ error: 'Lien invalide ou expiré' });
     }
-
     const email = resetRows[0].email;
 
-    const [deleteResult] = await pool.query(
-      'DELETE FROM password_resets WHERE token = ? AND expires_at > NOW()',
-      [token]
-    );
-
+    const [deleteResult] = await pool.query('DELETE FROM password_resets WHERE token = ?', [tokenHash]);
     if (deleteResult.affectedRows === 0) {
-      return res.status(400).json({ error: 'Jeton invalide ou expiré' });
-    }
-
-    const complexityCheck = validatePassword(newPassword);
-    if (!complexityCheck.isValid) {
-      return res.status(400).json({ error: 'Exigences du mot de passe non respectées', details: complexityCheck.errors });
+      return res.status(400).json({ error: 'Lien invalide ou expiré' });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-
     await pool.query(
-      'UPDATE entreprises SET mot_de_passe = ?, updated_at = NOW() WHERE email = ?',
+      'UPDATE entreprises SET mot_de_passe = ?, must_change_password = 0, temporary_password = NULL, updated_at = NOW() WHERE email = ?',
       [hashedPassword, email]
     );
+    await pool.query('DELETE FROM sessions WHERE entreprise_id = (SELECT id FROM entreprises WHERE email = ?)', [email]);
 
-    await pool.query(
-      'DELETE FROM sessions WHERE entreprise_id = (SELECT id FROM entreprises WHERE email = ?)',
-      [email]
-    );
-
-    logger.info(`✅ Mot de passe réinitialisé avec succès pour ${email}`);
-
-    res.json({
-      success: true,
-      message: 'Votre mot de passe a été mis à jour avec succès.'
-    });
+    logger.info('Mot de passe réinitialisé');
+    res.json({ success: true, message: 'Votre mot de passe a été mis à jour avec succès.' });
   } catch (err) {
     logger.error('Reset password error', { error: err.message });
     res.status(500).json({ error: 'Erreur lors de la réinitialisation' });

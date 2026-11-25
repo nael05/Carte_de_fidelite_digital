@@ -622,7 +622,7 @@ const PLANS = [
   },
 ]
 
-const eur = (n) => Number(n).toLocaleString('fr-FR', { maximumFractionDigits: 2 })
+const eur = (n) => Number(n).toLocaleString('fr-FR', { minimumFractionDigits: Number.isInteger(Number(n)) ? 0 : 2, maximumFractionDigits: 2 })
 
 /* ═══════════════════ HOME ═══════════════════ */
 export default function Home() {
@@ -882,10 +882,10 @@ export default function Home() {
                 <div className="plan-price">
                   <span className="plan-amt">{eur(shown)}</span>
                   <span className="plan-cur">€</span>
-                  <span className="plan-per">/ mois</span>
+                  <span className="plan-per">{paid ? 'TTC / mois' : '/ mois'}</span>
                 </div>
                 <p className="plan-ann">
-                  {!paid ? 'Gratuit, pour toujours' : annual ? `Soit ${eur(yearly)} € facturés par an` : 'Facturé mensuellement'}
+                  {!paid ? 'Gratuit, pour toujours' : annual ? `Soit ${eur(yearly)} € TTC facturés par an` : 'Facturé mensuellement, sans engagement'}
                 </p>
                 <button className={`fz-btn plan-cta${p.featured ? '' : ' ghost'}`} onClick={() => navigate(`/pro/signup?tier=${p.tier}&plan=${annual ? 'yearly' : 'monthly'}`)}>
                   {p.cta}

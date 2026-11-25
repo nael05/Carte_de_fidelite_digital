@@ -10,10 +10,13 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import logger from './logger.js';
-import axios from 'axios';
+import sharp from 'sharp';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Échappement des valeurs insérées dans les liens HTML (attributedValue) du dos de la carte.
+const escHtml = (v) => String(v).replace(/&/g, '&amp;').replace(/'/g, '&#39;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 export class PassGenerator {
   constructor() {
@@ -28,7 +31,8 @@ export class PassGenerator {
       if (this.configLoaded) return true;
 
       this.certPath = process.env.APPLE_CERT_PATH;
-      this.keyPath = process.env.APPLE_KEY_PATH || this.certPath;
+      this.keyPath = process.env.APPLE_KEY_PATH || this.certPath;
+
       if (this.certPath && !path.isAbsolute(this.certPath)) {
         this.certPath = path.resolve(__dirname, '..', this.certPath);
       }
@@ -39,7 +43,8 @@ export class PassGenerator {
       this.certPassword = process.env.APPLE_CERT_PASSWORD || '';
       this.teamId = process.env.APPLE_TEAM_ID;
       this.passTypeId = process.env.APPLE_PASS_TYPE_ID;
-      this.webserviceUrl = process.env.APPLE_WALLET_WEBSERVICE_URL;
+      this.webserviceUrl = process.env.APPLE_WALLET_WEBSERVICE_URL;
+
       if (typeof this.webserviceUrl === 'string' && this.webserviceUrl.endsWith('/')) {
         this.webserviceUrl = this.webserviceUrl.slice(0, -1);
       }
@@ -92,35 +97,32 @@ export class PassGenerator {
    * Helper pour obtenir le buffer d'une image (URL ou disque local)
    */
   async fetchImageBuffer(urlOrPath) {
-    if (!urlOrPath || typeof urlOrPath !== 'string') return null;
-
-    try {
-      const isLocalUpload = urlOrPath.includes('uploads/');
-      if (isLocalUpload) {
-        const cleanPath = urlOrPath.substring(urlOrPath.indexOf('uploads/'));
-        const fullPath = path.resolve(__dirname, '..', cleanPath);
-        const uploadsDir = path.resolve(__dirname, '..', 'uploads');
-        if (!fullPath.startsWith(uploadsDir + path.sep)) {
-          return null;
-        }
-        if (fs.existsSync(fullPath)) {
-          return fs.readFileSync(fullPath);
-        }
-        logger.error(`⚠️ Image Apple Wallet introuvable au chemin absolu: ${fullPath}`);
+    // Seuls les fichiers téléversés sur ce serveur sont acceptés : aucune requête vers une URL
+    // arbitraire (une URL saisie par un commerçant ne doit pas faire appeler le réseau interne).
+    if (!urlOrPath || typeof urlOrPath !== 'string' || !urlOrPath.includes('uploads/')) return null;
+    try {
+      const cleanPath = urlOrPath.substring(urlOrPath.indexOf('uploads/'));
+      const fullPath = path.resolve(__dirname, '..', cleanPath);
+      const uploadsDir = path.resolve(__dirname, '..', 'uploads');
+      if (!fullPath.startsWith(uploadsDir + path.sep) || !fs.existsSync(fullPath)) {
+        if (fullPath.startsWith(uploadsDir + path.sep)) logger.warn(`⚠️ Image Apple Wallet introuvable : ${cleanPath}`);
+        return null;
       }
-
-      if (urlOrPath.startsWith('http')) {
-        const response = await axios.get(urlOrPath, {
-          responseType: 'arraybuffer',
-          timeout: 5000
-        });
-        return Buffer.from(response.data, 'binary');
-      }
-      return null;
+      return fs.readFileSync(fullPath);
     } catch (e) {
-      logger.error(`❌ Erreur fetchImageBuffer pour [${urlOrPath}]: ${e.message}`);
+      logger.error(`❌ Erreur lecture image [${urlOrPath}]: ${e.message}`);
       return null;
     }
+  }
+
+  /**
+   * Icône par défaut (obligatoire pour Apple) : carré de la couleur de la carte, généré localement.
+   */
+  async defaultIcon(color) {
+    const match = /^#?([0-9a-f]{6})$/i.exec(String(color || '').trim());
+    const hex = match ? match[1] : '1f2937';
+    const background = { r: parseInt(hex.slice(0, 2), 16), g: parseInt(hex.slice(2, 4), 16), b: parseInt(hex.slice(4, 6), 16), alpha: 1 };
+    return sharp({ create: { width: 87, height: 87, channels: 4, background } }).png().toBuffer();
   }
 
   /**
@@ -233,7 +235,9 @@ export class PassGenerator {
       const cleanKey = this.extractPEM(keyBuffer);
 
       template.setCertificate(cleanCert);
-      template.setPrivateKey(cleanKey, this.certPassword || undefined);
+      template.setPrivateKey(cleanKey, this.certPassword || undefined);
+
+
       const finalLogoUrl = customization?.apple_logo_url || customization?.logo_url;
       const finalIconUrl = customization?.apple_icon_url || customization?.icon_url;
       const finalStripUrl = customization?.apple_strip_image_url || customization?.strip_image_url;
@@ -242,19 +246,25 @@ export class PassGenerator {
         this.fetchImageBuffer(finalLogoUrl),
         this.fetchImageBuffer(finalIconUrl),
         this.fetchImageBuffer(finalStripUrl)
-      ]);
+      ]);
+
       await this.safeAddImage(template, "logo", logoBuffer);
       await this.safeAddImage(template, "icon", iconBuffer);
       if (stripBuffer) {
         await this.safeAddImage(template, "strip", stripBuffer);
-      }
+      }
+
       if (!iconBuffer) {
-        const defaultIcon = await this.fetchImageBuffer('https://dummyimage.com/29x29/000/fff.png&text=Icon');
-        if (defaultIcon) await this.safeAddImage(template, "icon", defaultIcon);
+        try {
+          await this.safeAddImage(template, "icon", await this.defaultIcon(customization?.apple_background_color));
+        } catch (e) {
+          logger.warn(`⚠️ Icône par défaut non générée: ${e.message}`);
+        }
       }
       if (!logoBuffer) {
-        const defaultLogo = await this.fetchImageBuffer('https://dummyimage.com/160x50/000/fff.png&text=Logo');
-        if (defaultLogo) await this.safeAddImage(template, "logo", defaultLogo);
+        // Logo obligatoire : image transparente, seul le nom du commerce (logoText) apparaît.
+        const transparent = await sharp({ create: { width: 3, height: 3, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } }).png().toBuffer();
+        await this.safeAddImage(template, "logo", transparent);
       }
 
       const pass = template.createPass({
@@ -270,9 +280,12 @@ export class PassGenerator {
           locationsArray = typeof customization.locations === 'string'
             ? JSON.parse(customization.locations)
             : customization.locations;
-        } catch (e) {
+        } catch (e) {
+
         }
-      }
+      }
+
+
       const validLocations = [];
 
       if (Array.isArray(locationsArray) && locationsArray.length > 0) {
@@ -295,13 +308,16 @@ export class PassGenerator {
         const fbLng = Number(customization?.longitude);
         const fbLatValid = customization?.latitude !== '' && customization?.latitude != null && !isNaN(fbLat) && fbLat >= -90 && fbLat <= 90;
         const fbLngValid = customization?.longitude !== '' && customization?.longitude != null && !isNaN(fbLng) && fbLng >= -180 && fbLng <= 180;
-        if (fbLatValid && fbLngValid) {
+        if (fbLatValid && fbLngValid) {
+
           const rawFallbackText = (customization.relevant_text || customization.relevantText || '').replace(/Bientot/gi, '').replace(/Soon/gi, '').trim();
           const cleanFallbackText = rawFallbackText || `Bienvenue chez ${clientData.companyName || 'nous'}`;
           validLocations.push({ latitude: fbLat, longitude: fbLng, relevantText: cleanFallbackText.substring(0, 255) });
           logger.info(`📍 [APPLE FALLBACK ADD] Lat: ${fbLat}, Lng: ${fbLng}, Text: "${cleanFallbackText}"`);
         }
-      }
+      }
+
+
       if (validLocations.length > 0) {
         try {
           if (typeof pass.setLocations === 'function') {
@@ -320,24 +336,25 @@ export class PassGenerator {
           }
         } catch (_) { /* ignore */ }
         pass.locations = [];
-      }
+      }
+
+
       const currentBalance = clientData.balance || 0;
       const pointsDelta = clientData.lastPointsChange || 0;
       const rewardTiers = Array.isArray(clientData.rewardTiers) ? clientData.rewardTiers : [];
 
-      let appleNotifMessage = null;
-      if (pointsDelta < 0) {
-        const usedPoints = Math.abs(pointsDelta);
-        const redeemedTier = rewardTiers.find(t => t.points_required === usedPoints);
-        const rewardName = redeemedTier ? redeemedTier.title : 'votre récompense';
-        appleNotifMessage = `Vous avez utilisé ${usedPoints} points pour cette récompense : "${rewardName}"`;
-      } else if (pointsDelta > 0) {
-        const nextTier = rewardTiers.find(t => t.points_required > currentBalance);
-        if (nextTier) {
-          const missing = nextTier.points_required - currentBalance;
-          appleNotifMessage = `+ ${pointsDelta} points : Encore ${missing} pts pour obtenir cette récompense "${nextTier.title}"`;
+      // Message affiché au dos ; quand il change, Apple Wallet l'affiche sur l'écran verrouillé.
+      // Il doit être identique d'une génération à l'autre tant qu'aucun nouvel événement n'a eu lieu.
+      let appleNotifMessage = clientData.notificationMessage || null;
+      if (!appleNotifMessage && pointsDelta !== 0) {
+        // Cartes générées avant l'ajout de notification_message : même texte qu'avant.
+        if (pointsDelta < 0) {
+          appleNotifMessage = `${Math.abs(pointsDelta)} point(s) utilisé(s). Solde : ${currentBalance} point(s).`;
         } else {
-          appleNotifMessage = `+ ${pointsDelta} points : Bravo, vous avez ${currentBalance} points et avez atteint tous vos paliers !`;
+          const nextTier = rewardTiers.find(t => t.points_required > currentBalance);
+          appleNotifMessage = nextTier
+            ? `+ ${pointsDelta} points : Encore ${nextTier.points_required - currentBalance} pts pour « ${nextTier.title} »`
+            : `+ ${pointsDelta} points : vous avez ${currentBalance} points.`;
         }
       }
 
@@ -345,7 +362,8 @@ export class PassGenerator {
         key: 'points_header',
         label: 'POINTS',
         value: `${currentBalance}`
-      });
+      });
+
       this.safeAddField(pass.secondaryFields, {
         key: 'greeting',
         label: 'BONJOUR',
@@ -356,7 +374,8 @@ export class PassGenerator {
         key: 'reward_hint',
         label: 'DÉTAILS DES RÉCOMPENSES',
         value: 'Au dos'
-      });
+      });
+
       const shortId = clientData.clientId ? String(clientData.clientId).slice(-6).toUpperCase() : 'N/A';
       pass.barcodes = [
         {
@@ -367,15 +386,11 @@ export class PassGenerator {
         }
       ];
 
-      const notifValue = clientData.soonExpiringPoints > 0
-        ? `⚠️ Des points expirent bientôt ! Venez vite les utiliser (${new Date().toLocaleDateString('fr-FR')})`
-        : appleNotifMessage;
-
-      if (notifValue) {
+      if (appleNotifMessage) {
         this.safeAddField(pass.backFields, {
           key: 'notif_msg',
-          label: 'DERNIÈRE MISE À JOUR',
-          value: notifValue,
+          label: 'DERNIER MESSAGE',
+          value: appleNotifMessage,
           changeMessage: '%@'
         });
       }
@@ -399,7 +414,7 @@ export class PassGenerator {
           key: 'review_google',
           label: 'LAISSEZ-NOUS UN AVIS GOOGLE',
           value: customization.apple_review_url,
-          attributedValue: `<a href='${customization.apple_review_url}'>Cliquez ici</a>`,
+          attributedValue: `<a href='${escHtml(customization.apple_review_url)}'>Cliquez ici</a>`,
           dataDetectorTypes: ['PKDataDetectorTypeLink']
         });
       }
@@ -444,7 +459,9 @@ export class PassGenerator {
           if (platform === 'instagram') url = `https://instagram.com/${handle}`;
           else if (platform === 'tiktok') url = `https://tiktok.com/@${handle}`;
           else if (platform === 'facebook') url = `https://facebook.com/${handle}`;
-        }
+        }
+
+
         return { url, displayHandle };
       };
 
@@ -455,7 +472,7 @@ export class PassGenerator {
             key: 'instagram',
             label: 'INSTAGRAM',
             value: social.url,
-            attributedValue: `<a href='${social.url}'>${social.displayHandle}</a>`,
+            attributedValue: `<a href='${escHtml(social.url)}'>${escHtml(social.displayHandle)}</a>`,
             dataDetectorTypes: ['PKDataDetectorTypeLink']
           });
         }
@@ -468,7 +485,7 @@ export class PassGenerator {
             key: 'facebook',
             label: 'FACEBOOK',
             value: social.url,
-            attributedValue: `<a href='${social.url}'>${social.displayHandle}</a>`,
+            attributedValue: `<a href='${escHtml(social.url)}'>${escHtml(social.displayHandle)}</a>`,
             dataDetectorTypes: ['PKDataDetectorTypeLink']
           });
         }
@@ -481,24 +498,21 @@ export class PassGenerator {
             key: 'tiktok',
             label: 'TIKTOK',
             value: social.url,
-            attributedValue: `<a href='${social.url}'>${social.displayHandle}</a>`,
+            attributedValue: `<a href='${escHtml(social.url)}'>${escHtml(social.displayHandle)}</a>`,
             dataDetectorTypes: ['PKDataDetectorTypeLink']
           });
         }
-      }
+      }
+
       {
         const baseTerms = customization?.back_fields_terms || '';
         const expMonths = clientData.points_expiration_months ?? null;
         let expirationLine = '';
 
         if (expMonths !== null) {
-          if (clientData.soonExpiringPoints > 0) {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            expirationLine = `⚠️ Certains de vos points expirent bientôt (mis à jour le ${today.toLocaleDateString('fr-FR')}). Venez vite les utiliser !`;
-          } else {
-            expirationLine = `Vos points sont valables ${expMonths} mois à compter de leur date d'acquisition.`;
-          }
+          expirationLine = clientData.soonExpiringPoints > 0
+            ? `⚠️ ${clientData.soonExpiringPoints} point(s) expirent dans moins de 7 jours. Vos points sont valables ${expMonths} mois à compter de leur date d'acquisition.`
+            : `Vos points sont valables ${expMonths} mois à compter de leur date d'acquisition.`;
         }
 
         const finalTerms = [baseTerms, expirationLine].filter(Boolean).join('\n\n');
@@ -506,8 +520,7 @@ export class PassGenerator {
           this.safeAddField(pass.backFields, {
             key: 'terms',
             label: 'CONDITIONS',
-            value: finalTerms,
-            ...(clientData.soonExpiringPoints > 0 ? { changeMessage: '⚠️ Des points expirent bientôt ! Venez vite les utiliser avant qu\'il ne soit trop tard.' } : {})
+            value: finalTerms
           });
         }
       }
@@ -517,8 +530,7 @@ export class PassGenerator {
         this.safeAddField(pass.backFields, {
           key: 'rewards_tiers',
           label: 'PALIERS DE RÉCOMPENSES',
-          value: tiersList,
-          changeMessage: "Liste des récompenses mise à jour !"
+          value: tiersList
         });
       }
 
@@ -528,13 +540,13 @@ export class PassGenerator {
           label: 'INFOS COMPLÉMENTAIRES',
           value: customization.back_fields_info
         });
-      }
+      }
+
       if (customization?.relevant_text) {
         this.safeAddField(pass.backFields, {
           key: 'promotion',
           label: 'OFFRE EN COURS',
-          value: customization.relevant_text,
-          changeMessage: "Nouvelle offre : %@"
+          value: customization.relevant_text
         });
       }
 

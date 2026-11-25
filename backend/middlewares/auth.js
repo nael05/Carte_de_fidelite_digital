@@ -4,11 +4,12 @@ import { verifySessionValidity } from '../utils/sessionManager.js';
 import { effectiveTier } from '../utils/plans.js';
 import logger from '../utils/logger.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key_change_in_production';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // extra : revendications supplémentaires (compte équipe : staffId, staffRole).
+// Le compte Master Admin a une session courte (12 h) ; les commerçants 7 jours (renouvelés par la session).
 export const generateToken = (userId, role, extra = {}) => {
-  return jwt.sign({ id: userId, role, ...extra }, JWT_SECRET, { expiresIn: '7d' });
+  return jwt.sign({ id: userId, role, ...extra }, JWT_SECRET, { expiresIn: role === 'admin' ? '12h' : '7d', algorithm: 'HS256' });
 };
 const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
@@ -34,9 +35,9 @@ export const staffMayAccess = (role, method, path) => {
 };
 
 export const verifyToken = asyncHandler(async (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
+  const [scheme, token] = (req.headers.authorization || '').split(' ');
 
-  if (!token) {
+  if (scheme !== 'Bearer' || !token) {
     return res.status(401).json({ error: 'Token manquant' });
   }
 
@@ -49,7 +50,8 @@ export const verifyToken = asyncHandler(async (req, res, next) => {
       if (!deviceId) {
         return res.status(401).json({ error: 'Session expirée' });
       }
-      const sessionValid = await verifySessionValidity(decoded.id, deviceId);
+      // La session doit exister pour cet appareil ET correspondre à ce jeton (déconnexion à distance effective).
+      const sessionValid = await verifySessionValidity(decoded.id, deviceId, token);
       if (!sessionValid) {
         logger.warn('Session expired or invalid for pro', { userId: decoded.id, deviceId });
         return res.status(401).json({ error: 'Session expirée' });

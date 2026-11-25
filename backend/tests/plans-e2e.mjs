@@ -30,9 +30,9 @@ await pool.query('DELETE FROM rate_limit_store').catch(() => {});
 
 // 1. tarifs publics
 let r = await call('GET', '/plans', null, false);
-check('GET /plans : Pro 29 €/mois', r.data?.prices?.pro?.monthly?.amount === 29, JSON.stringify(r.data));
-check('GET /plans : Pro annuel 278,40 € (-20 %)', r.data?.prices?.pro?.yearly?.amount === 278.4, JSON.stringify(r.data?.prices?.pro));
-check('GET /plans : Business 59 € et 566,40 €', r.data?.prices?.business?.monthly?.amount === 59 && r.data?.prices?.business?.yearly?.amount === 566.4, JSON.stringify(r.data?.prices?.business));
+check('GET /plans : Pro 19 €/mois TTC', r.data?.prices?.pro?.monthly?.amount === 19, JSON.stringify(r.data));
+check('GET /plans : Pro annuel 182,40 € (-20 %)', r.data?.prices?.pro?.yearly?.amount === 182.4, JSON.stringify(r.data?.prices?.pro));
+check('GET /plans : Business 39 € et 374,40 €', r.data?.prices?.business?.monthly?.amount === 39 && r.data?.prices?.business?.yearly?.amount === 374.4, JSON.stringify(r.data?.prices?.business));
 
 // 2. inscription gratuite
 r = await call('POST', '/pro/signup', { tier: 'free', nom: 'Free Test', raison_sociale: 'Free Test SARL', email, mot_de_passe: PASSWORD }, false);

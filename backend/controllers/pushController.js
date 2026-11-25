@@ -1,117 +1,37 @@
-import { randomUUID } from 'crypto';
 import pool from '../db.js';
-import apnService from '../utils/apnService.js';
-import googleWalletGenerator from '../utils/googleWalletGenerator.js';
 import logger from '../utils/logger.js';
-import { prepareCampaign } from '../utils/pushGuard.js';
+import { sendCampaign } from '../utils/campaignService.js';
 
 /**
- * Récupérer l'historique des notifications pour une entreprise
+ * GET /api/pro/push/history — historique des campagnes.
  */
 export const getHistory = async (req, res) => {
-  const empresaId = req.user.id;
-
   try {
     const [rows] = await pool.query(
-      'SELECT * FROM push_notifications_sent WHERE entreprise_id = ? ORDER BY created_at DESC',
-      [empresaId]
+      'SELECT * FROM push_notifications_sent WHERE entreprise_id = ? ORDER BY created_at DESC LIMIT 200',
+      [req.user.id]
     );
-
     res.json(rows);
   } catch (err) {
-    logger.error('Error fetching push history:', err.message);
-    res.status(500).json({ error: 'Erreur lors de la récupération de l\'historique' });
+    logger.error('Error fetching push history', { error: err.message });
+    res.status(500).json({ error: "Erreur lors de la récupération de l'historique" });
   }
 };
 
 /**
- * Envoyer une notification push (ciblée ou à tous)
+ * POST /api/pro/push/send { clientIds, title, message } — campagne à des clients choisis.
+ * Mêmes règles que /pro/notifications/send (voir utils/campaignService.js).
  */
 export const sendNotification = async (req, res) => {
-  const empresaId = req.user.id;
   const { clientIds, title, message } = req.body;
-
-  if (!title || !message) {
-    return res.status(400).json({ error: 'Le titre et le message sont requis' });
-  }
-
   if (!Array.isArray(clientIds) || clientIds.length === 0) {
     return res.status(400).json({ error: 'Veuillez sélectionner au moins un client' });
   }
-
-  if (String(title).length > 60 || String(message).length > 200) {
-    return res.status(400).json({ error: 'Titre (60 caractères max) ou message (200 caractères max) trop long' });
-  }
-
   try {
-    const campaign = await prepareCampaign(empresaId, { clientIds });
-    if (campaign.error) return res.status(campaign.error.status).json(campaign.error.body);
-    const eligibleIds = campaign.clientIds;
-
-        const [registrations] = await pool.query(
-      `SELECT r.push_token, w.client_id, c.prenom, c.nom 
-       FROM apple_pass_registrations r
-       JOIN wallet_cards w ON r.pass_serial_number = w.pass_serial_number
-       JOIN clients c ON w.client_id = c.id
-       WHERE w.client_id IN (?) AND w.company_id = ?`,
-      [eligibleIds, empresaId]
-    );
-    const [googleCheck] = await pool.query(
-      `SELECT 1 FROM wallet_cards WHERE client_id IN (?) AND pass_serial_number LIKE 'GOOGLE_%' AND company_id = ? LIMIT 1`,
-      [eligibleIds, empresaId]
-    );
-
-    if (registrations.length === 0 && googleCheck.length === 0) {
-      return res.status(404).json({ error: 'Aucun appareil enregistré trouvé pour les clients sélectionnés' });
-    }
-
-    const notificationId = randomUUID();
-    await pool.query(
-      `INSERT INTO push_notifications_sent (id, entreprise_id, title, message, target_type, recipients_count, status)
-       VALUES (?, ?, ?, ?, 'specific', 0, 'sent')`,
-      [notificationId, empresaId, title, message]
-    );
-
-    const pushTokens = registrations.map(r => r.push_token);
-    const results = await apnService.sendBulkAlertNotifications(pushTokens, title, message);
-
-    if (registrations.length > 0) {
-      const now = new Date();
-      const logValues = registrations.map(reg => {
-        const result = results.results.find(r => r.token === reg.push_token);
-        return [randomUUID(), reg.client_id, notificationId, reg.push_token, result?.sent ? 'sent' : 'failed', now];
-      });
-      await pool.query(
-        `INSERT INTO client_push_notifications (id, client_id, notification_id, push_token, status, sent_at) VALUES ?`,
-        [logValues]
-      );
-    }
-
-    const [googleCards] = await pool.query(
-      `SELECT DISTINCT w.client_id
-       FROM wallet_cards w
-       WHERE w.client_id IN (?) AND w.pass_serial_number LIKE 'GOOGLE_%' AND w.company_id = ?`,
-      [eligibleIds, empresaId]
-    );
-    const googleResults = await Promise.allSettled(
-      googleCards.map(c => googleWalletGenerator.addMessageToObject(c.client_id, title, message))
-    );
-    const googleSent = googleResults.filter(r => r.status === 'fulfilled').length;
-
-    await pool.query(
-      'UPDATE push_notifications_sent SET sent_at = NOW(), recipients_count = ? WHERE id = ?',
-      [registrations.length + googleCards.length, notificationId]
-    );
-
-    res.json({
-      success: true,
-      sentCount: results.sent + googleSent,
-      failedCount: results.failed,
-      message: `Notifications envoyées avec succès à ${results.sent} appareil(s) Apple et ${googleSent} appareil(s) Google.`
-    });
-
+    const result = await sendCampaign(req.user.id, { title, message, clientIds });
+    res.status(result.status).json(result.body);
   } catch (err) {
-    logger.error('Error sending push notification:', err.message);
-    res.status(500).json({ error: 'Erreur lors de l\'envoi des notifications' });
+    logger.error('Error sending push notification', { error: err.message });
+    res.status(500).json({ error: "Erreur lors de l'envoi des notifications" });
   }
 };

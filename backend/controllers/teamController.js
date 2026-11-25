@@ -279,8 +279,8 @@ export const staffLogin = async (req, res) => {
   }
 
   const token = generateToken(staff.entreprise_id, 'pro', { staffId: staff.id, staffRole: staff.role });
-  const deviceFingerprint = generateDeviceFingerprint(req);
-  const deviceName = req.headers['user-agent']?.substring(0, 100) || 'Unknown Device';
+  const deviceFingerprint = generateDeviceFingerprint(req, `staff:${staff.id}`);
+  const deviceName = `${staff.nom} — ${req.headers['user-agent']?.substring(0, 80) || 'Appareil inconnu'}`;
   try {
     await createSession(staff.entreprise_id, deviceFingerprint, deviceName, token, '24h');
   } catch (err) {

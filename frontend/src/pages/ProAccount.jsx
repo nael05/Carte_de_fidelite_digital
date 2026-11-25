@@ -10,7 +10,7 @@ import AppShell, { PageHead } from '../components/AppShell'
 import useTheme from '../utils/useTheme'
 import PlanPicker from '../components/PlanPicker'
 import PlanBanner from '../components/PlanBanner'
-import { TIER_LABELS } from '../utils/usePlans'
+import { TIER_LABELS, fmtEuro } from '../utils/usePlans'
 import './ProAccount.css'
 
 const FREE_LIMIT = 15
@@ -242,7 +242,7 @@ function SubscriptionTab() {
         </div>
         <div className="acc-plan-name">Fidelyz {tierLabel} · {sub.plan === 'yearly' ? 'Annuel' : 'Mensuel'}</div>
         <div className="acc-plan-price">
-          {item ? <>{item.amount.toFixed(2)} <span>{item.currency.toUpperCase()} / {sub.plan === 'yearly' ? 'an' : 'mois'}</span></> : '—'}
+          {item ? <>{fmtEuro(item.amount)} <span>TTC / {sub.plan === 'yearly' ? 'an' : 'mois'}</span></> : '—'}
         </div>
         <div className="acc-plan-meta">
           {sub.cancel_at_period_end ? "Fin de l'abonnement" : 'Prochain renouvellement'} : <strong>{fmtDate(sub.current_period_end)}</strong>
@@ -380,7 +380,7 @@ function BillingTab() {
                 {data.invoices.map(inv => (
                   <tr key={inv.id}>
                     <td>{fmtDate(inv.date)}</td>
-                    <td><strong>{inv.amount.toFixed(2)} {inv.currency}</strong></td>
+                    <td><strong>{Number(inv.amount).toLocaleString('fr-FR', { style: 'currency', currency: (inv.currency || 'EUR').toUpperCase() })}</strong></td>
                     <td><span className={`ui-badge ${inv.status === 'paid' ? 'accent' : ''}`}>{inv.status === 'paid' ? 'Payée' : inv.status}</span></td>
                     <td className="acc-td-right"><button className="ui-btn secondary sm" onClick={() => downloadPdf(inv.id)}><Download size={14} /> PDF</button></td>
                   </tr>

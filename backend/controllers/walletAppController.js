@@ -1,204 +1,78 @@
 /**
  * WalletAppController.js
- * API utilisée par le Frontend pour créer des passes et gérer les points
- * Supporte Apple Wallet (.pkpass) et Google Wallet (Google Wallet API)
+ * Création / téléchargement des cartes Apple Wallet (.pkpass) et Google Wallet (lien d'ajout).
+ * Les points ne se modifient PAS ici : passer par la caisse (/pro/scan, /pro/redeem-reward, /pro/adjust-points)
+ * qui gère l'historique, les plafonds et les notifications.
  */
 
-import { randomUUID } from 'crypto';
-import passGenerator from '../utils/passGenerator.js';
 import googleWalletGenerator from '../utils/googleWalletGenerator.js';
-import { apnService } from '../utils/apnService.js';
-import { sendLoyaltyUpdateNotification } from '../utils/notificationService.js';
 import db from '../db.js';
 import logger from '../utils/logger.js';
+import { ensureWalletCard, buildApplePass, webServiceUrl, safeFilename } from '../utils/applePass.js';
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+const loadClient = async (clientId, entrepriseId = null) => {
+  const [rows] = await db.query(
+    `SELECT c.id, c.entreprise_id, c.prenom, c.nom, c.points, c.type_wallet, e.nom AS company_name, e.statut
+     FROM clients c JOIN entreprises e ON c.entreprise_id = e.id
+     WHERE c.id = ? ${entrepriseId ? 'AND c.entreprise_id = ?' : ''}`,
+    entrepriseId ? [clientId, entrepriseId] : [clientId]
+  );
+  return rows[0] || null;
+};
+
+// Lien « Ajouter à Google Wallet » : classe (design du commerce) + objet (carte du client).
+const googleSaveUrl = async (client) => {
+  const [[cust]] = await db.query(
+    'SELECT * FROM card_customization WHERE company_id = ? ORDER BY updated_at DESC LIMIT 1',
+    [client.entreprise_id]
+  );
+  const [[lc]] = await db.query('SELECT points_expiration_months FROM loyalty_config WHERE entreprise_id = ?', [client.entreprise_id]);
+  const [tiers] = await db.query('SELECT * FROM reward_tiers WHERE entreprise_id = ? ORDER BY points_required ASC', [client.entreprise_id]);
+  const config = { ...(cust || {}), points_expiration_months: lc?.points_expiration_months ?? null };
+
+  await googleWalletGenerator.createOrUpdateClass(client.entreprise_id, config, client.company_name, 'points');
+  const saveUrl = await googleWalletGenerator.createLoyaltyObject(
+    client.id, client.entreprise_id, `${client.prenom} ${client.nom}`, Number(client.points) || 0, config, tiers
+  );
+  if (saveUrl) await ensureWalletCard(client, 'google');
+  return saveUrl;
+};
+
+const sendPkpass = (res, buffer, name) => {
+  res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
+  res.setHeader('Content-Disposition', `attachment; filename="${safeFilename(name)}.pkpass"`);
+  res.setHeader('Cache-Control', 'no-store');
+  res.send(buffer);
+};
 
 /**
- * POST /api/app/wallet/create
- * Crée un nouveau pass Apple Wallet ou Google Wallet pour un client
+ * POST /api/app/wallet/create  { clientId, type_wallet? }  (espace pro)
  */
 export const createWalletPass = async (req, res) => {
   try {
-    const { clientId, type_wallet: bodyWalletType } = req.body;
+    const { clientId, type_wallet: bodyType } = req.body;
+    if (!clientId || !UUID_RE.test(String(clientId))) return res.status(400).json({ error: 'clientId invalide' });
 
-    if (!clientId) {
-      return res.status(400).json({ error: 'clientId manquant' });
-    }
-    const [clientRows] = await db.query(
-      `SELECT c.id, c.prenom, c.nom, c.telephone, c.points, c.type_wallet,
-              e.id as company_id, e.nom as company_name,
-              lc.points_for_reward,
-              cc.logo_url as generic_logo_url,
-              cc.icon_url as generic_icon_url,
-              cc.strip_image_url as generic_strip_image_url,
-              cc.primary_color as generic_primary_color,
-              cc.text_color as generic_text_color,
-              cc.accent_color as generic_accent_color,
-              cc.apple_logo_url,
-              cc.apple_icon_url,
-              cc.apple_strip_image_url,
-              cc.apple_background_color,
-              cc.apple_text_color,
-              cc.apple_label_color,
-              cc.card_subtitle as generic_card_subtitle,
-              cc.apple_pass_description,
-              cc.apple_organization_name,
-              cc.logo_text,
-              cc.google_primary_color,
-              cc.google_text_color,
-              cc.google_logo_url,
-              cc.google_hero_image_url,
-              cc.google_card_title,
-              cc.google_card_subtitle,
-              cc.latitude,
-              cc.longitude,
-              cc.relevant_text,
-              cc.apple_review_url,
-              cc.google_review_url,
-              cc.locations
-       FROM clients c
-       LEFT JOIN entreprises e ON c.entreprise_id = e.id
-       LEFT JOIN loyalty_config lc ON e.id = lc.entreprise_id
-       LEFT JOIN card_customization cc ON e.id = cc.company_id
-       WHERE c.id = ? AND c.entreprise_id = ?`,
-      [clientId, req.user.id]
-    );
+    const client = await loadClient(clientId, req.user.id);
+    if (!client) return res.status(404).json({ error: 'Client non trouvé' });
 
-    if (!clientRows || clientRows.length === 0) {
-      return res.status(404).json({ error: 'Client non trouvé' });
+    const kind = bodyType === 'google' || bodyType === 'apple' ? bodyType : client.type_wallet || 'apple';
+    if (kind !== client.type_wallet) {
+      await db.query('UPDATE clients SET type_wallet = ? WHERE id = ?', [kind, client.id]);
     }
 
-    const client = clientRows[0];
-    let type_wallet = bodyWalletType || client.type_wallet || 'apple';
-    const { company_id, company_name, points, points_for_reward } = client;
-    if (bodyWalletType && bodyWalletType !== client.type_wallet) {
-      await db.query('UPDATE clients SET type_wallet = ? WHERE id = ?', [bodyWalletType, client.id]);
+    if (kind === 'google') {
+      const saveUrl = await googleSaveUrl(client);
+      if (!saveUrl) return res.status(503).json({ error: 'Google Wallet indisponible (configuration manquante)' });
+      return res.json({ success: true, type: 'google', saveUrl });
     }
 
-    if (!company_id) {
-      return res.status(400).json({ error: 'Client sans entreprise associée' });
-    }
-
-    logger.info(`📱 Création pass ${type_wallet === 'google' ? 'Google' : 'Apple'} Wallet pour client: ${clientId}`);
-    if (type_wallet === 'google') {
-      try {
-        const [tiers] = await db.query('SELECT * FROM reward_tiers WHERE entreprise_id = ? ORDER BY points_required ASC', [company_id]);
-        await googleWalletGenerator.createOrUpdateClass(company_id, client, company_name);
-        const saveUrl = await googleWalletGenerator.createLoyaltyObject(client.id, company_id, `${client.prenom} ${client.nom}`, points || 0, client, tiers);
-        const googleSerial = `GOOGLE_${client.id}`;
-        const [existing] = await db.query('SELECT id FROM wallet_cards WHERE client_id = ? AND pass_serial_number LIKE "GOOGLE_%"', [client.id]);
-        
-        if (existing.length === 0) {
-          const googleToken = `GOOGLE_${randomUUID()}`;
-          await db.query(
-            `INSERT INTO wallet_cards (client_id, company_id, pass_serial_number, authentication_token, points_balance, qr_code_value)
-             VALUES (?, ?, ?, ?, ?, ?)
-             ON DUPLICATE KEY UPDATE 
-               pass_serial_number = VALUES(pass_serial_number),
-               authentication_token = VALUES(authentication_token),
-               points_balance = VALUES(points_balance),
-               last_updated = NOW()`,
-            [client.id, company_id, googleSerial, googleToken, points || 0, client.id.toString()]
-          );
-        }
-
-        return res.json({
-          success: true,
-          type: 'google',
-          saveUrl: saveUrl
-        });
-      } catch (err) {
-        logger.error('Erreur génération Google Wallet', err);
-        return res.status(500).json({ error: 'Erreur génération Google Wallet' });
-      }
-    }
-    const [existingCards] = await db.query(
-      'SELECT id FROM wallet_cards WHERE client_id = ? AND pass_serial_number NOT LIKE "GOOGLE_%"',
-      [client.id]
-    );
-
-    if (existingCards.length > 0) {
-      return res.status(400).json({
-        error: 'Ce client possède déjà une carte Apple Wallet',
-        serialNumber: existingCards[0].pass_serial_number,
-      });
-    }
-    const serialNumber = client.id.replace(/-/g, '').substring(0, 20).toUpperCase();
-    const authenticationToken = randomUUID();
-    const [tiers] = await db.query(
-      'SELECT * FROM reward_tiers WHERE entreprise_id = ? ORDER BY points_required ASC',
-      [company_id]
-    );
-
-    const passData = {
-      clientId: client.id,
-      firstName: client.prenom,
-      lastName: client.nom,
-      phoneNumber: client.telephone,
-      companyName: company_name,
-      balance: points || 0,
-      rewardTiers: tiers,
-      createdAt: client.created_at || new Date(),
-      qrCodeValue: client.id.toString(),
-    };
-
-    const customization = {
-      apple_logo_url: client.apple_logo_url || client.generic_logo_url,
-      apple_icon_url: client.apple_icon_url || client.generic_icon_url,
-      apple_strip_image_url: client.apple_strip_image_url || client.generic_strip_image_url,
-      apple_background_color: client.apple_background_color || client.generic_primary_color || '#1f2937',
-      apple_text_color: client.apple_text_color || client.generic_text_color || '#ffffff',
-      apple_label_color: client.apple_label_color || client.generic_accent_color || '#a8a8a8',
-      apple_pass_description: client.apple_pass_description || client.generic_card_subtitle || 'Votre Carte de Fidélité',
-      apple_organization_name: client.apple_organization_name || company_name,
-      logo_text: client.logo_text,
-      latitude: client.latitude,
-      longitude: client.longitude,
-      relevant_text: client.relevant_text,
-      apple_review_url: client.apple_review_url,
-      locations: client.locations,
-    };
-    let backendUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
-    if (backendUrl.startsWith('http://')) {
-      backendUrl = backendUrl.replace('http://', 'https://');
-    }
-    const webServiceURL = `${backendUrl}/api/wallet`;
-    
-    logger.info(`🌐 WebServiceURL pour ce pass : ${webServiceURL}`);
-    
-    const passBuffer = await passGenerator.generateLoyaltyPass(
-      passData,
-      customization,
-      serialNumber,
-      authenticationToken,
-      { webServiceURL }
-    );
-
-    if (!passBuffer) {
-      return res.status(503).json({ error: 'Service Apple Wallet temporairement désactivé (certificat manquant)' });
-    }
-    await db.query(
-      `INSERT INTO wallet_cards (
-        client_id, company_id, pass_serial_number, authentication_token,
-        points_balance, qr_code_value
-      ) VALUES (?, ?, ?, ?, ?, ?)
-      ON DUPLICATE KEY UPDATE 
-        pass_serial_number = VALUES(pass_serial_number),
-        points_balance = VALUES(points_balance),
-        last_updated = NOW()`,
-      [
-        client.id,
-        company_id,
-        serialNumber,
-        authenticationToken,
-        points || 0,
-        client.id.toString(),
-      ]
-    );
-    res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
-    res.setHeader('Content-Disposition', `attachment; filename="${serialNumber}.pkpass"`);
-    res.setHeader('Content-Length', passBuffer.length);
-    res.send(passBuffer);
-
+    const { serial } = await ensureWalletCard(client, 'apple');
+    const buffer = await buildApplePass(serial, webServiceUrl(req));
+    if (!buffer) return res.status(503).json({ error: 'Apple Wallet indisponible (certificat manquant)' });
+    sendPkpass(res, buffer, `${client.prenom}_${client.nom}`);
   } catch (error) {
     logger.error(`❌ Erreur création pass: ${error.message}`);
     res.status(500).json({ error: 'Erreur création pass' });
@@ -206,131 +80,32 @@ export const createWalletPass = async (req, res) => {
 };
 
 /**
- * POST /api/app/wallet/add-points
- */
-export const addPointsToWallet = async (req, res) => {
-  try {
-    const { clientId, pointsToAdd, reason } = req.body;
-
-    if (!clientId || !pointsToAdd || pointsToAdd <= 0) {
-      return res.status(400).json({ error: 'clientId et pointsToAdd requis' });
-    }
-
-    logger.info(`➕ Ajout de ${pointsToAdd} point(s) au client ${clientId}`);
-
-    const [walletRows] = await db.query(
-      `SELECT wc.id, wc.client_id, wc.pass_serial_number, wc.points_balance, wc.stamps_balance,
-              c.entreprise_id, e.loyalty_type
-       FROM wallet_cards wc
-       JOIN clients c ON wc.client_id = c.id
-       JOIN entreprises e ON c.entreprise_id = e.id
-       WHERE (wc.client_id = ? OR wc.pass_serial_number = ?) AND c.entreprise_id = ?`,
-      [clientId, clientId, req.user.id]
-    );
-
-    if (!walletRows || walletRows.length === 0) {
-      return res.status(404).json({ error: 'Pas de carte Wallet pour ce client' });
-    }
-
-    const wallet = walletRows[0];
-    const { id: walletId, pass_serial_number, loyalty_type } = wallet;
-    const isStamps = loyalty_type === 'stamps';
-
-    const [cfgRows] = await db.query(
-      'SELECT max_points_balance FROM loyalty_config WHERE entreprise_id = ?',
-      [wallet.entreprise_id]
-    );
-    const maxPoints = cfgRows.length > 0 ? cfgRows[0].max_points_balance : null;
-
-    let oldBalance, newBalance, cappedPoints;
-    const conn = await db.getConnection();
-    try {
-      await conn.beginTransaction();
-
-      const [[freshWallet]] = await conn.query(
-        'SELECT points_balance, stamps_balance FROM wallet_cards WHERE id = ? FOR UPDATE',
-        [walletId]
-      );
-      oldBalance = isStamps ? freshWallet.stamps_balance : freshWallet.points_balance;
-      cappedPoints = pointsToAdd;
-      if (maxPoints !== null) {
-        const roomLeft = Math.max(0, maxPoints - oldBalance);
-        cappedPoints = Math.min(cappedPoints, roomLeft);
-      }
-      newBalance = oldBalance + cappedPoints;
-
-      await conn.query(
-        `UPDATE wallet_cards SET ${isStamps ? 'stamps_balance' : 'points_balance'} = ?, last_updated = NOW() WHERE id = ?`,
-        [newBalance, walletId]
-      );
-      await conn.query(
-        'UPDATE clients SET points = ? WHERE id = ?',
-        [newBalance, wallet.client_id]
-      );
-      await conn.query(
-        `INSERT INTO pass_update_logs (wallet_card_id, pass_serial_number, action, value, old_balance, new_balance, description, triggered_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [walletId, pass_serial_number, isStamps ? 'add_stamps' : 'add_points', cappedPoints, oldBalance, newBalance, reason || 'API update', 'admin_api']
-      );
-
-      await conn.commit();
-    } catch (txErr) {
-      await conn.rollback();
-      throw txErr;
-    } finally {
-      conn.release();
-    }
-
-    sendLoyaltyUpdateNotification(clientId, wallet.entreprise_id, cappedPoints, false).catch(err =>
-      logger.warn('Push loyalty notification failed in walletApp', err.message)
-    );
-
-    res.json({
-      success: true,
-      oldBalance,
-      newBalance,
-      message: `${pointsToAdd} point(s) ajouté(s)`,
-    });
-  } catch (error) {
-    logger.error(`❌ Erreur ajout points: ${error.message}`);
-    res.status(500).json({ error: 'Erreur lors de l\'ajout de points' });
-  }
-};
-
-/**
- * GET /api/app/wallet/status/:clientId
+ * GET /api/app/wallet/status/:clientId  (espace pro)
  */
 export const getWalletStatus = async (req, res) => {
   try {
     const { clientId } = req.params;
-
     const [walletRows] = await db.query(
-      `SELECT wc.id, wc.pass_serial_number, wc.points_balance, wc.stamps_balance,
-              wc.wallet_added_at, wc.last_updated,
-              e.loyalty_type, COUNT(apr.id) as device_count
+      `SELECT wc.id, wc.pass_serial_number, wc.points_balance, wc.wallet_added_at, wc.last_updated,
+              COUNT(apr.id) AS device_count
        FROM wallet_cards wc
        JOIN clients c ON wc.client_id = c.id
-       LEFT JOIN entreprises e ON c.entreprise_id = e.id
        LEFT JOIN apple_pass_registrations apr ON wc.pass_serial_number = apr.pass_serial_number
        WHERE wc.client_id = ? AND c.entreprise_id = ?
        GROUP BY wc.id`,
       [clientId, req.user.id]
     );
-
-    if (!walletRows || walletRows.length === 0) {
-      return res.status(404).json({ error: 'Pas de carte Wallet' });
-    }
+    if (walletRows.length === 0) return res.status(404).json({ error: 'Pas de carte Wallet' });
 
     const wallet = walletRows[0];
-
     res.json({
       success: true,
       clientId,
-      balance: wallet.loyalty_type === 'stamps' ? wallet.stamps_balance : wallet.points_balance,
-      loyaltyType: wallet.loyalty_type,
+      balance: wallet.points_balance,
       walletAddedAt: wallet.wallet_added_at,
       lastUpdated: wallet.last_updated,
-      devicesRegistered: wallet.device_count,
-      serialNumber: wallet.pass_serial_number,
+      devicesRegistered: Number(wallet.device_count) || 0,
+      type: wallet.pass_serial_number.startsWith('GOOGLE_') ? 'google' : 'apple'
     });
   } catch (error) {
     logger.error(`❌ Erreur statut: ${error.message}`);
@@ -339,208 +114,40 @@ export const getWalletStatus = async (req, res) => {
 };
 
 /**
- * GET /api/app/wallet/client-download/:clientId
+ * GET /api/app/wallet/client-download/:clientId[?type=apple|google]
+ * Lien public envoyé au client après son inscription (l'identifiant client est un UUID aléatoire).
  */
 export const downloadClientPass = async (req, res) => {
   try {
     const { clientId } = req.params;
+    if (!UUID_RE.test(String(clientId))) return res.status(404).send('Carte introuvable');
 
-    if (!clientId) {
-      return res.status(400).send('Client ID manquant');
+    const client = await loadClient(clientId);
+    if (!client) return res.status(404).send('Carte introuvable');
+    if (client.statut !== 'actif') return res.status(403).send("Ce programme de fidélité n'est plus disponible.");
+
+    const requested = req.query.type;
+    const isIOS = /iPhone|iPad|iPod/.test(req.headers['user-agent'] || '');
+    const kind = requested === 'apple' || requested === 'google' ? requested : isIOS ? 'apple' : client.type_wallet || 'apple';
+
+    if (kind === 'google') {
+      const saveUrl = await googleSaveUrl(client);
+      if (!saveUrl) return res.status(503).send('Google Wallet est momentanément indisponible. Réessayez plus tard.');
+      return res.redirect(saveUrl);
     }
 
-    logger.info(`📱 Téléchargement (GET) pass pour client: ${clientId}`);
-
-    const [clientRows] = await db.query(
-      `SELECT c.id, c.prenom, c.nom, c.telephone, c.points, c.type_wallet,
-               e.id as company_id, e.nom as company_name, e.loyalty_type,
-               lc.points_for_reward, lc.stamps_for_reward, lc.points_expiration_months,
-               cc.logo_url as apple_logo_url,
-               cc.icon_url as apple_icon_url,
-               cc.strip_image_url as apple_strip_image_url,
-               cc.primary_color as apple_background_color,
-               cc.text_color as apple_text_color,
-               cc.accent_color as apple_label_color,
-               cc.card_subtitle as apple_pass_description,
-               cc.apple_organization_name,
-               cc.logo_text,
-               cc.google_primary_color,
-               cc.google_text_color,
-               cc.google_logo_url,
-               cc.google_hero_image_url,
-               cc.google_card_title,
-               cc.google_card_subtitle,
-               cc.latitude,
-               cc.longitude,
-               cc.back_fields_info,
-               cc.back_fields_terms,
-               cc.back_fields_website,
-               cc.back_fields_phone,
-               cc.back_fields_address,
-               cc.back_fields_instagram,
-               cc.back_fields_facebook,
-               cc.back_fields_tiktok,
-               cc.google_back_phone,
-               cc.google_back_website,
-               cc.google_back_address,
-               cc.google_back_instagram,
-               cc.google_back_facebook,
-               cc.google_back_tiktok,
-               cc.apple_review_url,
-               cc.google_review_url,
-               cc.locations
-        FROM clients c
-        LEFT JOIN entreprises e ON c.entreprise_id = e.id
-        LEFT JOIN loyalty_config lc ON e.id = lc.entreprise_id
-        LEFT JOIN card_customization cc ON e.id = cc.company_id
-        WHERE c.id = ?`,
-      [clientId]
-    );
-
-    if (!clientRows || clientRows.length === 0) {
-      return res.status(404).send('Client non trouvé');
-    }
-
-    const client = clientRows[0];
-    const requestedType = req.query.type; // ?type=apple ou ?type=google
-    const userAgent = req.headers['user-agent'] || '';
-    const isIOS = /iPhone|iPad|iPod/.test(userAgent);
-    let finalType = client.type_wallet;
-    if (requestedType === 'apple' || requestedType === 'google') {
-      finalType = requestedType;
-    } else if (isIOS) {
-      finalType = 'apple';
-    }
-    if (finalType === 'google') {
-      try {
-        const [tiers] = await db.query(
-          'SELECT * FROM reward_tiers WHERE entreprise_id = ? ORDER BY points_required ASC',
-          [client.company_id]
-        );
-
-        await googleWalletGenerator.createOrUpdateClass(client.company_id, client, client.company_name, 'points');
-        const saveUrl = await googleWalletGenerator.createLoyaltyObject(client.id, client.company_id, `${client.prenom} ${client.nom}`, client.points || 0, client, tiers);
-        const [existing] = await db.query('SELECT id FROM wallet_cards WHERE client_id = ? AND pass_serial_number LIKE "GOOGLE_%"', [client.id]);
-        if (existing.length === 0) {
-          const googleToken = `GOOGLE_${randomUUID()}`;
-          await db.query(
-            `INSERT INTO wallet_cards (id, client_id, company_id, pass_serial_number, authentication_token, points_balance, stamps_balance, qr_code_value)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-             ON DUPLICATE KEY UPDATE 
-               pass_serial_number = VALUES(pass_serial_number),
-               authentication_token = VALUES(authentication_token),
-               points_balance = VALUES(points_balance),
-               last_updated = NOW()`,
-            [randomUUID(), client.id, client.company_id, `GOOGLE_${client.id}`, googleToken, client.points || 0, 0, client.id.toString()]
-          );
-        }
-
-        return res.redirect(saveUrl);
-      } catch (err) {
-        logger.error('Erreur redirection Google Wallet', err);
-        return res.status(500).send('Erreur lors de la redirection Google Wallet.');
-      }
-    }
-    logger.info(`🔍 [APPLE DOWNLOAD DEBUG] Client: ${client.prenom} ${client.nom}, Locations JSON: ${JSON.stringify(client.locations)}`);
-    const serialNumber = client.id.replace(/-/g, '').substring(0, 20).toUpperCase();
-    const [existingTokenRow] = await db.query('SELECT authentication_token FROM wallet_cards WHERE pass_serial_number = ?', [serialNumber]);
-    const authenticationToken = existingTokenRow.length > 0 ? existingTokenRow[0].authentication_token : randomUUID();
-
-    const [tiers] = await db.query(
-      'SELECT * FROM reward_tiers WHERE entreprise_id = ? ORDER BY points_required ASC',
-      [client.company_id]
-    );
-    let soonExpiringPoints = 0;
-    if (client.points_expiration_months) {
-      try {
-        const { computeClientExpiration } = await import('./loyaltyController.js');
-        const { soonPoints } = await computeClientExpiration(client.id, client.points_expiration_months);
-        soonExpiringPoints = soonPoints;
-      } catch (_) {}
-    }
-
-    const passData = {
-      clientId: client.id,
-      firstName: client.prenom,
-      lastName: client.nom,
-      phoneNumber: client.telephone,
-      companyName: client.company_name,
-      loyaltyType: 'points',
-      balance: client.points || 0,
-      rewardTiers: tiers,
-      createdAt: new Date(),
-      qrCodeValue: client.id.toString(),
-      points_expiration_months: client.points_expiration_months ?? null,
-      soonExpiringPoints,
-    };
-
-    const customization = {
-      apple_logo_url: client.apple_logo_url,
-      apple_icon_url: client.apple_icon_url,
-      apple_strip_image_url: client.apple_strip_image_url,
-      apple_background_color: client.apple_background_color,
-      apple_text_color: client.apple_text_color,
-      apple_label_color: client.apple_label_color,
-      apple_pass_description: client.apple_pass_description,
-      apple_organization_name: client.apple_organization_name || client.company_name,
-      logo_text: client.logo_text,
-      back_fields_info: client.back_fields_info,
-      back_fields_terms: client.back_fields_terms,
-      back_fields_website: client.back_fields_website,
-      back_fields_phone: client.back_fields_phone,
-      back_fields_address: client.back_fields_address,
-      back_fields_instagram: client.back_fields_instagram,
-      back_fields_facebook: client.back_fields_facebook,
-      back_fields_tiktok: client.back_fields_tiktok,
-      apple_review_url: client.apple_review_url,
-      locations: client.locations,
-    };
-    let backendUrl = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
-    if (backendUrl.startsWith('http://')) backendUrl = backendUrl.replace('http://', 'https://');
-    const webServiceURL = `${backendUrl}/api/wallet`;
-
-    const passBuffer = await passGenerator.generateLoyaltyPass(
-      passData, 
-      customization, 
-      serialNumber, 
-      authenticationToken,
-      { webServiceURL }
-    );
-    await db.query(
-      `INSERT INTO wallet_cards (
-        id, client_id, company_id, pass_serial_number, authentication_token,
-        points_balance, stamps_balance, qr_code_value
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      ON DUPLICATE KEY UPDATE 
-        pass_serial_number = VALUES(pass_serial_number),
-        points_balance = VALUES(points_balance),
-        last_updated = NOW()`,
-      [
-        randomUUID(),
-        client.id,
-        client.company_id,
-        serialNumber,
-        authenticationToken,
-        client.points || 0,
-        0,
-        client.id.toString(),
-      ]
-    );
-
-    res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
-    res.setHeader('Content-Disposition', `attachment; filename="${client.prenom}_${client.nom}_Loyalty.pkpass"`);
-    res.setHeader('Content-Length', passBuffer.length);
-    res.send(passBuffer);
-
+    const { serial } = await ensureWalletCard(client, 'apple');
+    const buffer = await buildApplePass(serial, webServiceUrl(req));
+    if (!buffer) return res.status(503).send('Apple Wallet est momentanément indisponible. Réessayez plus tard.');
+    sendPkpass(res, buffer, `${client.prenom}_${client.nom}_${client.company_name}`);
   } catch (error) {
     logger.error(`❌ Erreur GET /client-download: ${error.message}`);
-    res.status(500).send('Erreur lors de la génération du pass.');
+    res.status(500).send('Erreur lors de la génération de la carte.');
   }
 };
 
 export default {
   createWalletPass,
-  addPointsToWallet,
   getWalletStatus,
-  downloadClientPass,
+  downloadClientPass
 };

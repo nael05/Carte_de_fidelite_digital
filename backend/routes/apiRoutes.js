@@ -2,6 +2,7 @@ import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import express from 'express';
+import { randomBytes } from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,34 +26,36 @@ import * as adminMailController from '../controllers/adminMailController.js';
 import walletRoutes from './walletRoutes.js';
 import { verifyToken, isAdmin, isPro } from '../middlewares/auth.js';
 import { requireActiveSubscription, requireAccountAccess, requireTier, checkSubscriptionStatus } from '../middlewares/subscriptionStatus.js';
-import { loginLimiter, apiLimiter, joinIpLimiter, joinCompanyLimiter } from '../middlewares/rateLimiter.js';
+import { loginLimiter, apiLimiter, strictLimiter, joinIpLimiter, joinCompanyLimiter } from '../middlewares/rateLimiter.js';
+import { isStripeConfigured } from '../utils/stripeConfig.js';
+
+// Paiement en ligne : refusé proprement tant que les clés Stripe ne sont pas configurées.
+const requireStripe = (req, res, next) => (isStripeConfigured()
+  ? next()
+  : res.status(503).json({ error: "Le paiement en ligne n'est pas encore activé. L'offre Gratuite reste disponible.", code: 'stripe_not_configured' }));
 
 const router = express.Router();
 
+// Fichier temporaire sans extension (jamais servi) : uploadLogo le ré-encode en PNG puis le supprime.
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadsDir)
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    cb(null, req.user?.id + '-' + Date.now() + ext)
-  }
+  destination: (req, file, cb) => cb(null, uploadsDir),
+  filename: (req, file, cb) => cb(null, `tmp-${randomBytes(16).toString('hex')}`)
 });
 const upload = multer({
-  storage: storage,
-  limits: { fileSize: 20 * 1024 * 1024 },
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024, files: 1 },
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) cb(null, true);
-    else cb(new Error('Seules les images sont autorisées'));
+    if (/^image\/(png|jpe?g|webp|gif)$/.test(file.mimetype)) cb(null, true);
+    else cb(new Error('Format non accepté : PNG, JPEG ou WebP'));
   }
 });
 router.use(apiLimiter);
 
 // Pro Signup (public endpoints)
 router.get('/plans', plansController.getPublicPlans);
-router.post('/pro/signup', proSignupController.proSignup);
-router.post('/pro/validate-promo', proSignupController.validatePromoCode);
-router.post('/pro/checkout/success', proSignupController.checkoutSuccess);
+router.post('/pro/signup', strictLimiter, proSignupController.proSignup);
+router.post('/pro/validate-promo', strictLimiter, requireStripe, proSignupController.validatePromoCode);
+router.post('/pro/checkout/success', requireStripe, proSignupController.checkoutSuccess);
 router.get('/pro/stripe-key', proSignupController.getStripeKey);
 
 // Admin routes
@@ -66,11 +69,11 @@ router.delete('/admin/delete-company/:companyId', verifyToken, isAdmin, apiContr
 router.put('/admin/update-company/:companyId', verifyToken, isAdmin, apiController.updateCompany);
 
 // Admin : tarifs Stripe, codes promo, e-mails, préavis de changement de tarif
-router.get('/admin/pricing', verifyToken, isAdmin, adminPricingController.getPricing);
-router.put('/admin/pricing', verifyToken, isAdmin, adminPricingController.updatePricing);
+router.get('/admin/pricing', verifyToken, isAdmin, requireStripe, adminPricingController.getPricing);
+router.put('/admin/pricing', verifyToken, isAdmin, requireStripe, adminPricingController.updatePricing);
 router.post('/admin/pricing/notify', verifyToken, isAdmin, adminPricingController.notifyPriceChange);
 router.get('/admin/promos', verifyToken, isAdmin, adminPromoController.listPromos);
-router.post('/admin/promos', verifyToken, isAdmin, adminPromoController.createPromo);
+router.post('/admin/promos', verifyToken, isAdmin, requireStripe, adminPromoController.createPromo);
 router.delete('/admin/promos/:id', verifyToken, isAdmin, adminPromoController.deactivatePromo);
 router.get('/admin/email/recipients', verifyToken, isAdmin, adminMailController.listRecipients);
 router.post('/admin/email/single', verifyToken, isAdmin, adminMailController.sendSingle);
@@ -80,19 +83,19 @@ router.get('/pro/status', verifyToken, isPro, checkSubscriptionStatus, apiContro
 
 // Account Management
 router.get('/pro/account', verifyToken, isPro, checkSubscriptionStatus, accountController.getAccountInfo);
-router.put('/pro/account/email', verifyToken, isPro, accountController.requestEmailChange);
+router.put('/pro/account/email', verifyToken, isPro, strictLimiter, accountController.requestEmailChange);
 router.post('/pro/account/confirm-email', verifyToken, isPro, accountController.confirmEmailChange);
 router.put('/pro/account/password', verifyToken, isPro, accountController.changePassword);
 router.delete('/pro/account', verifyToken, isPro, accountController.deleteAccount);
 
 // Subscription Management
 router.get('/pro/subscription', verifyToken, isPro, checkSubscriptionStatus, subscriptionController.getSubscription);
-router.post('/pro/subscription/checkout', verifyToken, isPro, subscriptionController.createUpgradeCheckout);
-router.post('/pro/subscription/switch-plan', verifyToken, isPro, requireActiveSubscription, subscriptionController.switchPlan);
-router.post('/pro/subscription/apply-promo', verifyToken, isPro, requireActiveSubscription, subscriptionController.applyPromoCode);
+router.post('/pro/subscription/checkout', verifyToken, isPro, requireStripe, subscriptionController.createUpgradeCheckout);
+router.post('/pro/subscription/switch-plan', verifyToken, isPro, requireActiveSubscription, requireStripe, subscriptionController.switchPlan);
+router.post('/pro/subscription/apply-promo', verifyToken, isPro, requireActiveSubscription, requireStripe, subscriptionController.applyPromoCode);
 router.post('/pro/subscription/cancel', verifyToken, isPro, checkSubscriptionStatus, subscriptionController.cancelSubscription);
 router.post('/pro/subscription/reactivate', verifyToken, isPro, checkSubscriptionStatus, subscriptionController.reactivateSubscription);
-router.get('/pro/subscription/portal-link', verifyToken, isPro, checkSubscriptionStatus, subscriptionController.getPortalLink);
+router.get('/pro/subscription/portal-link', verifyToken, isPro, checkSubscriptionStatus, requireStripe, subscriptionController.getPortalLink);
 
 // Billing & Invoices
 router.get('/pro/billing/invoices', verifyToken, isPro, checkSubscriptionStatus, billingController.getInvoices);
@@ -140,14 +143,14 @@ router.patch('/pro/card-customization/:empresaId/gps', verifyToken, isPro, apiCo
 router.post('/pro/upload-logo', verifyToken, isPro, (req, res, next) => {
   upload.single('logo')(req, res, (err) => {
     if (err?.code === 'LIMIT_FILE_SIZE') {
-      return res.status(413).json({ error: 'Image trop grande (max 20 Mo)' });
+      return res.status(413).json({ error: 'Image trop grande (10 Mo maximum)' });
     }
     if (err) return res.status(400).json({ error: err.message });
     next();
   });
 }, apiController.uploadLogo);
 router.post('/pro/clients/create-invite', verifyToken, isPro, requireActiveSubscription, apiController.createClientAndInvite);
-router.post('/pro/clients/resend-links', verifyToken, isPro, requireActiveSubscription, apiController.sendClientDownloadLinks);
+router.post('/pro/clients/resend-links', verifyToken, isPro, requireActiveSubscription, strictLimiter, apiController.sendClientDownloadLinks);
 router.post('/pro/push/send', verifyToken, isPro, requireActiveSubscription, pushController.sendNotification);
 router.get('/pro/push/history', verifyToken, isPro, pushController.getHistory);
 // Offre Business

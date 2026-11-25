@@ -13,9 +13,11 @@ export const isQuietHour = (date = new Date()) => {
   return h >= from || h < to;
 };
 
+// Début du mois civil (heure de Paris), au format DATETIME de MySQL.
 const monthStart = () => {
-  const d = new Date();
-  return new Date(d.getFullYear(), d.getMonth(), 1);
+  const [y, m] = new Intl.DateTimeFormat('en-CA', { timeZone: PUSH_RULES.quietHours.timeZone, year: 'numeric', month: '2-digit' })
+    .format(new Date()).split('-');
+  return `${y}-${m}-01 00:00:00`;
 };
 
 export const getQuota = async (entrepriseId) => {
@@ -87,6 +89,8 @@ export const prepareCampaign = async (entrepriseId, { clientIds = null, segment 
   }
   if (segment === 'active') sql += ' AND c.points > 0';
   else if (segment === 'inactive') sql += ' AND (c.points = 0 OR c.points IS NULL)';
+  // Seuls les clients qui ont une carte Wallet peuvent recevoir le message.
+  sql += ' AND EXISTS (SELECT 1 FROM wallet_cards w WHERE w.client_id = c.id AND w.company_id = c.entreprise_id)';
   sql += ` AND NOT EXISTS (
       SELECT 1 FROM client_push_notifications cp
       JOIN push_notifications_sent n ON n.id = cp.notification_id
@@ -97,7 +101,7 @@ export const prepareCampaign = async (entrepriseId, { clientIds = null, segment 
   const [eligible] = await pool.query(sql, params);
   if (eligible.length === 0) {
     return reject(422, 'no_eligible_recipients',
-      `Aucun client éligible : il faut son accord marketing et ne pas avoir reçu de campagne depuis ${PUSH_RULES.clientCooldownDays} jours.`);
+      `Aucun client éligible : il faut avoir ajouté sa carte au Wallet, avoir donné son accord pour recevoir des offres et ne pas avoir reçu de campagne depuis ${PUSH_RULES.clientCooldownDays} jours.`);
   }
   return { clientIds: eligible.map((c) => c.id), quota };
 };

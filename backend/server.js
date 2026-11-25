@@ -1,224 +1,123 @@
 import 'dotenv/config';
 
+import fs from 'fs';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import cron from 'node-cron';
 import apiRoutes from './routes/apiRoutes.js';
 import { stripeWebhook } from './controllers/webhookController.js';
-import { applyDuePriceChanges } from './controllers/adminPricingController.js';
-import { computeClientExpiration, runExpirationForEnterprise } from './controllers/loyaltyController.js';
-import walletSyncService from './utils/walletSyncService.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const uploadsDir = path.join(__dirname, 'uploads');
 import logger from './utils/logger.js';
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 import pool from './db.js';
+import passGenerator from './utils/passGenerator.js';
+import apnService from './utils/apnService.js';
+import { startCronJobs } from './utils/cronJobs.js';
 
-const REQUIRED_ENV = ['JWT_SECRET', 'DB_HOST', 'DB_USER', 'DB_PASSWORD', 'DB_NAME'];
-const missingEnv = REQUIRED_ENV.filter(k => process.env[k] === undefined);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const uploadsDir = path.join(__dirname, 'uploads');
+fs.mkdirSync(uploadsDir, { recursive: true });
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+// ───── Configuration obligatoire ─────
+const missingEnv = ['JWT_SECRET', 'DB_HOST', 'DB_USER', 'DB_NAME'].filter((k) => !process.env[k]);
+if (process.env.DB_PASSWORD === undefined) missingEnv.push('DB_PASSWORD');
 if (missingEnv.length > 0) {
   console.error(`[FATAL] Variables d'environnement manquantes : ${missingEnv.join(', ')}`);
   process.exit(1);
 }
+if (isProduction) {
+  const weak = [];
+  if (process.env.JWT_SECRET.length < 32 || /change|secret_key|example/i.test(process.env.JWT_SECRET)) weak.push('JWT_SECRET (32 caractères aléatoires minimum)');
+  if (!process.env.FRONTEND_URL || !process.env.FRONTEND_URL.startsWith('https://')) weak.push('FRONTEND_URL (https://...)');
+  if (weak.length > 0) {
+    console.error(`[FATAL] Configuration de production invalide : ${weak.join(', ')}`);
+    process.exit(1);
+  }
+}
 
 const app = express();
 app.set('trust proxy', 1);
+app.disable('x-powered-by');
 const PORT = process.env.PORT || 5000;
-app.use(helmet({
-  hsts: process.env.NODE_ENV === 'production' ? { maxAge: 31536000 } : false,
-  contentSecurityPolicy: false, // Laisser CORS gérer
-}));
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
-  : [
-      'https://fidelyzapp.fr',
-      'https://www.fidelyzapp.fr',
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'http://localhost:3002',
-      'http://localhost:5000',
-      'http://localhost:5173',
-      'http://127.0.0.1:3000',
-      'http://127.0.0.1:3001',
-      'http://127.0.0.1:3002',
-      'http://127.0.0.1:5000',
-      'http://127.0.0.1:5173',
-      'http://192.168.1.7:3000',
-      'http://192.168.1.7:3001',
-      'http://192.168.1.7:3002',
-      'http://192.168.1.7:5000',
-      'http://192.168.1.7:5173',
-      /^http:\/\/192\.168\.\d+\.\d+:(300[0-9]|5[0-9]{3})$/,
-      /^http:\/\/10\.\d+\.\d+\.\d+:(300[0-9]|5[0-9]{3})$/
-    ];
 
-const ipRangeRegex = /^http:\/\/(192\.168|10)\.\d+\.\d+:(300[0-9]|5[0-9]{3})$/;
+app.use(helmet({
+  hsts: isProduction ? { maxAge: 31536000, includeSubDomains: true } : false,
+  // API JSON uniquement : aucune ressource ne doit être chargée depuis ses réponses.
+  contentSecurityPolicy: { useDefaults: false, directives: { defaultSrc: ["'none'"], frameAncestors: ["'none'"] } },
+  crossOriginResourcePolicy: { policy: 'cross-origin' } // logos affichés par le site et récupérés par Google Wallet
+}));
+
+// ───── CORS ─────
+// En production, seules les origines de ALLOWED_ORIGINS (ou le site officiel) sont acceptées.
+// Les adresses locales ne sont autorisées qu'en développement.
+const DEV_ORIGIN_RE = /^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+):\d{2,5}$/;
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'https://fidelyzapp.fr,https://www.fidelyzapp.fr')
+  .split(',').map((o) => o.trim()).filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    const allowed = allowedOrigins.some(o =>
-      typeof o === 'string' ? o === origin : o.test(origin)
-    );
-    if (allowed) return callback(null, true);
-    callback(new Error(`CORS: origine non autorisée — ${origin}`));
+    if (!origin) return callback(null, true); // appels serveur à serveur (Apple Wallet, Stripe, curl)
+    if (allowedOrigins.includes(origin) || (!isProduction && DEV_ORIGIN_RE.test(origin))) return callback(null, true);
+    logger.warn('Origine CORS refusée', { origin });
+    callback(null, false);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Device-Id', 'X-Establishment-Id'],
-  maxAge: 86400,
+  maxAge: 86400
 }));
-app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), (req, res, next) => { req.rawBody = req.body; next(); }, stripeWebhook);
+
+// Le webhook Stripe a besoin du corps brut (vérification de signature) : déclaré avant express.json().
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json', limit: '1mb' }), (req, res, next) => { req.rawBody = req.body; next(); }, stripeWebhook);
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ limit: '1mb', extended: true }));
-logger.info(`📁 Uploads directory: ${uploadsDir}`);
-app.use('/uploads', express.static(uploadsDir));
-app.use('/api/uploads', express.static(uploadsDir)); // Frontend compatibility
-app.get('/api/wallet', (req, res) => {
-  logger.info('🔍 [APPLE CONNECT] L\'iPhone a testé la racine du WebService');
-  res.json({ status: 'active', service: 'Apple Wallet WebService' });
+
+// ───── Images téléversées (logos, bannières) ─────
+// Uniquement des PNG générés par le serveur ; jamais interprétés comme HTML ou script.
+const serveUploads = express.static(uploadsDir, {
+  index: false,
+  dotfiles: 'deny',
+  maxAge: '7d',
+  setHeaders: (res) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Security-Policy', "default-src 'none'");
+  }
 });
+const onlyImages = (req, res, next) => (/\.(png|jpe?g|webp)$/i.test(req.path) ? next() : res.status(404).end());
+app.use('/uploads', onlyImages, serveUploads);
+app.use('/api/uploads', onlyImages, serveUploads);
+
+app.get('/api/wallet', (req, res) => res.json({ status: 'active', service: 'Apple Wallet WebService' }));
 
 app.use('/api', apiRoutes);
+
 app.get('/health', async (req, res) => {
   try {
-    const [result] = await pool.query('SELECT 1');
+    await pool.query('SELECT 1');
     res.json({ status: 'OK', database: 'connected' });
   } catch (err) {
     logger.error('Health check failed - DB connection issue', { error: err.message });
-    res.status(503).json({ status: 'ERROR', database: 'disconnected', error: err.message });
+    res.status(503).json({ status: 'ERROR', database: 'disconnected' });
   }
 });
-app.get('/api/wallet/health', (req, res) => {
-  try {
-    import('./utils/passGenerator.js').then((module) => {
-      const pg = module.passGenerator;
-      pg.validateConfiguration();
-    });
-    import('./utils/apnService.js').then((module) => {
-      const apn = module.apnService;
-      logger.info('✅ Provider APNs prêt');
-    });
 
-    res.json({
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      configuration: {
-        passGenerator: '✅ Validée',
-        apnService: '✅ Prête'
-      }
-    });
-  } catch (err) {
-    logger.error('Health check error', err);
-    res.status(500).json({ error: err.message });
-  }
+app.get('/api/wallet/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    appleWallet: passGenerator.validateConfiguration() ? 'configuré' : 'non configuré',
+    applePush: apnService.isConfigured() ? 'configuré' : 'non configuré'
+  });
 });
+
 app.use(notFoundHandler);
 app.use(errorHandler);
-app.listen(PORT, () => {
-  logger.info(`✅ Backend démarré sur http://localhost:${PORT}`);
-  logger.info(`📍 Environnement: ${process.env.NODE_ENV || 'development'}`);
-  setTimeout(() => {
-    try {
-      import('./utils/passGenerator.js').then((module) => {
-        if (module.default) module.default.validateConfiguration();
-      });
-      import('./utils/apnService.js').then((module) => {
-        logger.info('✅ Configuration APNs initialisée');
-      });
-    } catch (err) {
-      logger.warn('⚠️ Warning quelconque', err.message);
-    }
-  }, 100);
-});
 
-if (process.env.NODE_APP_INSTANCE === '0') {
-  cron.schedule('0 2 * * *', async () => {
-    logger.info('[CRON] Points expiration job started');
-    try {
-      const [enterprises] = await pool.query(
-        'SELECT id, points_expiration_months FROM loyalty_config WHERE points_expiration_months IS NOT NULL'
-      );
-      for (const { id: entrepriseId, points_expiration_months } of enterprises) {
-        try {
-          await runExpirationForEnterprise(entrepriseId, points_expiration_months);
-        } catch (err) {
-          logger.error(`[CRON] Expiration failed for enterprise ${entrepriseId}`, { error: err.message });
-        }
-      }
-      for (const { id: entrepriseId, points_expiration_months } of enterprises) {
-        try {
-          const [clients] = await pool.query(
-            `SELECT c.id, c.entreprise_id FROM clients c
-             JOIN wallet_cards wc ON wc.client_id = c.id AND wc.company_id = c.entreprise_id
-             WHERE c.entreprise_id = ? AND wc.points_balance > 0`,
-            [entrepriseId]
-          );
-          for (const client of clients) {
-            try {
-              const { soonPoints } = await computeClientExpiration(client.id, points_expiration_months);
-              if (soonPoints > 0) {
-                await walletSyncService.syncClientWallet(client.id, entrepriseId, 0);
-                const [regRows] = await pool.query(
-                  `SELECT apr.push_token FROM apple_pass_registrations apr
-                   JOIN wallet_cards wc ON wc.pass_serial_number = apr.pass_serial_number
-                   WHERE wc.client_id = ?`,
-                  [client.id]
-                );
-                if (regRows.length > 0) {
-                  const tokens = regRows.map(r => r.push_token);
-                  const { apnService } = await import('./utils/apnService.js');
-                  await apnService.sendBulkAlertNotifications(
-                    tokens,
-                    '⏳ Vos points expirent bientôt !',
-                    `Il vous reste 7 jours pour utiliser ${soonPoints} point${soonPoints > 1 ? 's' : ''}. Venez vite !`
-                  );
-                }
-                const [gwRows] = await pool.query(
-                  `SELECT pass_serial_number FROM wallet_cards WHERE client_id = ? AND company_id = ? AND pass_serial_number LIKE 'GOOGLE_%'`,
-                  [client.id, entrepriseId]
-                );
-                if (gwRows.length > 0) {
-                  const { default: googleWalletGenerator } = await import('./utils/googleWalletGenerator.js');
-                  await googleWalletGenerator.sendExpirationNotification(client.id, soonPoints);
-                }
-              }
-            } catch (err) {
-              logger.warn(`[CRON] J-7 sync failed for client ${client.id}`, { error: err.message });
-            }
-          }
-        } catch (err) {
-          logger.error(`[CRON] J-7 loop failed for enterprise ${entrepriseId}`, { error: err.message });
-        }
-      }
-      logger.info('[CRON] Points expiration job completed');
-    } catch (err) {
-      logger.error('[CRON] Points expiration job failed', { error: err.message });
-    }
-  });
-  cron.schedule('0 4 * * *', async () => {
-    try {
-      const count = await applyDuePriceChanges();
-      if (count > 0) logger.info(`[CRON] Changements de tarif traités : ${count}`);
-    } catch (err) {
-      logger.error('[CRON] Application des changements de tarif échouée', { error: err.message });
-    }
-  });
-  cron.schedule('0 3 * * *', async () => {
-    try {
-      const [rows] = await pool.query(
-        'SELECT MAX(points_expiration_months) AS maxMonths FROM loyalty_config WHERE points_expiration_months IS NOT NULL'
-      );
-      const maxMonths = Math.max(6, (rows[0]?.maxMonths ?? 6) + 1);
-      await pool.query(`DELETE FROM transaction_history WHERE created_at < DATE_SUB(NOW(), INTERVAL ${maxMonths} MONTH)`);
-      logger.info(`Transaction history purge completed (keeping ${maxMonths} months)`);
-    } catch (err) {
-      logger.error('Transaction history purge failed', { error: err.message });
-    }
-  });
-}
+app.listen(PORT, () => {
+  logger.info(`✅ Backend démarré sur le port ${PORT} (${process.env.NODE_ENV || 'development'})`);
+  passGenerator.validateConfiguration();
+  startCronJobs();
+});

@@ -1,19 +1,21 @@
 import crypto, { randomUUID } from 'crypto';
 import pool from '../db.js'
 
+export const hashToken = (token) => crypto.createHash('sha256').update(token + 'salt').digest('hex')
+
 /**
- * Génère une empreinte d'appareil basée sur User-Agent + IP
+ * Identifiant d'appareil renvoyé au navigateur à la connexion (en-tête X-Device-Id ensuite).
+ * account : propriétaire ou compte équipe, pour qu'un caissier et le gérant puissent être connectés
+ * en même temps sur le même ordinateur de caisse sans se déconnecter l'un l'autre.
  */
-export const generateDeviceFingerprint = (req) => {
+export const generateDeviceFingerprint = (req, account = 'owner') => {
   const userAgent = req.headers['user-agent'] || 'unknown'
-  const ip = req.ip || req.connection.remoteAddress || 'unknown'
-  const fingerprint = crypto
+  const ip = req.ip || req.socket?.remoteAddress || 'unknown'
+  return crypto
     .createHash('sha256')
-    .update(`${userAgent}:${ip}`)
+    .update(`${userAgent}:${ip}:${account}`)
     .digest('hex')
     .substring(0, 16)
-  
-  return fingerprint
 }
 
 /**
@@ -21,21 +23,24 @@ export const generateDeviceFingerprint = (req) => {
  */
 export const createSession = async (empresaId, deviceId, deviceName, token, expiresIn = '24h') => {
   try {
-    const sessionId = randomUUID()
+    const sessionId = randomUUID()
+
     const expiresMs = expiresIn === '7d' ? 7 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000
-    const expiresAt = new Date(Date.now() + expiresMs)
-    const tokenHash = crypto.createHash('sha256').update(token + 'salt').digest('hex')
+    const expiresAt = new Date(Date.now() + expiresMs)
+
+    const tokenHash = hashToken(token)
+
     await pool.query(
       'DELETE FROM sessions WHERE entreprise_id = ? AND device_id = ?',
       [empresaId, deviceId]
-    )
+    )
+
     await pool.query(
       `INSERT INTO sessions (id, entreprise_id, device_id, device_name, token_hash, expires_at)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [sessionId, empresaId, deviceId, deviceName, tokenHash, expiresAt]
     )
     
-    console.log(`✅ [SESSION] Nouvelle session créée: ${empresaId} sur device ${deviceId}`)
     return sessionId
   } catch (err) {
     console.error('❌ [SESSION] Erreur création session:', err.message)
@@ -46,25 +51,26 @@ export const createSession = async (empresaId, deviceId, deviceName, token, expi
 /**
  * Vérifier qu'une session est valide et met à jour last_activity
  */
-export const verifySessionValidity = async (empresaId, deviceId) => {
+export const verifySessionValidity = async (empresaId, deviceId, token) => {
   try {
     const [rows] = await pool.query(
-      `SELECT id, expires_at, last_activity FROM sessions 
+      `SELECT id, expires_at, last_activity, token_hash FROM sessions 
        WHERE entreprise_id = ? AND device_id = ?`,
       [empresaId, deviceId]
     )
     
-    if (rows.length === 0) {
-      console.log(`⚠️ [SESSION] Session non trouvée: ${empresaId} device ${deviceId}`)
-      return null
-    }
-    
-    const session = rows[0]
+    if (rows.length === 0) return null
+
+    const session = rows[0]
+    if (!token || session.token_hash !== hashToken(token)) return null
+
     if (new Date() > new Date(session.expires_at)) {
-      console.log(`⚠️ [SESSION] Session expirée: ${empresaId}`)
+
       await pool.query('DELETE FROM sessions WHERE id = ?', [session.id])
       return null
-    }
+    }
+
+
     const lastActivityTime = new Date(session.last_activity)
     const now = new Date()
     
